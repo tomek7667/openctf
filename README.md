@@ -10,3 +10,6 @@ Open-source alternative for [ctftime.org](https://ctftime.org)
 - [ ] CTF events:
   - cron importing ctfs from ctftime keying on name - that way there won't be conflict if one adds the ctf here and there
   - weight of the CTF manually set based on experienced players opinion for first iteration of most popular ctfs, to be automatically corrected with weight formula
+- [ ] organizational
+  - notification based contact with administrators of the platform -- a good form with topic, message and attachments
+- [ ] mobile app in future
