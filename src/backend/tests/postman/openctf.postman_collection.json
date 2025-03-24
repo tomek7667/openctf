@@ -16,7 +16,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"username\": \"tomek\",\r\n    \"password\": \"123\"\r\n}\r\n ",
+							"raw": "{\r\n    \"username\": \"tomek\",\r\n    \"email\": \"tomek@test.test\",\r\n    \"password\": \"123\"\r\n}\r\n ",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -44,7 +44,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"username\": \"example\",\r\n    \"password\": \"123\"\r\n}\r\n ",
+							"raw": "{\r\n    \"username\": \"example\",\r\n    \"email\": \"example@test.test\",\r\n    \"password\": \"123\"\r\n}\r\n ",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -60,6 +60,34 @@
 								"api",
 								"auth",
 								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/api/auth/login (tomek)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"identity\": \"tomek\",\r\n    \"password\": \"123\"\r\n}\r\n ",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/auth/login",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"login"
 							]
 						}
 					},
