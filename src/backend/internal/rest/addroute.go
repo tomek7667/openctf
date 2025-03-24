@@ -20,7 +20,7 @@ func errorHandler(c *gin.Context, info ratelimit.Info) {
 		"requester", c.ClientIP(),
 		"can try again in", time.Until(info.ResetTime).String(),
 	)
-	c.JSON(http.StatusTooManyRequests, map[string]interface{}{
+	c.JSON(http.StatusTooManyRequests, map[string]any{
 		"success": false,
 		"message": fmt.Sprintf(
 			"Too many requests. Try again in %s",

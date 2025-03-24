@@ -7,8 +7,8 @@ require (
 	github.com/JGLTechnologies/gin-rate-limit v1.5.4
 	github.com/gin-gonic/gin v1.10.0
 	github.com/golang-jwt/jwt v3.2.2+incompatible
+	github.com/lib/pq v1.10.9
 	github.com/lmittmann/tint v1.0.7
-	github.com/mattn/go-sqlite3 v1.14.24
 	golang.org/x/crypto v0.33.0
 )
 
@@ -38,6 +38,7 @@ require (
 	github.com/klauspost/cpuid/v2 v2.2.7 // indirect
 	github.com/leodido/go-urn v1.4.0 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
+	github.com/mattn/go-sqlite3 v1.14.24 // indirect
 	github.com/mitchellh/go-wordwrap v0.0.0-20150314170334-ad45545899c7 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect

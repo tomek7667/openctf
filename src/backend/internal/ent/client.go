@@ -7,17 +7,17 @@ import (
 
 	"openctfbackend/ent"
 
-	_ "github.com/mattn/go-sqlite3"
+	_ "github.com/lib/pq"
 )
 
 type Client struct {
 	C *ent.Client
 }
 
-func New() (*Client, error) {
-	client, err := ent.Open("sqlite3", "file:ent?mode=memory&cache=shared&_fk=1")
+func New(credentials string) (*Client, error) {
+	client, err := ent.Open("postgres", credentials)
 	if err != nil {
-		return nil, errors.Join(fmt.Errorf("failed opening connection to sqlite"), err)
+		return nil, errors.Join(fmt.Errorf("failed opening connection to pg"), err)
 	}
 	if err := client.Schema.Create(context.Background()); err != nil {
 		return nil, errors.Join(fmt.Errorf("failed creating schema resources"), err)
