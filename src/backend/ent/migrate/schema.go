@@ -41,9 +41,13 @@ var (
 	UsersColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
 		{Name: "username", Type: field.TypeString, Unique: true},
+		{Name: "email", Type: field.TypeString, Unique: true},
+		{Name: "email_confirmed_at", Type: field.TypeTime, Nullable: true},
+		{Name: "confirmation_code", Type: field.TypeString, Nullable: true},
 		{Name: "permission_level", Type: field.TypeEnum, Enums: []string{"player", "moderator", "administrator"}, Default: "player"},
 		{Name: "description", Type: field.TypeString, Nullable: true},
 		{Name: "password", Type: field.TypeString},
+		{Name: "created_at", Type: field.TypeTime},
 	}
 	// UsersTable holds the schema information for the "users" table.
 	UsersTable = &schema.Table{

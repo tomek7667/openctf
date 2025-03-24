@@ -1,5 +1,21 @@
 # backend
 
+## models
+
+[entgio docs](https://entgo.io/docs/)
+
+- To codegen the models after adding a new model / modifying:
+
+```sh
+go generate ./ent
+```
+
+- To add a new model:
+
+```sh
+go run -mod=mod entgo.io/ent/cmd/ent new <UpperCamelCaseModelName>
+```
+
 ## environment variables
 
 whenever new env var is used in the code add it in the following table
@@ -22,19 +38,3 @@ whenever new env var is used in the code add it in the following table
 | `APP_NAME`               | Just the app name for logging purposes                                                                                          | [ ]                    |
 | `JWT_SECRET`             | JWT secret used for getting and verifying the JWT token used for authentication. Default: `8c7fafb856380624fa60b22e7baf311d`    | [x]                    |
 | `GIN_MODE`               | Gin _(library for rest)_ running mode. When in prod, this value must be `release`. Default: `debug`                             | [x]                    |
-
-## models
-
-[entgio docs](https://entgo.io/docs/)
-
-- To codegen the models after adding a new model / modifying:
-
-```sh
-go generate ./ent
-```
-
-- To add a new model:
-
-```sh
-go run -mod=mod entgo.io/ent/cmd/ent new <UpperCamelCaseModelName>
-```

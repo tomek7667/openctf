@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"openctfbackend/ent/user"
 	"strings"
+	"time"
 
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
@@ -18,12 +19,20 @@ type User struct {
 	ID int `json:"id,omitempty"`
 	// Username holds the value of the "username" field.
 	Username string `json:"username,omitempty"`
+	// Email holds the value of the "email" field.
+	Email string `json:"email,omitempty"`
+	// EmailConfirmedAt holds the value of the "email_confirmed_at" field.
+	EmailConfirmedAt *time.Time `json:"email_confirmed_at,omitempty"`
+	// ConfirmationCode holds the value of the "confirmation_code" field.
+	ConfirmationCode *string `json:"-"`
 	// PermissionLevel holds the value of the "permission_level" field.
 	PermissionLevel user.PermissionLevel `json:"permission_level,omitempty"`
 	// Description holds the value of the "description" field.
 	Description string `json:"description,omitempty"`
 	// Password holds the value of the "password" field.
 	Password string `json:"-"`
+	// CreatedAt holds the value of the "created_at" field.
+	CreatedAt time.Time `json:"created_at,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the UserQuery when eager-loading is set.
 	Edges        UserEdges `json:"edges"`
@@ -55,8 +64,10 @@ func (*User) scanValues(columns []string) ([]any, error) {
 		switch columns[i] {
 		case user.FieldID:
 			values[i] = new(sql.NullInt64)
-		case user.FieldUsername, user.FieldPermissionLevel, user.FieldDescription, user.FieldPassword:
+		case user.FieldUsername, user.FieldEmail, user.FieldConfirmationCode, user.FieldPermissionLevel, user.FieldDescription, user.FieldPassword:
 			values[i] = new(sql.NullString)
+		case user.FieldEmailConfirmedAt, user.FieldCreatedAt:
+			values[i] = new(sql.NullTime)
 		default:
 			values[i] = new(sql.UnknownType)
 		}
@@ -84,6 +95,26 @@ func (u *User) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				u.Username = value.String
 			}
+		case user.FieldEmail:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field email", values[i])
+			} else if value.Valid {
+				u.Email = value.String
+			}
+		case user.FieldEmailConfirmedAt:
+			if value, ok := values[i].(*sql.NullTime); !ok {
+				return fmt.Errorf("unexpected type %T for field email_confirmed_at", values[i])
+			} else if value.Valid {
+				u.EmailConfirmedAt = new(time.Time)
+				*u.EmailConfirmedAt = value.Time
+			}
+		case user.FieldConfirmationCode:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field confirmation_code", values[i])
+			} else if value.Valid {
+				u.ConfirmationCode = new(string)
+				*u.ConfirmationCode = value.String
+			}
 		case user.FieldPermissionLevel:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field permission_level", values[i])
@@ -101,6 +132,12 @@ func (u *User) assignValues(columns []string, values []any) error {
 				return fmt.Errorf("unexpected type %T for field password", values[i])
 			} else if value.Valid {
 				u.Password = value.String
+			}
+		case user.FieldCreatedAt:
+			if value, ok := values[i].(*sql.NullTime); !ok {
+				return fmt.Errorf("unexpected type %T for field created_at", values[i])
+			} else if value.Valid {
+				u.CreatedAt = value.Time
 			}
 		default:
 			u.selectValues.Set(columns[i], values[i])
@@ -146,6 +183,16 @@ func (u *User) String() string {
 	builder.WriteString("username=")
 	builder.WriteString(u.Username)
 	builder.WriteString(", ")
+	builder.WriteString("email=")
+	builder.WriteString(u.Email)
+	builder.WriteString(", ")
+	if v := u.EmailConfirmedAt; v != nil {
+		builder.WriteString("email_confirmed_at=")
+		builder.WriteString(v.Format(time.ANSIC))
+	}
+	builder.WriteString(", ")
+	builder.WriteString("confirmation_code=<sensitive>")
+	builder.WriteString(", ")
 	builder.WriteString("permission_level=")
 	builder.WriteString(fmt.Sprintf("%v", u.PermissionLevel))
 	builder.WriteString(", ")
@@ -153,6 +200,9 @@ func (u *User) String() string {
 	builder.WriteString(u.Description)
 	builder.WriteString(", ")
 	builder.WriteString("password=<sensitive>")
+	builder.WriteString(", ")
+	builder.WriteString("created_at=")
+	builder.WriteString(u.CreatedAt.Format(time.ANSIC))
 	builder.WriteByte(')')
 	return builder.String()
 }

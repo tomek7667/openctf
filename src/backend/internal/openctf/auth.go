@@ -65,4 +65,8 @@ func (h *Handler) AddRoutes_ApiAuth() {
 			"token": *token,
 		}, err)
 	})
+
+	// TODO: add github sso auth/create
+	// TODO: add reset password functionality
+	// TODO: add remove account
 }

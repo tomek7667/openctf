@@ -9,6 +9,7 @@ import (
 	"openctfbackend/ent/predicate"
 	"openctfbackend/ent/team"
 	"openctfbackend/ent/user"
+	"time"
 
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
@@ -39,6 +40,60 @@ func (uu *UserUpdate) SetNillableUsername(s *string) *UserUpdate {
 	if s != nil {
 		uu.SetUsername(*s)
 	}
+	return uu
+}
+
+// SetEmail sets the "email" field.
+func (uu *UserUpdate) SetEmail(s string) *UserUpdate {
+	uu.mutation.SetEmail(s)
+	return uu
+}
+
+// SetNillableEmail sets the "email" field if the given value is not nil.
+func (uu *UserUpdate) SetNillableEmail(s *string) *UserUpdate {
+	if s != nil {
+		uu.SetEmail(*s)
+	}
+	return uu
+}
+
+// SetEmailConfirmedAt sets the "email_confirmed_at" field.
+func (uu *UserUpdate) SetEmailConfirmedAt(t time.Time) *UserUpdate {
+	uu.mutation.SetEmailConfirmedAt(t)
+	return uu
+}
+
+// SetNillableEmailConfirmedAt sets the "email_confirmed_at" field if the given value is not nil.
+func (uu *UserUpdate) SetNillableEmailConfirmedAt(t *time.Time) *UserUpdate {
+	if t != nil {
+		uu.SetEmailConfirmedAt(*t)
+	}
+	return uu
+}
+
+// ClearEmailConfirmedAt clears the value of the "email_confirmed_at" field.
+func (uu *UserUpdate) ClearEmailConfirmedAt() *UserUpdate {
+	uu.mutation.ClearEmailConfirmedAt()
+	return uu
+}
+
+// SetConfirmationCode sets the "confirmation_code" field.
+func (uu *UserUpdate) SetConfirmationCode(s string) *UserUpdate {
+	uu.mutation.SetConfirmationCode(s)
+	return uu
+}
+
+// SetNillableConfirmationCode sets the "confirmation_code" field if the given value is not nil.
+func (uu *UserUpdate) SetNillableConfirmationCode(s *string) *UserUpdate {
+	if s != nil {
+		uu.SetConfirmationCode(*s)
+	}
+	return uu
+}
+
+// ClearConfirmationCode clears the value of the "confirmation_code" field.
+func (uu *UserUpdate) ClearConfirmationCode() *UserUpdate {
+	uu.mutation.ClearConfirmationCode()
 	return uu
 }
 
@@ -165,6 +220,11 @@ func (uu *UserUpdate) check() error {
 			return &ValidationError{Name: "username", err: fmt.Errorf(`ent: validator failed for field "User.username": %w`, err)}
 		}
 	}
+	if v, ok := uu.mutation.Email(); ok {
+		if err := user.EmailValidator(v); err != nil {
+			return &ValidationError{Name: "email", err: fmt.Errorf(`ent: validator failed for field "User.email": %w`, err)}
+		}
+	}
 	if v, ok := uu.mutation.PermissionLevel(); ok {
 		if err := user.PermissionLevelValidator(v); err != nil {
 			return &ValidationError{Name: "permission_level", err: fmt.Errorf(`ent: validator failed for field "User.permission_level": %w`, err)}
@@ -187,6 +247,21 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if value, ok := uu.mutation.Username(); ok {
 		_spec.SetField(user.FieldUsername, field.TypeString, value)
+	}
+	if value, ok := uu.mutation.Email(); ok {
+		_spec.SetField(user.FieldEmail, field.TypeString, value)
+	}
+	if value, ok := uu.mutation.EmailConfirmedAt(); ok {
+		_spec.SetField(user.FieldEmailConfirmedAt, field.TypeTime, value)
+	}
+	if uu.mutation.EmailConfirmedAtCleared() {
+		_spec.ClearField(user.FieldEmailConfirmedAt, field.TypeTime)
+	}
+	if value, ok := uu.mutation.ConfirmationCode(); ok {
+		_spec.SetField(user.FieldConfirmationCode, field.TypeString, value)
+	}
+	if uu.mutation.ConfirmationCodeCleared() {
+		_spec.ClearField(user.FieldConfirmationCode, field.TypeString)
 	}
 	if value, ok := uu.mutation.PermissionLevel(); ok {
 		_spec.SetField(user.FieldPermissionLevel, field.TypeEnum, value)
@@ -276,6 +351,60 @@ func (uuo *UserUpdateOne) SetNillableUsername(s *string) *UserUpdateOne {
 	if s != nil {
 		uuo.SetUsername(*s)
 	}
+	return uuo
+}
+
+// SetEmail sets the "email" field.
+func (uuo *UserUpdateOne) SetEmail(s string) *UserUpdateOne {
+	uuo.mutation.SetEmail(s)
+	return uuo
+}
+
+// SetNillableEmail sets the "email" field if the given value is not nil.
+func (uuo *UserUpdateOne) SetNillableEmail(s *string) *UserUpdateOne {
+	if s != nil {
+		uuo.SetEmail(*s)
+	}
+	return uuo
+}
+
+// SetEmailConfirmedAt sets the "email_confirmed_at" field.
+func (uuo *UserUpdateOne) SetEmailConfirmedAt(t time.Time) *UserUpdateOne {
+	uuo.mutation.SetEmailConfirmedAt(t)
+	return uuo
+}
+
+// SetNillableEmailConfirmedAt sets the "email_confirmed_at" field if the given value is not nil.
+func (uuo *UserUpdateOne) SetNillableEmailConfirmedAt(t *time.Time) *UserUpdateOne {
+	if t != nil {
+		uuo.SetEmailConfirmedAt(*t)
+	}
+	return uuo
+}
+
+// ClearEmailConfirmedAt clears the value of the "email_confirmed_at" field.
+func (uuo *UserUpdateOne) ClearEmailConfirmedAt() *UserUpdateOne {
+	uuo.mutation.ClearEmailConfirmedAt()
+	return uuo
+}
+
+// SetConfirmationCode sets the "confirmation_code" field.
+func (uuo *UserUpdateOne) SetConfirmationCode(s string) *UserUpdateOne {
+	uuo.mutation.SetConfirmationCode(s)
+	return uuo
+}
+
+// SetNillableConfirmationCode sets the "confirmation_code" field if the given value is not nil.
+func (uuo *UserUpdateOne) SetNillableConfirmationCode(s *string) *UserUpdateOne {
+	if s != nil {
+		uuo.SetConfirmationCode(*s)
+	}
+	return uuo
+}
+
+// ClearConfirmationCode clears the value of the "confirmation_code" field.
+func (uuo *UserUpdateOne) ClearConfirmationCode() *UserUpdateOne {
+	uuo.mutation.ClearConfirmationCode()
 	return uuo
 }
 
@@ -415,6 +544,11 @@ func (uuo *UserUpdateOne) check() error {
 			return &ValidationError{Name: "username", err: fmt.Errorf(`ent: validator failed for field "User.username": %w`, err)}
 		}
 	}
+	if v, ok := uuo.mutation.Email(); ok {
+		if err := user.EmailValidator(v); err != nil {
+			return &ValidationError{Name: "email", err: fmt.Errorf(`ent: validator failed for field "User.email": %w`, err)}
+		}
+	}
 	if v, ok := uuo.mutation.PermissionLevel(); ok {
 		if err := user.PermissionLevelValidator(v); err != nil {
 			return &ValidationError{Name: "permission_level", err: fmt.Errorf(`ent: validator failed for field "User.permission_level": %w`, err)}
@@ -454,6 +588,21 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 	}
 	if value, ok := uuo.mutation.Username(); ok {
 		_spec.SetField(user.FieldUsername, field.TypeString, value)
+	}
+	if value, ok := uuo.mutation.Email(); ok {
+		_spec.SetField(user.FieldEmail, field.TypeString, value)
+	}
+	if value, ok := uuo.mutation.EmailConfirmedAt(); ok {
+		_spec.SetField(user.FieldEmailConfirmedAt, field.TypeTime, value)
+	}
+	if uuo.mutation.EmailConfirmedAtCleared() {
+		_spec.ClearField(user.FieldEmailConfirmedAt, field.TypeTime)
+	}
+	if value, ok := uuo.mutation.ConfirmationCode(); ok {
+		_spec.SetField(user.FieldConfirmationCode, field.TypeString, value)
+	}
+	if uuo.mutation.ConfirmationCodeCleared() {
+		_spec.ClearField(user.FieldConfirmationCode, field.TypeString)
 	}
 	if value, ok := uuo.mutation.PermissionLevel(); ok {
 		_spec.SetField(user.FieldPermissionLevel, field.TypeEnum, value)

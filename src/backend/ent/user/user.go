@@ -4,6 +4,7 @@ package user
 
 import (
 	"fmt"
+	"time"
 
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
@@ -16,12 +17,20 @@ const (
 	FieldID = "id"
 	// FieldUsername holds the string denoting the username field in the database.
 	FieldUsername = "username"
+	// FieldEmail holds the string denoting the email field in the database.
+	FieldEmail = "email"
+	// FieldEmailConfirmedAt holds the string denoting the email_confirmed_at field in the database.
+	FieldEmailConfirmedAt = "email_confirmed_at"
+	// FieldConfirmationCode holds the string denoting the confirmation_code field in the database.
+	FieldConfirmationCode = "confirmation_code"
 	// FieldPermissionLevel holds the string denoting the permission_level field in the database.
 	FieldPermissionLevel = "permission_level"
 	// FieldDescription holds the string denoting the description field in the database.
 	FieldDescription = "description"
 	// FieldPassword holds the string denoting the password field in the database.
 	FieldPassword = "password"
+	// FieldCreatedAt holds the string denoting the created_at field in the database.
+	FieldCreatedAt = "created_at"
 	// EdgePlayingFor holds the string denoting the playing_for edge name in mutations.
 	EdgePlayingFor = "playing_for"
 	// Table holds the table name of the user in the database.
@@ -39,9 +48,13 @@ const (
 var Columns = []string{
 	FieldID,
 	FieldUsername,
+	FieldEmail,
+	FieldEmailConfirmedAt,
+	FieldConfirmationCode,
 	FieldPermissionLevel,
 	FieldDescription,
 	FieldPassword,
+	FieldCreatedAt,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -57,6 +70,10 @@ func ValidColumn(column string) bool {
 var (
 	// UsernameValidator is a validator for the "username" field. It is called by the builders before save.
 	UsernameValidator func(string) error
+	// EmailValidator is a validator for the "email" field. It is called by the builders before save.
+	EmailValidator func(string) error
+	// DefaultCreatedAt holds the default value on creation for the "created_at" field.
+	DefaultCreatedAt time.Time
 )
 
 // PermissionLevel defines the type for the "permission_level" enum field.
@@ -99,6 +116,21 @@ func ByUsername(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldUsername, opts...).ToFunc()
 }
 
+// ByEmail orders the results by the email field.
+func ByEmail(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldEmail, opts...).ToFunc()
+}
+
+// ByEmailConfirmedAt orders the results by the email_confirmed_at field.
+func ByEmailConfirmedAt(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldEmailConfirmedAt, opts...).ToFunc()
+}
+
+// ByConfirmationCode orders the results by the confirmation_code field.
+func ByConfirmationCode(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldConfirmationCode, opts...).ToFunc()
+}
+
 // ByPermissionLevel orders the results by the permission_level field.
 func ByPermissionLevel(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldPermissionLevel, opts...).ToFunc()
@@ -112,6 +144,11 @@ func ByDescription(opts ...sql.OrderTermOption) OrderOption {
 // ByPassword orders the results by the password field.
 func ByPassword(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldPassword, opts...).ToFunc()
+}
+
+// ByCreatedAt orders the results by the created_at field.
+func ByCreatedAt(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldCreatedAt, opts...).ToFunc()
 }
 
 // ByPlayingForCount orders the results by playing_for count.

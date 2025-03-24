@@ -4,6 +4,7 @@ package user
 
 import (
 	"openctfbackend/ent/predicate"
+	"time"
 
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
@@ -59,6 +60,21 @@ func Username(v string) predicate.User {
 	return predicate.User(sql.FieldEQ(FieldUsername, v))
 }
 
+// Email applies equality check predicate on the "email" field. It's identical to EmailEQ.
+func Email(v string) predicate.User {
+	return predicate.User(sql.FieldEQ(FieldEmail, v))
+}
+
+// EmailConfirmedAt applies equality check predicate on the "email_confirmed_at" field. It's identical to EmailConfirmedAtEQ.
+func EmailConfirmedAt(v time.Time) predicate.User {
+	return predicate.User(sql.FieldEQ(FieldEmailConfirmedAt, v))
+}
+
+// ConfirmationCode applies equality check predicate on the "confirmation_code" field. It's identical to ConfirmationCodeEQ.
+func ConfirmationCode(v string) predicate.User {
+	return predicate.User(sql.FieldEQ(FieldConfirmationCode, v))
+}
+
 // Description applies equality check predicate on the "description" field. It's identical to DescriptionEQ.
 func Description(v string) predicate.User {
 	return predicate.User(sql.FieldEQ(FieldDescription, v))
@@ -67,6 +83,11 @@ func Description(v string) predicate.User {
 // Password applies equality check predicate on the "password" field. It's identical to PasswordEQ.
 func Password(v string) predicate.User {
 	return predicate.User(sql.FieldEQ(FieldPassword, v))
+}
+
+// CreatedAt applies equality check predicate on the "created_at" field. It's identical to CreatedAtEQ.
+func CreatedAt(v time.Time) predicate.User {
+	return predicate.User(sql.FieldEQ(FieldCreatedAt, v))
 }
 
 // UsernameEQ applies the EQ predicate on the "username" field.
@@ -132,6 +153,196 @@ func UsernameEqualFold(v string) predicate.User {
 // UsernameContainsFold applies the ContainsFold predicate on the "username" field.
 func UsernameContainsFold(v string) predicate.User {
 	return predicate.User(sql.FieldContainsFold(FieldUsername, v))
+}
+
+// EmailEQ applies the EQ predicate on the "email" field.
+func EmailEQ(v string) predicate.User {
+	return predicate.User(sql.FieldEQ(FieldEmail, v))
+}
+
+// EmailNEQ applies the NEQ predicate on the "email" field.
+func EmailNEQ(v string) predicate.User {
+	return predicate.User(sql.FieldNEQ(FieldEmail, v))
+}
+
+// EmailIn applies the In predicate on the "email" field.
+func EmailIn(vs ...string) predicate.User {
+	return predicate.User(sql.FieldIn(FieldEmail, vs...))
+}
+
+// EmailNotIn applies the NotIn predicate on the "email" field.
+func EmailNotIn(vs ...string) predicate.User {
+	return predicate.User(sql.FieldNotIn(FieldEmail, vs...))
+}
+
+// EmailGT applies the GT predicate on the "email" field.
+func EmailGT(v string) predicate.User {
+	return predicate.User(sql.FieldGT(FieldEmail, v))
+}
+
+// EmailGTE applies the GTE predicate on the "email" field.
+func EmailGTE(v string) predicate.User {
+	return predicate.User(sql.FieldGTE(FieldEmail, v))
+}
+
+// EmailLT applies the LT predicate on the "email" field.
+func EmailLT(v string) predicate.User {
+	return predicate.User(sql.FieldLT(FieldEmail, v))
+}
+
+// EmailLTE applies the LTE predicate on the "email" field.
+func EmailLTE(v string) predicate.User {
+	return predicate.User(sql.FieldLTE(FieldEmail, v))
+}
+
+// EmailContains applies the Contains predicate on the "email" field.
+func EmailContains(v string) predicate.User {
+	return predicate.User(sql.FieldContains(FieldEmail, v))
+}
+
+// EmailHasPrefix applies the HasPrefix predicate on the "email" field.
+func EmailHasPrefix(v string) predicate.User {
+	return predicate.User(sql.FieldHasPrefix(FieldEmail, v))
+}
+
+// EmailHasSuffix applies the HasSuffix predicate on the "email" field.
+func EmailHasSuffix(v string) predicate.User {
+	return predicate.User(sql.FieldHasSuffix(FieldEmail, v))
+}
+
+// EmailEqualFold applies the EqualFold predicate on the "email" field.
+func EmailEqualFold(v string) predicate.User {
+	return predicate.User(sql.FieldEqualFold(FieldEmail, v))
+}
+
+// EmailContainsFold applies the ContainsFold predicate on the "email" field.
+func EmailContainsFold(v string) predicate.User {
+	return predicate.User(sql.FieldContainsFold(FieldEmail, v))
+}
+
+// EmailConfirmedAtEQ applies the EQ predicate on the "email_confirmed_at" field.
+func EmailConfirmedAtEQ(v time.Time) predicate.User {
+	return predicate.User(sql.FieldEQ(FieldEmailConfirmedAt, v))
+}
+
+// EmailConfirmedAtNEQ applies the NEQ predicate on the "email_confirmed_at" field.
+func EmailConfirmedAtNEQ(v time.Time) predicate.User {
+	return predicate.User(sql.FieldNEQ(FieldEmailConfirmedAt, v))
+}
+
+// EmailConfirmedAtIn applies the In predicate on the "email_confirmed_at" field.
+func EmailConfirmedAtIn(vs ...time.Time) predicate.User {
+	return predicate.User(sql.FieldIn(FieldEmailConfirmedAt, vs...))
+}
+
+// EmailConfirmedAtNotIn applies the NotIn predicate on the "email_confirmed_at" field.
+func EmailConfirmedAtNotIn(vs ...time.Time) predicate.User {
+	return predicate.User(sql.FieldNotIn(FieldEmailConfirmedAt, vs...))
+}
+
+// EmailConfirmedAtGT applies the GT predicate on the "email_confirmed_at" field.
+func EmailConfirmedAtGT(v time.Time) predicate.User {
+	return predicate.User(sql.FieldGT(FieldEmailConfirmedAt, v))
+}
+
+// EmailConfirmedAtGTE applies the GTE predicate on the "email_confirmed_at" field.
+func EmailConfirmedAtGTE(v time.Time) predicate.User {
+	return predicate.User(sql.FieldGTE(FieldEmailConfirmedAt, v))
+}
+
+// EmailConfirmedAtLT applies the LT predicate on the "email_confirmed_at" field.
+func EmailConfirmedAtLT(v time.Time) predicate.User {
+	return predicate.User(sql.FieldLT(FieldEmailConfirmedAt, v))
+}
+
+// EmailConfirmedAtLTE applies the LTE predicate on the "email_confirmed_at" field.
+func EmailConfirmedAtLTE(v time.Time) predicate.User {
+	return predicate.User(sql.FieldLTE(FieldEmailConfirmedAt, v))
+}
+
+// EmailConfirmedAtIsNil applies the IsNil predicate on the "email_confirmed_at" field.
+func EmailConfirmedAtIsNil() predicate.User {
+	return predicate.User(sql.FieldIsNull(FieldEmailConfirmedAt))
+}
+
+// EmailConfirmedAtNotNil applies the NotNil predicate on the "email_confirmed_at" field.
+func EmailConfirmedAtNotNil() predicate.User {
+	return predicate.User(sql.FieldNotNull(FieldEmailConfirmedAt))
+}
+
+// ConfirmationCodeEQ applies the EQ predicate on the "confirmation_code" field.
+func ConfirmationCodeEQ(v string) predicate.User {
+	return predicate.User(sql.FieldEQ(FieldConfirmationCode, v))
+}
+
+// ConfirmationCodeNEQ applies the NEQ predicate on the "confirmation_code" field.
+func ConfirmationCodeNEQ(v string) predicate.User {
+	return predicate.User(sql.FieldNEQ(FieldConfirmationCode, v))
+}
+
+// ConfirmationCodeIn applies the In predicate on the "confirmation_code" field.
+func ConfirmationCodeIn(vs ...string) predicate.User {
+	return predicate.User(sql.FieldIn(FieldConfirmationCode, vs...))
+}
+
+// ConfirmationCodeNotIn applies the NotIn predicate on the "confirmation_code" field.
+func ConfirmationCodeNotIn(vs ...string) predicate.User {
+	return predicate.User(sql.FieldNotIn(FieldConfirmationCode, vs...))
+}
+
+// ConfirmationCodeGT applies the GT predicate on the "confirmation_code" field.
+func ConfirmationCodeGT(v string) predicate.User {
+	return predicate.User(sql.FieldGT(FieldConfirmationCode, v))
+}
+
+// ConfirmationCodeGTE applies the GTE predicate on the "confirmation_code" field.
+func ConfirmationCodeGTE(v string) predicate.User {
+	return predicate.User(sql.FieldGTE(FieldConfirmationCode, v))
+}
+
+// ConfirmationCodeLT applies the LT predicate on the "confirmation_code" field.
+func ConfirmationCodeLT(v string) predicate.User {
+	return predicate.User(sql.FieldLT(FieldConfirmationCode, v))
+}
+
+// ConfirmationCodeLTE applies the LTE predicate on the "confirmation_code" field.
+func ConfirmationCodeLTE(v string) predicate.User {
+	return predicate.User(sql.FieldLTE(FieldConfirmationCode, v))
+}
+
+// ConfirmationCodeContains applies the Contains predicate on the "confirmation_code" field.
+func ConfirmationCodeContains(v string) predicate.User {
+	return predicate.User(sql.FieldContains(FieldConfirmationCode, v))
+}
+
+// ConfirmationCodeHasPrefix applies the HasPrefix predicate on the "confirmation_code" field.
+func ConfirmationCodeHasPrefix(v string) predicate.User {
+	return predicate.User(sql.FieldHasPrefix(FieldConfirmationCode, v))
+}
+
+// ConfirmationCodeHasSuffix applies the HasSuffix predicate on the "confirmation_code" field.
+func ConfirmationCodeHasSuffix(v string) predicate.User {
+	return predicate.User(sql.FieldHasSuffix(FieldConfirmationCode, v))
+}
+
+// ConfirmationCodeIsNil applies the IsNil predicate on the "confirmation_code" field.
+func ConfirmationCodeIsNil() predicate.User {
+	return predicate.User(sql.FieldIsNull(FieldConfirmationCode))
+}
+
+// ConfirmationCodeNotNil applies the NotNil predicate on the "confirmation_code" field.
+func ConfirmationCodeNotNil() predicate.User {
+	return predicate.User(sql.FieldNotNull(FieldConfirmationCode))
+}
+
+// ConfirmationCodeEqualFold applies the EqualFold predicate on the "confirmation_code" field.
+func ConfirmationCodeEqualFold(v string) predicate.User {
+	return predicate.User(sql.FieldEqualFold(FieldConfirmationCode, v))
+}
+
+// ConfirmationCodeContainsFold applies the ContainsFold predicate on the "confirmation_code" field.
+func ConfirmationCodeContainsFold(v string) predicate.User {
+	return predicate.User(sql.FieldContainsFold(FieldConfirmationCode, v))
 }
 
 // PermissionLevelEQ applies the EQ predicate on the "permission_level" field.
@@ -292,6 +503,46 @@ func PasswordEqualFold(v string) predicate.User {
 // PasswordContainsFold applies the ContainsFold predicate on the "password" field.
 func PasswordContainsFold(v string) predicate.User {
 	return predicate.User(sql.FieldContainsFold(FieldPassword, v))
+}
+
+// CreatedAtEQ applies the EQ predicate on the "created_at" field.
+func CreatedAtEQ(v time.Time) predicate.User {
+	return predicate.User(sql.FieldEQ(FieldCreatedAt, v))
+}
+
+// CreatedAtNEQ applies the NEQ predicate on the "created_at" field.
+func CreatedAtNEQ(v time.Time) predicate.User {
+	return predicate.User(sql.FieldNEQ(FieldCreatedAt, v))
+}
+
+// CreatedAtIn applies the In predicate on the "created_at" field.
+func CreatedAtIn(vs ...time.Time) predicate.User {
+	return predicate.User(sql.FieldIn(FieldCreatedAt, vs...))
+}
+
+// CreatedAtNotIn applies the NotIn predicate on the "created_at" field.
+func CreatedAtNotIn(vs ...time.Time) predicate.User {
+	return predicate.User(sql.FieldNotIn(FieldCreatedAt, vs...))
+}
+
+// CreatedAtGT applies the GT predicate on the "created_at" field.
+func CreatedAtGT(v time.Time) predicate.User {
+	return predicate.User(sql.FieldGT(FieldCreatedAt, v))
+}
+
+// CreatedAtGTE applies the GTE predicate on the "created_at" field.
+func CreatedAtGTE(v time.Time) predicate.User {
+	return predicate.User(sql.FieldGTE(FieldCreatedAt, v))
+}
+
+// CreatedAtLT applies the LT predicate on the "created_at" field.
+func CreatedAtLT(v time.Time) predicate.User {
+	return predicate.User(sql.FieldLT(FieldCreatedAt, v))
+}
+
+// CreatedAtLTE applies the LTE predicate on the "created_at" field.
+func CreatedAtLTE(v time.Time) predicate.User {
+	return predicate.User(sql.FieldLTE(FieldCreatedAt, v))
 }
 
 // HasPlayingFor applies the HasEdge predicate on the "playing_for" edge.

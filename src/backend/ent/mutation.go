@@ -10,6 +10,7 @@ import (
 	"openctfbackend/ent/team"
 	"openctfbackend/ent/user"
 	"sync"
+	"time"
 
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
@@ -577,9 +578,13 @@ type UserMutation struct {
 	typ                string
 	id                 *int
 	username           *string
+	email              *string
+	email_confirmed_at *time.Time
+	confirmation_code  *string
 	permission_level   *user.PermissionLevel
 	description        *string
 	password           *string
+	created_at         *time.Time
 	clearedFields      map[string]struct{}
 	playing_for        map[int]struct{}
 	removedplaying_for map[int]struct{}
@@ -723,6 +728,140 @@ func (m *UserMutation) ResetUsername() {
 	m.username = nil
 }
 
+// SetEmail sets the "email" field.
+func (m *UserMutation) SetEmail(s string) {
+	m.email = &s
+}
+
+// Email returns the value of the "email" field in the mutation.
+func (m *UserMutation) Email() (r string, exists bool) {
+	v := m.email
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldEmail returns the old "email" field's value of the User entity.
+// If the User object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *UserMutation) OldEmail(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldEmail is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldEmail requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldEmail: %w", err)
+	}
+	return oldValue.Email, nil
+}
+
+// ResetEmail resets all changes to the "email" field.
+func (m *UserMutation) ResetEmail() {
+	m.email = nil
+}
+
+// SetEmailConfirmedAt sets the "email_confirmed_at" field.
+func (m *UserMutation) SetEmailConfirmedAt(t time.Time) {
+	m.email_confirmed_at = &t
+}
+
+// EmailConfirmedAt returns the value of the "email_confirmed_at" field in the mutation.
+func (m *UserMutation) EmailConfirmedAt() (r time.Time, exists bool) {
+	v := m.email_confirmed_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldEmailConfirmedAt returns the old "email_confirmed_at" field's value of the User entity.
+// If the User object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *UserMutation) OldEmailConfirmedAt(ctx context.Context) (v *time.Time, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldEmailConfirmedAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldEmailConfirmedAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldEmailConfirmedAt: %w", err)
+	}
+	return oldValue.EmailConfirmedAt, nil
+}
+
+// ClearEmailConfirmedAt clears the value of the "email_confirmed_at" field.
+func (m *UserMutation) ClearEmailConfirmedAt() {
+	m.email_confirmed_at = nil
+	m.clearedFields[user.FieldEmailConfirmedAt] = struct{}{}
+}
+
+// EmailConfirmedAtCleared returns if the "email_confirmed_at" field was cleared in this mutation.
+func (m *UserMutation) EmailConfirmedAtCleared() bool {
+	_, ok := m.clearedFields[user.FieldEmailConfirmedAt]
+	return ok
+}
+
+// ResetEmailConfirmedAt resets all changes to the "email_confirmed_at" field.
+func (m *UserMutation) ResetEmailConfirmedAt() {
+	m.email_confirmed_at = nil
+	delete(m.clearedFields, user.FieldEmailConfirmedAt)
+}
+
+// SetConfirmationCode sets the "confirmation_code" field.
+func (m *UserMutation) SetConfirmationCode(s string) {
+	m.confirmation_code = &s
+}
+
+// ConfirmationCode returns the value of the "confirmation_code" field in the mutation.
+func (m *UserMutation) ConfirmationCode() (r string, exists bool) {
+	v := m.confirmation_code
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldConfirmationCode returns the old "confirmation_code" field's value of the User entity.
+// If the User object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *UserMutation) OldConfirmationCode(ctx context.Context) (v *string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldConfirmationCode is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldConfirmationCode requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldConfirmationCode: %w", err)
+	}
+	return oldValue.ConfirmationCode, nil
+}
+
+// ClearConfirmationCode clears the value of the "confirmation_code" field.
+func (m *UserMutation) ClearConfirmationCode() {
+	m.confirmation_code = nil
+	m.clearedFields[user.FieldConfirmationCode] = struct{}{}
+}
+
+// ConfirmationCodeCleared returns if the "confirmation_code" field was cleared in this mutation.
+func (m *UserMutation) ConfirmationCodeCleared() bool {
+	_, ok := m.clearedFields[user.FieldConfirmationCode]
+	return ok
+}
+
+// ResetConfirmationCode resets all changes to the "confirmation_code" field.
+func (m *UserMutation) ResetConfirmationCode() {
+	m.confirmation_code = nil
+	delete(m.clearedFields, user.FieldConfirmationCode)
+}
+
 // SetPermissionLevel sets the "permission_level" field.
 func (m *UserMutation) SetPermissionLevel(ul user.PermissionLevel) {
 	m.permission_level = &ul
@@ -844,6 +983,42 @@ func (m *UserMutation) ResetPassword() {
 	m.password = nil
 }
 
+// SetCreatedAt sets the "created_at" field.
+func (m *UserMutation) SetCreatedAt(t time.Time) {
+	m.created_at = &t
+}
+
+// CreatedAt returns the value of the "created_at" field in the mutation.
+func (m *UserMutation) CreatedAt() (r time.Time, exists bool) {
+	v := m.created_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldCreatedAt returns the old "created_at" field's value of the User entity.
+// If the User object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *UserMutation) OldCreatedAt(ctx context.Context) (v time.Time, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldCreatedAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldCreatedAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldCreatedAt: %w", err)
+	}
+	return oldValue.CreatedAt, nil
+}
+
+// ResetCreatedAt resets all changes to the "created_at" field.
+func (m *UserMutation) ResetCreatedAt() {
+	m.created_at = nil
+}
+
 // AddPlayingForIDs adds the "playing_for" edge to the Team entity by ids.
 func (m *UserMutation) AddPlayingForIDs(ids ...int) {
 	if m.playing_for == nil {
@@ -932,9 +1107,18 @@ func (m *UserMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *UserMutation) Fields() []string {
-	fields := make([]string, 0, 4)
+	fields := make([]string, 0, 8)
 	if m.username != nil {
 		fields = append(fields, user.FieldUsername)
+	}
+	if m.email != nil {
+		fields = append(fields, user.FieldEmail)
+	}
+	if m.email_confirmed_at != nil {
+		fields = append(fields, user.FieldEmailConfirmedAt)
+	}
+	if m.confirmation_code != nil {
+		fields = append(fields, user.FieldConfirmationCode)
 	}
 	if m.permission_level != nil {
 		fields = append(fields, user.FieldPermissionLevel)
@@ -944,6 +1128,9 @@ func (m *UserMutation) Fields() []string {
 	}
 	if m.password != nil {
 		fields = append(fields, user.FieldPassword)
+	}
+	if m.created_at != nil {
+		fields = append(fields, user.FieldCreatedAt)
 	}
 	return fields
 }
@@ -955,12 +1142,20 @@ func (m *UserMutation) Field(name string) (ent.Value, bool) {
 	switch name {
 	case user.FieldUsername:
 		return m.Username()
+	case user.FieldEmail:
+		return m.Email()
+	case user.FieldEmailConfirmedAt:
+		return m.EmailConfirmedAt()
+	case user.FieldConfirmationCode:
+		return m.ConfirmationCode()
 	case user.FieldPermissionLevel:
 		return m.PermissionLevel()
 	case user.FieldDescription:
 		return m.Description()
 	case user.FieldPassword:
 		return m.Password()
+	case user.FieldCreatedAt:
+		return m.CreatedAt()
 	}
 	return nil, false
 }
@@ -972,12 +1167,20 @@ func (m *UserMutation) OldField(ctx context.Context, name string) (ent.Value, er
 	switch name {
 	case user.FieldUsername:
 		return m.OldUsername(ctx)
+	case user.FieldEmail:
+		return m.OldEmail(ctx)
+	case user.FieldEmailConfirmedAt:
+		return m.OldEmailConfirmedAt(ctx)
+	case user.FieldConfirmationCode:
+		return m.OldConfirmationCode(ctx)
 	case user.FieldPermissionLevel:
 		return m.OldPermissionLevel(ctx)
 	case user.FieldDescription:
 		return m.OldDescription(ctx)
 	case user.FieldPassword:
 		return m.OldPassword(ctx)
+	case user.FieldCreatedAt:
+		return m.OldCreatedAt(ctx)
 	}
 	return nil, fmt.Errorf("unknown User field %s", name)
 }
@@ -993,6 +1196,27 @@ func (m *UserMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetUsername(v)
+		return nil
+	case user.FieldEmail:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetEmail(v)
+		return nil
+	case user.FieldEmailConfirmedAt:
+		v, ok := value.(time.Time)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetEmailConfirmedAt(v)
+		return nil
+	case user.FieldConfirmationCode:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetConfirmationCode(v)
 		return nil
 	case user.FieldPermissionLevel:
 		v, ok := value.(user.PermissionLevel)
@@ -1014,6 +1238,13 @@ func (m *UserMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetPassword(v)
+		return nil
+	case user.FieldCreatedAt:
+		v, ok := value.(time.Time)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCreatedAt(v)
 		return nil
 	}
 	return fmt.Errorf("unknown User field %s", name)
@@ -1045,6 +1276,12 @@ func (m *UserMutation) AddField(name string, value ent.Value) error {
 // mutation.
 func (m *UserMutation) ClearedFields() []string {
 	var fields []string
+	if m.FieldCleared(user.FieldEmailConfirmedAt) {
+		fields = append(fields, user.FieldEmailConfirmedAt)
+	}
+	if m.FieldCleared(user.FieldConfirmationCode) {
+		fields = append(fields, user.FieldConfirmationCode)
+	}
 	if m.FieldCleared(user.FieldDescription) {
 		fields = append(fields, user.FieldDescription)
 	}
@@ -1062,6 +1299,12 @@ func (m *UserMutation) FieldCleared(name string) bool {
 // error if the field is not defined in the schema.
 func (m *UserMutation) ClearField(name string) error {
 	switch name {
+	case user.FieldEmailConfirmedAt:
+		m.ClearEmailConfirmedAt()
+		return nil
+	case user.FieldConfirmationCode:
+		m.ClearConfirmationCode()
+		return nil
 	case user.FieldDescription:
 		m.ClearDescription()
 		return nil
@@ -1076,6 +1319,15 @@ func (m *UserMutation) ResetField(name string) error {
 	case user.FieldUsername:
 		m.ResetUsername()
 		return nil
+	case user.FieldEmail:
+		m.ResetEmail()
+		return nil
+	case user.FieldEmailConfirmedAt:
+		m.ResetEmailConfirmedAt()
+		return nil
+	case user.FieldConfirmationCode:
+		m.ResetConfirmationCode()
+		return nil
 	case user.FieldPermissionLevel:
 		m.ResetPermissionLevel()
 		return nil
@@ -1084,6 +1336,9 @@ func (m *UserMutation) ResetField(name string) error {
 		return nil
 	case user.FieldPassword:
 		m.ResetPassword()
+		return nil
+	case user.FieldCreatedAt:
+		m.ResetCreatedAt()
 		return nil
 	}
 	return fmt.Errorf("unknown User field %s", name)
