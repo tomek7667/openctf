@@ -21,7 +21,7 @@ func New(port string) *Client {
 }
 
 func (c *Client) Serve() {
-	slog.Info("starting rest client", "port", c.Port)
+	slog.Info("starting rest client", "port", c.Port, "mode", gin.Mode())
 	c.Router.Use(gin.Recovery())
 	c.Router.Use(
 		gin.LoggerWithFormatter(func(param gin.LogFormatterParams) string {

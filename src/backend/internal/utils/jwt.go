@@ -1,0 +1,72 @@
+package utils
+
+import (
+	"log/slog"
+	"os"
+	"time"
+
+	"openctfbackend/ent"
+
+	"github.com/golang-jwt/jwt"
+)
+
+func JwtEncode(claims map[string]interface{}, secret string) (string, error) {
+	t := jwt.NewWithClaims(
+		jwt.SigningMethodHS256,
+		jwt.MapClaims(claims),
+	)
+	return t.SignedString([]byte(secret))
+}
+
+func JwtVerify(token, secret string) (map[string]interface{}, error) {
+	t, err := jwt.Parse(token, func(t *jwt.Token) (interface{}, error) {
+		return []byte(secret), nil
+	})
+	if err != nil {
+		return nil, err
+	}
+	return t.Claims.(jwt.MapClaims), nil
+}
+
+func GetToken(user *ent.User) (string, error) {
+	jwtSecret := Getenv(
+		"JWT_SECRET",
+		"8c7fafb856380624fa60b22e7baf311d",
+	)
+	if jwtSecret == "8c7fafb856380624fa60b22e7baf311d" {
+		slog.Warn(
+			"using development JWT secret, this should never occur on prod",
+			"JWT_SECRET env var", os.Getenv("JWT_SECRET"),
+		)
+	}
+
+	return JwtEncode(
+		map[string]interface{}{
+			"sub":              user.ID,
+			"id":               user.ID,
+			"iat":              time.Now().Unix(),
+			"username":         user.Username,
+			"permission_level": user.PermissionLevel,
+		},
+		jwtSecret,
+	)
+}
+
+func VerifyToken(token string) (string, error) {
+	jwtSecret := Getenv(
+		"JWT_SECRET",
+		"8c7fafb856380624fa60b22e7baf311d",
+	)
+	if jwtSecret == "8c7fafb856380624fa60b22e7baf311d" {
+		slog.Warn(
+			"using development JWT secret, this should never occur on prod",
+			"JWT_SECRET env var", os.Getenv("JWT_SECRET"),
+		)
+	}
+
+	data, err := JwtVerify(token, jwtSecret)
+	if err != nil {
+		return "", err
+	}
+	return data["id"].(string), nil
+}
