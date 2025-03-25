@@ -3,14 +3,14 @@ package openctf
 import (
 	"net/http"
 
-	"openctfbackend/internal/ent"
 	"openctfbackend/internal/rest"
+	"openctfbackend/internal/service"
 
 	"github.com/gin-gonic/gin"
 )
 
 func (h *Handler) AuthLogin(ctx *gin.Context) {
-	dto := ent.LoginDto{}
+	dto := service.LoginDto{}
 	err := ctx.ShouldBind(&dto)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, map[string]any{
@@ -20,7 +20,7 @@ func (h *Handler) AuthLogin(ctx *gin.Context) {
 		})
 		return
 	}
-	user, token, err := h.EntClient.Login(ctx, &dto)
+	user, token, err := h.ServiceClient.Login(ctx, &dto)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, map[string]any{
 			"success": false,

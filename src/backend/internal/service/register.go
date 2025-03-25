@@ -1,4 +1,4 @@
-package ent
+package service
 
 import (
 	"context"

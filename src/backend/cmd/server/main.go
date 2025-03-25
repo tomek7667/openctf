@@ -4,16 +4,16 @@ import (
 	"fmt"
 	"log/slog"
 
-	"openctfbackend/internal/ent"
 	"openctfbackend/internal/logger"
 	"openctfbackend/internal/openctf"
 	"openctfbackend/internal/rest"
+	"openctfbackend/internal/service"
 	"openctfbackend/internal/utils"
 )
 
 var (
-	restClient *rest.Client
-	entClient  *ent.Client
+	restClient    *rest.Client
+	serviceClient *service.Client
 )
 
 func getCreds() string {
@@ -33,7 +33,7 @@ func init() {
 	logger.SetLogLevel()
 
 	restClient = rest.New(utils.Getenv("PORT", "7999"))
-	entClient, err = ent.New(getCreds())
+	serviceClient, err = service.New(getCreds())
 	if err != nil {
 		slog.Error("initializing ent client failed", "err", err)
 		panic(err)
@@ -41,7 +41,7 @@ func init() {
 }
 
 func main() {
-	handler := openctf.New(restClient, entClient)
+	handler := openctf.New(restClient, serviceClient)
 
 	handler.Handle()
 }

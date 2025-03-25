@@ -3,7 +3,7 @@ package openctf
 import (
 	"log/slog"
 
-	"openctfbackend/internal/ent"
+	"openctfbackend/internal/service"
 
 	ratelimit "github.com/JGLTechnologies/gin-rate-limit"
 	"github.com/gin-gonic/gin"
@@ -20,14 +20,14 @@ type RestClient interface {
 }
 
 type Handler struct {
-	RestClient RestClient
-	EntClient  *ent.Client
+	RestClient    RestClient
+	ServiceClient *service.Client
 }
 
-func New(restClient RestClient, entClient *ent.Client) *Handler {
+func New(restClient RestClient, serviceClient *service.Client) *Handler {
 	return &Handler{
-		RestClient: restClient,
-		EntClient:  entClient,
+		RestClient:    restClient,
+		ServiceClient: serviceClient,
 	}
 }
 
@@ -37,7 +37,7 @@ func (h *Handler) Handle() {
 
 	h.AddRoutes_ApiAuth()
 
-	defer h.EntClient.C.Close()
+	defer h.ServiceClient.C.Close()
 	slog.Info("serving")
 	h.RestClient.Serve()
 }
