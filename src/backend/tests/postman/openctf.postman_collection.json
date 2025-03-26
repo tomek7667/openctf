@@ -39,6 +39,23 @@
 				},
 				{
 					"name": "/api/auth/register (example)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"    let {data: {token}} = pm.response.json()\r",
+									"    pm.environment.set(\"EXAMPLE_TOKEN\", token);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
 					"request": {
 						"method": "POST",
 						"header": [],
@@ -172,7 +189,13 @@
 					},
 					"request": {
 						"method": "GET",
-						"header": [],
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3NDI5NDcyNDEsImlkIjoyNywicGVybWlzc2lvbl9sZXZlbCI6InBsYXllciIsInN1YiI6MjcsInVzZXJuYW1lIjoidG9tZWsifQ.ey",
+								"type": "text"
+							}
+						],
 						"body": {
 							"mode": "raw",
 							"raw": "",
