@@ -14,6 +14,7 @@ var (
 		{Name: "name", Type: field.TypeString, Unique: true},
 		{Name: "description", Type: field.TypeString, Nullable: true},
 		{Name: "logo", Type: field.TypeBytes, Nullable: true, Size: 52428800},
+		{Name: "confirmed_at", Type: field.TypeTime, Nullable: true},
 		{Name: "team_captain", Type: field.TypeInt, Nullable: true},
 		{Name: "user_playing_for", Type: field.TypeInt, Nullable: true},
 	}
@@ -25,13 +26,13 @@ var (
 		ForeignKeys: []*schema.ForeignKey{
 			{
 				Symbol:     "teams_users_captain",
-				Columns:    []*schema.Column{TeamsColumns[4]},
+				Columns:    []*schema.Column{TeamsColumns[5]},
 				RefColumns: []*schema.Column{UsersColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 			{
 				Symbol:     "teams_users_playing_for",
-				Columns:    []*schema.Column{TeamsColumns[5]},
+				Columns:    []*schema.Column{TeamsColumns[6]},
 				RefColumns: []*schema.Column{UsersColumns[0]},
 				OnDelete:   schema.SetNull,
 			},

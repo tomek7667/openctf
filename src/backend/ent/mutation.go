@@ -38,6 +38,7 @@ type TeamMutation struct {
 	name           *string
 	description    *string
 	logo           *[]byte
+	confirmed_at   *time.Time
 	clearedFields  map[string]struct{}
 	captain        *int
 	clearedcaptain bool
@@ -278,6 +279,55 @@ func (m *TeamMutation) ResetLogo() {
 	delete(m.clearedFields, team.FieldLogo)
 }
 
+// SetConfirmedAt sets the "confirmed_at" field.
+func (m *TeamMutation) SetConfirmedAt(t time.Time) {
+	m.confirmed_at = &t
+}
+
+// ConfirmedAt returns the value of the "confirmed_at" field in the mutation.
+func (m *TeamMutation) ConfirmedAt() (r time.Time, exists bool) {
+	v := m.confirmed_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldConfirmedAt returns the old "confirmed_at" field's value of the Team entity.
+// If the Team object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *TeamMutation) OldConfirmedAt(ctx context.Context) (v *time.Time, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldConfirmedAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldConfirmedAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldConfirmedAt: %w", err)
+	}
+	return oldValue.ConfirmedAt, nil
+}
+
+// ClearConfirmedAt clears the value of the "confirmed_at" field.
+func (m *TeamMutation) ClearConfirmedAt() {
+	m.confirmed_at = nil
+	m.clearedFields[team.FieldConfirmedAt] = struct{}{}
+}
+
+// ConfirmedAtCleared returns if the "confirmed_at" field was cleared in this mutation.
+func (m *TeamMutation) ConfirmedAtCleared() bool {
+	_, ok := m.clearedFields[team.FieldConfirmedAt]
+	return ok
+}
+
+// ResetConfirmedAt resets all changes to the "confirmed_at" field.
+func (m *TeamMutation) ResetConfirmedAt() {
+	m.confirmed_at = nil
+	delete(m.clearedFields, team.FieldConfirmedAt)
+}
+
 // SetCaptainID sets the "captain" edge to the User entity by id.
 func (m *TeamMutation) SetCaptainID(id int) {
 	m.captain = &id
@@ -351,7 +401,7 @@ func (m *TeamMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *TeamMutation) Fields() []string {
-	fields := make([]string, 0, 3)
+	fields := make([]string, 0, 4)
 	if m.name != nil {
 		fields = append(fields, team.FieldName)
 	}
@@ -360,6 +410,9 @@ func (m *TeamMutation) Fields() []string {
 	}
 	if m.logo != nil {
 		fields = append(fields, team.FieldLogo)
+	}
+	if m.confirmed_at != nil {
+		fields = append(fields, team.FieldConfirmedAt)
 	}
 	return fields
 }
@@ -375,6 +428,8 @@ func (m *TeamMutation) Field(name string) (ent.Value, bool) {
 		return m.Description()
 	case team.FieldLogo:
 		return m.Logo()
+	case team.FieldConfirmedAt:
+		return m.ConfirmedAt()
 	}
 	return nil, false
 }
@@ -390,6 +445,8 @@ func (m *TeamMutation) OldField(ctx context.Context, name string) (ent.Value, er
 		return m.OldDescription(ctx)
 	case team.FieldLogo:
 		return m.OldLogo(ctx)
+	case team.FieldConfirmedAt:
+		return m.OldConfirmedAt(ctx)
 	}
 	return nil, fmt.Errorf("unknown Team field %s", name)
 }
@@ -419,6 +476,13 @@ func (m *TeamMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetLogo(v)
+		return nil
+	case team.FieldConfirmedAt:
+		v, ok := value.(time.Time)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetConfirmedAt(v)
 		return nil
 	}
 	return fmt.Errorf("unknown Team field %s", name)
@@ -456,6 +520,9 @@ func (m *TeamMutation) ClearedFields() []string {
 	if m.FieldCleared(team.FieldLogo) {
 		fields = append(fields, team.FieldLogo)
 	}
+	if m.FieldCleared(team.FieldConfirmedAt) {
+		fields = append(fields, team.FieldConfirmedAt)
+	}
 	return fields
 }
 
@@ -476,6 +543,9 @@ func (m *TeamMutation) ClearField(name string) error {
 	case team.FieldLogo:
 		m.ClearLogo()
 		return nil
+	case team.FieldConfirmedAt:
+		m.ClearConfirmedAt()
+		return nil
 	}
 	return fmt.Errorf("unknown Team nullable field %s", name)
 }
@@ -492,6 +562,9 @@ func (m *TeamMutation) ResetField(name string) error {
 		return nil
 	case team.FieldLogo:
 		m.ResetLogo()
+		return nil
+	case team.FieldConfirmedAt:
+		m.ResetConfirmedAt()
 		return nil
 	}
 	return fmt.Errorf("unknown Team field %s", name)

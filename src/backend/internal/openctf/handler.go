@@ -36,6 +36,7 @@ func (h *Handler) Handle() {
 	go h.DbHealth()
 
 	h.AddRoutes_ApiAuth()
+	h.AddRoutes_ApiTeams()
 
 	defer h.ServiceClient.C.Close()
 	slog.Info("serving")

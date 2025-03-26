@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"openctfbackend/ent/team"
 	"openctfbackend/ent/user"
+	"time"
 
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
@@ -43,6 +44,20 @@ func (tc *TeamCreate) SetNillableDescription(s *string) *TeamCreate {
 // SetLogo sets the "logo" field.
 func (tc *TeamCreate) SetLogo(b []byte) *TeamCreate {
 	tc.mutation.SetLogo(b)
+	return tc
+}
+
+// SetConfirmedAt sets the "confirmed_at" field.
+func (tc *TeamCreate) SetConfirmedAt(t time.Time) *TeamCreate {
+	tc.mutation.SetConfirmedAt(t)
+	return tc
+}
+
+// SetNillableConfirmedAt sets the "confirmed_at" field if the given value is not nil.
+func (tc *TeamCreate) SetNillableConfirmedAt(t *time.Time) *TeamCreate {
+	if t != nil {
+		tc.SetConfirmedAt(*t)
+	}
 	return tc
 }
 
@@ -149,6 +164,10 @@ func (tc *TeamCreate) createSpec() (*Team, *sqlgraph.CreateSpec) {
 	if value, ok := tc.mutation.Logo(); ok {
 		_spec.SetField(team.FieldLogo, field.TypeBytes, value)
 		_node.Logo = value
+	}
+	if value, ok := tc.mutation.ConfirmedAt(); ok {
+		_spec.SetField(team.FieldConfirmedAt, field.TypeTime, value)
+		_node.ConfirmedAt = &value
 	}
 	if nodes := tc.mutation.CaptainIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{

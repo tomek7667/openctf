@@ -4,6 +4,7 @@ package team
 
 import (
 	"openctfbackend/ent/predicate"
+	"time"
 
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
@@ -67,6 +68,11 @@ func Description(v string) predicate.Team {
 // Logo applies equality check predicate on the "logo" field. It's identical to LogoEQ.
 func Logo(v []byte) predicate.Team {
 	return predicate.Team(sql.FieldEQ(FieldLogo, v))
+}
+
+// ConfirmedAt applies equality check predicate on the "confirmed_at" field. It's identical to ConfirmedAtEQ.
+func ConfirmedAt(v time.Time) predicate.Team {
+	return predicate.Team(sql.FieldEQ(FieldConfirmedAt, v))
 }
 
 // NameEQ applies the EQ predicate on the "name" field.
@@ -257,6 +263,56 @@ func LogoIsNil() predicate.Team {
 // LogoNotNil applies the NotNil predicate on the "logo" field.
 func LogoNotNil() predicate.Team {
 	return predicate.Team(sql.FieldNotNull(FieldLogo))
+}
+
+// ConfirmedAtEQ applies the EQ predicate on the "confirmed_at" field.
+func ConfirmedAtEQ(v time.Time) predicate.Team {
+	return predicate.Team(sql.FieldEQ(FieldConfirmedAt, v))
+}
+
+// ConfirmedAtNEQ applies the NEQ predicate on the "confirmed_at" field.
+func ConfirmedAtNEQ(v time.Time) predicate.Team {
+	return predicate.Team(sql.FieldNEQ(FieldConfirmedAt, v))
+}
+
+// ConfirmedAtIn applies the In predicate on the "confirmed_at" field.
+func ConfirmedAtIn(vs ...time.Time) predicate.Team {
+	return predicate.Team(sql.FieldIn(FieldConfirmedAt, vs...))
+}
+
+// ConfirmedAtNotIn applies the NotIn predicate on the "confirmed_at" field.
+func ConfirmedAtNotIn(vs ...time.Time) predicate.Team {
+	return predicate.Team(sql.FieldNotIn(FieldConfirmedAt, vs...))
+}
+
+// ConfirmedAtGT applies the GT predicate on the "confirmed_at" field.
+func ConfirmedAtGT(v time.Time) predicate.Team {
+	return predicate.Team(sql.FieldGT(FieldConfirmedAt, v))
+}
+
+// ConfirmedAtGTE applies the GTE predicate on the "confirmed_at" field.
+func ConfirmedAtGTE(v time.Time) predicate.Team {
+	return predicate.Team(sql.FieldGTE(FieldConfirmedAt, v))
+}
+
+// ConfirmedAtLT applies the LT predicate on the "confirmed_at" field.
+func ConfirmedAtLT(v time.Time) predicate.Team {
+	return predicate.Team(sql.FieldLT(FieldConfirmedAt, v))
+}
+
+// ConfirmedAtLTE applies the LTE predicate on the "confirmed_at" field.
+func ConfirmedAtLTE(v time.Time) predicate.Team {
+	return predicate.Team(sql.FieldLTE(FieldConfirmedAt, v))
+}
+
+// ConfirmedAtIsNil applies the IsNil predicate on the "confirmed_at" field.
+func ConfirmedAtIsNil() predicate.Team {
+	return predicate.Team(sql.FieldIsNull(FieldConfirmedAt))
+}
+
+// ConfirmedAtNotNil applies the NotNil predicate on the "confirmed_at" field.
+func ConfirmedAtNotNil() predicate.Team {
+	return predicate.Team(sql.FieldNotNull(FieldConfirmedAt))
 }
 
 // HasCaptain applies the HasEdge predicate on the "captain" edge.
