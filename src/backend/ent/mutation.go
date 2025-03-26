@@ -32,19 +32,21 @@ const (
 // TeamMutation represents an operation that mutates the Team nodes in the graph.
 type TeamMutation struct {
 	config
-	op             Op
-	typ            string
-	id             *int
-	name           *string
-	description    *string
-	logo           *[]byte
-	verified_at    *time.Time
-	clearedFields  map[string]struct{}
-	captain        *int
-	clearedcaptain bool
-	done           bool
-	oldValue       func(context.Context) (*Team, error)
-	predicates     []predicate.Team
+	op                 Op
+	typ                string
+	id                 *int
+	name               *string
+	description        *string
+	logo               *[]byte
+	verified_at        *time.Time
+	clearedFields      map[string]struct{}
+	captain            *int
+	clearedcaptain     bool
+	verified_by        *int
+	clearedverified_by bool
+	done               bool
+	oldValue           func(context.Context) (*Team, error)
+	predicates         []predicate.Team
 }
 
 var _ ent.Mutation = (*TeamMutation)(nil)
@@ -367,6 +369,45 @@ func (m *TeamMutation) ResetCaptain() {
 	m.clearedcaptain = false
 }
 
+// SetVerifiedByID sets the "verified_by" edge to the User entity by id.
+func (m *TeamMutation) SetVerifiedByID(id int) {
+	m.verified_by = &id
+}
+
+// ClearVerifiedBy clears the "verified_by" edge to the User entity.
+func (m *TeamMutation) ClearVerifiedBy() {
+	m.clearedverified_by = true
+}
+
+// VerifiedByCleared reports if the "verified_by" edge to the User entity was cleared.
+func (m *TeamMutation) VerifiedByCleared() bool {
+	return m.clearedverified_by
+}
+
+// VerifiedByID returns the "verified_by" edge ID in the mutation.
+func (m *TeamMutation) VerifiedByID() (id int, exists bool) {
+	if m.verified_by != nil {
+		return *m.verified_by, true
+	}
+	return
+}
+
+// VerifiedByIDs returns the "verified_by" edge IDs in the mutation.
+// Note that IDs always returns len(IDs) <= 1 for unique edges, and you should use
+// VerifiedByID instead. It exists only for internal usage by the builders.
+func (m *TeamMutation) VerifiedByIDs() (ids []int) {
+	if id := m.verified_by; id != nil {
+		ids = append(ids, *id)
+	}
+	return
+}
+
+// ResetVerifiedBy resets all changes to the "verified_by" edge.
+func (m *TeamMutation) ResetVerifiedBy() {
+	m.verified_by = nil
+	m.clearedverified_by = false
+}
+
 // Where appends a list predicates to the TeamMutation builder.
 func (m *TeamMutation) Where(ps ...predicate.Team) {
 	m.predicates = append(m.predicates, ps...)
@@ -572,9 +613,12 @@ func (m *TeamMutation) ResetField(name string) error {
 
 // AddedEdges returns all edge names that were set/added in this mutation.
 func (m *TeamMutation) AddedEdges() []string {
-	edges := make([]string, 0, 1)
+	edges := make([]string, 0, 2)
 	if m.captain != nil {
 		edges = append(edges, team.EdgeCaptain)
+	}
+	if m.verified_by != nil {
+		edges = append(edges, team.EdgeVerifiedBy)
 	}
 	return edges
 }
@@ -587,13 +631,17 @@ func (m *TeamMutation) AddedIDs(name string) []ent.Value {
 		if id := m.captain; id != nil {
 			return []ent.Value{*id}
 		}
+	case team.EdgeVerifiedBy:
+		if id := m.verified_by; id != nil {
+			return []ent.Value{*id}
+		}
 	}
 	return nil
 }
 
 // RemovedEdges returns all edge names that were removed in this mutation.
 func (m *TeamMutation) RemovedEdges() []string {
-	edges := make([]string, 0, 1)
+	edges := make([]string, 0, 2)
 	return edges
 }
 
@@ -605,9 +653,12 @@ func (m *TeamMutation) RemovedIDs(name string) []ent.Value {
 
 // ClearedEdges returns all edge names that were cleared in this mutation.
 func (m *TeamMutation) ClearedEdges() []string {
-	edges := make([]string, 0, 1)
+	edges := make([]string, 0, 2)
 	if m.clearedcaptain {
 		edges = append(edges, team.EdgeCaptain)
+	}
+	if m.clearedverified_by {
+		edges = append(edges, team.EdgeVerifiedBy)
 	}
 	return edges
 }
@@ -618,6 +669,8 @@ func (m *TeamMutation) EdgeCleared(name string) bool {
 	switch name {
 	case team.EdgeCaptain:
 		return m.clearedcaptain
+	case team.EdgeVerifiedBy:
+		return m.clearedverified_by
 	}
 	return false
 }
@@ -629,6 +682,9 @@ func (m *TeamMutation) ClearEdge(name string) error {
 	case team.EdgeCaptain:
 		m.ClearCaptain()
 		return nil
+	case team.EdgeVerifiedBy:
+		m.ClearVerifiedBy()
+		return nil
 	}
 	return fmt.Errorf("unknown Team unique edge %s", name)
 }
@@ -639,6 +695,9 @@ func (m *TeamMutation) ResetEdge(name string) error {
 	switch name {
 	case team.EdgeCaptain:
 		m.ResetCaptain()
+		return nil
+	case team.EdgeVerifiedBy:
+		m.ResetVerifiedBy()
 		return nil
 	}
 	return fmt.Errorf("unknown Team edge %s", name)

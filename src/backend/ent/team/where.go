@@ -338,6 +338,29 @@ func HasCaptainWith(preds ...predicate.User) predicate.Team {
 	})
 }
 
+// HasVerifiedBy applies the HasEdge predicate on the "verified_by" edge.
+func HasVerifiedBy() predicate.Team {
+	return predicate.Team(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, false, VerifiedByTable, VerifiedByColumn),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasVerifiedByWith applies the HasEdge predicate on the "verified_by" edge with a given conditions (other predicates).
+func HasVerifiedByWith(preds ...predicate.User) predicate.Team {
+	return predicate.Team(func(s *sql.Selector) {
+		step := newVerifiedByStep()
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
+}
+
 // And groups predicates with the AND operator between them.
 func And(predicates ...predicate.Team) predicate.Team {
 	return predicate.Team(sql.AndPredicates(predicates...))

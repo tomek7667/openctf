@@ -27,5 +27,6 @@ func (Team) Fields() []ent.Field {
 func (Team) Edges() []ent.Edge {
 	return []ent.Edge{
 		edge.To("captain", User.Type).Unique(),
+		edge.To("verified_by", User.Type).Unique(),
 	}
 }

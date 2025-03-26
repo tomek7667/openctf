@@ -19,12 +19,13 @@ import (
 // TeamQuery is the builder for querying Team entities.
 type TeamQuery struct {
 	config
-	ctx         *QueryContext
-	order       []team.OrderOption
-	inters      []Interceptor
-	predicates  []predicate.Team
-	withCaptain *UserQuery
-	withFKs     bool
+	ctx            *QueryContext
+	order          []team.OrderOption
+	inters         []Interceptor
+	predicates     []predicate.Team
+	withCaptain    *UserQuery
+	withVerifiedBy *UserQuery
+	withFKs        bool
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -76,6 +77,28 @@ func (tq *TeamQuery) QueryCaptain() *UserQuery {
 			sqlgraph.From(team.Table, team.FieldID, selector),
 			sqlgraph.To(user.Table, user.FieldID),
 			sqlgraph.Edge(sqlgraph.M2O, false, team.CaptainTable, team.CaptainColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(tq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
+}
+
+// QueryVerifiedBy chains the current query on the "verified_by" edge.
+func (tq *TeamQuery) QueryVerifiedBy() *UserQuery {
+	query := (&UserClient{config: tq.config}).Query()
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := tq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		selector := tq.sqlQuery(ctx)
+		if err := selector.Err(); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(team.Table, team.FieldID, selector),
+			sqlgraph.To(user.Table, user.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, false, team.VerifiedByTable, team.VerifiedByColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(tq.driver.Dialect(), step)
 		return fromU, nil
@@ -270,12 +293,13 @@ func (tq *TeamQuery) Clone() *TeamQuery {
 		return nil
 	}
 	return &TeamQuery{
-		config:      tq.config,
-		ctx:         tq.ctx.Clone(),
-		order:       append([]team.OrderOption{}, tq.order...),
-		inters:      append([]Interceptor{}, tq.inters...),
-		predicates:  append([]predicate.Team{}, tq.predicates...),
-		withCaptain: tq.withCaptain.Clone(),
+		config:         tq.config,
+		ctx:            tq.ctx.Clone(),
+		order:          append([]team.OrderOption{}, tq.order...),
+		inters:         append([]Interceptor{}, tq.inters...),
+		predicates:     append([]predicate.Team{}, tq.predicates...),
+		withCaptain:    tq.withCaptain.Clone(),
+		withVerifiedBy: tq.withVerifiedBy.Clone(),
 		// clone intermediate query.
 		sql:  tq.sql.Clone(),
 		path: tq.path,
@@ -290,6 +314,17 @@ func (tq *TeamQuery) WithCaptain(opts ...func(*UserQuery)) *TeamQuery {
 		opt(query)
 	}
 	tq.withCaptain = query
+	return tq
+}
+
+// WithVerifiedBy tells the query-builder to eager-load the nodes that are connected to
+// the "verified_by" edge. The optional arguments are used to configure the query builder of the edge.
+func (tq *TeamQuery) WithVerifiedBy(opts ...func(*UserQuery)) *TeamQuery {
+	query := (&UserClient{config: tq.config}).Query()
+	for _, opt := range opts {
+		opt(query)
+	}
+	tq.withVerifiedBy = query
 	return tq
 }
 
@@ -372,11 +407,12 @@ func (tq *TeamQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Team, e
 		nodes       = []*Team{}
 		withFKs     = tq.withFKs
 		_spec       = tq.querySpec()
-		loadedTypes = [1]bool{
+		loadedTypes = [2]bool{
 			tq.withCaptain != nil,
+			tq.withVerifiedBy != nil,
 		}
 	)
-	if tq.withCaptain != nil {
+	if tq.withCaptain != nil || tq.withVerifiedBy != nil {
 		withFKs = true
 	}
 	if withFKs {
@@ -403,6 +439,12 @@ func (tq *TeamQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Team, e
 	if query := tq.withCaptain; query != nil {
 		if err := tq.loadCaptain(ctx, query, nodes, nil,
 			func(n *Team, e *User) { n.Edges.Captain = e }); err != nil {
+			return nil, err
+		}
+	}
+	if query := tq.withVerifiedBy; query != nil {
+		if err := tq.loadVerifiedBy(ctx, query, nodes, nil,
+			func(n *Team, e *User) { n.Edges.VerifiedBy = e }); err != nil {
 			return nil, err
 		}
 	}
@@ -434,6 +476,38 @@ func (tq *TeamQuery) loadCaptain(ctx context.Context, query *UserQuery, nodes []
 		nodes, ok := nodeids[n.ID]
 		if !ok {
 			return fmt.Errorf(`unexpected foreign-key "team_captain" returned %v`, n.ID)
+		}
+		for i := range nodes {
+			assign(nodes[i], n)
+		}
+	}
+	return nil
+}
+func (tq *TeamQuery) loadVerifiedBy(ctx context.Context, query *UserQuery, nodes []*Team, init func(*Team), assign func(*Team, *User)) error {
+	ids := make([]int, 0, len(nodes))
+	nodeids := make(map[int][]*Team)
+	for i := range nodes {
+		if nodes[i].team_verified_by == nil {
+			continue
+		}
+		fk := *nodes[i].team_verified_by
+		if _, ok := nodeids[fk]; !ok {
+			ids = append(ids, fk)
+		}
+		nodeids[fk] = append(nodeids[fk], nodes[i])
+	}
+	if len(ids) == 0 {
+		return nil
+	}
+	query.Where(user.IDIn(ids...))
+	neighbors, err := query.All(ctx)
+	if err != nil {
+		return err
+	}
+	for _, n := range neighbors {
+		nodes, ok := nodeids[n.ID]
+		if !ok {
+			return fmt.Errorf(`unexpected foreign-key "team_verified_by" returned %v`, n.ID)
 		}
 		for i := range nodes {
 			assign(nodes[i], n)

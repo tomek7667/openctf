@@ -22,6 +22,8 @@ const (
 	FieldVerifiedAt = "verified_at"
 	// EdgeCaptain holds the string denoting the captain edge name in mutations.
 	EdgeCaptain = "captain"
+	// EdgeVerifiedBy holds the string denoting the verified_by edge name in mutations.
+	EdgeVerifiedBy = "verified_by"
 	// Table holds the table name of the team in the database.
 	Table = "teams"
 	// CaptainTable is the table that holds the captain relation/edge.
@@ -31,6 +33,13 @@ const (
 	CaptainInverseTable = "users"
 	// CaptainColumn is the table column denoting the captain relation/edge.
 	CaptainColumn = "team_captain"
+	// VerifiedByTable is the table that holds the verified_by relation/edge.
+	VerifiedByTable = "teams"
+	// VerifiedByInverseTable is the table name for the User entity.
+	// It exists in this package in order to avoid circular dependency with the "user" package.
+	VerifiedByInverseTable = "users"
+	// VerifiedByColumn is the table column denoting the verified_by relation/edge.
+	VerifiedByColumn = "team_verified_by"
 )
 
 // Columns holds all SQL columns for team fields.
@@ -46,6 +55,7 @@ var Columns = []string{
 // table and are not defined as standalone fields in the schema.
 var ForeignKeys = []string{
 	"team_captain",
+	"team_verified_by",
 	"user_playing_for",
 }
 
@@ -100,10 +110,24 @@ func ByCaptainField(field string, opts ...sql.OrderTermOption) OrderOption {
 		sqlgraph.OrderByNeighborTerms(s, newCaptainStep(), sql.OrderByField(field, opts...))
 	}
 }
+
+// ByVerifiedByField orders the results by verified_by field.
+func ByVerifiedByField(field string, opts ...sql.OrderTermOption) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborTerms(s, newVerifiedByStep(), sql.OrderByField(field, opts...))
+	}
+}
 func newCaptainStep() *sqlgraph.Step {
 	return sqlgraph.NewStep(
 		sqlgraph.From(Table, FieldID),
 		sqlgraph.To(CaptainInverseTable, FieldID),
 		sqlgraph.Edge(sqlgraph.M2O, false, CaptainTable, CaptainColumn),
+	)
+}
+func newVerifiedByStep() *sqlgraph.Step {
+	return sqlgraph.NewStep(
+		sqlgraph.From(Table, FieldID),
+		sqlgraph.To(VerifiedByInverseTable, FieldID),
+		sqlgraph.Edge(sqlgraph.M2O, false, VerifiedByTable, VerifiedByColumn),
 	)
 }

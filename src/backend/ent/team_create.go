@@ -80,6 +80,25 @@ func (tc *TeamCreate) SetCaptain(u *User) *TeamCreate {
 	return tc.SetCaptainID(u.ID)
 }
 
+// SetVerifiedByID sets the "verified_by" edge to the User entity by ID.
+func (tc *TeamCreate) SetVerifiedByID(id int) *TeamCreate {
+	tc.mutation.SetVerifiedByID(id)
+	return tc
+}
+
+// SetNillableVerifiedByID sets the "verified_by" edge to the User entity by ID if the given value is not nil.
+func (tc *TeamCreate) SetNillableVerifiedByID(id *int) *TeamCreate {
+	if id != nil {
+		tc = tc.SetVerifiedByID(*id)
+	}
+	return tc
+}
+
+// SetVerifiedBy sets the "verified_by" edge to the User entity.
+func (tc *TeamCreate) SetVerifiedBy(u *User) *TeamCreate {
+	return tc.SetVerifiedByID(u.ID)
+}
+
 // Mutation returns the TeamMutation object of the builder.
 func (tc *TeamCreate) Mutation() *TeamMutation {
 	return tc.mutation
@@ -184,6 +203,23 @@ func (tc *TeamCreate) createSpec() (*Team, *sqlgraph.CreateSpec) {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
 		_node.team_captain = &nodes[0]
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := tc.mutation.VerifiedByIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: false,
+			Table:   team.VerifiedByTable,
+			Columns: []string{team.VerifiedByColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(user.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_node.team_verified_by = &nodes[0]
 		_spec.Edges = append(_spec.Edges, edge)
 	}
 	return _node, _spec

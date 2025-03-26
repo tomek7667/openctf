@@ -30,6 +30,7 @@ type Team struct {
 	// The values are being populated by the TeamQuery when eager-loading is set.
 	Edges            TeamEdges `json:"edges"`
 	team_captain     *int
+	team_verified_by *int
 	user_playing_for *int
 	selectValues     sql.SelectValues
 }
@@ -38,9 +39,11 @@ type Team struct {
 type TeamEdges struct {
 	// Captain holds the value of the captain edge.
 	Captain *User `json:"captain,omitempty"`
+	// VerifiedBy holds the value of the verified_by edge.
+	VerifiedBy *User `json:"verified_by,omitempty"`
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [1]bool
+	loadedTypes [2]bool
 }
 
 // CaptainOrErr returns the Captain value or an error if the edge
@@ -52,6 +55,17 @@ func (e TeamEdges) CaptainOrErr() (*User, error) {
 		return nil, &NotFoundError{label: user.Label}
 	}
 	return nil, &NotLoadedError{edge: "captain"}
+}
+
+// VerifiedByOrErr returns the VerifiedBy value or an error if the edge
+// was not loaded in eager-loading, or loaded but was not found.
+func (e TeamEdges) VerifiedByOrErr() (*User, error) {
+	if e.VerifiedBy != nil {
+		return e.VerifiedBy, nil
+	} else if e.loadedTypes[1] {
+		return nil, &NotFoundError{label: user.Label}
+	}
+	return nil, &NotLoadedError{edge: "verified_by"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -69,7 +83,9 @@ func (*Team) scanValues(columns []string) ([]any, error) {
 			values[i] = new(sql.NullTime)
 		case team.ForeignKeys[0]: // team_captain
 			values[i] = new(sql.NullInt64)
-		case team.ForeignKeys[1]: // user_playing_for
+		case team.ForeignKeys[1]: // team_verified_by
+			values[i] = new(sql.NullInt64)
+		case team.ForeignKeys[2]: // user_playing_for
 			values[i] = new(sql.NullInt64)
 		default:
 			values[i] = new(sql.UnknownType)
@@ -126,6 +142,13 @@ func (t *Team) assignValues(columns []string, values []any) error {
 			}
 		case team.ForeignKeys[1]:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for edge-field team_verified_by", value)
+			} else if value.Valid {
+				t.team_verified_by = new(int)
+				*t.team_verified_by = int(value.Int64)
+			}
+		case team.ForeignKeys[2]:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for edge-field user_playing_for", value)
 			} else if value.Valid {
 				t.user_playing_for = new(int)
@@ -147,6 +170,11 @@ func (t *Team) Value(name string) (ent.Value, error) {
 // QueryCaptain queries the "captain" edge of the Team entity.
 func (t *Team) QueryCaptain() *UserQuery {
 	return NewTeamClient(t.config).QueryCaptain(t)
+}
+
+// QueryVerifiedBy queries the "verified_by" edge of the Team entity.
+func (t *Team) QueryVerifiedBy() *UserQuery {
+	return NewTeamClient(t.config).QueryVerifiedBy(t)
 }
 
 // Update returns a builder for updating this Team.

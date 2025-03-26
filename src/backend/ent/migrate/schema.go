@@ -16,6 +16,7 @@ var (
 		{Name: "logo", Type: field.TypeBytes, Nullable: true, Size: 52428800},
 		{Name: "verified_at", Type: field.TypeTime, Nullable: true},
 		{Name: "team_captain", Type: field.TypeInt, Nullable: true},
+		{Name: "team_verified_by", Type: field.TypeInt, Nullable: true},
 		{Name: "user_playing_for", Type: field.TypeInt, Nullable: true},
 	}
 	// TeamsTable holds the schema information for the "teams" table.
@@ -31,8 +32,14 @@ var (
 				OnDelete:   schema.SetNull,
 			},
 			{
-				Symbol:     "teams_users_playing_for",
+				Symbol:     "teams_users_verified_by",
 				Columns:    []*schema.Column{TeamsColumns[6]},
+				RefColumns: []*schema.Column{UsersColumns[0]},
+				OnDelete:   schema.SetNull,
+			},
+			{
+				Symbol:     "teams_users_playing_for",
+				Columns:    []*schema.Column{TeamsColumns[7]},
 				RefColumns: []*schema.Column{UsersColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
@@ -66,4 +73,5 @@ var (
 func init() {
 	TeamsTable.ForeignKeys[0].RefTable = UsersTable
 	TeamsTable.ForeignKeys[1].RefTable = UsersTable
+	TeamsTable.ForeignKeys[2].RefTable = UsersTable
 }

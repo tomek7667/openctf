@@ -114,6 +114,25 @@ func (tu *TeamUpdate) SetCaptain(u *User) *TeamUpdate {
 	return tu.SetCaptainID(u.ID)
 }
 
+// SetVerifiedByID sets the "verified_by" edge to the User entity by ID.
+func (tu *TeamUpdate) SetVerifiedByID(id int) *TeamUpdate {
+	tu.mutation.SetVerifiedByID(id)
+	return tu
+}
+
+// SetNillableVerifiedByID sets the "verified_by" edge to the User entity by ID if the given value is not nil.
+func (tu *TeamUpdate) SetNillableVerifiedByID(id *int) *TeamUpdate {
+	if id != nil {
+		tu = tu.SetVerifiedByID(*id)
+	}
+	return tu
+}
+
+// SetVerifiedBy sets the "verified_by" edge to the User entity.
+func (tu *TeamUpdate) SetVerifiedBy(u *User) *TeamUpdate {
+	return tu.SetVerifiedByID(u.ID)
+}
+
 // Mutation returns the TeamMutation object of the builder.
 func (tu *TeamUpdate) Mutation() *TeamMutation {
 	return tu.mutation
@@ -122,6 +141,12 @@ func (tu *TeamUpdate) Mutation() *TeamMutation {
 // ClearCaptain clears the "captain" edge to the User entity.
 func (tu *TeamUpdate) ClearCaptain() *TeamUpdate {
 	tu.mutation.ClearCaptain()
+	return tu
+}
+
+// ClearVerifiedBy clears the "verified_by" edge to the User entity.
+func (tu *TeamUpdate) ClearVerifiedBy() *TeamUpdate {
+	tu.mutation.ClearVerifiedBy()
 	return tu
 }
 
@@ -219,6 +244,35 @@ func (tu *TeamUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Inverse: false,
 			Table:   team.CaptainTable,
 			Columns: []string{team.CaptainColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(user.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if tu.mutation.VerifiedByCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: false,
+			Table:   team.VerifiedByTable,
+			Columns: []string{team.VerifiedByColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(user.FieldID, field.TypeInt),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := tu.mutation.VerifiedByIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: false,
+			Table:   team.VerifiedByTable,
+			Columns: []string{team.VerifiedByColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(user.FieldID, field.TypeInt),
@@ -334,6 +388,25 @@ func (tuo *TeamUpdateOne) SetCaptain(u *User) *TeamUpdateOne {
 	return tuo.SetCaptainID(u.ID)
 }
 
+// SetVerifiedByID sets the "verified_by" edge to the User entity by ID.
+func (tuo *TeamUpdateOne) SetVerifiedByID(id int) *TeamUpdateOne {
+	tuo.mutation.SetVerifiedByID(id)
+	return tuo
+}
+
+// SetNillableVerifiedByID sets the "verified_by" edge to the User entity by ID if the given value is not nil.
+func (tuo *TeamUpdateOne) SetNillableVerifiedByID(id *int) *TeamUpdateOne {
+	if id != nil {
+		tuo = tuo.SetVerifiedByID(*id)
+	}
+	return tuo
+}
+
+// SetVerifiedBy sets the "verified_by" edge to the User entity.
+func (tuo *TeamUpdateOne) SetVerifiedBy(u *User) *TeamUpdateOne {
+	return tuo.SetVerifiedByID(u.ID)
+}
+
 // Mutation returns the TeamMutation object of the builder.
 func (tuo *TeamUpdateOne) Mutation() *TeamMutation {
 	return tuo.mutation
@@ -342,6 +415,12 @@ func (tuo *TeamUpdateOne) Mutation() *TeamMutation {
 // ClearCaptain clears the "captain" edge to the User entity.
 func (tuo *TeamUpdateOne) ClearCaptain() *TeamUpdateOne {
 	tuo.mutation.ClearCaptain()
+	return tuo
+}
+
+// ClearVerifiedBy clears the "verified_by" edge to the User entity.
+func (tuo *TeamUpdateOne) ClearVerifiedBy() *TeamUpdateOne {
+	tuo.mutation.ClearVerifiedBy()
 	return tuo
 }
 
@@ -469,6 +548,35 @@ func (tuo *TeamUpdateOne) sqlSave(ctx context.Context) (_node *Team, err error) 
 			Inverse: false,
 			Table:   team.CaptainTable,
 			Columns: []string{team.CaptainColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(user.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if tuo.mutation.VerifiedByCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: false,
+			Table:   team.VerifiedByTable,
+			Columns: []string{team.VerifiedByColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(user.FieldID, field.TypeInt),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := tuo.mutation.VerifiedByIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: false,
+			Table:   team.VerifiedByTable,
+			Columns: []string{team.VerifiedByColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(user.FieldID, field.TypeInt),
