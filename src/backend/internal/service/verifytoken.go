@@ -16,7 +16,7 @@ func verifyToken(token string) (int, error) {
 	if err != nil {
 		return -1, err
 	}
-	return data["id"].(int), nil
+	return int(data["id"].(float64)), nil
 }
 
 // `VerifyToken` takes context and authorization token from the `Authorization` header and returns the user instance

@@ -1,12 +1,17 @@
 package openctf
 
-import "github.com/gin-gonic/gin"
+import (
+	"openctfbackend/ent"
+
+	"github.com/gin-gonic/gin"
+)
 
 // `WithAuth` is a middleware, that prevents the request from going further
 // unless it contains an `Authorization` header with signed by the backend jwt token.
 // If the token is valid, the `*ent.User` instance will be set into the `ctx` and can be retrieved by
-// `ctx.Get("user").(*ent.User)` in the request further.
-func (h *Handler) WithAuth() func(ctx *gin.Context) {
+// `ctx.Get("user").(*ent.User)` in the request further. It takes only one argument: `wrappee`,
+// which is the function that will receive the user object in both the parameter and the `ctx`.
+func (h *Handler) WithAuth(wrappee func(ctx *gin.Context, user *ent.User)) func(ctx *gin.Context) {
 	return func(ctx *gin.Context) {
 		token := ctx.GetHeader("Authorization")
 		if token == "" {
@@ -25,6 +30,7 @@ func (h *Handler) WithAuth() func(ctx *gin.Context) {
 			return
 		}
 		ctx.Set("user", user)
-		ctx.Next()
+		wrappee(ctx, user)
+		// ctx.Next()
 	}
 }

@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"errors"
 	"log/slog"
 	"os"
 	"time"
@@ -9,6 +10,8 @@ import (
 
 	"github.com/golang-jwt/jwt"
 )
+
+var ErrInvalidToken = errors.New("provided token is not valid")
 
 func GetJwtSecret() string {
 	jwtSecret := Getenv(
@@ -37,7 +40,10 @@ func JwtVerify(token, secret string) (map[string]any, error) {
 		return []byte(secret), nil
 	})
 	if err != nil {
-		return nil, err
+		return nil, errors.Join(ErrInvalidToken, err)
+	}
+	if !t.Valid {
+		return nil, ErrInvalidToken
 	}
 	return t.Claims.(jwt.MapClaims), nil
 }
