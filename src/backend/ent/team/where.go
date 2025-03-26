@@ -70,9 +70,9 @@ func Logo(v []byte) predicate.Team {
 	return predicate.Team(sql.FieldEQ(FieldLogo, v))
 }
 
-// ConfirmedAt applies equality check predicate on the "confirmed_at" field. It's identical to ConfirmedAtEQ.
-func ConfirmedAt(v time.Time) predicate.Team {
-	return predicate.Team(sql.FieldEQ(FieldConfirmedAt, v))
+// VerifiedAt applies equality check predicate on the "verified_at" field. It's identical to VerifiedAtEQ.
+func VerifiedAt(v time.Time) predicate.Team {
+	return predicate.Team(sql.FieldEQ(FieldVerifiedAt, v))
 }
 
 // NameEQ applies the EQ predicate on the "name" field.
@@ -265,54 +265,54 @@ func LogoNotNil() predicate.Team {
 	return predicate.Team(sql.FieldNotNull(FieldLogo))
 }
 
-// ConfirmedAtEQ applies the EQ predicate on the "confirmed_at" field.
-func ConfirmedAtEQ(v time.Time) predicate.Team {
-	return predicate.Team(sql.FieldEQ(FieldConfirmedAt, v))
+// VerifiedAtEQ applies the EQ predicate on the "verified_at" field.
+func VerifiedAtEQ(v time.Time) predicate.Team {
+	return predicate.Team(sql.FieldEQ(FieldVerifiedAt, v))
 }
 
-// ConfirmedAtNEQ applies the NEQ predicate on the "confirmed_at" field.
-func ConfirmedAtNEQ(v time.Time) predicate.Team {
-	return predicate.Team(sql.FieldNEQ(FieldConfirmedAt, v))
+// VerifiedAtNEQ applies the NEQ predicate on the "verified_at" field.
+func VerifiedAtNEQ(v time.Time) predicate.Team {
+	return predicate.Team(sql.FieldNEQ(FieldVerifiedAt, v))
 }
 
-// ConfirmedAtIn applies the In predicate on the "confirmed_at" field.
-func ConfirmedAtIn(vs ...time.Time) predicate.Team {
-	return predicate.Team(sql.FieldIn(FieldConfirmedAt, vs...))
+// VerifiedAtIn applies the In predicate on the "verified_at" field.
+func VerifiedAtIn(vs ...time.Time) predicate.Team {
+	return predicate.Team(sql.FieldIn(FieldVerifiedAt, vs...))
 }
 
-// ConfirmedAtNotIn applies the NotIn predicate on the "confirmed_at" field.
-func ConfirmedAtNotIn(vs ...time.Time) predicate.Team {
-	return predicate.Team(sql.FieldNotIn(FieldConfirmedAt, vs...))
+// VerifiedAtNotIn applies the NotIn predicate on the "verified_at" field.
+func VerifiedAtNotIn(vs ...time.Time) predicate.Team {
+	return predicate.Team(sql.FieldNotIn(FieldVerifiedAt, vs...))
 }
 
-// ConfirmedAtGT applies the GT predicate on the "confirmed_at" field.
-func ConfirmedAtGT(v time.Time) predicate.Team {
-	return predicate.Team(sql.FieldGT(FieldConfirmedAt, v))
+// VerifiedAtGT applies the GT predicate on the "verified_at" field.
+func VerifiedAtGT(v time.Time) predicate.Team {
+	return predicate.Team(sql.FieldGT(FieldVerifiedAt, v))
 }
 
-// ConfirmedAtGTE applies the GTE predicate on the "confirmed_at" field.
-func ConfirmedAtGTE(v time.Time) predicate.Team {
-	return predicate.Team(sql.FieldGTE(FieldConfirmedAt, v))
+// VerifiedAtGTE applies the GTE predicate on the "verified_at" field.
+func VerifiedAtGTE(v time.Time) predicate.Team {
+	return predicate.Team(sql.FieldGTE(FieldVerifiedAt, v))
 }
 
-// ConfirmedAtLT applies the LT predicate on the "confirmed_at" field.
-func ConfirmedAtLT(v time.Time) predicate.Team {
-	return predicate.Team(sql.FieldLT(FieldConfirmedAt, v))
+// VerifiedAtLT applies the LT predicate on the "verified_at" field.
+func VerifiedAtLT(v time.Time) predicate.Team {
+	return predicate.Team(sql.FieldLT(FieldVerifiedAt, v))
 }
 
-// ConfirmedAtLTE applies the LTE predicate on the "confirmed_at" field.
-func ConfirmedAtLTE(v time.Time) predicate.Team {
-	return predicate.Team(sql.FieldLTE(FieldConfirmedAt, v))
+// VerifiedAtLTE applies the LTE predicate on the "verified_at" field.
+func VerifiedAtLTE(v time.Time) predicate.Team {
+	return predicate.Team(sql.FieldLTE(FieldVerifiedAt, v))
 }
 
-// ConfirmedAtIsNil applies the IsNil predicate on the "confirmed_at" field.
-func ConfirmedAtIsNil() predicate.Team {
-	return predicate.Team(sql.FieldIsNull(FieldConfirmedAt))
+// VerifiedAtIsNil applies the IsNil predicate on the "verified_at" field.
+func VerifiedAtIsNil() predicate.Team {
+	return predicate.Team(sql.FieldIsNull(FieldVerifiedAt))
 }
 
-// ConfirmedAtNotNil applies the NotNil predicate on the "confirmed_at" field.
-func ConfirmedAtNotNil() predicate.Team {
-	return predicate.Team(sql.FieldNotNull(FieldConfirmedAt))
+// VerifiedAtNotNil applies the NotNil predicate on the "verified_at" field.
+func VerifiedAtNotNil() predicate.Team {
+	return predicate.Team(sql.FieldNotNull(FieldVerifiedAt))
 }
 
 // HasCaptain applies the HasEdge predicate on the "captain" edge.

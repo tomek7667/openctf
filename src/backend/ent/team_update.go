@@ -75,23 +75,23 @@ func (tu *TeamUpdate) ClearLogo() *TeamUpdate {
 	return tu
 }
 
-// SetConfirmedAt sets the "confirmed_at" field.
-func (tu *TeamUpdate) SetConfirmedAt(t time.Time) *TeamUpdate {
-	tu.mutation.SetConfirmedAt(t)
+// SetVerifiedAt sets the "verified_at" field.
+func (tu *TeamUpdate) SetVerifiedAt(t time.Time) *TeamUpdate {
+	tu.mutation.SetVerifiedAt(t)
 	return tu
 }
 
-// SetNillableConfirmedAt sets the "confirmed_at" field if the given value is not nil.
-func (tu *TeamUpdate) SetNillableConfirmedAt(t *time.Time) *TeamUpdate {
+// SetNillableVerifiedAt sets the "verified_at" field if the given value is not nil.
+func (tu *TeamUpdate) SetNillableVerifiedAt(t *time.Time) *TeamUpdate {
 	if t != nil {
-		tu.SetConfirmedAt(*t)
+		tu.SetVerifiedAt(*t)
 	}
 	return tu
 }
 
-// ClearConfirmedAt clears the value of the "confirmed_at" field.
-func (tu *TeamUpdate) ClearConfirmedAt() *TeamUpdate {
-	tu.mutation.ClearConfirmedAt()
+// ClearVerifiedAt clears the value of the "verified_at" field.
+func (tu *TeamUpdate) ClearVerifiedAt() *TeamUpdate {
+	tu.mutation.ClearVerifiedAt()
 	return tu
 }
 
@@ -194,11 +194,11 @@ func (tu *TeamUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	if tu.mutation.LogoCleared() {
 		_spec.ClearField(team.FieldLogo, field.TypeBytes)
 	}
-	if value, ok := tu.mutation.ConfirmedAt(); ok {
-		_spec.SetField(team.FieldConfirmedAt, field.TypeTime, value)
+	if value, ok := tu.mutation.VerifiedAt(); ok {
+		_spec.SetField(team.FieldVerifiedAt, field.TypeTime, value)
 	}
-	if tu.mutation.ConfirmedAtCleared() {
-		_spec.ClearField(team.FieldConfirmedAt, field.TypeTime)
+	if tu.mutation.VerifiedAtCleared() {
+		_spec.ClearField(team.FieldVerifiedAt, field.TypeTime)
 	}
 	if tu.mutation.CaptainCleared() {
 		edge := &sqlgraph.EdgeSpec{
@@ -295,23 +295,23 @@ func (tuo *TeamUpdateOne) ClearLogo() *TeamUpdateOne {
 	return tuo
 }
 
-// SetConfirmedAt sets the "confirmed_at" field.
-func (tuo *TeamUpdateOne) SetConfirmedAt(t time.Time) *TeamUpdateOne {
-	tuo.mutation.SetConfirmedAt(t)
+// SetVerifiedAt sets the "verified_at" field.
+func (tuo *TeamUpdateOne) SetVerifiedAt(t time.Time) *TeamUpdateOne {
+	tuo.mutation.SetVerifiedAt(t)
 	return tuo
 }
 
-// SetNillableConfirmedAt sets the "confirmed_at" field if the given value is not nil.
-func (tuo *TeamUpdateOne) SetNillableConfirmedAt(t *time.Time) *TeamUpdateOne {
+// SetNillableVerifiedAt sets the "verified_at" field if the given value is not nil.
+func (tuo *TeamUpdateOne) SetNillableVerifiedAt(t *time.Time) *TeamUpdateOne {
 	if t != nil {
-		tuo.SetConfirmedAt(*t)
+		tuo.SetVerifiedAt(*t)
 	}
 	return tuo
 }
 
-// ClearConfirmedAt clears the value of the "confirmed_at" field.
-func (tuo *TeamUpdateOne) ClearConfirmedAt() *TeamUpdateOne {
-	tuo.mutation.ClearConfirmedAt()
+// ClearVerifiedAt clears the value of the "verified_at" field.
+func (tuo *TeamUpdateOne) ClearVerifiedAt() *TeamUpdateOne {
+	tuo.mutation.ClearVerifiedAt()
 	return tuo
 }
 
@@ -444,11 +444,11 @@ func (tuo *TeamUpdateOne) sqlSave(ctx context.Context) (_node *Team, err error) 
 	if tuo.mutation.LogoCleared() {
 		_spec.ClearField(team.FieldLogo, field.TypeBytes)
 	}
-	if value, ok := tuo.mutation.ConfirmedAt(); ok {
-		_spec.SetField(team.FieldConfirmedAt, field.TypeTime, value)
+	if value, ok := tuo.mutation.VerifiedAt(); ok {
+		_spec.SetField(team.FieldVerifiedAt, field.TypeTime, value)
 	}
-	if tuo.mutation.ConfirmedAtCleared() {
-		_spec.ClearField(team.FieldConfirmedAt, field.TypeTime)
+	if tuo.mutation.VerifiedAtCleared() {
+		_spec.ClearField(team.FieldVerifiedAt, field.TypeTime)
 	}
 	if tuo.mutation.CaptainCleared() {
 		edge := &sqlgraph.EdgeSpec{

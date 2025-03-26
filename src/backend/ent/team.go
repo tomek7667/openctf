@@ -24,8 +24,8 @@ type Team struct {
 	Description string `json:"description,omitempty"`
 	// Logo holds the value of the "logo" field.
 	Logo []byte `json:"logo,omitempty"`
-	// ConfirmedAt holds the value of the "confirmed_at" field.
-	ConfirmedAt *time.Time `json:"confirmed_at,omitempty"`
+	// VerifiedAt holds the value of the "verified_at" field.
+	VerifiedAt *time.Time `json:"verified_at,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the TeamQuery when eager-loading is set.
 	Edges            TeamEdges `json:"edges"`
@@ -65,7 +65,7 @@ func (*Team) scanValues(columns []string) ([]any, error) {
 			values[i] = new(sql.NullInt64)
 		case team.FieldName, team.FieldDescription:
 			values[i] = new(sql.NullString)
-		case team.FieldConfirmedAt:
+		case team.FieldVerifiedAt:
 			values[i] = new(sql.NullTime)
 		case team.ForeignKeys[0]: // team_captain
 			values[i] = new(sql.NullInt64)
@@ -110,12 +110,12 @@ func (t *Team) assignValues(columns []string, values []any) error {
 			} else if value != nil {
 				t.Logo = *value
 			}
-		case team.FieldConfirmedAt:
+		case team.FieldVerifiedAt:
 			if value, ok := values[i].(*sql.NullTime); !ok {
-				return fmt.Errorf("unexpected type %T for field confirmed_at", values[i])
+				return fmt.Errorf("unexpected type %T for field verified_at", values[i])
 			} else if value.Valid {
-				t.ConfirmedAt = new(time.Time)
-				*t.ConfirmedAt = value.Time
+				t.VerifiedAt = new(time.Time)
+				*t.VerifiedAt = value.Time
 			}
 		case team.ForeignKeys[0]:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
@@ -181,8 +181,8 @@ func (t *Team) String() string {
 	builder.WriteString("logo=")
 	builder.WriteString(fmt.Sprintf("%v", t.Logo))
 	builder.WriteString(", ")
-	if v := t.ConfirmedAt; v != nil {
-		builder.WriteString("confirmed_at=")
+	if v := t.VerifiedAt; v != nil {
+		builder.WriteString("verified_at=")
 		builder.WriteString(v.Format(time.ANSIC))
 	}
 	builder.WriteByte(')')

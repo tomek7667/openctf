@@ -47,16 +47,16 @@ func (tc *TeamCreate) SetLogo(b []byte) *TeamCreate {
 	return tc
 }
 
-// SetConfirmedAt sets the "confirmed_at" field.
-func (tc *TeamCreate) SetConfirmedAt(t time.Time) *TeamCreate {
-	tc.mutation.SetConfirmedAt(t)
+// SetVerifiedAt sets the "verified_at" field.
+func (tc *TeamCreate) SetVerifiedAt(t time.Time) *TeamCreate {
+	tc.mutation.SetVerifiedAt(t)
 	return tc
 }
 
-// SetNillableConfirmedAt sets the "confirmed_at" field if the given value is not nil.
-func (tc *TeamCreate) SetNillableConfirmedAt(t *time.Time) *TeamCreate {
+// SetNillableVerifiedAt sets the "verified_at" field if the given value is not nil.
+func (tc *TeamCreate) SetNillableVerifiedAt(t *time.Time) *TeamCreate {
 	if t != nil {
-		tc.SetConfirmedAt(*t)
+		tc.SetVerifiedAt(*t)
 	}
 	return tc
 }
@@ -165,9 +165,9 @@ func (tc *TeamCreate) createSpec() (*Team, *sqlgraph.CreateSpec) {
 		_spec.SetField(team.FieldLogo, field.TypeBytes, value)
 		_node.Logo = value
 	}
-	if value, ok := tc.mutation.ConfirmedAt(); ok {
-		_spec.SetField(team.FieldConfirmedAt, field.TypeTime, value)
-		_node.ConfirmedAt = &value
+	if value, ok := tc.mutation.VerifiedAt(); ok {
+		_spec.SetField(team.FieldVerifiedAt, field.TypeTime, value)
+		_node.VerifiedAt = &value
 	}
 	if nodes := tc.mutation.CaptainIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{

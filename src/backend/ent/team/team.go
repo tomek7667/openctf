@@ -18,8 +18,8 @@ const (
 	FieldDescription = "description"
 	// FieldLogo holds the string denoting the logo field in the database.
 	FieldLogo = "logo"
-	// FieldConfirmedAt holds the string denoting the confirmed_at field in the database.
-	FieldConfirmedAt = "confirmed_at"
+	// FieldVerifiedAt holds the string denoting the verified_at field in the database.
+	FieldVerifiedAt = "verified_at"
 	// EdgeCaptain holds the string denoting the captain edge name in mutations.
 	EdgeCaptain = "captain"
 	// Table holds the table name of the team in the database.
@@ -39,7 +39,7 @@ var Columns = []string{
 	FieldName,
 	FieldDescription,
 	FieldLogo,
-	FieldConfirmedAt,
+	FieldVerifiedAt,
 }
 
 // ForeignKeys holds the SQL foreign-keys that are owned by the "teams"
@@ -89,9 +89,9 @@ func ByDescription(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldDescription, opts...).ToFunc()
 }
 
-// ByConfirmedAt orders the results by the confirmed_at field.
-func ByConfirmedAt(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldConfirmedAt, opts...).ToFunc()
+// ByVerifiedAt orders the results by the verified_at field.
+func ByVerifiedAt(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldVerifiedAt, opts...).ToFunc()
 }
 
 // ByCaptainField orders the results by captain field.

@@ -19,7 +19,7 @@ func (Team) Fields() []ent.Field {
 		field.String("name").Match(regexp.MustCompile("[a-z0-9 _-]+$")).Unique(),
 		field.String("description").Optional(),
 		field.Bytes("logo").MaxLen(50 * 1024 * 1024).Optional(), // Max 50 MB
-		field.Time("confirmed_at").Optional().Nillable(),
+		field.Time("verified_at").Optional().Nillable(),
 	}
 }
 
