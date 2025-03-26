@@ -16,6 +16,37 @@ go generate ./ent
 go run -mod=mod entgo.io/ent/cmd/ent new <UpperCamelCaseModelName>
 ```
 
+## routing
+
+the project currently provides handful of utility functions and already has an established way of adding new routes. Note: `/api` will be called 0th level route, `/api/example` will be called 1st level route and `/api/example/something` will be called 2nd level route. Few rules that are currentl established:
+
+- all API routes start with `/api`
+- if a new 1nd level route is added, it must be via a go file in `internal/openctf/exampleroute.go` _(all lowercase together, no dashes even if the route has some.)_
+- the 1nd level route file _(`internal/openctf/exampleroute.go`)_ contains just the `AddRoutes_ApiExampleRoute` function with `h.RestClient.AddRateLimitedRoute(...)` inside of it and a logging statement about registering such route at the beginning of the function.
+- in order to add 2nd level route called `something`, you should:
+  1. create a file called `internal/openctf/exampleroute_something.go`
+  2. create a function in the created file `func (h *Handler) ExampleRouteSomething(ctx *gin.Context, ...) {` - this should handle you all logic related to the request/response.
+  3. add the route with one of the `AddRoute` rest client methods, with any middlewares or wrappers you'd like: `h.RestClient.AddRateLimitedRoute("POST", "/api/example-route/something", ratelimit.InMemoryOptions{}, h.WithAuth(h.ExampleRouteSomething))`
+- the direct interaction with the database, should be implemented as a `ServiceClient` function in `internal/service`, which can be then called with `Handler.ServiceClient.Something` in the request/response logic layer in `internal/openctf/exampleroute_something.go`
+
+### utility functions
+
+`RestClient`'s `AddRateLimitedRoute` allows to add a route with rate limitting already implemented with the use of [gin-rate-limit package _(external link)_](https://github.com/JGLTechnologies/gin-rate-limit).
+
+```go
+AddRateLimitedRoute(
+    method, path string,
+    opts ratelimit.InMemoryOptions,
+    handlers ...gin.HandlerFunc,
+)
+```
+
+`RestClient`'s `AddRoute` is just a wrapper around the [`*gin.Engine`'s `Handle` _(external link)_](https://pkg.go.dev/github.com/gin-gonic/gin@v1.10.0#RouterGroup.Handle) method.
+
+```go
+AddRoute(method, path string, handlers ...gin.HandlerFunc)
+```
+
 ## environment variables
 
 whenever new env var is used in the code add it in the following table
