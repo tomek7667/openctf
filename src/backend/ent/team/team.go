@@ -16,6 +16,10 @@ const (
 	FieldName = "name"
 	// FieldDescription holds the string denoting the description field in the database.
 	FieldDescription = "description"
+	// FieldCtftimeID holds the string denoting the ctftime_id field in the database.
+	FieldCtftimeID = "ctftime_id"
+	// FieldCtftimeVerifiedAt holds the string denoting the ctftime_verified_at field in the database.
+	FieldCtftimeVerifiedAt = "ctftime_verified_at"
 	// FieldLogo holds the string denoting the logo field in the database.
 	FieldLogo = "logo"
 	// FieldVerifiedAt holds the string denoting the verified_at field in the database.
@@ -56,6 +60,8 @@ var Columns = []string{
 	FieldID,
 	FieldName,
 	FieldDescription,
+	FieldCtftimeID,
+	FieldCtftimeVerifiedAt,
 	FieldLogo,
 	FieldVerifiedAt,
 }
@@ -105,6 +111,16 @@ func ByName(opts ...sql.OrderTermOption) OrderOption {
 // ByDescription orders the results by the description field.
 func ByDescription(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldDescription, opts...).ToFunc()
+}
+
+// ByCtftimeID orders the results by the ctftime_id field.
+func ByCtftimeID(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldCtftimeID, opts...).ToFunc()
+}
+
+// ByCtftimeVerifiedAt orders the results by the ctftime_verified_at field.
+func ByCtftimeVerifiedAt(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldCtftimeVerifiedAt, opts...).ToFunc()
 }
 
 // ByVerifiedAt orders the results by the verified_at field.

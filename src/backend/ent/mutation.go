@@ -32,24 +32,27 @@ const (
 // TeamMutation represents an operation that mutates the Team nodes in the graph.
 type TeamMutation struct {
 	config
-	op                 Op
-	typ                string
-	id                 *int
-	name               *string
-	description        *string
-	logo               *[]byte
-	verified_at        *time.Time
-	clearedFields      map[string]struct{}
-	captain            *int
-	clearedcaptain     bool
-	verified_by        *int
-	clearedverified_by bool
-	members            map[int]struct{}
-	removedmembers     map[int]struct{}
-	clearedmembers     bool
-	done               bool
-	oldValue           func(context.Context) (*Team, error)
-	predicates         []predicate.Team
+	op                  Op
+	typ                 string
+	id                  *int
+	name                *string
+	description         *string
+	ctftime_id          *int
+	addctftime_id       *int
+	ctftime_verified_at *time.Time
+	logo                *[]byte
+	verified_at         *time.Time
+	clearedFields       map[string]struct{}
+	captain             *int
+	clearedcaptain      bool
+	verified_by         *int
+	clearedverified_by  bool
+	members             map[int]struct{}
+	removedmembers      map[int]struct{}
+	clearedmembers      bool
+	done                bool
+	oldValue            func(context.Context) (*Team, error)
+	predicates          []predicate.Team
 }
 
 var _ ent.Mutation = (*TeamMutation)(nil)
@@ -233,6 +236,125 @@ func (m *TeamMutation) DescriptionCleared() bool {
 func (m *TeamMutation) ResetDescription() {
 	m.description = nil
 	delete(m.clearedFields, team.FieldDescription)
+}
+
+// SetCtftimeID sets the "ctftime_id" field.
+func (m *TeamMutation) SetCtftimeID(i int) {
+	m.ctftime_id = &i
+	m.addctftime_id = nil
+}
+
+// CtftimeID returns the value of the "ctftime_id" field in the mutation.
+func (m *TeamMutation) CtftimeID() (r int, exists bool) {
+	v := m.ctftime_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldCtftimeID returns the old "ctftime_id" field's value of the Team entity.
+// If the Team object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *TeamMutation) OldCtftimeID(ctx context.Context) (v *int, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldCtftimeID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldCtftimeID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldCtftimeID: %w", err)
+	}
+	return oldValue.CtftimeID, nil
+}
+
+// AddCtftimeID adds i to the "ctftime_id" field.
+func (m *TeamMutation) AddCtftimeID(i int) {
+	if m.addctftime_id != nil {
+		*m.addctftime_id += i
+	} else {
+		m.addctftime_id = &i
+	}
+}
+
+// AddedCtftimeID returns the value that was added to the "ctftime_id" field in this mutation.
+func (m *TeamMutation) AddedCtftimeID() (r int, exists bool) {
+	v := m.addctftime_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ClearCtftimeID clears the value of the "ctftime_id" field.
+func (m *TeamMutation) ClearCtftimeID() {
+	m.ctftime_id = nil
+	m.addctftime_id = nil
+	m.clearedFields[team.FieldCtftimeID] = struct{}{}
+}
+
+// CtftimeIDCleared returns if the "ctftime_id" field was cleared in this mutation.
+func (m *TeamMutation) CtftimeIDCleared() bool {
+	_, ok := m.clearedFields[team.FieldCtftimeID]
+	return ok
+}
+
+// ResetCtftimeID resets all changes to the "ctftime_id" field.
+func (m *TeamMutation) ResetCtftimeID() {
+	m.ctftime_id = nil
+	m.addctftime_id = nil
+	delete(m.clearedFields, team.FieldCtftimeID)
+}
+
+// SetCtftimeVerifiedAt sets the "ctftime_verified_at" field.
+func (m *TeamMutation) SetCtftimeVerifiedAt(t time.Time) {
+	m.ctftime_verified_at = &t
+}
+
+// CtftimeVerifiedAt returns the value of the "ctftime_verified_at" field in the mutation.
+func (m *TeamMutation) CtftimeVerifiedAt() (r time.Time, exists bool) {
+	v := m.ctftime_verified_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldCtftimeVerifiedAt returns the old "ctftime_verified_at" field's value of the Team entity.
+// If the Team object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *TeamMutation) OldCtftimeVerifiedAt(ctx context.Context) (v *time.Time, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldCtftimeVerifiedAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldCtftimeVerifiedAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldCtftimeVerifiedAt: %w", err)
+	}
+	return oldValue.CtftimeVerifiedAt, nil
+}
+
+// ClearCtftimeVerifiedAt clears the value of the "ctftime_verified_at" field.
+func (m *TeamMutation) ClearCtftimeVerifiedAt() {
+	m.ctftime_verified_at = nil
+	m.clearedFields[team.FieldCtftimeVerifiedAt] = struct{}{}
+}
+
+// CtftimeVerifiedAtCleared returns if the "ctftime_verified_at" field was cleared in this mutation.
+func (m *TeamMutation) CtftimeVerifiedAtCleared() bool {
+	_, ok := m.clearedFields[team.FieldCtftimeVerifiedAt]
+	return ok
+}
+
+// ResetCtftimeVerifiedAt resets all changes to the "ctftime_verified_at" field.
+func (m *TeamMutation) ResetCtftimeVerifiedAt() {
+	m.ctftime_verified_at = nil
+	delete(m.clearedFields, team.FieldCtftimeVerifiedAt)
 }
 
 // SetLogo sets the "logo" field.
@@ -499,12 +621,18 @@ func (m *TeamMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *TeamMutation) Fields() []string {
-	fields := make([]string, 0, 4)
+	fields := make([]string, 0, 6)
 	if m.name != nil {
 		fields = append(fields, team.FieldName)
 	}
 	if m.description != nil {
 		fields = append(fields, team.FieldDescription)
+	}
+	if m.ctftime_id != nil {
+		fields = append(fields, team.FieldCtftimeID)
+	}
+	if m.ctftime_verified_at != nil {
+		fields = append(fields, team.FieldCtftimeVerifiedAt)
 	}
 	if m.logo != nil {
 		fields = append(fields, team.FieldLogo)
@@ -524,6 +652,10 @@ func (m *TeamMutation) Field(name string) (ent.Value, bool) {
 		return m.Name()
 	case team.FieldDescription:
 		return m.Description()
+	case team.FieldCtftimeID:
+		return m.CtftimeID()
+	case team.FieldCtftimeVerifiedAt:
+		return m.CtftimeVerifiedAt()
 	case team.FieldLogo:
 		return m.Logo()
 	case team.FieldVerifiedAt:
@@ -541,6 +673,10 @@ func (m *TeamMutation) OldField(ctx context.Context, name string) (ent.Value, er
 		return m.OldName(ctx)
 	case team.FieldDescription:
 		return m.OldDescription(ctx)
+	case team.FieldCtftimeID:
+		return m.OldCtftimeID(ctx)
+	case team.FieldCtftimeVerifiedAt:
+		return m.OldCtftimeVerifiedAt(ctx)
 	case team.FieldLogo:
 		return m.OldLogo(ctx)
 	case team.FieldVerifiedAt:
@@ -568,6 +704,20 @@ func (m *TeamMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetDescription(v)
 		return nil
+	case team.FieldCtftimeID:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCtftimeID(v)
+		return nil
+	case team.FieldCtftimeVerifiedAt:
+		v, ok := value.(time.Time)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCtftimeVerifiedAt(v)
+		return nil
 	case team.FieldLogo:
 		v, ok := value.([]byte)
 		if !ok {
@@ -589,13 +739,21 @@ func (m *TeamMutation) SetField(name string, value ent.Value) error {
 // AddedFields returns all numeric fields that were incremented/decremented during
 // this mutation.
 func (m *TeamMutation) AddedFields() []string {
-	return nil
+	var fields []string
+	if m.addctftime_id != nil {
+		fields = append(fields, team.FieldCtftimeID)
+	}
+	return fields
 }
 
 // AddedField returns the numeric value that was incremented/decremented on a field
 // with the given name. The second boolean return value indicates that this field
 // was not set, or was not defined in the schema.
 func (m *TeamMutation) AddedField(name string) (ent.Value, bool) {
+	switch name {
+	case team.FieldCtftimeID:
+		return m.AddedCtftimeID()
+	}
 	return nil, false
 }
 
@@ -604,6 +762,13 @@ func (m *TeamMutation) AddedField(name string) (ent.Value, bool) {
 // type.
 func (m *TeamMutation) AddField(name string, value ent.Value) error {
 	switch name {
+	case team.FieldCtftimeID:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddCtftimeID(v)
+		return nil
 	}
 	return fmt.Errorf("unknown Team numeric field %s", name)
 }
@@ -614,6 +779,12 @@ func (m *TeamMutation) ClearedFields() []string {
 	var fields []string
 	if m.FieldCleared(team.FieldDescription) {
 		fields = append(fields, team.FieldDescription)
+	}
+	if m.FieldCleared(team.FieldCtftimeID) {
+		fields = append(fields, team.FieldCtftimeID)
+	}
+	if m.FieldCleared(team.FieldCtftimeVerifiedAt) {
+		fields = append(fields, team.FieldCtftimeVerifiedAt)
 	}
 	if m.FieldCleared(team.FieldLogo) {
 		fields = append(fields, team.FieldLogo)
@@ -638,6 +809,12 @@ func (m *TeamMutation) ClearField(name string) error {
 	case team.FieldDescription:
 		m.ClearDescription()
 		return nil
+	case team.FieldCtftimeID:
+		m.ClearCtftimeID()
+		return nil
+	case team.FieldCtftimeVerifiedAt:
+		m.ClearCtftimeVerifiedAt()
+		return nil
 	case team.FieldLogo:
 		m.ClearLogo()
 		return nil
@@ -657,6 +834,12 @@ func (m *TeamMutation) ResetField(name string) error {
 		return nil
 	case team.FieldDescription:
 		m.ResetDescription()
+		return nil
+	case team.FieldCtftimeID:
+		m.ResetCtftimeID()
+		return nil
+	case team.FieldCtftimeVerifiedAt:
+		m.ResetCtftimeVerifiedAt()
 		return nil
 	case team.FieldLogo:
 		m.ResetLogo()

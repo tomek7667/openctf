@@ -65,6 +65,16 @@ func Description(v string) predicate.Team {
 	return predicate.Team(sql.FieldEQ(FieldDescription, v))
 }
 
+// CtftimeID applies equality check predicate on the "ctftime_id" field. It's identical to CtftimeIDEQ.
+func CtftimeID(v int) predicate.Team {
+	return predicate.Team(sql.FieldEQ(FieldCtftimeID, v))
+}
+
+// CtftimeVerifiedAt applies equality check predicate on the "ctftime_verified_at" field. It's identical to CtftimeVerifiedAtEQ.
+func CtftimeVerifiedAt(v time.Time) predicate.Team {
+	return predicate.Team(sql.FieldEQ(FieldCtftimeVerifiedAt, v))
+}
+
 // Logo applies equality check predicate on the "logo" field. It's identical to LogoEQ.
 func Logo(v []byte) predicate.Team {
 	return predicate.Team(sql.FieldEQ(FieldLogo, v))
@@ -213,6 +223,106 @@ func DescriptionEqualFold(v string) predicate.Team {
 // DescriptionContainsFold applies the ContainsFold predicate on the "description" field.
 func DescriptionContainsFold(v string) predicate.Team {
 	return predicate.Team(sql.FieldContainsFold(FieldDescription, v))
+}
+
+// CtftimeIDEQ applies the EQ predicate on the "ctftime_id" field.
+func CtftimeIDEQ(v int) predicate.Team {
+	return predicate.Team(sql.FieldEQ(FieldCtftimeID, v))
+}
+
+// CtftimeIDNEQ applies the NEQ predicate on the "ctftime_id" field.
+func CtftimeIDNEQ(v int) predicate.Team {
+	return predicate.Team(sql.FieldNEQ(FieldCtftimeID, v))
+}
+
+// CtftimeIDIn applies the In predicate on the "ctftime_id" field.
+func CtftimeIDIn(vs ...int) predicate.Team {
+	return predicate.Team(sql.FieldIn(FieldCtftimeID, vs...))
+}
+
+// CtftimeIDNotIn applies the NotIn predicate on the "ctftime_id" field.
+func CtftimeIDNotIn(vs ...int) predicate.Team {
+	return predicate.Team(sql.FieldNotIn(FieldCtftimeID, vs...))
+}
+
+// CtftimeIDGT applies the GT predicate on the "ctftime_id" field.
+func CtftimeIDGT(v int) predicate.Team {
+	return predicate.Team(sql.FieldGT(FieldCtftimeID, v))
+}
+
+// CtftimeIDGTE applies the GTE predicate on the "ctftime_id" field.
+func CtftimeIDGTE(v int) predicate.Team {
+	return predicate.Team(sql.FieldGTE(FieldCtftimeID, v))
+}
+
+// CtftimeIDLT applies the LT predicate on the "ctftime_id" field.
+func CtftimeIDLT(v int) predicate.Team {
+	return predicate.Team(sql.FieldLT(FieldCtftimeID, v))
+}
+
+// CtftimeIDLTE applies the LTE predicate on the "ctftime_id" field.
+func CtftimeIDLTE(v int) predicate.Team {
+	return predicate.Team(sql.FieldLTE(FieldCtftimeID, v))
+}
+
+// CtftimeIDIsNil applies the IsNil predicate on the "ctftime_id" field.
+func CtftimeIDIsNil() predicate.Team {
+	return predicate.Team(sql.FieldIsNull(FieldCtftimeID))
+}
+
+// CtftimeIDNotNil applies the NotNil predicate on the "ctftime_id" field.
+func CtftimeIDNotNil() predicate.Team {
+	return predicate.Team(sql.FieldNotNull(FieldCtftimeID))
+}
+
+// CtftimeVerifiedAtEQ applies the EQ predicate on the "ctftime_verified_at" field.
+func CtftimeVerifiedAtEQ(v time.Time) predicate.Team {
+	return predicate.Team(sql.FieldEQ(FieldCtftimeVerifiedAt, v))
+}
+
+// CtftimeVerifiedAtNEQ applies the NEQ predicate on the "ctftime_verified_at" field.
+func CtftimeVerifiedAtNEQ(v time.Time) predicate.Team {
+	return predicate.Team(sql.FieldNEQ(FieldCtftimeVerifiedAt, v))
+}
+
+// CtftimeVerifiedAtIn applies the In predicate on the "ctftime_verified_at" field.
+func CtftimeVerifiedAtIn(vs ...time.Time) predicate.Team {
+	return predicate.Team(sql.FieldIn(FieldCtftimeVerifiedAt, vs...))
+}
+
+// CtftimeVerifiedAtNotIn applies the NotIn predicate on the "ctftime_verified_at" field.
+func CtftimeVerifiedAtNotIn(vs ...time.Time) predicate.Team {
+	return predicate.Team(sql.FieldNotIn(FieldCtftimeVerifiedAt, vs...))
+}
+
+// CtftimeVerifiedAtGT applies the GT predicate on the "ctftime_verified_at" field.
+func CtftimeVerifiedAtGT(v time.Time) predicate.Team {
+	return predicate.Team(sql.FieldGT(FieldCtftimeVerifiedAt, v))
+}
+
+// CtftimeVerifiedAtGTE applies the GTE predicate on the "ctftime_verified_at" field.
+func CtftimeVerifiedAtGTE(v time.Time) predicate.Team {
+	return predicate.Team(sql.FieldGTE(FieldCtftimeVerifiedAt, v))
+}
+
+// CtftimeVerifiedAtLT applies the LT predicate on the "ctftime_verified_at" field.
+func CtftimeVerifiedAtLT(v time.Time) predicate.Team {
+	return predicate.Team(sql.FieldLT(FieldCtftimeVerifiedAt, v))
+}
+
+// CtftimeVerifiedAtLTE applies the LTE predicate on the "ctftime_verified_at" field.
+func CtftimeVerifiedAtLTE(v time.Time) predicate.Team {
+	return predicate.Team(sql.FieldLTE(FieldCtftimeVerifiedAt, v))
+}
+
+// CtftimeVerifiedAtIsNil applies the IsNil predicate on the "ctftime_verified_at" field.
+func CtftimeVerifiedAtIsNil() predicate.Team {
+	return predicate.Team(sql.FieldIsNull(FieldCtftimeVerifiedAt))
+}
+
+// CtftimeVerifiedAtNotNil applies the NotNil predicate on the "ctftime_verified_at" field.
+func CtftimeVerifiedAtNotNil() predicate.Team {
+	return predicate.Team(sql.FieldNotNull(FieldCtftimeVerifiedAt))
 }
 
 // LogoEQ applies the EQ predicate on the "logo" field.

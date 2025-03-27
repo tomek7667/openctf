@@ -22,6 +22,10 @@ type Team struct {
 	Name string `json:"name,omitempty"`
 	// Description holds the value of the "description" field.
 	Description string `json:"description,omitempty"`
+	// CtftimeID holds the value of the "ctftime_id" field.
+	CtftimeID *int `json:"ctftime_id,omitempty"`
+	// CtftimeVerifiedAt holds the value of the "ctftime_verified_at" field.
+	CtftimeVerifiedAt *time.Time `json:"ctftime_verified_at,omitempty"`
 	// Logo holds the value of the "logo" field.
 	Logo []byte `json:"logo,omitempty"`
 	// VerifiedAt holds the value of the "verified_at" field.
@@ -85,11 +89,11 @@ func (*Team) scanValues(columns []string) ([]any, error) {
 		switch columns[i] {
 		case team.FieldLogo:
 			values[i] = new([]byte)
-		case team.FieldID:
+		case team.FieldID, team.FieldCtftimeID:
 			values[i] = new(sql.NullInt64)
 		case team.FieldName, team.FieldDescription:
 			values[i] = new(sql.NullString)
-		case team.FieldVerifiedAt:
+		case team.FieldCtftimeVerifiedAt, team.FieldVerifiedAt:
 			values[i] = new(sql.NullTime)
 		case team.ForeignKeys[0]: // team_captain
 			values[i] = new(sql.NullInt64)
@@ -127,6 +131,20 @@ func (t *Team) assignValues(columns []string, values []any) error {
 				return fmt.Errorf("unexpected type %T for field description", values[i])
 			} else if value.Valid {
 				t.Description = value.String
+			}
+		case team.FieldCtftimeID:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field ctftime_id", values[i])
+			} else if value.Valid {
+				t.CtftimeID = new(int)
+				*t.CtftimeID = int(value.Int64)
+			}
+		case team.FieldCtftimeVerifiedAt:
+			if value, ok := values[i].(*sql.NullTime); !ok {
+				return fmt.Errorf("unexpected type %T for field ctftime_verified_at", values[i])
+			} else if value.Valid {
+				t.CtftimeVerifiedAt = new(time.Time)
+				*t.CtftimeVerifiedAt = value.Time
 			}
 		case team.FieldLogo:
 			if value, ok := values[i].(*[]byte); !ok {
@@ -211,6 +229,16 @@ func (t *Team) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("description=")
 	builder.WriteString(t.Description)
+	builder.WriteString(", ")
+	if v := t.CtftimeID; v != nil {
+		builder.WriteString("ctftime_id=")
+		builder.WriteString(fmt.Sprintf("%v", *v))
+	}
+	builder.WriteString(", ")
+	if v := t.CtftimeVerifiedAt; v != nil {
+		builder.WriteString("ctftime_verified_at=")
+		builder.WriteString(v.Format(time.ANSIC))
+	}
 	builder.WriteString(", ")
 	builder.WriteString("logo=")
 	builder.WriteString(fmt.Sprintf("%v", t.Logo))

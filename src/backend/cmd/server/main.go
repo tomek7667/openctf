@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log/slog"
 
+	"openctfbackend/internal/ctftime"
 	"openctfbackend/internal/logger"
 	"openctfbackend/internal/openctf"
 	"openctfbackend/internal/rest"
@@ -14,6 +15,7 @@ import (
 var (
 	restClient    *rest.Client
 	serviceClient *service.Client
+	ctftimeClient *ctftime.Client
 )
 
 func getCreds() string {
@@ -38,10 +40,19 @@ func init() {
 		slog.Error("initializing ent client failed", "err", err)
 		panic(err)
 	}
+	ctftimeClient, err = ctftime.New(utils.Getenv("CTFTIME_API_URL", "https://ctftime.org/api/v1"))
+	if err != nil {
+		slog.Error("initializing ctftime client failed", "err", err)
+		panic(err)
+	}
 }
 
 func main() {
-	handler := openctf.New(restClient, serviceClient)
+	handler := openctf.New(
+		restClient,
+		serviceClient,
+		ctftimeClient,
+	)
 
 	handler.Handle()
 }

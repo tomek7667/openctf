@@ -18,6 +18,8 @@ func (Team) Fields() []ent.Field {
 	return []ent.Field{
 		field.String("name").Match(regexp.MustCompile("[a-z0-9 _-]+$")).Unique(),
 		field.String("description").Optional(),
+		field.Int("ctftime_id").Optional().Nillable(),
+		field.Time("ctftime_verified_at").Optional().Nillable(),
 		field.Bytes("logo").MaxLen(50 * 1024 * 1024).Optional(), // Max 50 MB
 		field.Time("verified_at").Optional().Nillable(),
 	}

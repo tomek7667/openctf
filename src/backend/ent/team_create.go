@@ -41,6 +41,34 @@ func (tc *TeamCreate) SetNillableDescription(s *string) *TeamCreate {
 	return tc
 }
 
+// SetCtftimeID sets the "ctftime_id" field.
+func (tc *TeamCreate) SetCtftimeID(i int) *TeamCreate {
+	tc.mutation.SetCtftimeID(i)
+	return tc
+}
+
+// SetNillableCtftimeID sets the "ctftime_id" field if the given value is not nil.
+func (tc *TeamCreate) SetNillableCtftimeID(i *int) *TeamCreate {
+	if i != nil {
+		tc.SetCtftimeID(*i)
+	}
+	return tc
+}
+
+// SetCtftimeVerifiedAt sets the "ctftime_verified_at" field.
+func (tc *TeamCreate) SetCtftimeVerifiedAt(t time.Time) *TeamCreate {
+	tc.mutation.SetCtftimeVerifiedAt(t)
+	return tc
+}
+
+// SetNillableCtftimeVerifiedAt sets the "ctftime_verified_at" field if the given value is not nil.
+func (tc *TeamCreate) SetNillableCtftimeVerifiedAt(t *time.Time) *TeamCreate {
+	if t != nil {
+		tc.SetCtftimeVerifiedAt(*t)
+	}
+	return tc
+}
+
 // SetLogo sets the "logo" field.
 func (tc *TeamCreate) SetLogo(b []byte) *TeamCreate {
 	tc.mutation.SetLogo(b)
@@ -194,6 +222,14 @@ func (tc *TeamCreate) createSpec() (*Team, *sqlgraph.CreateSpec) {
 	if value, ok := tc.mutation.Description(); ok {
 		_spec.SetField(team.FieldDescription, field.TypeString, value)
 		_node.Description = value
+	}
+	if value, ok := tc.mutation.CtftimeID(); ok {
+		_spec.SetField(team.FieldCtftimeID, field.TypeInt, value)
+		_node.CtftimeID = &value
+	}
+	if value, ok := tc.mutation.CtftimeVerifiedAt(); ok {
+		_spec.SetField(team.FieldCtftimeVerifiedAt, field.TypeTime, value)
+		_node.CtftimeVerifiedAt = &value
 	}
 	if value, ok := tc.mutation.Logo(); ok {
 		_spec.SetField(team.FieldLogo, field.TypeBytes, value)

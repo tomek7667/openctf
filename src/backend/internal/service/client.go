@@ -27,3 +27,7 @@ func New(credentials string) (*Client, error) {
 		C: client,
 	}, nil
 }
+
+func (c *Client) GetEnt() *ent.Client {
+	return c.C
+}

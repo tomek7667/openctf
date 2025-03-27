@@ -63,6 +63,53 @@ func (tu *TeamUpdate) ClearDescription() *TeamUpdate {
 	return tu
 }
 
+// SetCtftimeID sets the "ctftime_id" field.
+func (tu *TeamUpdate) SetCtftimeID(i int) *TeamUpdate {
+	tu.mutation.ResetCtftimeID()
+	tu.mutation.SetCtftimeID(i)
+	return tu
+}
+
+// SetNillableCtftimeID sets the "ctftime_id" field if the given value is not nil.
+func (tu *TeamUpdate) SetNillableCtftimeID(i *int) *TeamUpdate {
+	if i != nil {
+		tu.SetCtftimeID(*i)
+	}
+	return tu
+}
+
+// AddCtftimeID adds i to the "ctftime_id" field.
+func (tu *TeamUpdate) AddCtftimeID(i int) *TeamUpdate {
+	tu.mutation.AddCtftimeID(i)
+	return tu
+}
+
+// ClearCtftimeID clears the value of the "ctftime_id" field.
+func (tu *TeamUpdate) ClearCtftimeID() *TeamUpdate {
+	tu.mutation.ClearCtftimeID()
+	return tu
+}
+
+// SetCtftimeVerifiedAt sets the "ctftime_verified_at" field.
+func (tu *TeamUpdate) SetCtftimeVerifiedAt(t time.Time) *TeamUpdate {
+	tu.mutation.SetCtftimeVerifiedAt(t)
+	return tu
+}
+
+// SetNillableCtftimeVerifiedAt sets the "ctftime_verified_at" field if the given value is not nil.
+func (tu *TeamUpdate) SetNillableCtftimeVerifiedAt(t *time.Time) *TeamUpdate {
+	if t != nil {
+		tu.SetCtftimeVerifiedAt(*t)
+	}
+	return tu
+}
+
+// ClearCtftimeVerifiedAt clears the value of the "ctftime_verified_at" field.
+func (tu *TeamUpdate) ClearCtftimeVerifiedAt() *TeamUpdate {
+	tu.mutation.ClearCtftimeVerifiedAt()
+	return tu
+}
+
 // SetLogo sets the "logo" field.
 func (tu *TeamUpdate) SetLogo(b []byte) *TeamUpdate {
 	tu.mutation.SetLogo(b)
@@ -249,6 +296,21 @@ func (tu *TeamUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	if tu.mutation.DescriptionCleared() {
 		_spec.ClearField(team.FieldDescription, field.TypeString)
 	}
+	if value, ok := tu.mutation.CtftimeID(); ok {
+		_spec.SetField(team.FieldCtftimeID, field.TypeInt, value)
+	}
+	if value, ok := tu.mutation.AddedCtftimeID(); ok {
+		_spec.AddField(team.FieldCtftimeID, field.TypeInt, value)
+	}
+	if tu.mutation.CtftimeIDCleared() {
+		_spec.ClearField(team.FieldCtftimeID, field.TypeInt)
+	}
+	if value, ok := tu.mutation.CtftimeVerifiedAt(); ok {
+		_spec.SetField(team.FieldCtftimeVerifiedAt, field.TypeTime, value)
+	}
+	if tu.mutation.CtftimeVerifiedAtCleared() {
+		_spec.ClearField(team.FieldCtftimeVerifiedAt, field.TypeTime)
+	}
 	if value, ok := tu.mutation.Logo(); ok {
 		_spec.SetField(team.FieldLogo, field.TypeBytes, value)
 	}
@@ -415,6 +477,53 @@ func (tuo *TeamUpdateOne) SetNillableDescription(s *string) *TeamUpdateOne {
 // ClearDescription clears the value of the "description" field.
 func (tuo *TeamUpdateOne) ClearDescription() *TeamUpdateOne {
 	tuo.mutation.ClearDescription()
+	return tuo
+}
+
+// SetCtftimeID sets the "ctftime_id" field.
+func (tuo *TeamUpdateOne) SetCtftimeID(i int) *TeamUpdateOne {
+	tuo.mutation.ResetCtftimeID()
+	tuo.mutation.SetCtftimeID(i)
+	return tuo
+}
+
+// SetNillableCtftimeID sets the "ctftime_id" field if the given value is not nil.
+func (tuo *TeamUpdateOne) SetNillableCtftimeID(i *int) *TeamUpdateOne {
+	if i != nil {
+		tuo.SetCtftimeID(*i)
+	}
+	return tuo
+}
+
+// AddCtftimeID adds i to the "ctftime_id" field.
+func (tuo *TeamUpdateOne) AddCtftimeID(i int) *TeamUpdateOne {
+	tuo.mutation.AddCtftimeID(i)
+	return tuo
+}
+
+// ClearCtftimeID clears the value of the "ctftime_id" field.
+func (tuo *TeamUpdateOne) ClearCtftimeID() *TeamUpdateOne {
+	tuo.mutation.ClearCtftimeID()
+	return tuo
+}
+
+// SetCtftimeVerifiedAt sets the "ctftime_verified_at" field.
+func (tuo *TeamUpdateOne) SetCtftimeVerifiedAt(t time.Time) *TeamUpdateOne {
+	tuo.mutation.SetCtftimeVerifiedAt(t)
+	return tuo
+}
+
+// SetNillableCtftimeVerifiedAt sets the "ctftime_verified_at" field if the given value is not nil.
+func (tuo *TeamUpdateOne) SetNillableCtftimeVerifiedAt(t *time.Time) *TeamUpdateOne {
+	if t != nil {
+		tuo.SetCtftimeVerifiedAt(*t)
+	}
+	return tuo
+}
+
+// ClearCtftimeVerifiedAt clears the value of the "ctftime_verified_at" field.
+func (tuo *TeamUpdateOne) ClearCtftimeVerifiedAt() *TeamUpdateOne {
+	tuo.mutation.ClearCtftimeVerifiedAt()
 	return tuo
 }
 
@@ -633,6 +742,21 @@ func (tuo *TeamUpdateOne) sqlSave(ctx context.Context) (_node *Team, err error) 
 	}
 	if tuo.mutation.DescriptionCleared() {
 		_spec.ClearField(team.FieldDescription, field.TypeString)
+	}
+	if value, ok := tuo.mutation.CtftimeID(); ok {
+		_spec.SetField(team.FieldCtftimeID, field.TypeInt, value)
+	}
+	if value, ok := tuo.mutation.AddedCtftimeID(); ok {
+		_spec.AddField(team.FieldCtftimeID, field.TypeInt, value)
+	}
+	if tuo.mutation.CtftimeIDCleared() {
+		_spec.ClearField(team.FieldCtftimeID, field.TypeInt)
+	}
+	if value, ok := tuo.mutation.CtftimeVerifiedAt(); ok {
+		_spec.SetField(team.FieldCtftimeVerifiedAt, field.TypeTime, value)
+	}
+	if tuo.mutation.CtftimeVerifiedAtCleared() {
+		_spec.ClearField(team.FieldCtftimeVerifiedAt, field.TypeTime)
 	}
 	if value, ok := tuo.mutation.Logo(); ok {
 		_spec.SetField(team.FieldLogo, field.TypeBytes, value)

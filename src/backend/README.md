@@ -71,3 +71,4 @@ whenever new env var is used in the code add it in the following table
 | `APP_NAME`               | Just the app name for logging purposes                                                                                          | [ ]                    |
 | `JWT_SECRET`             | JWT secret used for getting and verifying the JWT token used for authentication. Default: `8c7fafb856380624fa60b22e7baf311d`    | [x]                    |
 | `GIN_MODE`               | Gin _(library for rest)_ running mode. When in prod, this value must be `release`. Default: `debug`                             | [x]                    |
+| `CTFTIME_API_URL`        | Ctftime API url to be used for ctftime integration. Default: `https://ctftime.org/api/v1`                                       | [ ]                    |

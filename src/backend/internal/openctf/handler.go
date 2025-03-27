@@ -1,8 +1,11 @@
 package openctf
 
 import (
+	"context"
 	"log/slog"
 
+	"openctfbackend/ent"
+	"openctfbackend/internal/ctftime"
 	"openctfbackend/internal/service"
 
 	ratelimit "github.com/JGLTechnologies/gin-rate-limit"
@@ -19,15 +22,36 @@ type RestClient interface {
 	Serve()
 }
 
-type Handler struct {
-	RestClient    RestClient
-	ServiceClient *service.Client
+type ServiceClient interface {
+	GetEnt() *ent.Client
+
+	CreateTeam(ctx context.Context, captain *ent.User, dto *service.CreateTeamDto) (*ent.Team, error)
+	ListTeams(ctx context.Context, dto *service.ListTeamsDto) ([]*ent.Team, error)
+	Login(ctx context.Context, dto *service.LoginDto) (*ent.User, *string, error)
+	Register(ctx context.Context, dto *service.RegisterDto) (*ent.User, *string, error)
+	VerifyTeam(ctx context.Context, verifier *ent.User, dto *service.VerifyTeamDto) (*ent.Team, error)
+	VerifyToken(ctx context.Context, token string) (*ent.User, error)
 }
 
-func New(restClient RestClient, serviceClient *service.Client) *Handler {
+type CtftimeClient interface {
+	GetTeam(id int) (*ctftime.Team, error)
+}
+
+type Handler struct {
+	RestClient    RestClient
+	ServiceClient ServiceClient
+	CtftimeClient CtftimeClient
+}
+
+func New(
+	restClient RestClient,
+	serviceClient ServiceClient,
+	ctftimeClient CtftimeClient,
+) *Handler {
 	return &Handler{
 		RestClient:    restClient,
 		ServiceClient: serviceClient,
+		CtftimeClient: ctftimeClient,
 	}
 }
 
@@ -38,7 +62,7 @@ func (h *Handler) Handle() {
 	h.AddRoutes_ApiAuth()
 	h.AddRoutes_ApiTeams()
 
-	defer h.ServiceClient.C.Close()
+	defer h.ServiceClient.GetEnt().Close()
 	slog.Info("serving")
 	h.RestClient.Serve()
 }

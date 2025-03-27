@@ -16,7 +16,7 @@ import (
 
 func (h *Handler) DbHealth() {
 	// adding default admin for the service in the database
-	admin, err := h.ServiceClient.C.User.
+	admin, err := h.ServiceClient.GetEnt().User.
 		Query().
 		Where(user.Username("admin")).
 		First(context.Background())
@@ -28,7 +28,7 @@ func (h *Handler) DbHealth() {
 		encryptedPassword, _ := bcrypt.GenerateFromPassword(
 			[]byte(adminServicePassword), bcrypt.DefaultCost,
 		)
-		admin, err = h.ServiceClient.C.User.
+		admin, err = h.ServiceClient.GetEnt().User.
 			Create().
 			SetUsername("admin").
 			SetEmail("admin@local.host").
@@ -49,7 +49,7 @@ func (h *Handler) DbHealth() {
 	defer ticker.Stop()
 
 	for range ticker.C {
-		if _, err := h.ServiceClient.C.User.Get(context.Background(), admin.ID); err != nil {
+		if _, err := h.ServiceClient.GetEnt().User.Get(context.Background(), admin.ID); err != nil {
 			slog.Error("database unavailable", "error", err)
 		} else {
 			// slog.Info("database is available")

@@ -12,7 +12,8 @@ import (
 type CreateTeamDto struct {
 	Name        string `json:"name"`
 	Description string `json:"description"`
-	// LogoUrl    []byte `json:"password"`
+	CtftimeID   int    `json:"ctftimeId,omitempty"`
+	Logo        []byte
 }
 
 func (c *Client) CreateTeam(ctx context.Context, captain *ent.User, dto *CreateTeamDto) (*ent.Team, error) {
@@ -20,6 +21,8 @@ func (c *Client) CreateTeam(ctx context.Context, captain *ent.User, dto *CreateT
 		Create().
 		SetName(dto.Name).
 		SetDescription(dto.Description).
+		SetCtftimeID(dto.CtftimeID).
+		SetLogo(dto.Logo).
 		SetCaptain(captain).
 		AddMembers(captain).
 		Save(ctx)
