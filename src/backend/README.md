@@ -1,5 +1,7 @@
 # backend
 
+the backend is using [ent go project _(external link)_](https://entgo.io) as the ORM and postgresql as the primary database.
+
 ## models
 
 [entgio docs](https://entgo.io/docs/)
