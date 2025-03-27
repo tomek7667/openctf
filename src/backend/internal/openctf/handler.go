@@ -30,6 +30,7 @@ type ServiceClient interface {
 	Login(ctx context.Context, dto *service.LoginDto) (*ent.User, *string, error)
 	Register(ctx context.Context, dto *service.RegisterDto) (*ent.User, *string, error)
 	VerifyTeam(ctx context.Context, verifier *ent.User, dto *service.VerifyTeamDto) (*ent.Team, error)
+	MergeTeams(ctx context.Context, user *ent.User, dto *service.MergeTeamsDto) (*ent.Team, error)
 	VerifyToken(ctx context.Context, token string) (*ent.User, error)
 }
 
