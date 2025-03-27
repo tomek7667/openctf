@@ -7,8 +7,9 @@ import (
 	"fmt"
 	"log/slog"
 	"net/http"
-	"os"
 	"time"
+
+	"openctfbackend/internal/utils"
 )
 
 type LokiHandler struct {
@@ -59,7 +60,7 @@ func (h *LokiHandler) Handle(ctx context.Context, record slog.Record) error {
 	labels := map[string]string{
 		"job":   h.appName,
 		"level": record.Level.String(),
-		"env":   os.Getenv("ENVIRONMENT"),
+		"env":   utils.Getenv("ENVIRONMENT", "development"),
 	}
 
 	entry := [][]string{
@@ -68,8 +69,8 @@ func (h *LokiHandler) Handle(ctx context.Context, record slog.Record) error {
 			getRecordMessage(record),
 		},
 	}
-	payload := map[string]interface{}{
-		"streams": []map[string]interface{}{
+	payload := map[string]any{
+		"streams": []map[string]any{
 			{
 				"stream": labels,
 				"values": entry,
