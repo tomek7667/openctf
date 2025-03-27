@@ -5,6 +5,8 @@
 - points inflation: too many competitions have 100.0 weight
 - imcomparable weights: an easy competition can be voted very highly as the quality might be high, similarly to a hard competition; discouraging hard competitions
 - there's always a huge gap between 1st and 2nd place in highly ranked competitions
+- voting manipulation: people rate CTF really from 0 to 100, but see only clamped values. Should be more like: "what do you think this ctf should be worth from 0 to 100" and then clamp it
+- points for a challenge might influence global ranking points
 
 ## propositions
 
