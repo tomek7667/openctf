@@ -31,7 +31,6 @@ type Team struct {
 	Edges            TeamEdges `json:"edges"`
 	team_captain     *int
 	team_verified_by *int
-	user_playing_for *int
 	selectValues     sql.SelectValues
 }
 
@@ -41,9 +40,11 @@ type TeamEdges struct {
 	Captain *User `json:"captain,omitempty"`
 	// VerifiedBy holds the value of the verified_by edge.
 	VerifiedBy *User `json:"verified_by,omitempty"`
+	// Members holds the value of the members edge.
+	Members []*User `json:"members,omitempty"`
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [2]bool
+	loadedTypes [3]bool
 }
 
 // CaptainOrErr returns the Captain value or an error if the edge
@@ -68,6 +69,15 @@ func (e TeamEdges) VerifiedByOrErr() (*User, error) {
 	return nil, &NotLoadedError{edge: "verified_by"}
 }
 
+// MembersOrErr returns the Members value or an error if the edge
+// was not loaded in eager-loading.
+func (e TeamEdges) MembersOrErr() ([]*User, error) {
+	if e.loadedTypes[2] {
+		return e.Members, nil
+	}
+	return nil, &NotLoadedError{edge: "members"}
+}
+
 // scanValues returns the types for scanning values from sql.Rows.
 func (*Team) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
@@ -84,8 +94,6 @@ func (*Team) scanValues(columns []string) ([]any, error) {
 		case team.ForeignKeys[0]: // team_captain
 			values[i] = new(sql.NullInt64)
 		case team.ForeignKeys[1]: // team_verified_by
-			values[i] = new(sql.NullInt64)
-		case team.ForeignKeys[2]: // user_playing_for
 			values[i] = new(sql.NullInt64)
 		default:
 			values[i] = new(sql.UnknownType)
@@ -147,13 +155,6 @@ func (t *Team) assignValues(columns []string, values []any) error {
 				t.team_verified_by = new(int)
 				*t.team_verified_by = int(value.Int64)
 			}
-		case team.ForeignKeys[2]:
-			if value, ok := values[i].(*sql.NullInt64); !ok {
-				return fmt.Errorf("unexpected type %T for edge-field user_playing_for", value)
-			} else if value.Valid {
-				t.user_playing_for = new(int)
-				*t.user_playing_for = int(value.Int64)
-			}
 		default:
 			t.selectValues.Set(columns[i], values[i])
 		}
@@ -175,6 +176,11 @@ func (t *Team) QueryCaptain() *UserQuery {
 // QueryVerifiedBy queries the "verified_by" edge of the Team entity.
 func (t *Team) QueryVerifiedBy() *UserQuery {
 	return NewTeamClient(t.config).QueryVerifiedBy(t)
+}
+
+// QueryMembers queries the "members" edge of the Team entity.
+func (t *Team) QueryMembers() *UserQuery {
+	return NewTeamClient(t.config).QueryMembers(t)
 }
 
 // Update returns a builder for updating this Team.

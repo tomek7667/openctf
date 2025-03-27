@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"openctfbackend/ent"
+	"openctfbackend/ent/team"
 	"openctfbackend/ent/user"
 )
 
@@ -42,6 +43,16 @@ func (c *Client) VerifyTeam(ctx context.Context, verifier *ent.User, dto *Verify
 		Save(ctx)
 	if err != nil {
 		return nil, errors.Join(fmt.Errorf("failed saving the team of %d id when verifying", dto.TeamID), err)
+	}
+	t, err = c.C.Team.
+		Query().
+		WithCaptain().
+		WithMembers().
+		WithVerifiedBy().
+		Where(team.ID(t.ID)).
+		First(ctx)
+	if err != nil {
+		return nil, errors.Join(fmt.Errorf("team has been verified but couldn't retrieve it"), err)
 	}
 
 	return t, nil

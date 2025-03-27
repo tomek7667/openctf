@@ -17,7 +17,6 @@ var (
 		{Name: "verified_at", Type: field.TypeTime, Nullable: true},
 		{Name: "team_captain", Type: field.TypeInt, Nullable: true},
 		{Name: "team_verified_by", Type: field.TypeInt, Nullable: true},
-		{Name: "user_playing_for", Type: field.TypeInt, Nullable: true},
 	}
 	// TeamsTable holds the schema information for the "teams" table.
 	TeamsTable = &schema.Table{
@@ -37,12 +36,6 @@ var (
 				RefColumns: []*schema.Column{UsersColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
-			{
-				Symbol:     "teams_users_playing_for",
-				Columns:    []*schema.Column{TeamsColumns[7]},
-				RefColumns: []*schema.Column{UsersColumns[0]},
-				OnDelete:   schema.SetNull,
-			},
 		},
 	}
 	// UsersColumns holds the columns for the "users" table.
@@ -56,12 +49,21 @@ var (
 		{Name: "description", Type: field.TypeString, Nullable: true},
 		{Name: "password", Type: field.TypeString},
 		{Name: "created_at", Type: field.TypeTime},
+		{Name: "team_members", Type: field.TypeInt, Nullable: true},
 	}
 	// UsersTable holds the schema information for the "users" table.
 	UsersTable = &schema.Table{
 		Name:       "users",
 		Columns:    UsersColumns,
 		PrimaryKey: []*schema.Column{UsersColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{
+			{
+				Symbol:     "users_teams_members",
+				Columns:    []*schema.Column{UsersColumns[9]},
+				RefColumns: []*schema.Column{TeamsColumns[0]},
+				OnDelete:   schema.SetNull,
+			},
+		},
 	}
 	// Tables holds all the tables in the schema.
 	Tables = []*schema.Table{
@@ -73,5 +75,5 @@ var (
 func init() {
 	TeamsTable.ForeignKeys[0].RefTable = UsersTable
 	TeamsTable.ForeignKeys[1].RefTable = UsersTable
-	TeamsTable.ForeignKeys[2].RefTable = UsersTable
+	UsersTable.ForeignKeys[0].RefTable = TeamsTable
 }

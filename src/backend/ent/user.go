@@ -32,29 +32,9 @@ type User struct {
 	// Password holds the value of the "password" field.
 	Password string `json:"-"`
 	// CreatedAt holds the value of the "created_at" field.
-	CreatedAt time.Time `json:"created_at,omitempty"`
-	// Edges holds the relations/edges for other nodes in the graph.
-	// The values are being populated by the UserQuery when eager-loading is set.
-	Edges        UserEdges `json:"edges"`
+	CreatedAt    time.Time `json:"created_at,omitempty"`
+	team_members *int
 	selectValues sql.SelectValues
-}
-
-// UserEdges holds the relations/edges for other nodes in the graph.
-type UserEdges struct {
-	// PlayingFor holds the value of the playing_for edge.
-	PlayingFor []*Team `json:"playing_for,omitempty"`
-	// loadedTypes holds the information for reporting if a
-	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [1]bool
-}
-
-// PlayingForOrErr returns the PlayingFor value or an error if the edge
-// was not loaded in eager-loading.
-func (e UserEdges) PlayingForOrErr() ([]*Team, error) {
-	if e.loadedTypes[0] {
-		return e.PlayingFor, nil
-	}
-	return nil, &NotLoadedError{edge: "playing_for"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -68,6 +48,8 @@ func (*User) scanValues(columns []string) ([]any, error) {
 			values[i] = new(sql.NullString)
 		case user.FieldEmailConfirmedAt, user.FieldCreatedAt:
 			values[i] = new(sql.NullTime)
+		case user.ForeignKeys[0]: // team_members
+			values[i] = new(sql.NullInt64)
 		default:
 			values[i] = new(sql.UnknownType)
 		}
@@ -139,6 +121,13 @@ func (u *User) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				u.CreatedAt = value.Time
 			}
+		case user.ForeignKeys[0]:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for edge-field team_members", value)
+			} else if value.Valid {
+				u.team_members = new(int)
+				*u.team_members = int(value.Int64)
+			}
 		default:
 			u.selectValues.Set(columns[i], values[i])
 		}
@@ -150,11 +139,6 @@ func (u *User) assignValues(columns []string, values []any) error {
 // This includes values selected through modifiers, order, etc.
 func (u *User) Value(name string) (ent.Value, error) {
 	return u.selectValues.Get(name)
-}
-
-// QueryPlayingFor queries the "playing_for" edge of the User entity.
-func (u *User) QueryPlayingFor() *TeamQuery {
-	return NewUserClient(u.config).QueryPlayingFor(u)
 }
 
 // Update returns a builder for updating this User.

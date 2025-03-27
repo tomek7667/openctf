@@ -28,6 +28,9 @@ func (c *Client) ListTeams(ctx context.Context, dto *ListTeamsDto) ([]*ent.Team,
 		Query().
 		Limit(dto.Limit).
 		Offset(dto.Offset).
+		WithCaptain().
+		WithMembers().
+		WithVerifiedBy().
 		All(ctx)
 	if err != nil {
 		return nil, errors.Join(fmt.Errorf("failed creating a team"), err)

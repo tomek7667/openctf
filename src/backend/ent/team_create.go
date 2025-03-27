@@ -99,6 +99,21 @@ func (tc *TeamCreate) SetVerifiedBy(u *User) *TeamCreate {
 	return tc.SetVerifiedByID(u.ID)
 }
 
+// AddMemberIDs adds the "members" edge to the User entity by IDs.
+func (tc *TeamCreate) AddMemberIDs(ids ...int) *TeamCreate {
+	tc.mutation.AddMemberIDs(ids...)
+	return tc
+}
+
+// AddMembers adds the "members" edges to the User entity.
+func (tc *TeamCreate) AddMembers(u ...*User) *TeamCreate {
+	ids := make([]int, len(u))
+	for i := range u {
+		ids[i] = u[i].ID
+	}
+	return tc.AddMemberIDs(ids...)
+}
+
 // Mutation returns the TeamMutation object of the builder.
 func (tc *TeamCreate) Mutation() *TeamMutation {
 	return tc.mutation
@@ -220,6 +235,22 @@ func (tc *TeamCreate) createSpec() (*Team, *sqlgraph.CreateSpec) {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
 		_node.team_verified_by = &nodes[0]
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := tc.mutation.MembersIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   team.MembersTable,
+			Columns: []string{team.MembersColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(user.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
 		_spec.Edges = append(_spec.Edges, edge)
 	}
 	return _node, _spec

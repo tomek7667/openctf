@@ -4,6 +4,7 @@ package ent
 
 import (
 	"context"
+	"database/sql/driver"
 	"fmt"
 	"math"
 	"openctfbackend/ent/predicate"
@@ -25,6 +26,7 @@ type TeamQuery struct {
 	predicates     []predicate.Team
 	withCaptain    *UserQuery
 	withVerifiedBy *UserQuery
+	withMembers    *UserQuery
 	withFKs        bool
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
@@ -99,6 +101,28 @@ func (tq *TeamQuery) QueryVerifiedBy() *UserQuery {
 			sqlgraph.From(team.Table, team.FieldID, selector),
 			sqlgraph.To(user.Table, user.FieldID),
 			sqlgraph.Edge(sqlgraph.M2O, false, team.VerifiedByTable, team.VerifiedByColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(tq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
+}
+
+// QueryMembers chains the current query on the "members" edge.
+func (tq *TeamQuery) QueryMembers() *UserQuery {
+	query := (&UserClient{config: tq.config}).Query()
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := tq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		selector := tq.sqlQuery(ctx)
+		if err := selector.Err(); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(team.Table, team.FieldID, selector),
+			sqlgraph.To(user.Table, user.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, team.MembersTable, team.MembersColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(tq.driver.Dialect(), step)
 		return fromU, nil
@@ -300,6 +324,7 @@ func (tq *TeamQuery) Clone() *TeamQuery {
 		predicates:     append([]predicate.Team{}, tq.predicates...),
 		withCaptain:    tq.withCaptain.Clone(),
 		withVerifiedBy: tq.withVerifiedBy.Clone(),
+		withMembers:    tq.withMembers.Clone(),
 		// clone intermediate query.
 		sql:  tq.sql.Clone(),
 		path: tq.path,
@@ -325,6 +350,17 @@ func (tq *TeamQuery) WithVerifiedBy(opts ...func(*UserQuery)) *TeamQuery {
 		opt(query)
 	}
 	tq.withVerifiedBy = query
+	return tq
+}
+
+// WithMembers tells the query-builder to eager-load the nodes that are connected to
+// the "members" edge. The optional arguments are used to configure the query builder of the edge.
+func (tq *TeamQuery) WithMembers(opts ...func(*UserQuery)) *TeamQuery {
+	query := (&UserClient{config: tq.config}).Query()
+	for _, opt := range opts {
+		opt(query)
+	}
+	tq.withMembers = query
 	return tq
 }
 
@@ -407,9 +443,10 @@ func (tq *TeamQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Team, e
 		nodes       = []*Team{}
 		withFKs     = tq.withFKs
 		_spec       = tq.querySpec()
-		loadedTypes = [2]bool{
+		loadedTypes = [3]bool{
 			tq.withCaptain != nil,
 			tq.withVerifiedBy != nil,
+			tq.withMembers != nil,
 		}
 	)
 	if tq.withCaptain != nil || tq.withVerifiedBy != nil {
@@ -445,6 +482,13 @@ func (tq *TeamQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Team, e
 	if query := tq.withVerifiedBy; query != nil {
 		if err := tq.loadVerifiedBy(ctx, query, nodes, nil,
 			func(n *Team, e *User) { n.Edges.VerifiedBy = e }); err != nil {
+			return nil, err
+		}
+	}
+	if query := tq.withMembers; query != nil {
+		if err := tq.loadMembers(ctx, query, nodes,
+			func(n *Team) { n.Edges.Members = []*User{} },
+			func(n *Team, e *User) { n.Edges.Members = append(n.Edges.Members, e) }); err != nil {
 			return nil, err
 		}
 	}
@@ -512,6 +556,37 @@ func (tq *TeamQuery) loadVerifiedBy(ctx context.Context, query *UserQuery, nodes
 		for i := range nodes {
 			assign(nodes[i], n)
 		}
+	}
+	return nil
+}
+func (tq *TeamQuery) loadMembers(ctx context.Context, query *UserQuery, nodes []*Team, init func(*Team), assign func(*Team, *User)) error {
+	fks := make([]driver.Value, 0, len(nodes))
+	nodeids := make(map[int]*Team)
+	for i := range nodes {
+		fks = append(fks, nodes[i].ID)
+		nodeids[nodes[i].ID] = nodes[i]
+		if init != nil {
+			init(nodes[i])
+		}
+	}
+	query.withFKs = true
+	query.Where(predicate.User(func(s *sql.Selector) {
+		s.Where(sql.InValues(s.C(team.MembersColumn), fks...))
+	}))
+	neighbors, err := query.All(ctx)
+	if err != nil {
+		return err
+	}
+	for _, n := range neighbors {
+		fk := n.team_members
+		if fk == nil {
+			return fmt.Errorf(`foreign-key "team_members" is nil for node %v`, n.ID)
+		}
+		node, ok := nodeids[*fk]
+		if !ok {
+			return fmt.Errorf(`unexpected referenced foreign-key "team_members" returned %v for node %v`, *fk, n.ID)
+		}
+		assign(node, n)
 	}
 	return nil
 }

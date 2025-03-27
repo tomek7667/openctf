@@ -6,7 +6,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"openctfbackend/ent/team"
 	"openctfbackend/ent/user"
 	"time"
 
@@ -107,21 +106,6 @@ func (uc *UserCreate) SetNillableCreatedAt(t *time.Time) *UserCreate {
 		uc.SetCreatedAt(*t)
 	}
 	return uc
-}
-
-// AddPlayingForIDs adds the "playing_for" edge to the Team entity by IDs.
-func (uc *UserCreate) AddPlayingForIDs(ids ...int) *UserCreate {
-	uc.mutation.AddPlayingForIDs(ids...)
-	return uc
-}
-
-// AddPlayingFor adds the "playing_for" edges to the Team entity.
-func (uc *UserCreate) AddPlayingFor(t ...*Team) *UserCreate {
-	ids := make([]int, len(t))
-	for i := range t {
-		ids[i] = t[i].ID
-	}
-	return uc.AddPlayingForIDs(ids...)
 }
 
 // Mutation returns the UserMutation object of the builder.
@@ -258,22 +242,6 @@ func (uc *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 	if value, ok := uc.mutation.CreatedAt(); ok {
 		_spec.SetField(user.FieldCreatedAt, field.TypeTime, value)
 		_node.CreatedAt = value
-	}
-	if nodes := uc.mutation.PlayingForIDs(); len(nodes) > 0 {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
-			Inverse: false,
-			Table:   user.PlayingForTable,
-			Columns: []string{user.PlayingForColumn},
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(team.FieldID, field.TypeInt),
-			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		_spec.Edges = append(_spec.Edges, edge)
 	}
 	return _node, _spec
 }

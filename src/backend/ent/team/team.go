@@ -24,6 +24,8 @@ const (
 	EdgeCaptain = "captain"
 	// EdgeVerifiedBy holds the string denoting the verified_by edge name in mutations.
 	EdgeVerifiedBy = "verified_by"
+	// EdgeMembers holds the string denoting the members edge name in mutations.
+	EdgeMembers = "members"
 	// Table holds the table name of the team in the database.
 	Table = "teams"
 	// CaptainTable is the table that holds the captain relation/edge.
@@ -40,6 +42,13 @@ const (
 	VerifiedByInverseTable = "users"
 	// VerifiedByColumn is the table column denoting the verified_by relation/edge.
 	VerifiedByColumn = "team_verified_by"
+	// MembersTable is the table that holds the members relation/edge.
+	MembersTable = "users"
+	// MembersInverseTable is the table name for the User entity.
+	// It exists in this package in order to avoid circular dependency with the "user" package.
+	MembersInverseTable = "users"
+	// MembersColumn is the table column denoting the members relation/edge.
+	MembersColumn = "team_members"
 )
 
 // Columns holds all SQL columns for team fields.
@@ -56,7 +65,6 @@ var Columns = []string{
 var ForeignKeys = []string{
 	"team_captain",
 	"team_verified_by",
-	"user_playing_for",
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -117,6 +125,20 @@ func ByVerifiedByField(field string, opts ...sql.OrderTermOption) OrderOption {
 		sqlgraph.OrderByNeighborTerms(s, newVerifiedByStep(), sql.OrderByField(field, opts...))
 	}
 }
+
+// ByMembersCount orders the results by members count.
+func ByMembersCount(opts ...sql.OrderTermOption) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborsCount(s, newMembersStep(), opts...)
+	}
+}
+
+// ByMembers orders the results by members terms.
+func ByMembers(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborTerms(s, newMembersStep(), append([]sql.OrderTerm{term}, terms...)...)
+	}
+}
 func newCaptainStep() *sqlgraph.Step {
 	return sqlgraph.NewStep(
 		sqlgraph.From(Table, FieldID),
@@ -129,5 +151,12 @@ func newVerifiedByStep() *sqlgraph.Step {
 		sqlgraph.From(Table, FieldID),
 		sqlgraph.To(VerifiedByInverseTable, FieldID),
 		sqlgraph.Edge(sqlgraph.M2O, false, VerifiedByTable, VerifiedByColumn),
+	)
+}
+func newMembersStep() *sqlgraph.Step {
+	return sqlgraph.NewStep(
+		sqlgraph.From(Table, FieldID),
+		sqlgraph.To(MembersInverseTable, FieldID),
+		sqlgraph.Edge(sqlgraph.O2M, false, MembersTable, MembersColumn),
 	)
 }

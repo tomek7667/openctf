@@ -7,7 +7,6 @@ import (
 	"time"
 
 	"entgo.io/ent/dialect/sql"
-	"entgo.io/ent/dialect/sql/sqlgraph"
 )
 
 const (
@@ -31,17 +30,8 @@ const (
 	FieldPassword = "password"
 	// FieldCreatedAt holds the string denoting the created_at field in the database.
 	FieldCreatedAt = "created_at"
-	// EdgePlayingFor holds the string denoting the playing_for edge name in mutations.
-	EdgePlayingFor = "playing_for"
 	// Table holds the table name of the user in the database.
 	Table = "users"
-	// PlayingForTable is the table that holds the playing_for relation/edge.
-	PlayingForTable = "teams"
-	// PlayingForInverseTable is the table name for the Team entity.
-	// It exists in this package in order to avoid circular dependency with the "team" package.
-	PlayingForInverseTable = "teams"
-	// PlayingForColumn is the table column denoting the playing_for relation/edge.
-	PlayingForColumn = "user_playing_for"
 )
 
 // Columns holds all SQL columns for user fields.
@@ -57,10 +47,21 @@ var Columns = []string{
 	FieldCreatedAt,
 }
 
+// ForeignKeys holds the SQL foreign-keys that are owned by the "users"
+// table and are not defined as standalone fields in the schema.
+var ForeignKeys = []string{
+	"team_members",
+}
+
 // ValidColumn reports if the column name is valid (part of the table columns).
 func ValidColumn(column string) bool {
 	for i := range Columns {
 		if column == Columns[i] {
+			return true
+		}
+	}
+	for i := range ForeignKeys {
+		if column == ForeignKeys[i] {
 			return true
 		}
 	}
@@ -149,25 +150,4 @@ func ByPassword(opts ...sql.OrderTermOption) OrderOption {
 // ByCreatedAt orders the results by the created_at field.
 func ByCreatedAt(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldCreatedAt, opts...).ToFunc()
-}
-
-// ByPlayingForCount orders the results by playing_for count.
-func ByPlayingForCount(opts ...sql.OrderTermOption) OrderOption {
-	return func(s *sql.Selector) {
-		sqlgraph.OrderByNeighborsCount(s, newPlayingForStep(), opts...)
-	}
-}
-
-// ByPlayingFor orders the results by playing_for terms.
-func ByPlayingFor(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
-	return func(s *sql.Selector) {
-		sqlgraph.OrderByNeighborTerms(s, newPlayingForStep(), append([]sql.OrderTerm{term}, terms...)...)
-	}
-}
-func newPlayingForStep() *sqlgraph.Step {
-	return sqlgraph.NewStep(
-		sqlgraph.From(Table, FieldID),
-		sqlgraph.To(PlayingForInverseTable, FieldID),
-		sqlgraph.Edge(sqlgraph.O2M, false, PlayingForTable, PlayingForColumn),
-	)
 }

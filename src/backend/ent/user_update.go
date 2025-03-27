@@ -7,7 +7,6 @@ import (
 	"errors"
 	"fmt"
 	"openctfbackend/ent/predicate"
-	"openctfbackend/ent/team"
 	"openctfbackend/ent/user"
 	"time"
 
@@ -145,45 +144,9 @@ func (uu *UserUpdate) SetNillablePassword(s *string) *UserUpdate {
 	return uu
 }
 
-// AddPlayingForIDs adds the "playing_for" edge to the Team entity by IDs.
-func (uu *UserUpdate) AddPlayingForIDs(ids ...int) *UserUpdate {
-	uu.mutation.AddPlayingForIDs(ids...)
-	return uu
-}
-
-// AddPlayingFor adds the "playing_for" edges to the Team entity.
-func (uu *UserUpdate) AddPlayingFor(t ...*Team) *UserUpdate {
-	ids := make([]int, len(t))
-	for i := range t {
-		ids[i] = t[i].ID
-	}
-	return uu.AddPlayingForIDs(ids...)
-}
-
 // Mutation returns the UserMutation object of the builder.
 func (uu *UserUpdate) Mutation() *UserMutation {
 	return uu.mutation
-}
-
-// ClearPlayingFor clears all "playing_for" edges to the Team entity.
-func (uu *UserUpdate) ClearPlayingFor() *UserUpdate {
-	uu.mutation.ClearPlayingFor()
-	return uu
-}
-
-// RemovePlayingForIDs removes the "playing_for" edge to Team entities by IDs.
-func (uu *UserUpdate) RemovePlayingForIDs(ids ...int) *UserUpdate {
-	uu.mutation.RemovePlayingForIDs(ids...)
-	return uu
-}
-
-// RemovePlayingFor removes "playing_for" edges to Team entities.
-func (uu *UserUpdate) RemovePlayingFor(t ...*Team) *UserUpdate {
-	ids := make([]int, len(t))
-	for i := range t {
-		ids[i] = t[i].ID
-	}
-	return uu.RemovePlayingForIDs(ids...)
 }
 
 // Save executes the query and returns the number of nodes affected by the update operation.
@@ -274,51 +237,6 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if value, ok := uu.mutation.Password(); ok {
 		_spec.SetField(user.FieldPassword, field.TypeString, value)
-	}
-	if uu.mutation.PlayingForCleared() {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
-			Inverse: false,
-			Table:   user.PlayingForTable,
-			Columns: []string{user.PlayingForColumn},
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(team.FieldID, field.TypeInt),
-			},
-		}
-		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
-	}
-	if nodes := uu.mutation.RemovedPlayingForIDs(); len(nodes) > 0 && !uu.mutation.PlayingForCleared() {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
-			Inverse: false,
-			Table:   user.PlayingForTable,
-			Columns: []string{user.PlayingForColumn},
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(team.FieldID, field.TypeInt),
-			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
-	}
-	if nodes := uu.mutation.PlayingForIDs(); len(nodes) > 0 {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
-			Inverse: false,
-			Table:   user.PlayingForTable,
-			Columns: []string{user.PlayingForColumn},
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(team.FieldID, field.TypeInt),
-			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
 	if n, err = sqlgraph.UpdateNodes(ctx, uu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
@@ -456,45 +374,9 @@ func (uuo *UserUpdateOne) SetNillablePassword(s *string) *UserUpdateOne {
 	return uuo
 }
 
-// AddPlayingForIDs adds the "playing_for" edge to the Team entity by IDs.
-func (uuo *UserUpdateOne) AddPlayingForIDs(ids ...int) *UserUpdateOne {
-	uuo.mutation.AddPlayingForIDs(ids...)
-	return uuo
-}
-
-// AddPlayingFor adds the "playing_for" edges to the Team entity.
-func (uuo *UserUpdateOne) AddPlayingFor(t ...*Team) *UserUpdateOne {
-	ids := make([]int, len(t))
-	for i := range t {
-		ids[i] = t[i].ID
-	}
-	return uuo.AddPlayingForIDs(ids...)
-}
-
 // Mutation returns the UserMutation object of the builder.
 func (uuo *UserUpdateOne) Mutation() *UserMutation {
 	return uuo.mutation
-}
-
-// ClearPlayingFor clears all "playing_for" edges to the Team entity.
-func (uuo *UserUpdateOne) ClearPlayingFor() *UserUpdateOne {
-	uuo.mutation.ClearPlayingFor()
-	return uuo
-}
-
-// RemovePlayingForIDs removes the "playing_for" edge to Team entities by IDs.
-func (uuo *UserUpdateOne) RemovePlayingForIDs(ids ...int) *UserUpdateOne {
-	uuo.mutation.RemovePlayingForIDs(ids...)
-	return uuo
-}
-
-// RemovePlayingFor removes "playing_for" edges to Team entities.
-func (uuo *UserUpdateOne) RemovePlayingFor(t ...*Team) *UserUpdateOne {
-	ids := make([]int, len(t))
-	for i := range t {
-		ids[i] = t[i].ID
-	}
-	return uuo.RemovePlayingForIDs(ids...)
 }
 
 // Where appends a list predicates to the UserUpdate builder.
@@ -615,51 +497,6 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 	}
 	if value, ok := uuo.mutation.Password(); ok {
 		_spec.SetField(user.FieldPassword, field.TypeString, value)
-	}
-	if uuo.mutation.PlayingForCleared() {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
-			Inverse: false,
-			Table:   user.PlayingForTable,
-			Columns: []string{user.PlayingForColumn},
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(team.FieldID, field.TypeInt),
-			},
-		}
-		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
-	}
-	if nodes := uuo.mutation.RemovedPlayingForIDs(); len(nodes) > 0 && !uuo.mutation.PlayingForCleared() {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
-			Inverse: false,
-			Table:   user.PlayingForTable,
-			Columns: []string{user.PlayingForColumn},
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(team.FieldID, field.TypeInt),
-			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
-	}
-	if nodes := uuo.mutation.PlayingForIDs(); len(nodes) > 0 {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
-			Inverse: false,
-			Table:   user.PlayingForTable,
-			Columns: []string{user.PlayingForColumn},
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(team.FieldID, field.TypeInt),
-			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
 	_node = &User{config: uuo.config}
 	_spec.Assign = _node.assignValues
