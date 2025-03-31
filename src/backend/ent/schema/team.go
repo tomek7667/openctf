@@ -8,12 +8,10 @@ import (
 	"entgo.io/ent/schema/field"
 )
 
-// Team holds the schema definition for the Team entity.
 type Team struct {
 	ent.Schema
 }
 
-// Fields of the Team.
 func (Team) Fields() []ent.Field {
 	return []ent.Field{
 		field.String("name").Match(regexp.MustCompile("[a-z0-9 _-]+$")).Unique(),
@@ -25,7 +23,6 @@ func (Team) Fields() []ent.Field {
 	}
 }
 
-// Edges of the Team.
 func (Team) Edges() []ent.Edge {
 	return []ent.Edge{
 		edge.To("captain", User.Type).Unique(),

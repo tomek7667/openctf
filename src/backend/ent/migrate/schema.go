@@ -8,6 +8,65 @@ import (
 )
 
 var (
+	// ContestsColumns holds the columns for the "contests" table.
+	ContestsColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "name", Type: field.TypeString, Unique: true},
+		{Name: "description", Type: field.TypeString, Nullable: true},
+		{Name: "rules", Type: field.TypeString, Nullable: true},
+		{Name: "prizes", Type: field.TypeString, Nullable: true},
+		{Name: "start", Type: field.TypeTime},
+		{Name: "end", Type: field.TypeTime},
+		{Name: "url", Type: field.TypeString, Nullable: true},
+		{Name: "ctftime_id", Type: field.TypeInt, Nullable: true},
+		{Name: "assigned_weight_points", Type: field.TypeInt, Default: 0},
+		{Name: "contest_organizers", Type: field.TypeInt},
+	}
+	// ContestsTable holds the schema information for the "contests" table.
+	ContestsTable = &schema.Table{
+		Name:       "contests",
+		Columns:    ContestsColumns,
+		PrimaryKey: []*schema.Column{ContestsColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{
+			{
+				Symbol:     "contests_teams_organizers",
+				Columns:    []*schema.Column{ContestsColumns[10]},
+				RefColumns: []*schema.Column{TeamsColumns[0]},
+				OnDelete:   schema.NoAction,
+			},
+		},
+	}
+	// PlacesColumns holds the columns for the "places" table.
+	PlacesColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "team_name", Type: field.TypeString, Unique: true},
+		{Name: "place", Type: field.TypeInt},
+		{Name: "contest_points", Type: field.TypeFloat64, Nullable: true},
+		{Name: "openctf_points", Type: field.TypeFloat64, Nullable: true},
+		{Name: "assigned_weight_points", Type: field.TypeInt, Default: 0},
+		{Name: "place_contest", Type: field.TypeInt},
+		{Name: "place_associated_team", Type: field.TypeInt, Nullable: true},
+	}
+	// PlacesTable holds the schema information for the "places" table.
+	PlacesTable = &schema.Table{
+		Name:       "places",
+		Columns:    PlacesColumns,
+		PrimaryKey: []*schema.Column{PlacesColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{
+			{
+				Symbol:     "places_contests_contest",
+				Columns:    []*schema.Column{PlacesColumns[6]},
+				RefColumns: []*schema.Column{ContestsColumns[0]},
+				OnDelete:   schema.NoAction,
+			},
+			{
+				Symbol:     "places_teams_associated_team",
+				Columns:    []*schema.Column{PlacesColumns[7]},
+				RefColumns: []*schema.Column{TeamsColumns[0]},
+				OnDelete:   schema.SetNull,
+			},
+		},
+	}
 	// TeamsColumns holds the columns for the "teams" table.
 	TeamsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
@@ -69,12 +128,17 @@ var (
 	}
 	// Tables holds all the tables in the schema.
 	Tables = []*schema.Table{
+		ContestsTable,
+		PlacesTable,
 		TeamsTable,
 		UsersTable,
 	}
 )
 
 func init() {
+	ContestsTable.ForeignKeys[0].RefTable = TeamsTable
+	PlacesTable.ForeignKeys[0].RefTable = ContestsTable
+	PlacesTable.ForeignKeys[1].RefTable = TeamsTable
 	TeamsTable.ForeignKeys[0].RefTable = UsersTable
 	TeamsTable.ForeignKeys[1].RefTable = UsersTable
 	UsersTable.ForeignKeys[0].RefTable = TeamsTable

@@ -6,6 +6,12 @@ import (
 	"entgo.io/ent/dialect/sql"
 )
 
+// Contest is the predicate function for contest builders.
+type Contest func(*sql.Selector)
+
+// Place is the predicate function for place builders.
+type Place func(*sql.Selector)
+
 // Team is the predicate function for team builders.
 type Team func(*sql.Selector)
 

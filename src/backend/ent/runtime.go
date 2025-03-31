@@ -3,6 +3,8 @@
 package ent
 
 import (
+	"openctfbackend/ent/contest"
+	"openctfbackend/ent/place"
 	"openctfbackend/ent/schema"
 	"openctfbackend/ent/team"
 	"openctfbackend/ent/user"
@@ -13,6 +15,42 @@ import (
 // (default values, validators, hooks and policies) and stitches it
 // to their package variables.
 func init() {
+	contestFields := schema.Contest{}.Fields()
+	_ = contestFields
+	// contestDescName is the schema descriptor for name field.
+	contestDescName := contestFields[0].Descriptor()
+	// contest.NameValidator is a validator for the "name" field. It is called by the builders before save.
+	contest.NameValidator = contestDescName.Validators[0].(func(string) error)
+	// contestDescURL is the schema descriptor for url field.
+	contestDescURL := contestFields[6].Descriptor()
+	// contest.URLValidator is a validator for the "url" field. It is called by the builders before save.
+	contest.URLValidator = contestDescURL.Validators[0].(func(string) error)
+	// contestDescAssignedWeightPoints is the schema descriptor for assigned_weight_points field.
+	contestDescAssignedWeightPoints := contestFields[8].Descriptor()
+	// contest.DefaultAssignedWeightPoints holds the default value on creation for the assigned_weight_points field.
+	contest.DefaultAssignedWeightPoints = contestDescAssignedWeightPoints.Default.(int)
+	placeFields := schema.Place{}.Fields()
+	_ = placeFields
+	// placeDescTeamName is the schema descriptor for team_name field.
+	placeDescTeamName := placeFields[0].Descriptor()
+	// place.TeamNameValidator is a validator for the "team_name" field. It is called by the builders before save.
+	place.TeamNameValidator = placeDescTeamName.Validators[0].(func(string) error)
+	// placeDescPlace is the schema descriptor for place field.
+	placeDescPlace := placeFields[1].Descriptor()
+	// place.PlaceValidator is a validator for the "place" field. It is called by the builders before save.
+	place.PlaceValidator = placeDescPlace.Validators[0].(func(int) error)
+	// placeDescContestPoints is the schema descriptor for contest_points field.
+	placeDescContestPoints := placeFields[2].Descriptor()
+	// place.ContestPointsValidator is a validator for the "contest_points" field. It is called by the builders before save.
+	place.ContestPointsValidator = placeDescContestPoints.Validators[0].(func(float64) error)
+	// placeDescOpenctfPoints is the schema descriptor for openctf_points field.
+	placeDescOpenctfPoints := placeFields[3].Descriptor()
+	// place.OpenctfPointsValidator is a validator for the "openctf_points" field. It is called by the builders before save.
+	place.OpenctfPointsValidator = placeDescOpenctfPoints.Validators[0].(func(float64) error)
+	// placeDescAssignedWeightPoints is the schema descriptor for assigned_weight_points field.
+	placeDescAssignedWeightPoints := placeFields[4].Descriptor()
+	// place.DefaultAssignedWeightPoints holds the default value on creation for the assigned_weight_points field.
+	place.DefaultAssignedWeightPoints = placeDescAssignedWeightPoints.Default.(int)
 	teamFields := schema.Team{}.Fields()
 	_ = teamFields
 	// teamDescName is the schema descriptor for name field.
