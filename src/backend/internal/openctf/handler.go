@@ -2,7 +2,6 @@ package openctf
 
 import (
 	"context"
-	"log/slog"
 
 	"openctfbackend/ent"
 	"openctfbackend/internal/ctftime"
@@ -55,16 +54,4 @@ func New(
 		ServiceClient: serviceClient,
 		CtftimeClient: ctftimeClient,
 	}
-}
-
-func (h *Handler) Handle() {
-	slog.Info("starting openctf handler")
-	go h.DbHealth()
-
-	h.AddRoutes_ApiAuth()
-	h.AddRoutes_ApiTeams()
-
-	defer h.ServiceClient.GetEnt().Close()
-	slog.Info("serving")
-	h.RestClient.Serve()
 }

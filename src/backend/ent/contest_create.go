@@ -129,6 +129,14 @@ func (cc *ContestCreate) SetOrganizersID(id int) *ContestCreate {
 	return cc
 }
 
+// SetNillableOrganizersID sets the "organizers" edge to the Team entity by ID if the given value is not nil.
+func (cc *ContestCreate) SetNillableOrganizersID(id *int) *ContestCreate {
+	if id != nil {
+		cc = cc.SetOrganizersID(*id)
+	}
+	return cc
+}
+
 // SetOrganizers sets the "organizers" edge to the Team entity.
 func (cc *ContestCreate) SetOrganizers(t *Team) *ContestCreate {
 	return cc.SetOrganizersID(t.ID)
@@ -198,9 +206,6 @@ func (cc *ContestCreate) check() error {
 	}
 	if _, ok := cc.mutation.AssignedWeightPoints(); !ok {
 		return &ValidationError{Name: "assigned_weight_points", err: errors.New(`ent: missing required field "Contest.assigned_weight_points"`)}
-	}
-	if len(cc.mutation.OrganizersIDs()) == 0 {
-		return &ValidationError{Name: "organizers", err: errors.New(`ent: missing required edge "Contest.organizers"`)}
 	}
 	return nil
 }

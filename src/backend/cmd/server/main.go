@@ -3,7 +3,9 @@ package main
 import (
 	"fmt"
 	"log/slog"
+	"sync"
 
+	"openctfbackend/internal/crawler"
 	"openctfbackend/internal/ctftime"
 	"openctfbackend/internal/logger"
 	"openctfbackend/internal/openctf"
@@ -48,11 +50,35 @@ func init() {
 }
 
 func main() {
-	handler := openctf.New(
+	openctf := openctf.New(
 		restClient,
 		serviceClient,
 		ctftimeClient,
 	)
+	crawler := crawler.New(
+		serviceClient,
+		ctftimeClient,
+	)
 
-	handler.Handle()
+	wg := &sync.WaitGroup{}
+	wg.Add(2)
+	go func() {
+		defer wg.Done()
+		defer func() {
+			if r := recover(); r != nil {
+				slog.Error("panic recovered in crawler.Handle", "err", r)
+			}
+		}()
+		crawler.Handle()
+	}()
+	go func() {
+		defer wg.Done()
+		defer func() {
+			if r := recover(); r != nil {
+				slog.Error("panic recovered in openctf.Handle", "err", r)
+			}
+		}()
+		openctf.Handle()
+	}()
+	wg.Wait()
 }

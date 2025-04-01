@@ -1,21 +1,23 @@
 package crawler
 
 import (
-	"log/slog"
+	"context"
 	"time"
 
 	"openctfbackend/ent"
 	"openctfbackend/internal/ctftime"
+	"openctfbackend/internal/service"
 )
 
 type ServiceClient interface {
 	GetEnt() *ent.Client
 
-	// TODO: CreateEvent()
+	GetContestByCtftimeID(ctx context.Context, ctftimeID int) (*ent.Contest, error)
+	CreateContest(ctx context.Context, dto *service.CreateContestDto) (*ent.Contest, error)
 }
 
 type CtftimeClient interface {
-	GetEventsBetween(start, finish time.Time) ([]ctftime.Event, error)
+	GetEventsBetween(ctx context.Context, start, finish time.Time) ([]ctftime.Event, error)
 }
 
 type Handler struct {
@@ -31,9 +33,4 @@ func New(
 		ServiceClient: serviceClient,
 		CtftimeClient: ctftimeClient,
 	}
-}
-
-func (h *Handler) Handle() {
-	slog.Info("starting crawler handler")
-	defer h.ServiceClient.GetEnt().Close()
 }

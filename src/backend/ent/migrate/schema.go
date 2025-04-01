@@ -20,7 +20,7 @@ var (
 		{Name: "url", Type: field.TypeString, Nullable: true},
 		{Name: "ctftime_id", Type: field.TypeInt, Nullable: true},
 		{Name: "assigned_weight_points", Type: field.TypeInt, Default: 0},
-		{Name: "contest_organizers", Type: field.TypeInt},
+		{Name: "contest_organizers", Type: field.TypeInt, Nullable: true},
 	}
 	// ContestsTable holds the schema information for the "contests" table.
 	ContestsTable = &schema.Table{
@@ -32,7 +32,7 @@ var (
 				Symbol:     "contests_teams_organizers",
 				Columns:    []*schema.Column{ContestsColumns[10]},
 				RefColumns: []*schema.Column{TeamsColumns[0]},
-				OnDelete:   schema.NoAction,
+				OnDelete:   schema.SetNull,
 			},
 		},
 	}

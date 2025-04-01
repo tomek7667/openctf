@@ -205,6 +205,14 @@ func (cu *ContestUpdate) SetOrganizersID(id int) *ContestUpdate {
 	return cu
 }
 
+// SetNillableOrganizersID sets the "organizers" edge to the Team entity by ID if the given value is not nil.
+func (cu *ContestUpdate) SetNillableOrganizersID(id *int) *ContestUpdate {
+	if id != nil {
+		cu = cu.SetOrganizersID(*id)
+	}
+	return cu
+}
+
 // SetOrganizers sets the "organizers" edge to the Team entity.
 func (cu *ContestUpdate) SetOrganizers(t *Team) *ContestUpdate {
 	return cu.SetOrganizersID(t.ID)
@@ -259,9 +267,6 @@ func (cu *ContestUpdate) check() error {
 		if err := contest.URLValidator(v); err != nil {
 			return &ValidationError{Name: "url", err: fmt.Errorf(`ent: validator failed for field "Contest.url": %w`, err)}
 		}
-	}
-	if cu.mutation.OrganizersCleared() && len(cu.mutation.OrganizersIDs()) > 0 {
-		return errors.New(`ent: clearing a required unique edge "Contest.organizers"`)
 	}
 	return nil
 }
@@ -551,6 +556,14 @@ func (cuo *ContestUpdateOne) SetOrganizersID(id int) *ContestUpdateOne {
 	return cuo
 }
 
+// SetNillableOrganizersID sets the "organizers" edge to the Team entity by ID if the given value is not nil.
+func (cuo *ContestUpdateOne) SetNillableOrganizersID(id *int) *ContestUpdateOne {
+	if id != nil {
+		cuo = cuo.SetOrganizersID(*id)
+	}
+	return cuo
+}
+
 // SetOrganizers sets the "organizers" edge to the Team entity.
 func (cuo *ContestUpdateOne) SetOrganizers(t *Team) *ContestUpdateOne {
 	return cuo.SetOrganizersID(t.ID)
@@ -618,9 +631,6 @@ func (cuo *ContestUpdateOne) check() error {
 		if err := contest.URLValidator(v); err != nil {
 			return &ValidationError{Name: "url", err: fmt.Errorf(`ent: validator failed for field "Contest.url": %w`, err)}
 		}
-	}
-	if cuo.mutation.OrganizersCleared() && len(cuo.mutation.OrganizersIDs()) > 0 {
-		return errors.New(`ent: clearing a required unique edge "Contest.organizers"`)
 	}
 	return nil
 }
