@@ -47,9 +47,11 @@ type Contest struct {
 type ContestEdges struct {
 	// Organizers holds the value of the organizers edge.
 	Organizers *Team `json:"organizers,omitempty"`
+	// Places holds the value of the places edge.
+	Places []*Place `json:"places,omitempty"`
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [1]bool
+	loadedTypes [2]bool
 }
 
 // OrganizersOrErr returns the Organizers value or an error if the edge
@@ -61,6 +63,15 @@ func (e ContestEdges) OrganizersOrErr() (*Team, error) {
 		return nil, &NotFoundError{label: team.Label}
 	}
 	return nil, &NotLoadedError{edge: "organizers"}
+}
+
+// PlacesOrErr returns the Places value or an error if the edge
+// was not loaded in eager-loading.
+func (e ContestEdges) PlacesOrErr() ([]*Place, error) {
+	if e.loadedTypes[1] {
+		return e.Places, nil
+	}
+	return nil, &NotLoadedError{edge: "places"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -179,6 +190,11 @@ func (c *Contest) Value(name string) (ent.Value, error) {
 // QueryOrganizers queries the "organizers" edge of the Contest entity.
 func (c *Contest) QueryOrganizers() *TeamQuery {
 	return NewContestClient(c.config).QueryOrganizers(c)
+}
+
+// QueryPlaces queries the "places" edge of the Contest entity.
+func (c *Contest) QueryPlaces() *PlaceQuery {
+	return NewContestClient(c.config).QueryPlaces(c)
 }
 
 // Update returns a builder for updating this Contest.

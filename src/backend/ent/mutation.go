@@ -53,6 +53,9 @@ type ContestMutation struct {
 	clearedFields             map[string]struct{}
 	organizers                *int
 	clearedorganizers         bool
+	places                    map[int]struct{}
+	removedplaces             map[int]struct{}
+	clearedplaces             bool
 	done                      bool
 	oldValue                  func(context.Context) (*Contest, error)
 	predicates                []predicate.Contest
@@ -625,6 +628,60 @@ func (m *ContestMutation) ResetOrganizers() {
 	m.clearedorganizers = false
 }
 
+// AddPlaceIDs adds the "places" edge to the Place entity by ids.
+func (m *ContestMutation) AddPlaceIDs(ids ...int) {
+	if m.places == nil {
+		m.places = make(map[int]struct{})
+	}
+	for i := range ids {
+		m.places[ids[i]] = struct{}{}
+	}
+}
+
+// ClearPlaces clears the "places" edge to the Place entity.
+func (m *ContestMutation) ClearPlaces() {
+	m.clearedplaces = true
+}
+
+// PlacesCleared reports if the "places" edge to the Place entity was cleared.
+func (m *ContestMutation) PlacesCleared() bool {
+	return m.clearedplaces
+}
+
+// RemovePlaceIDs removes the "places" edge to the Place entity by IDs.
+func (m *ContestMutation) RemovePlaceIDs(ids ...int) {
+	if m.removedplaces == nil {
+		m.removedplaces = make(map[int]struct{})
+	}
+	for i := range ids {
+		delete(m.places, ids[i])
+		m.removedplaces[ids[i]] = struct{}{}
+	}
+}
+
+// RemovedPlaces returns the removed IDs of the "places" edge to the Place entity.
+func (m *ContestMutation) RemovedPlacesIDs() (ids []int) {
+	for id := range m.removedplaces {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// PlacesIDs returns the "places" edge IDs in the mutation.
+func (m *ContestMutation) PlacesIDs() (ids []int) {
+	for id := range m.places {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// ResetPlaces resets all changes to the "places" edge.
+func (m *ContestMutation) ResetPlaces() {
+	m.places = nil
+	m.clearedplaces = false
+	m.removedplaces = nil
+}
+
 // Where appends a list predicates to the ContestMutation builder.
 func (m *ContestMutation) Where(ps ...predicate.Contest) {
 	m.predicates = append(m.predicates, ps...)
@@ -954,9 +1011,12 @@ func (m *ContestMutation) ResetField(name string) error {
 
 // AddedEdges returns all edge names that were set/added in this mutation.
 func (m *ContestMutation) AddedEdges() []string {
-	edges := make([]string, 0, 1)
+	edges := make([]string, 0, 2)
 	if m.organizers != nil {
 		edges = append(edges, contest.EdgeOrganizers)
+	}
+	if m.places != nil {
+		edges = append(edges, contest.EdgePlaces)
 	}
 	return edges
 }
@@ -969,27 +1029,47 @@ func (m *ContestMutation) AddedIDs(name string) []ent.Value {
 		if id := m.organizers; id != nil {
 			return []ent.Value{*id}
 		}
+	case contest.EdgePlaces:
+		ids := make([]ent.Value, 0, len(m.places))
+		for id := range m.places {
+			ids = append(ids, id)
+		}
+		return ids
 	}
 	return nil
 }
 
 // RemovedEdges returns all edge names that were removed in this mutation.
 func (m *ContestMutation) RemovedEdges() []string {
-	edges := make([]string, 0, 1)
+	edges := make([]string, 0, 2)
+	if m.removedplaces != nil {
+		edges = append(edges, contest.EdgePlaces)
+	}
 	return edges
 }
 
 // RemovedIDs returns all IDs (to other nodes) that were removed for the edge with
 // the given name in this mutation.
 func (m *ContestMutation) RemovedIDs(name string) []ent.Value {
+	switch name {
+	case contest.EdgePlaces:
+		ids := make([]ent.Value, 0, len(m.removedplaces))
+		for id := range m.removedplaces {
+			ids = append(ids, id)
+		}
+		return ids
+	}
 	return nil
 }
 
 // ClearedEdges returns all edge names that were cleared in this mutation.
 func (m *ContestMutation) ClearedEdges() []string {
-	edges := make([]string, 0, 1)
+	edges := make([]string, 0, 2)
 	if m.clearedorganizers {
 		edges = append(edges, contest.EdgeOrganizers)
+	}
+	if m.clearedplaces {
+		edges = append(edges, contest.EdgePlaces)
 	}
 	return edges
 }
@@ -1000,6 +1080,8 @@ func (m *ContestMutation) EdgeCleared(name string) bool {
 	switch name {
 	case contest.EdgeOrganizers:
 		return m.clearedorganizers
+	case contest.EdgePlaces:
+		return m.clearedplaces
 	}
 	return false
 }
@@ -1022,6 +1104,9 @@ func (m *ContestMutation) ResetEdge(name string) error {
 	case contest.EdgeOrganizers:
 		m.ResetOrganizers()
 		return nil
+	case contest.EdgePlaces:
+		m.ResetPlaces()
+		return nil
 	}
 	return fmt.Errorf("unknown Contest edge %s", name)
 }
@@ -1042,8 +1127,8 @@ type PlaceMutation struct {
 	assigned_weight_points    *int
 	addassigned_weight_points *int
 	clearedFields             map[string]struct{}
-	contest                   *int
-	clearedcontest            bool
+	associated_contest        *int
+	clearedassociated_contest bool
 	associated_team           *int
 	clearedassociated_team    bool
 	done                      bool
@@ -1381,6 +1466,42 @@ func (m *PlaceMutation) ResetOpenctfPoints() {
 	delete(m.clearedFields, place.FieldOpenctfPoints)
 }
 
+// SetAssociatedContestID sets the "associated_contest_id" field.
+func (m *PlaceMutation) SetAssociatedContestID(i int) {
+	m.associated_contest = &i
+}
+
+// AssociatedContestID returns the value of the "associated_contest_id" field in the mutation.
+func (m *PlaceMutation) AssociatedContestID() (r int, exists bool) {
+	v := m.associated_contest
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldAssociatedContestID returns the old "associated_contest_id" field's value of the Place entity.
+// If the Place object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *PlaceMutation) OldAssociatedContestID(ctx context.Context) (v int, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldAssociatedContestID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldAssociatedContestID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldAssociatedContestID: %w", err)
+	}
+	return oldValue.AssociatedContestID, nil
+}
+
+// ResetAssociatedContestID resets all changes to the "associated_contest_id" field.
+func (m *PlaceMutation) ResetAssociatedContestID() {
+	m.associated_contest = nil
+}
+
 // SetAssignedWeightPoints sets the "assigned_weight_points" field.
 func (m *PlaceMutation) SetAssignedWeightPoints(i int) {
 	m.assigned_weight_points = &i
@@ -1437,43 +1558,31 @@ func (m *PlaceMutation) ResetAssignedWeightPoints() {
 	m.addassigned_weight_points = nil
 }
 
-// SetContestID sets the "contest" edge to the Contest entity by id.
-func (m *PlaceMutation) SetContestID(id int) {
-	m.contest = &id
+// ClearAssociatedContest clears the "associated_contest" edge to the Contest entity.
+func (m *PlaceMutation) ClearAssociatedContest() {
+	m.clearedassociated_contest = true
+	m.clearedFields[place.FieldAssociatedContestID] = struct{}{}
 }
 
-// ClearContest clears the "contest" edge to the Contest entity.
-func (m *PlaceMutation) ClearContest() {
-	m.clearedcontest = true
+// AssociatedContestCleared reports if the "associated_contest" edge to the Contest entity was cleared.
+func (m *PlaceMutation) AssociatedContestCleared() bool {
+	return m.clearedassociated_contest
 }
 
-// ContestCleared reports if the "contest" edge to the Contest entity was cleared.
-func (m *PlaceMutation) ContestCleared() bool {
-	return m.clearedcontest
-}
-
-// ContestID returns the "contest" edge ID in the mutation.
-func (m *PlaceMutation) ContestID() (id int, exists bool) {
-	if m.contest != nil {
-		return *m.contest, true
-	}
-	return
-}
-
-// ContestIDs returns the "contest" edge IDs in the mutation.
+// AssociatedContestIDs returns the "associated_contest" edge IDs in the mutation.
 // Note that IDs always returns len(IDs) <= 1 for unique edges, and you should use
-// ContestID instead. It exists only for internal usage by the builders.
-func (m *PlaceMutation) ContestIDs() (ids []int) {
-	if id := m.contest; id != nil {
+// AssociatedContestID instead. It exists only for internal usage by the builders.
+func (m *PlaceMutation) AssociatedContestIDs() (ids []int) {
+	if id := m.associated_contest; id != nil {
 		ids = append(ids, *id)
 	}
 	return
 }
 
-// ResetContest resets all changes to the "contest" edge.
-func (m *PlaceMutation) ResetContest() {
-	m.contest = nil
-	m.clearedcontest = false
+// ResetAssociatedContest resets all changes to the "associated_contest" edge.
+func (m *PlaceMutation) ResetAssociatedContest() {
+	m.associated_contest = nil
+	m.clearedassociated_contest = false
 }
 
 // SetAssociatedTeamID sets the "associated_team" edge to the Team entity by id.
@@ -1549,7 +1658,7 @@ func (m *PlaceMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *PlaceMutation) Fields() []string {
-	fields := make([]string, 0, 5)
+	fields := make([]string, 0, 6)
 	if m.team_name != nil {
 		fields = append(fields, place.FieldTeamName)
 	}
@@ -1561,6 +1670,9 @@ func (m *PlaceMutation) Fields() []string {
 	}
 	if m.openctf_points != nil {
 		fields = append(fields, place.FieldOpenctfPoints)
+	}
+	if m.associated_contest != nil {
+		fields = append(fields, place.FieldAssociatedContestID)
 	}
 	if m.assigned_weight_points != nil {
 		fields = append(fields, place.FieldAssignedWeightPoints)
@@ -1581,6 +1693,8 @@ func (m *PlaceMutation) Field(name string) (ent.Value, bool) {
 		return m.ContestPoints()
 	case place.FieldOpenctfPoints:
 		return m.OpenctfPoints()
+	case place.FieldAssociatedContestID:
+		return m.AssociatedContestID()
 	case place.FieldAssignedWeightPoints:
 		return m.AssignedWeightPoints()
 	}
@@ -1600,6 +1714,8 @@ func (m *PlaceMutation) OldField(ctx context.Context, name string) (ent.Value, e
 		return m.OldContestPoints(ctx)
 	case place.FieldOpenctfPoints:
 		return m.OldOpenctfPoints(ctx)
+	case place.FieldAssociatedContestID:
+		return m.OldAssociatedContestID(ctx)
 	case place.FieldAssignedWeightPoints:
 		return m.OldAssignedWeightPoints(ctx)
 	}
@@ -1638,6 +1754,13 @@ func (m *PlaceMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetOpenctfPoints(v)
+		return nil
+	case place.FieldAssociatedContestID:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetAssociatedContestID(v)
 		return nil
 	case place.FieldAssignedWeightPoints:
 		v, ok := value.(int)
@@ -1773,6 +1896,9 @@ func (m *PlaceMutation) ResetField(name string) error {
 	case place.FieldOpenctfPoints:
 		m.ResetOpenctfPoints()
 		return nil
+	case place.FieldAssociatedContestID:
+		m.ResetAssociatedContestID()
+		return nil
 	case place.FieldAssignedWeightPoints:
 		m.ResetAssignedWeightPoints()
 		return nil
@@ -1783,8 +1909,8 @@ func (m *PlaceMutation) ResetField(name string) error {
 // AddedEdges returns all edge names that were set/added in this mutation.
 func (m *PlaceMutation) AddedEdges() []string {
 	edges := make([]string, 0, 2)
-	if m.contest != nil {
-		edges = append(edges, place.EdgeContest)
+	if m.associated_contest != nil {
+		edges = append(edges, place.EdgeAssociatedContest)
 	}
 	if m.associated_team != nil {
 		edges = append(edges, place.EdgeAssociatedTeam)
@@ -1796,8 +1922,8 @@ func (m *PlaceMutation) AddedEdges() []string {
 // name in this mutation.
 func (m *PlaceMutation) AddedIDs(name string) []ent.Value {
 	switch name {
-	case place.EdgeContest:
-		if id := m.contest; id != nil {
+	case place.EdgeAssociatedContest:
+		if id := m.associated_contest; id != nil {
 			return []ent.Value{*id}
 		}
 	case place.EdgeAssociatedTeam:
@@ -1823,8 +1949,8 @@ func (m *PlaceMutation) RemovedIDs(name string) []ent.Value {
 // ClearedEdges returns all edge names that were cleared in this mutation.
 func (m *PlaceMutation) ClearedEdges() []string {
 	edges := make([]string, 0, 2)
-	if m.clearedcontest {
-		edges = append(edges, place.EdgeContest)
+	if m.clearedassociated_contest {
+		edges = append(edges, place.EdgeAssociatedContest)
 	}
 	if m.clearedassociated_team {
 		edges = append(edges, place.EdgeAssociatedTeam)
@@ -1836,8 +1962,8 @@ func (m *PlaceMutation) ClearedEdges() []string {
 // was cleared in this mutation.
 func (m *PlaceMutation) EdgeCleared(name string) bool {
 	switch name {
-	case place.EdgeContest:
-		return m.clearedcontest
+	case place.EdgeAssociatedContest:
+		return m.clearedassociated_contest
 	case place.EdgeAssociatedTeam:
 		return m.clearedassociated_team
 	}
@@ -1848,8 +1974,8 @@ func (m *PlaceMutation) EdgeCleared(name string) bool {
 // if that edge is not defined in the schema.
 func (m *PlaceMutation) ClearEdge(name string) error {
 	switch name {
-	case place.EdgeContest:
-		m.ClearContest()
+	case place.EdgeAssociatedContest:
+		m.ClearAssociatedContest()
 		return nil
 	case place.EdgeAssociatedTeam:
 		m.ClearAssociatedTeam()
@@ -1862,8 +1988,8 @@ func (m *PlaceMutation) ClearEdge(name string) error {
 // It returns an error if the edge is not defined in the schema.
 func (m *PlaceMutation) ResetEdge(name string) error {
 	switch name {
-	case place.EdgeContest:
-		m.ResetContest()
+	case place.EdgeAssociatedContest:
+		m.ResetAssociatedContest()
 		return nil
 	case place.EdgeAssociatedTeam:
 		m.ResetAssociatedTeam()

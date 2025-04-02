@@ -39,12 +39,12 @@ var (
 	// PlacesColumns holds the columns for the "places" table.
 	PlacesColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
-		{Name: "team_name", Type: field.TypeString, Unique: true},
+		{Name: "team_name", Type: field.TypeString},
 		{Name: "place", Type: field.TypeInt},
 		{Name: "contest_points", Type: field.TypeFloat64, Nullable: true},
 		{Name: "openctf_points", Type: field.TypeFloat64, Nullable: true},
 		{Name: "assigned_weight_points", Type: field.TypeInt, Default: 0},
-		{Name: "place_contest", Type: field.TypeInt},
+		{Name: "associated_contest_id", Type: field.TypeInt},
 		{Name: "place_associated_team", Type: field.TypeInt, Nullable: true},
 	}
 	// PlacesTable holds the schema information for the "places" table.
@@ -54,7 +54,7 @@ var (
 		PrimaryKey: []*schema.Column{PlacesColumns[0]},
 		ForeignKeys: []*schema.ForeignKey{
 			{
-				Symbol:     "places_contests_contest",
+				Symbol:     "places_contests_places",
 				Columns:    []*schema.Column{PlacesColumns[6]},
 				RefColumns: []*schema.Column{ContestsColumns[0]},
 				OnDelete:   schema.NoAction,
@@ -64,6 +64,13 @@ var (
 				Columns:    []*schema.Column{PlacesColumns[7]},
 				RefColumns: []*schema.Column{TeamsColumns[0]},
 				OnDelete:   schema.SetNull,
+			},
+		},
+		Indexes: []*schema.Index{
+			{
+				Name:    "place_team_name_associated_contest_id",
+				Unique:  true,
+				Columns: []*schema.Column{PlacesColumns[1], PlacesColumns[6]},
 			},
 		},
 	}

@@ -4,9 +4,11 @@ package ent
 
 import (
 	"context"
+	"database/sql/driver"
 	"fmt"
 	"math"
 	"openctfbackend/ent/contest"
+	"openctfbackend/ent/place"
 	"openctfbackend/ent/predicate"
 	"openctfbackend/ent/team"
 
@@ -24,6 +26,7 @@ type ContestQuery struct {
 	inters         []Interceptor
 	predicates     []predicate.Contest
 	withOrganizers *TeamQuery
+	withPlaces     *PlaceQuery
 	withFKs        bool
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
@@ -76,6 +79,28 @@ func (cq *ContestQuery) QueryOrganizers() *TeamQuery {
 			sqlgraph.From(contest.Table, contest.FieldID, selector),
 			sqlgraph.To(team.Table, team.FieldID),
 			sqlgraph.Edge(sqlgraph.M2O, false, contest.OrganizersTable, contest.OrganizersColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(cq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
+}
+
+// QueryPlaces chains the current query on the "places" edge.
+func (cq *ContestQuery) QueryPlaces() *PlaceQuery {
+	query := (&PlaceClient{config: cq.config}).Query()
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := cq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		selector := cq.sqlQuery(ctx)
+		if err := selector.Err(); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(contest.Table, contest.FieldID, selector),
+			sqlgraph.To(place.Table, place.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, contest.PlacesTable, contest.PlacesColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(cq.driver.Dialect(), step)
 		return fromU, nil
@@ -276,6 +301,7 @@ func (cq *ContestQuery) Clone() *ContestQuery {
 		inters:         append([]Interceptor{}, cq.inters...),
 		predicates:     append([]predicate.Contest{}, cq.predicates...),
 		withOrganizers: cq.withOrganizers.Clone(),
+		withPlaces:     cq.withPlaces.Clone(),
 		// clone intermediate query.
 		sql:  cq.sql.Clone(),
 		path: cq.path,
@@ -290,6 +316,17 @@ func (cq *ContestQuery) WithOrganizers(opts ...func(*TeamQuery)) *ContestQuery {
 		opt(query)
 	}
 	cq.withOrganizers = query
+	return cq
+}
+
+// WithPlaces tells the query-builder to eager-load the nodes that are connected to
+// the "places" edge. The optional arguments are used to configure the query builder of the edge.
+func (cq *ContestQuery) WithPlaces(opts ...func(*PlaceQuery)) *ContestQuery {
+	query := (&PlaceClient{config: cq.config}).Query()
+	for _, opt := range opts {
+		opt(query)
+	}
+	cq.withPlaces = query
 	return cq
 }
 
@@ -372,8 +409,9 @@ func (cq *ContestQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Cont
 		nodes       = []*Contest{}
 		withFKs     = cq.withFKs
 		_spec       = cq.querySpec()
-		loadedTypes = [1]bool{
+		loadedTypes = [2]bool{
 			cq.withOrganizers != nil,
+			cq.withPlaces != nil,
 		}
 	)
 	if cq.withOrganizers != nil {
@@ -403,6 +441,13 @@ func (cq *ContestQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Cont
 	if query := cq.withOrganizers; query != nil {
 		if err := cq.loadOrganizers(ctx, query, nodes, nil,
 			func(n *Contest, e *Team) { n.Edges.Organizers = e }); err != nil {
+			return nil, err
+		}
+	}
+	if query := cq.withPlaces; query != nil {
+		if err := cq.loadPlaces(ctx, query, nodes,
+			func(n *Contest) { n.Edges.Places = []*Place{} },
+			func(n *Contest, e *Place) { n.Edges.Places = append(n.Edges.Places, e) }); err != nil {
 			return nil, err
 		}
 	}
@@ -438,6 +483,37 @@ func (cq *ContestQuery) loadOrganizers(ctx context.Context, query *TeamQuery, no
 		for i := range nodes {
 			assign(nodes[i], n)
 		}
+	}
+	return nil
+}
+func (cq *ContestQuery) loadPlaces(ctx context.Context, query *PlaceQuery, nodes []*Contest, init func(*Contest), assign func(*Contest, *Place)) error {
+	fks := make([]driver.Value, 0, len(nodes))
+	nodeids := make(map[int]*Contest)
+	for i := range nodes {
+		fks = append(fks, nodes[i].ID)
+		nodeids[nodes[i].ID] = nodes[i]
+		if init != nil {
+			init(nodes[i])
+		}
+	}
+	query.withFKs = true
+	if len(query.ctx.Fields) > 0 {
+		query.ctx.AppendFieldOnce(place.FieldAssociatedContestID)
+	}
+	query.Where(predicate.Place(func(s *sql.Selector) {
+		s.Where(sql.InValues(s.C(contest.PlacesColumn), fks...))
+	}))
+	neighbors, err := query.All(ctx)
+	if err != nil {
+		return err
+	}
+	for _, n := range neighbors {
+		fk := n.AssociatedContestID
+		node, ok := nodeids[fk]
+		if !ok {
+			return fmt.Errorf(`unexpected referenced foreign-key "associated_contest_id" returned %v for node %v`, fk, n.ID)
+		}
+		assign(node, n)
 	}
 	return nil
 }

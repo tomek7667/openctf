@@ -26,20 +26,21 @@ type Place struct {
 	ContestPoints *float64 `json:"contest_points,omitempty"`
 	// these points are normalized based on contest_points being max multiplied by the ctf weight
 	OpenctfPoints *float64 `json:"openctf_points,omitempty"`
+	// AssociatedContestID holds the value of the "associated_contest_id" field.
+	AssociatedContestID int `json:"associated_contest_id,omitempty"`
 	// AssignedWeightPoints holds the value of the "assigned_weight_points" field.
 	AssignedWeightPoints int `json:"assigned_weight_points,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the PlaceQuery when eager-loading is set.
 	Edges                 PlaceEdges `json:"edges"`
-	place_contest         *int
 	place_associated_team *int
 	selectValues          sql.SelectValues
 }
 
 // PlaceEdges holds the relations/edges for other nodes in the graph.
 type PlaceEdges struct {
-	// Contest holds the value of the contest edge.
-	Contest *Contest `json:"contest,omitempty"`
+	// AssociatedContest holds the value of the associated_contest edge.
+	AssociatedContest *Contest `json:"associated_contest,omitempty"`
 	// AssociatedTeam holds the value of the associated_team edge.
 	AssociatedTeam *Team `json:"associated_team,omitempty"`
 	// loadedTypes holds the information for reporting if a
@@ -47,15 +48,15 @@ type PlaceEdges struct {
 	loadedTypes [2]bool
 }
 
-// ContestOrErr returns the Contest value or an error if the edge
+// AssociatedContestOrErr returns the AssociatedContest value or an error if the edge
 // was not loaded in eager-loading, or loaded but was not found.
-func (e PlaceEdges) ContestOrErr() (*Contest, error) {
-	if e.Contest != nil {
-		return e.Contest, nil
+func (e PlaceEdges) AssociatedContestOrErr() (*Contest, error) {
+	if e.AssociatedContest != nil {
+		return e.AssociatedContest, nil
 	} else if e.loadedTypes[0] {
 		return nil, &NotFoundError{label: contest.Label}
 	}
-	return nil, &NotLoadedError{edge: "contest"}
+	return nil, &NotLoadedError{edge: "associated_contest"}
 }
 
 // AssociatedTeamOrErr returns the AssociatedTeam value or an error if the edge
@@ -76,13 +77,11 @@ func (*Place) scanValues(columns []string) ([]any, error) {
 		switch columns[i] {
 		case place.FieldContestPoints, place.FieldOpenctfPoints:
 			values[i] = new(sql.NullFloat64)
-		case place.FieldID, place.FieldPlace, place.FieldAssignedWeightPoints:
+		case place.FieldID, place.FieldPlace, place.FieldAssociatedContestID, place.FieldAssignedWeightPoints:
 			values[i] = new(sql.NullInt64)
 		case place.FieldTeamName:
 			values[i] = new(sql.NullString)
-		case place.ForeignKeys[0]: // place_contest
-			values[i] = new(sql.NullInt64)
-		case place.ForeignKeys[1]: // place_associated_team
+		case place.ForeignKeys[0]: // place_associated_team
 			values[i] = new(sql.NullInt64)
 		default:
 			values[i] = new(sql.UnknownType)
@@ -131,6 +130,12 @@ func (pl *Place) assignValues(columns []string, values []any) error {
 				pl.OpenctfPoints = new(float64)
 				*pl.OpenctfPoints = value.Float64
 			}
+		case place.FieldAssociatedContestID:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field associated_contest_id", values[i])
+			} else if value.Valid {
+				pl.AssociatedContestID = int(value.Int64)
+			}
 		case place.FieldAssignedWeightPoints:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field assigned_weight_points", values[i])
@@ -138,13 +143,6 @@ func (pl *Place) assignValues(columns []string, values []any) error {
 				pl.AssignedWeightPoints = int(value.Int64)
 			}
 		case place.ForeignKeys[0]:
-			if value, ok := values[i].(*sql.NullInt64); !ok {
-				return fmt.Errorf("unexpected type %T for edge-field place_contest", value)
-			} else if value.Valid {
-				pl.place_contest = new(int)
-				*pl.place_contest = int(value.Int64)
-			}
-		case place.ForeignKeys[1]:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for edge-field place_associated_team", value)
 			} else if value.Valid {
@@ -164,9 +162,9 @@ func (pl *Place) Value(name string) (ent.Value, error) {
 	return pl.selectValues.Get(name)
 }
 
-// QueryContest queries the "contest" edge of the Place entity.
-func (pl *Place) QueryContest() *ContestQuery {
-	return NewPlaceClient(pl.config).QueryContest(pl)
+// QueryAssociatedContest queries the "associated_contest" edge of the Place entity.
+func (pl *Place) QueryAssociatedContest() *ContestQuery {
+	return NewPlaceClient(pl.config).QueryAssociatedContest(pl)
 }
 
 // QueryAssociatedTeam queries the "associated_team" edge of the Place entity.
@@ -212,6 +210,9 @@ func (pl *Place) String() string {
 		builder.WriteString("openctf_points=")
 		builder.WriteString(fmt.Sprintf("%v", *v))
 	}
+	builder.WriteString(", ")
+	builder.WriteString("associated_contest_id=")
+	builder.WriteString(fmt.Sprintf("%v", pl.AssociatedContestID))
 	builder.WriteString(", ")
 	builder.WriteString("assigned_weight_points=")
 	builder.WriteString(fmt.Sprintf("%v", pl.AssignedWeightPoints))

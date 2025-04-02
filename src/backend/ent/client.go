@@ -352,6 +352,22 @@ func (c *ContestClient) QueryOrganizers(co *Contest) *TeamQuery {
 	return query
 }
 
+// QueryPlaces queries the places edge of a Contest.
+func (c *ContestClient) QueryPlaces(co *Contest) *PlaceQuery {
+	query := (&PlaceClient{config: c.config}).Query()
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
+		id := co.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(contest.Table, contest.FieldID, id),
+			sqlgraph.To(place.Table, place.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, contest.PlacesTable, contest.PlacesColumn),
+		)
+		fromV = sqlgraph.Neighbors(co.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
 // Hooks returns the client hooks.
 func (c *ContestClient) Hooks() []Hook {
 	return c.hooks.Contest
@@ -485,15 +501,15 @@ func (c *PlaceClient) GetX(ctx context.Context, id int) *Place {
 	return obj
 }
 
-// QueryContest queries the contest edge of a Place.
-func (c *PlaceClient) QueryContest(pl *Place) *ContestQuery {
+// QueryAssociatedContest queries the associated_contest edge of a Place.
+func (c *PlaceClient) QueryAssociatedContest(pl *Place) *ContestQuery {
 	query := (&ContestClient{config: c.config}).Query()
 	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
 		id := pl.ID
 		step := sqlgraph.NewStep(
 			sqlgraph.From(place.Table, place.FieldID, id),
 			sqlgraph.To(contest.Table, contest.FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, false, place.ContestTable, place.ContestColumn),
+			sqlgraph.Edge(sqlgraph.M2O, true, place.AssociatedContestTable, place.AssociatedContestColumn),
 		)
 		fromV = sqlgraph.Neighbors(pl.driver.Dialect(), step)
 		return fromV, nil

@@ -658,6 +658,29 @@ func HasOrganizersWith(preds ...predicate.Team) predicate.Contest {
 	})
 }
 
+// HasPlaces applies the HasEdge predicate on the "places" edge.
+func HasPlaces() predicate.Contest {
+	return predicate.Contest(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, PlacesTable, PlacesColumn),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasPlacesWith applies the HasEdge predicate on the "places" edge with a given conditions (other predicates).
+func HasPlacesWith(preds ...predicate.Place) predicate.Contest {
+	return predicate.Contest(func(s *sql.Selector) {
+		step := newPlacesStep()
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
+}
+
 // And groups predicates with the AND operator between them.
 func And(predicates ...predicate.Contest) predicate.Contest {
 	return predicate.Contest(sql.AndPredicates(predicates...))

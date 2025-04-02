@@ -7,6 +7,7 @@ import (
 	"errors"
 	"fmt"
 	"openctfbackend/ent/contest"
+	"openctfbackend/ent/place"
 	"openctfbackend/ent/team"
 	"time"
 
@@ -140,6 +141,21 @@ func (cc *ContestCreate) SetNillableOrganizersID(id *int) *ContestCreate {
 // SetOrganizers sets the "organizers" edge to the Team entity.
 func (cc *ContestCreate) SetOrganizers(t *Team) *ContestCreate {
 	return cc.SetOrganizersID(t.ID)
+}
+
+// AddPlaceIDs adds the "places" edge to the Place entity by IDs.
+func (cc *ContestCreate) AddPlaceIDs(ids ...int) *ContestCreate {
+	cc.mutation.AddPlaceIDs(ids...)
+	return cc
+}
+
+// AddPlaces adds the "places" edges to the Place entity.
+func (cc *ContestCreate) AddPlaces(p ...*Place) *ContestCreate {
+	ids := make([]int, len(p))
+	for i := range p {
+		ids[i] = p[i].ID
+	}
+	return cc.AddPlaceIDs(ids...)
 }
 
 // Mutation returns the ContestMutation object of the builder.
@@ -284,6 +300,22 @@ func (cc *ContestCreate) createSpec() (*Contest, *sqlgraph.CreateSpec) {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
 		_node.contest_organizers = &nodes[0]
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := cc.mutation.PlacesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   contest.PlacesTable,
+			Columns: []string{contest.PlacesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(place.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
 		_spec.Edges = append(_spec.Edges, edge)
 	}
 	return _node, _spec

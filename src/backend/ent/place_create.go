@@ -61,6 +61,12 @@ func (pc *PlaceCreate) SetNillableOpenctfPoints(f *float64) *PlaceCreate {
 	return pc
 }
 
+// SetAssociatedContestID sets the "associated_contest_id" field.
+func (pc *PlaceCreate) SetAssociatedContestID(i int) *PlaceCreate {
+	pc.mutation.SetAssociatedContestID(i)
+	return pc
+}
+
 // SetAssignedWeightPoints sets the "assigned_weight_points" field.
 func (pc *PlaceCreate) SetAssignedWeightPoints(i int) *PlaceCreate {
 	pc.mutation.SetAssignedWeightPoints(i)
@@ -75,15 +81,9 @@ func (pc *PlaceCreate) SetNillableAssignedWeightPoints(i *int) *PlaceCreate {
 	return pc
 }
 
-// SetContestID sets the "contest" edge to the Contest entity by ID.
-func (pc *PlaceCreate) SetContestID(id int) *PlaceCreate {
-	pc.mutation.SetContestID(id)
-	return pc
-}
-
-// SetContest sets the "contest" edge to the Contest entity.
-func (pc *PlaceCreate) SetContest(c *Contest) *PlaceCreate {
-	return pc.SetContestID(c.ID)
+// SetAssociatedContest sets the "associated_contest" edge to the Contest entity.
+func (pc *PlaceCreate) SetAssociatedContest(c *Contest) *PlaceCreate {
+	return pc.SetAssociatedContestID(c.ID)
 }
 
 // SetAssociatedTeamID sets the "associated_team" edge to the Team entity by ID.
@@ -174,11 +174,14 @@ func (pc *PlaceCreate) check() error {
 			return &ValidationError{Name: "openctf_points", err: fmt.Errorf(`ent: validator failed for field "Place.openctf_points": %w`, err)}
 		}
 	}
+	if _, ok := pc.mutation.AssociatedContestID(); !ok {
+		return &ValidationError{Name: "associated_contest_id", err: errors.New(`ent: missing required field "Place.associated_contest_id"`)}
+	}
 	if _, ok := pc.mutation.AssignedWeightPoints(); !ok {
 		return &ValidationError{Name: "assigned_weight_points", err: errors.New(`ent: missing required field "Place.assigned_weight_points"`)}
 	}
-	if len(pc.mutation.ContestIDs()) == 0 {
-		return &ValidationError{Name: "contest", err: errors.New(`ent: missing required edge "Place.contest"`)}
+	if len(pc.mutation.AssociatedContestIDs()) == 0 {
+		return &ValidationError{Name: "associated_contest", err: errors.New(`ent: missing required edge "Place.associated_contest"`)}
 	}
 	return nil
 }
@@ -226,12 +229,12 @@ func (pc *PlaceCreate) createSpec() (*Place, *sqlgraph.CreateSpec) {
 		_spec.SetField(place.FieldAssignedWeightPoints, field.TypeInt, value)
 		_node.AssignedWeightPoints = value
 	}
-	if nodes := pc.mutation.ContestIDs(); len(nodes) > 0 {
+	if nodes := pc.mutation.AssociatedContestIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
-			Inverse: false,
-			Table:   place.ContestTable,
-			Columns: []string{place.ContestColumn},
+			Inverse: true,
+			Table:   place.AssociatedContestTable,
+			Columns: []string{place.AssociatedContestColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(contest.FieldID, field.TypeInt),
@@ -240,7 +243,7 @@ func (pc *PlaceCreate) createSpec() (*Place, *sqlgraph.CreateSpec) {
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
-		_node.place_contest = &nodes[0]
+		_node.AssociatedContestID = nodes[0]
 		_spec.Edges = append(_spec.Edges, edge)
 	}
 	if nodes := pc.mutation.AssociatedTeamIDs(); len(nodes) > 0 {

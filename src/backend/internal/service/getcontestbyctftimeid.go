@@ -12,5 +12,6 @@ func (c *Client) GetContestByCtftimeID(ctx context.Context, ctftimeID int) (*ent
 		Query().
 		Where(contest.CtftimeID(ctftimeID)).
 		WithOrganizers().
+		WithPlaces().
 		First(ctx)
 }

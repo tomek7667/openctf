@@ -32,6 +32,8 @@ const (
 	FieldAssignedWeightPoints = "assigned_weight_points"
 	// EdgeOrganizers holds the string denoting the organizers edge name in mutations.
 	EdgeOrganizers = "organizers"
+	// EdgePlaces holds the string denoting the places edge name in mutations.
+	EdgePlaces = "places"
 	// Table holds the table name of the contest in the database.
 	Table = "contests"
 	// OrganizersTable is the table that holds the organizers relation/edge.
@@ -41,6 +43,13 @@ const (
 	OrganizersInverseTable = "teams"
 	// OrganizersColumn is the table column denoting the organizers relation/edge.
 	OrganizersColumn = "contest_organizers"
+	// PlacesTable is the table that holds the places relation/edge.
+	PlacesTable = "places"
+	// PlacesInverseTable is the table name for the Place entity.
+	// It exists in this package in order to avoid circular dependency with the "place" package.
+	PlacesInverseTable = "places"
+	// PlacesColumn is the table column denoting the places relation/edge.
+	PlacesColumn = "associated_contest_id"
 )
 
 // Columns holds all SQL columns for contest fields.
@@ -146,10 +155,31 @@ func ByOrganizersField(field string, opts ...sql.OrderTermOption) OrderOption {
 		sqlgraph.OrderByNeighborTerms(s, newOrganizersStep(), sql.OrderByField(field, opts...))
 	}
 }
+
+// ByPlacesCount orders the results by places count.
+func ByPlacesCount(opts ...sql.OrderTermOption) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborsCount(s, newPlacesStep(), opts...)
+	}
+}
+
+// ByPlaces orders the results by places terms.
+func ByPlaces(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborTerms(s, newPlacesStep(), append([]sql.OrderTerm{term}, terms...)...)
+	}
+}
 func newOrganizersStep() *sqlgraph.Step {
 	return sqlgraph.NewStep(
 		sqlgraph.From(Table, FieldID),
 		sqlgraph.To(OrganizersInverseTable, FieldID),
 		sqlgraph.Edge(sqlgraph.M2O, false, OrganizersTable, OrganizersColumn),
+	)
+}
+func newPlacesStep() *sqlgraph.Step {
+	return sqlgraph.NewStep(
+		sqlgraph.From(Table, FieldID),
+		sqlgraph.To(PlacesInverseTable, FieldID),
+		sqlgraph.Edge(sqlgraph.O2M, false, PlacesTable, PlacesColumn),
 	)
 }

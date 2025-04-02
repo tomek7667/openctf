@@ -48,7 +48,7 @@ func init() {
 	// place.OpenctfPointsValidator is a validator for the "openctf_points" field. It is called by the builders before save.
 	place.OpenctfPointsValidator = placeDescOpenctfPoints.Validators[0].(func(float64) error)
 	// placeDescAssignedWeightPoints is the schema descriptor for assigned_weight_points field.
-	placeDescAssignedWeightPoints := placeFields[4].Descriptor()
+	placeDescAssignedWeightPoints := placeFields[5].Descriptor()
 	// place.DefaultAssignedWeightPoints holds the default value on creation for the assigned_weight_points field.
 	place.DefaultAssignedWeightPoints = placeDescAssignedWeightPoints.Default.(int)
 	teamFields := schema.Team{}.Fields()

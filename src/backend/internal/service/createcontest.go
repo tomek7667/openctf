@@ -33,7 +33,7 @@ func (c *Client) CreateContest(ctx context.Context, dto *CreateContestDto) (*ent
 		SetStart(dto.Start).
 		SetEnd(dto.End).
 		SetURL(dto.Url)
-	if dto.CtftimeID != nil {
+	if dto.CtftimeID != nil && *dto.CtftimeID != 0 {
 		createOp.SetCtftimeID(*dto.CtftimeID)
 	}
 	ctst, err := createOp.
@@ -44,6 +44,7 @@ func (c *Client) CreateContest(ctx context.Context, dto *CreateContestDto) (*ent
 	ctst, err = c.C.Contest.
 		Query().
 		WithOrganizers().
+		WithPlaces().
 		Where(contest.ID(ctst.ID)).
 		First(ctx)
 	if err != nil {

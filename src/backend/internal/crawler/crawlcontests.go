@@ -11,10 +11,10 @@ import (
 	"openctfbackend/internal/service"
 )
 
-func (h *Handler) Crawl(interval time.Duration) error {
-	slog.Info("running the crawler")
+func (h *Handler) CrawlContests(interval time.Duration) error {
+	slog.Info("running the contests crawler")
 
-	start := time.Now()
+	start := time.Now().Add(-interval)
 	finish := start.Add(interval)
 	ctftimeEvents, err := h.CtftimeClient.GetEventsBetween(context.Background(), start, finish)
 	if err != nil {
@@ -62,7 +62,7 @@ func (h *Handler) Crawl(interval time.Duration) error {
 			errs = errors.Join(
 				errs,
 				errors.Join(
-					fmt.Errorf("creating the contest in the database failed"),
+					fmt.Errorf("creating the contest in the database failed; ctftime event failed=%s", ctftimeEvent.Title),
 					err,
 				),
 			)
@@ -73,6 +73,7 @@ func (h *Handler) Crawl(interval time.Duration) error {
 	slog.Info(
 		"added the ctftime events to the database",
 		"amount of events added", added,
+		"errors along the way", errs,
 	)
-	return errs
+	return nil
 }

@@ -74,6 +74,11 @@ func OpenctfPoints(v float64) predicate.Place {
 	return predicate.Place(sql.FieldEQ(FieldOpenctfPoints, v))
 }
 
+// AssociatedContestID applies equality check predicate on the "associated_contest_id" field. It's identical to AssociatedContestIDEQ.
+func AssociatedContestID(v int) predicate.Place {
+	return predicate.Place(sql.FieldEQ(FieldAssociatedContestID, v))
+}
+
 // AssignedWeightPoints applies equality check predicate on the "assigned_weight_points" field. It's identical to AssignedWeightPointsEQ.
 func AssignedWeightPoints(v int) predicate.Place {
 	return predicate.Place(sql.FieldEQ(FieldAssignedWeightPoints, v))
@@ -284,6 +289,26 @@ func OpenctfPointsNotNil() predicate.Place {
 	return predicate.Place(sql.FieldNotNull(FieldOpenctfPoints))
 }
 
+// AssociatedContestIDEQ applies the EQ predicate on the "associated_contest_id" field.
+func AssociatedContestIDEQ(v int) predicate.Place {
+	return predicate.Place(sql.FieldEQ(FieldAssociatedContestID, v))
+}
+
+// AssociatedContestIDNEQ applies the NEQ predicate on the "associated_contest_id" field.
+func AssociatedContestIDNEQ(v int) predicate.Place {
+	return predicate.Place(sql.FieldNEQ(FieldAssociatedContestID, v))
+}
+
+// AssociatedContestIDIn applies the In predicate on the "associated_contest_id" field.
+func AssociatedContestIDIn(vs ...int) predicate.Place {
+	return predicate.Place(sql.FieldIn(FieldAssociatedContestID, vs...))
+}
+
+// AssociatedContestIDNotIn applies the NotIn predicate on the "associated_contest_id" field.
+func AssociatedContestIDNotIn(vs ...int) predicate.Place {
+	return predicate.Place(sql.FieldNotIn(FieldAssociatedContestID, vs...))
+}
+
 // AssignedWeightPointsEQ applies the EQ predicate on the "assigned_weight_points" field.
 func AssignedWeightPointsEQ(v int) predicate.Place {
 	return predicate.Place(sql.FieldEQ(FieldAssignedWeightPoints, v))
@@ -324,21 +349,21 @@ func AssignedWeightPointsLTE(v int) predicate.Place {
 	return predicate.Place(sql.FieldLTE(FieldAssignedWeightPoints, v))
 }
 
-// HasContest applies the HasEdge predicate on the "contest" edge.
-func HasContest() predicate.Place {
+// HasAssociatedContest applies the HasEdge predicate on the "associated_contest" edge.
+func HasAssociatedContest() predicate.Place {
 	return predicate.Place(func(s *sql.Selector) {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(Table, FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, false, ContestTable, ContestColumn),
+			sqlgraph.Edge(sqlgraph.M2O, true, AssociatedContestTable, AssociatedContestColumn),
 		)
 		sqlgraph.HasNeighbors(s, step)
 	})
 }
 
-// HasContestWith applies the HasEdge predicate on the "contest" edge with a given conditions (other predicates).
-func HasContestWith(preds ...predicate.Contest) predicate.Place {
+// HasAssociatedContestWith applies the HasEdge predicate on the "associated_contest" edge with a given conditions (other predicates).
+func HasAssociatedContestWith(preds ...predicate.Contest) predicate.Place {
 	return predicate.Place(func(s *sql.Selector) {
-		step := newContestStep()
+		step := newAssociatedContestStep()
 		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
 			for _, p := range preds {
 				p(s)

@@ -29,5 +29,6 @@ func (Contest) Fields() []ent.Field {
 func (Contest) Edges() []ent.Edge {
 	return []ent.Edge{
 		edge.To("organizers", Team.Type).Unique(),
+		edge.To("places", Place.Type),
 	}
 }
