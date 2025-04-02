@@ -7,6 +7,7 @@ import (
 	"log/slog"
 	"strconv"
 
+	"openctfbackend/ent"
 	"openctfbackend/internal/service"
 )
 
@@ -32,8 +33,10 @@ func (h *Handler) CrawlPlaces() error {
 			err,
 		)
 	}
+	slog.Info(
+		"ctftime response received crawl places",
+	)
 
-	addedPlaces := 0
 	for _, c := range contests {
 		res, exists := (*ctftimeResponse)[*c.CtftimeID]
 		if !exists {
@@ -45,6 +48,8 @@ func (h *Handler) CrawlPlaces() error {
 			continue
 		}
 
+		var createQueries []*ent.PlaceCreate
+		slog.Debug("preparing bulk create", "scores to be prepared", len(res.Scores), "contest", c.Name)
 		for _, score := range res.Scores {
 			var points float64
 			if points, err = strconv.ParseFloat(score.Points, 64); err != nil {
@@ -63,6 +68,7 @@ func (h *Handler) CrawlPlaces() error {
 					"failed getting the team from ctftime",
 					"err", err,
 					"score that failed", score,
+					"contest", c.Name,
 				)
 				continue
 			}
@@ -77,25 +83,40 @@ func (h *Handler) CrawlPlaces() error {
 			}
 
 			// create place in the db
-			_, err = h.ServiceClient.CreateCtftimePlace(context.TODO(), &service.CreateCtftimePlaceDto{
+			createdPlaceQuery := h.ServiceClient.CreateCtftimePlace(context.TODO(), &service.CreateCtftimePlaceDto{
 				TeamName:         ctftimeTeam.Name,
 				Place:            score.Place,
 				ContestPoints:    points,
 				ContestID:        c.ID,
 				AssociatedTeamID: associatedDbTeamID,
 			})
-			if err != nil {
-				slog.Error(
-					"failed creating ctftime place in the database",
-					"err", err,
-					"contest", c.Name,
-					"score team id", score.CtftimeTeamID,
-				)
-			} else {
-				addedPlaces++
-			}
+			createQueries = append(createQueries, createdPlaceQuery)
 		}
+		createdPlaces, err := h.ServiceClient.GetEnt().Place.CreateBulk(createQueries...).Save(context.TODO())
+		if err != nil {
+			slog.Error(
+				"saving ctftime places in the database failed",
+				"err", err,
+				"contest ctftime name", c.Name,
+				"contest ctftime id", c.CtftimeID,
+			)
+			continue
+		}
+
+		// 	addedPlaces++
+		_, err = h.ServiceClient.GetEnt().Contest.UpdateOne(c).AddPlaces(createdPlaces...).Save(context.TODO())
+		if err != nil {
+			slog.Error(
+				"failed updating the contest with new places",
+				"err", err,
+				"contest", c.Name,
+				"places amount to be saved", len(createdPlaces),
+				"last place example", createdPlaces[len(createdPlaces)-1],
+			)
+			continue
+		}
+		slog.Info("saved places for contest", "contest name", c.Name, "amount of created places", len(createdPlaces))
 	}
-	slog.Info("places crawler finished", "added places", addedPlaces)
+	slog.Info("places crawler finished")
 	return nil
 }

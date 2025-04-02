@@ -2,11 +2,10 @@ package service
 
 import (
 	"context"
-	"errors"
 	"fmt"
+	"strings"
 
 	"openctfbackend/ent"
-	"openctfbackend/ent/place"
 )
 
 type CreateCtftimePlaceDto struct {
@@ -17,35 +16,27 @@ type CreateCtftimePlaceDto struct {
 	AssociatedTeamID *int    `json:"associated_team_id"`
 }
 
-func (c *Client) CreateCtftimePlace(ctx context.Context, dto *CreateCtftimePlaceDto) (*ent.Place, error) {
+func sanitizeCtftimeTeamName(ctftimeTeamName string) string {
+	sanitized := ""
+	for _, r := range ctftimeTeamName {
+		if (r >= 'a' && r <= 'z') || (r >= 'A' && r <= 'Z') || (r >= '0' && r <= '9') || r == ' ' || r == '_' || r == '-' {
+			sanitized += string(r)
+		} else {
+			sanitized += fmt.Sprintf("%X", r)
+		}
+	}
+	return strings.TrimSpace(sanitized)
+}
+
+func (c *Client) CreateCtftimePlace(ctx context.Context, dto *CreateCtftimePlaceDto) *ent.PlaceCreate {
 	placeCreate := c.C.Place.
 		Create().
-		SetTeamName(dto.TeamName).
+		SetTeamName(sanitizeCtftimeTeamName(dto.TeamName)).
 		SetPlace(dto.Place).
 		SetContestPoints(dto.ContestPoints).
 		SetAssociatedContestID(dto.ContestID)
 	if dto.AssociatedTeamID != nil && *dto.AssociatedTeamID != 0 {
 		placeCreate.SetAssociatedTeamID(*dto.AssociatedTeamID)
 	}
-	p, err := placeCreate.Save(ctx)
-	if err != nil {
-		return nil, errors.Join(
-			fmt.Errorf("creating the place in db failed"),
-			err,
-		)
-	}
-	p, err = c.C.Place.
-		Query().
-		WithAssociatedTeam().
-		WithAssociatedContest().
-		Where(place.ID(p.ID)).
-		First(ctx)
-	if err != nil {
-		return nil, errors.Join(
-			fmt.Errorf("place has been created but couldn't retrieve it"),
-			err,
-		)
-	}
-
-	return p, nil
+	return placeCreate
 }

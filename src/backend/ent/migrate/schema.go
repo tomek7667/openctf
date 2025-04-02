@@ -43,8 +43,9 @@ var (
 		{Name: "place", Type: field.TypeInt},
 		{Name: "contest_points", Type: field.TypeFloat64, Nullable: true},
 		{Name: "openctf_points", Type: field.TypeFloat64, Nullable: true},
-		{Name: "assigned_weight_points", Type: field.TypeInt, Default: 0},
 		{Name: "associated_contest_id", Type: field.TypeInt},
+		{Name: "assigned_weight_points", Type: field.TypeInt, Default: 0},
+		{Name: "contest_places", Type: field.TypeInt, Nullable: true},
 		{Name: "place_associated_team", Type: field.TypeInt, Nullable: true},
 	}
 	// PlacesTable holds the schema information for the "places" table.
@@ -55,13 +56,13 @@ var (
 		ForeignKeys: []*schema.ForeignKey{
 			{
 				Symbol:     "places_contests_places",
-				Columns:    []*schema.Column{PlacesColumns[6]},
+				Columns:    []*schema.Column{PlacesColumns[7]},
 				RefColumns: []*schema.Column{ContestsColumns[0]},
-				OnDelete:   schema.NoAction,
+				OnDelete:   schema.SetNull,
 			},
 			{
 				Symbol:     "places_teams_associated_team",
-				Columns:    []*schema.Column{PlacesColumns[7]},
+				Columns:    []*schema.Column{PlacesColumns[8]},
 				RefColumns: []*schema.Column{TeamsColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
@@ -70,7 +71,7 @@ var (
 			{
 				Name:    "place_team_name_associated_contest_id",
 				Unique:  true,
-				Columns: []*schema.Column{PlacesColumns[1], PlacesColumns[6]},
+				Columns: []*schema.Column{PlacesColumns[1], PlacesColumns[5]},
 			},
 		},
 	}

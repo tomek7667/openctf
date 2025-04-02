@@ -6,7 +6,6 @@ import (
 	"context"
 	"fmt"
 	"math"
-	"openctfbackend/ent/contest"
 	"openctfbackend/ent/place"
 	"openctfbackend/ent/predicate"
 	"openctfbackend/ent/team"
@@ -20,13 +19,12 @@ import (
 // PlaceQuery is the builder for querying Place entities.
 type PlaceQuery struct {
 	config
-	ctx                   *QueryContext
-	order                 []place.OrderOption
-	inters                []Interceptor
-	predicates            []predicate.Place
-	withAssociatedContest *ContestQuery
-	withAssociatedTeam    *TeamQuery
-	withFKs               bool
+	ctx                *QueryContext
+	order              []place.OrderOption
+	inters             []Interceptor
+	predicates         []predicate.Place
+	withAssociatedTeam *TeamQuery
+	withFKs            bool
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -61,28 +59,6 @@ func (pq *PlaceQuery) Unique(unique bool) *PlaceQuery {
 func (pq *PlaceQuery) Order(o ...place.OrderOption) *PlaceQuery {
 	pq.order = append(pq.order, o...)
 	return pq
-}
-
-// QueryAssociatedContest chains the current query on the "associated_contest" edge.
-func (pq *PlaceQuery) QueryAssociatedContest() *ContestQuery {
-	query := (&ContestClient{config: pq.config}).Query()
-	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
-		if err := pq.prepareQuery(ctx); err != nil {
-			return nil, err
-		}
-		selector := pq.sqlQuery(ctx)
-		if err := selector.Err(); err != nil {
-			return nil, err
-		}
-		step := sqlgraph.NewStep(
-			sqlgraph.From(place.Table, place.FieldID, selector),
-			sqlgraph.To(contest.Table, contest.FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, place.AssociatedContestTable, place.AssociatedContestColumn),
-		)
-		fromU = sqlgraph.SetNeighbors(pq.driver.Dialect(), step)
-		return fromU, nil
-	}
-	return query
 }
 
 // QueryAssociatedTeam chains the current query on the "associated_team" edge.
@@ -294,28 +270,16 @@ func (pq *PlaceQuery) Clone() *PlaceQuery {
 		return nil
 	}
 	return &PlaceQuery{
-		config:                pq.config,
-		ctx:                   pq.ctx.Clone(),
-		order:                 append([]place.OrderOption{}, pq.order...),
-		inters:                append([]Interceptor{}, pq.inters...),
-		predicates:            append([]predicate.Place{}, pq.predicates...),
-		withAssociatedContest: pq.withAssociatedContest.Clone(),
-		withAssociatedTeam:    pq.withAssociatedTeam.Clone(),
+		config:             pq.config,
+		ctx:                pq.ctx.Clone(),
+		order:              append([]place.OrderOption{}, pq.order...),
+		inters:             append([]Interceptor{}, pq.inters...),
+		predicates:         append([]predicate.Place{}, pq.predicates...),
+		withAssociatedTeam: pq.withAssociatedTeam.Clone(),
 		// clone intermediate query.
 		sql:  pq.sql.Clone(),
 		path: pq.path,
 	}
-}
-
-// WithAssociatedContest tells the query-builder to eager-load the nodes that are connected to
-// the "associated_contest" edge. The optional arguments are used to configure the query builder of the edge.
-func (pq *PlaceQuery) WithAssociatedContest(opts ...func(*ContestQuery)) *PlaceQuery {
-	query := (&ContestClient{config: pq.config}).Query()
-	for _, opt := range opts {
-		opt(query)
-	}
-	pq.withAssociatedContest = query
-	return pq
 }
 
 // WithAssociatedTeam tells the query-builder to eager-load the nodes that are connected to
@@ -408,8 +372,7 @@ func (pq *PlaceQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Place,
 		nodes       = []*Place{}
 		withFKs     = pq.withFKs
 		_spec       = pq.querySpec()
-		loadedTypes = [2]bool{
-			pq.withAssociatedContest != nil,
+		loadedTypes = [1]bool{
 			pq.withAssociatedTeam != nil,
 		}
 	)
@@ -437,12 +400,6 @@ func (pq *PlaceQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Place,
 	if len(nodes) == 0 {
 		return nodes, nil
 	}
-	if query := pq.withAssociatedContest; query != nil {
-		if err := pq.loadAssociatedContest(ctx, query, nodes, nil,
-			func(n *Place, e *Contest) { n.Edges.AssociatedContest = e }); err != nil {
-			return nil, err
-		}
-	}
 	if query := pq.withAssociatedTeam; query != nil {
 		if err := pq.loadAssociatedTeam(ctx, query, nodes, nil,
 			func(n *Place, e *Team) { n.Edges.AssociatedTeam = e }); err != nil {
@@ -452,35 +409,6 @@ func (pq *PlaceQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Place,
 	return nodes, nil
 }
 
-func (pq *PlaceQuery) loadAssociatedContest(ctx context.Context, query *ContestQuery, nodes []*Place, init func(*Place), assign func(*Place, *Contest)) error {
-	ids := make([]int, 0, len(nodes))
-	nodeids := make(map[int][]*Place)
-	for i := range nodes {
-		fk := nodes[i].AssociatedContestID
-		if _, ok := nodeids[fk]; !ok {
-			ids = append(ids, fk)
-		}
-		nodeids[fk] = append(nodeids[fk], nodes[i])
-	}
-	if len(ids) == 0 {
-		return nil
-	}
-	query.Where(contest.IDIn(ids...))
-	neighbors, err := query.All(ctx)
-	if err != nil {
-		return err
-	}
-	for _, n := range neighbors {
-		nodes, ok := nodeids[n.ID]
-		if !ok {
-			return fmt.Errorf(`unexpected foreign-key "associated_contest_id" returned %v`, n.ID)
-		}
-		for i := range nodes {
-			assign(nodes[i], n)
-		}
-	}
-	return nil
-}
 func (pq *PlaceQuery) loadAssociatedTeam(ctx context.Context, query *TeamQuery, nodes []*Place, init func(*Place), assign func(*Place, *Team)) error {
 	ids := make([]int, 0, len(nodes))
 	nodeids := make(map[int][]*Place)
@@ -538,9 +466,6 @@ func (pq *PlaceQuery) querySpec() *sqlgraph.QuerySpec {
 			if fields[i] != place.FieldID {
 				_spec.Node.Columns = append(_spec.Node.Columns, fields[i])
 			}
-		}
-		if pq.withAssociatedContest != nil {
-			_spec.Node.AddColumnOnce(place.FieldAssociatedContestID)
 		}
 	}
 	if ps := pq.predicates; len(ps) > 0 {

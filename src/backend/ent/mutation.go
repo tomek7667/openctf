@@ -1124,11 +1124,11 @@ type PlaceMutation struct {
 	addcontest_points         *float64
 	openctf_points            *float64
 	addopenctf_points         *float64
+	associated_contest_id     *int
+	addassociated_contest_id  *int
 	assigned_weight_points    *int
 	addassigned_weight_points *int
 	clearedFields             map[string]struct{}
-	associated_contest        *int
-	clearedassociated_contest bool
 	associated_team           *int
 	clearedassociated_team    bool
 	done                      bool
@@ -1468,12 +1468,13 @@ func (m *PlaceMutation) ResetOpenctfPoints() {
 
 // SetAssociatedContestID sets the "associated_contest_id" field.
 func (m *PlaceMutation) SetAssociatedContestID(i int) {
-	m.associated_contest = &i
+	m.associated_contest_id = &i
+	m.addassociated_contest_id = nil
 }
 
 // AssociatedContestID returns the value of the "associated_contest_id" field in the mutation.
 func (m *PlaceMutation) AssociatedContestID() (r int, exists bool) {
-	v := m.associated_contest
+	v := m.associated_contest_id
 	if v == nil {
 		return
 	}
@@ -1497,9 +1498,28 @@ func (m *PlaceMutation) OldAssociatedContestID(ctx context.Context) (v int, err 
 	return oldValue.AssociatedContestID, nil
 }
 
+// AddAssociatedContestID adds i to the "associated_contest_id" field.
+func (m *PlaceMutation) AddAssociatedContestID(i int) {
+	if m.addassociated_contest_id != nil {
+		*m.addassociated_contest_id += i
+	} else {
+		m.addassociated_contest_id = &i
+	}
+}
+
+// AddedAssociatedContestID returns the value that was added to the "associated_contest_id" field in this mutation.
+func (m *PlaceMutation) AddedAssociatedContestID() (r int, exists bool) {
+	v := m.addassociated_contest_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
 // ResetAssociatedContestID resets all changes to the "associated_contest_id" field.
 func (m *PlaceMutation) ResetAssociatedContestID() {
-	m.associated_contest = nil
+	m.associated_contest_id = nil
+	m.addassociated_contest_id = nil
 }
 
 // SetAssignedWeightPoints sets the "assigned_weight_points" field.
@@ -1556,33 +1576,6 @@ func (m *PlaceMutation) AddedAssignedWeightPoints() (r int, exists bool) {
 func (m *PlaceMutation) ResetAssignedWeightPoints() {
 	m.assigned_weight_points = nil
 	m.addassigned_weight_points = nil
-}
-
-// ClearAssociatedContest clears the "associated_contest" edge to the Contest entity.
-func (m *PlaceMutation) ClearAssociatedContest() {
-	m.clearedassociated_contest = true
-	m.clearedFields[place.FieldAssociatedContestID] = struct{}{}
-}
-
-// AssociatedContestCleared reports if the "associated_contest" edge to the Contest entity was cleared.
-func (m *PlaceMutation) AssociatedContestCleared() bool {
-	return m.clearedassociated_contest
-}
-
-// AssociatedContestIDs returns the "associated_contest" edge IDs in the mutation.
-// Note that IDs always returns len(IDs) <= 1 for unique edges, and you should use
-// AssociatedContestID instead. It exists only for internal usage by the builders.
-func (m *PlaceMutation) AssociatedContestIDs() (ids []int) {
-	if id := m.associated_contest; id != nil {
-		ids = append(ids, *id)
-	}
-	return
-}
-
-// ResetAssociatedContest resets all changes to the "associated_contest" edge.
-func (m *PlaceMutation) ResetAssociatedContest() {
-	m.associated_contest = nil
-	m.clearedassociated_contest = false
 }
 
 // SetAssociatedTeamID sets the "associated_team" edge to the Team entity by id.
@@ -1671,7 +1664,7 @@ func (m *PlaceMutation) Fields() []string {
 	if m.openctf_points != nil {
 		fields = append(fields, place.FieldOpenctfPoints)
 	}
-	if m.associated_contest != nil {
+	if m.associated_contest_id != nil {
 		fields = append(fields, place.FieldAssociatedContestID)
 	}
 	if m.assigned_weight_points != nil {
@@ -1786,6 +1779,9 @@ func (m *PlaceMutation) AddedFields() []string {
 	if m.addopenctf_points != nil {
 		fields = append(fields, place.FieldOpenctfPoints)
 	}
+	if m.addassociated_contest_id != nil {
+		fields = append(fields, place.FieldAssociatedContestID)
+	}
 	if m.addassigned_weight_points != nil {
 		fields = append(fields, place.FieldAssignedWeightPoints)
 	}
@@ -1803,6 +1799,8 @@ func (m *PlaceMutation) AddedField(name string) (ent.Value, bool) {
 		return m.AddedContestPoints()
 	case place.FieldOpenctfPoints:
 		return m.AddedOpenctfPoints()
+	case place.FieldAssociatedContestID:
+		return m.AddedAssociatedContestID()
 	case place.FieldAssignedWeightPoints:
 		return m.AddedAssignedWeightPoints()
 	}
@@ -1834,6 +1832,13 @@ func (m *PlaceMutation) AddField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.AddOpenctfPoints(v)
+		return nil
+	case place.FieldAssociatedContestID:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddAssociatedContestID(v)
 		return nil
 	case place.FieldAssignedWeightPoints:
 		v, ok := value.(int)
@@ -1908,10 +1913,7 @@ func (m *PlaceMutation) ResetField(name string) error {
 
 // AddedEdges returns all edge names that were set/added in this mutation.
 func (m *PlaceMutation) AddedEdges() []string {
-	edges := make([]string, 0, 2)
-	if m.associated_contest != nil {
-		edges = append(edges, place.EdgeAssociatedContest)
-	}
+	edges := make([]string, 0, 1)
 	if m.associated_team != nil {
 		edges = append(edges, place.EdgeAssociatedTeam)
 	}
@@ -1922,10 +1924,6 @@ func (m *PlaceMutation) AddedEdges() []string {
 // name in this mutation.
 func (m *PlaceMutation) AddedIDs(name string) []ent.Value {
 	switch name {
-	case place.EdgeAssociatedContest:
-		if id := m.associated_contest; id != nil {
-			return []ent.Value{*id}
-		}
 	case place.EdgeAssociatedTeam:
 		if id := m.associated_team; id != nil {
 			return []ent.Value{*id}
@@ -1936,7 +1934,7 @@ func (m *PlaceMutation) AddedIDs(name string) []ent.Value {
 
 // RemovedEdges returns all edge names that were removed in this mutation.
 func (m *PlaceMutation) RemovedEdges() []string {
-	edges := make([]string, 0, 2)
+	edges := make([]string, 0, 1)
 	return edges
 }
 
@@ -1948,10 +1946,7 @@ func (m *PlaceMutation) RemovedIDs(name string) []ent.Value {
 
 // ClearedEdges returns all edge names that were cleared in this mutation.
 func (m *PlaceMutation) ClearedEdges() []string {
-	edges := make([]string, 0, 2)
-	if m.clearedassociated_contest {
-		edges = append(edges, place.EdgeAssociatedContest)
-	}
+	edges := make([]string, 0, 1)
 	if m.clearedassociated_team {
 		edges = append(edges, place.EdgeAssociatedTeam)
 	}
@@ -1962,8 +1957,6 @@ func (m *PlaceMutation) ClearedEdges() []string {
 // was cleared in this mutation.
 func (m *PlaceMutation) EdgeCleared(name string) bool {
 	switch name {
-	case place.EdgeAssociatedContest:
-		return m.clearedassociated_contest
 	case place.EdgeAssociatedTeam:
 		return m.clearedassociated_team
 	}
@@ -1974,9 +1967,6 @@ func (m *PlaceMutation) EdgeCleared(name string) bool {
 // if that edge is not defined in the schema.
 func (m *PlaceMutation) ClearEdge(name string) error {
 	switch name {
-	case place.EdgeAssociatedContest:
-		m.ClearAssociatedContest()
-		return nil
 	case place.EdgeAssociatedTeam:
 		m.ClearAssociatedTeam()
 		return nil
@@ -1988,9 +1978,6 @@ func (m *PlaceMutation) ClearEdge(name string) error {
 // It returns an error if the edge is not defined in the schema.
 func (m *PlaceMutation) ResetEdge(name string) error {
 	switch name {
-	case place.EdgeAssociatedContest:
-		m.ResetAssociatedContest()
-		return nil
 	case place.EdgeAssociatedTeam:
 		m.ResetAssociatedTeam()
 		return nil

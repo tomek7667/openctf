@@ -6,7 +6,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"openctfbackend/ent/contest"
 	"openctfbackend/ent/place"
 	"openctfbackend/ent/team"
 
@@ -79,11 +78,6 @@ func (pc *PlaceCreate) SetNillableAssignedWeightPoints(i *int) *PlaceCreate {
 		pc.SetAssignedWeightPoints(*i)
 	}
 	return pc
-}
-
-// SetAssociatedContest sets the "associated_contest" edge to the Contest entity.
-func (pc *PlaceCreate) SetAssociatedContest(c *Contest) *PlaceCreate {
-	return pc.SetAssociatedContestID(c.ID)
 }
 
 // SetAssociatedTeamID sets the "associated_team" edge to the Team entity by ID.
@@ -180,9 +174,6 @@ func (pc *PlaceCreate) check() error {
 	if _, ok := pc.mutation.AssignedWeightPoints(); !ok {
 		return &ValidationError{Name: "assigned_weight_points", err: errors.New(`ent: missing required field "Place.assigned_weight_points"`)}
 	}
-	if len(pc.mutation.AssociatedContestIDs()) == 0 {
-		return &ValidationError{Name: "associated_contest", err: errors.New(`ent: missing required edge "Place.associated_contest"`)}
-	}
 	return nil
 }
 
@@ -225,26 +216,13 @@ func (pc *PlaceCreate) createSpec() (*Place, *sqlgraph.CreateSpec) {
 		_spec.SetField(place.FieldOpenctfPoints, field.TypeFloat64, value)
 		_node.OpenctfPoints = &value
 	}
+	if value, ok := pc.mutation.AssociatedContestID(); ok {
+		_spec.SetField(place.FieldAssociatedContestID, field.TypeInt, value)
+		_node.AssociatedContestID = value
+	}
 	if value, ok := pc.mutation.AssignedWeightPoints(); ok {
 		_spec.SetField(place.FieldAssignedWeightPoints, field.TypeInt, value)
 		_node.AssignedWeightPoints = value
-	}
-	if nodes := pc.mutation.AssociatedContestIDs(); len(nodes) > 0 {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2O,
-			Inverse: true,
-			Table:   place.AssociatedContestTable,
-			Columns: []string{place.AssociatedContestColumn},
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(contest.FieldID, field.TypeInt),
-			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		_node.AssociatedContestID = nodes[0]
-		_spec.Edges = append(_spec.Edges, edge)
 	}
 	if nodes := pc.mutation.AssociatedTeamIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{

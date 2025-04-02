@@ -12,20 +12,24 @@ import (
 type CreateTeamDto struct {
 	Name        string `json:"name"`
 	Description string `json:"description"`
-	CtftimeID   int    `json:"ctftimeId,omitempty"`
+	CtftimeID   *int   `json:"ctftimeId,omitempty"`
 	Logo        []byte
 }
 
 func (c *Client) CreateTeam(ctx context.Context, captain *ent.User, dto *CreateTeamDto) (*ent.Team, error) {
-	t, err := c.C.Team.
+	tq := c.C.Team.
 		Create().
-		SetName(dto.Name).
 		SetDescription(dto.Description).
-		SetCtftimeID(dto.CtftimeID).
+		SetName(sanitizeCtftimeTeamName(dto.Name)).
 		SetLogo(dto.Logo).
 		SetCaptain(captain).
-		AddMembers(captain).
-		Save(ctx)
+		AddMembers(captain)
+
+	if dto.CtftimeID != nil && *dto.CtftimeID != 0 {
+		tq.SetCtftimeID(*dto.CtftimeID)
+	}
+
+	t, err := tq.Save(ctx)
 	if err != nil {
 		return nil, errors.Join(fmt.Errorf("failed creating a team"), err)
 	}

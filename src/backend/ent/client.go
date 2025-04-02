@@ -501,22 +501,6 @@ func (c *PlaceClient) GetX(ctx context.Context, id int) *Place {
 	return obj
 }
 
-// QueryAssociatedContest queries the associated_contest edge of a Place.
-func (c *PlaceClient) QueryAssociatedContest(pl *Place) *ContestQuery {
-	query := (&ContestClient{config: c.config}).Query()
-	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
-		id := pl.ID
-		step := sqlgraph.NewStep(
-			sqlgraph.From(place.Table, place.FieldID, id),
-			sqlgraph.To(contest.Table, contest.FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, place.AssociatedContestTable, place.AssociatedContestColumn),
-		)
-		fromV = sqlgraph.Neighbors(pl.driver.Dialect(), step)
-		return fromV, nil
-	}
-	return query
-}
-
 // QueryAssociatedTeam queries the associated_team edge of a Place.
 func (c *PlaceClient) QueryAssociatedTeam(pl *Place) *TeamQuery {
 	query := (&TeamClient{config: c.config}).Query()

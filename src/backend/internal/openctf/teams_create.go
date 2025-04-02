@@ -23,8 +23,8 @@ func (h *Handler) TeamsCreate(ctx *gin.Context, user *ent.User) {
 		})
 		return
 	}
-	if dto.CtftimeID != 0 {
-		ctftimeTeam, err := h.CtftimeClient.GetTeam(dto.CtftimeID)
+	if dto.CtftimeID != nil && *dto.CtftimeID != 0 {
+		ctftimeTeam, err := h.CtftimeClient.GetTeam(*dto.CtftimeID)
 		if err != nil {
 			ctx.JSON(http.StatusInternalServerError, map[string]any{
 				"success": false,

@@ -24,19 +24,10 @@ const (
 	FieldAssociatedContestID = "associated_contest_id"
 	// FieldAssignedWeightPoints holds the string denoting the assigned_weight_points field in the database.
 	FieldAssignedWeightPoints = "assigned_weight_points"
-	// EdgeAssociatedContest holds the string denoting the associated_contest edge name in mutations.
-	EdgeAssociatedContest = "associated_contest"
 	// EdgeAssociatedTeam holds the string denoting the associated_team edge name in mutations.
 	EdgeAssociatedTeam = "associated_team"
 	// Table holds the table name of the place in the database.
 	Table = "places"
-	// AssociatedContestTable is the table that holds the associated_contest relation/edge.
-	AssociatedContestTable = "places"
-	// AssociatedContestInverseTable is the table name for the Contest entity.
-	// It exists in this package in order to avoid circular dependency with the "contest" package.
-	AssociatedContestInverseTable = "contests"
-	// AssociatedContestColumn is the table column denoting the associated_contest relation/edge.
-	AssociatedContestColumn = "associated_contest_id"
 	// AssociatedTeamTable is the table that holds the associated_team relation/edge.
 	AssociatedTeamTable = "places"
 	// AssociatedTeamInverseTable is the table name for the Team entity.
@@ -60,6 +51,7 @@ var Columns = []string{
 // ForeignKeys holds the SQL foreign-keys that are owned by the "places"
 // table and are not defined as standalone fields in the schema.
 var ForeignKeys = []string{
+	"contest_places",
 	"place_associated_team",
 }
 
@@ -129,25 +121,11 @@ func ByAssignedWeightPoints(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldAssignedWeightPoints, opts...).ToFunc()
 }
 
-// ByAssociatedContestField orders the results by associated_contest field.
-func ByAssociatedContestField(field string, opts ...sql.OrderTermOption) OrderOption {
-	return func(s *sql.Selector) {
-		sqlgraph.OrderByNeighborTerms(s, newAssociatedContestStep(), sql.OrderByField(field, opts...))
-	}
-}
-
 // ByAssociatedTeamField orders the results by associated_team field.
 func ByAssociatedTeamField(field string, opts ...sql.OrderTermOption) OrderOption {
 	return func(s *sql.Selector) {
 		sqlgraph.OrderByNeighborTerms(s, newAssociatedTeamStep(), sql.OrderByField(field, opts...))
 	}
-}
-func newAssociatedContestStep() *sqlgraph.Step {
-	return sqlgraph.NewStep(
-		sqlgraph.From(Table, FieldID),
-		sqlgraph.To(AssociatedContestInverseTable, FieldID),
-		sqlgraph.Edge(sqlgraph.M2O, true, AssociatedContestTable, AssociatedContestColumn),
-	)
 }
 func newAssociatedTeamStep() *sqlgraph.Step {
 	return sqlgraph.NewStep(

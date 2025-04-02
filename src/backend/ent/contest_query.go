@@ -497,9 +497,6 @@ func (cq *ContestQuery) loadPlaces(ctx context.Context, query *PlaceQuery, nodes
 		}
 	}
 	query.withFKs = true
-	if len(query.ctx.Fields) > 0 {
-		query.ctx.AppendFieldOnce(place.FieldAssociatedContestID)
-	}
 	query.Where(predicate.Place(func(s *sql.Selector) {
 		s.Where(sql.InValues(s.C(contest.PlacesColumn), fks...))
 	}))
@@ -508,10 +505,13 @@ func (cq *ContestQuery) loadPlaces(ctx context.Context, query *PlaceQuery, nodes
 		return err
 	}
 	for _, n := range neighbors {
-		fk := n.AssociatedContestID
-		node, ok := nodeids[fk]
+		fk := n.contest_places
+		if fk == nil {
+			return fmt.Errorf(`foreign-key "contest_places" is nil for node %v`, n.ID)
+		}
+		node, ok := nodeids[*fk]
 		if !ok {
-			return fmt.Errorf(`unexpected referenced foreign-key "associated_contest_id" returned %v for node %v`, fk, n.ID)
+			return fmt.Errorf(`unexpected referenced foreign-key "contest_places" returned %v for node %v`, *fk, n.ID)
 		}
 		assign(node, n)
 	}

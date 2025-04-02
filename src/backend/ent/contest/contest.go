@@ -49,7 +49,7 @@ const (
 	// It exists in this package in order to avoid circular dependency with the "place" package.
 	PlacesInverseTable = "places"
 	// PlacesColumn is the table column denoting the places relation/edge.
-	PlacesColumn = "associated_contest_id"
+	PlacesColumn = "contest_places"
 )
 
 // Columns holds all SQL columns for contest fields.

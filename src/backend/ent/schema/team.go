@@ -14,7 +14,7 @@ type Team struct {
 
 func (Team) Fields() []ent.Field {
 	return []ent.Field{
-		field.String("name").Match(regexp.MustCompile("[a-z0-9 _-]+$")).Unique(),
+		field.String("name").Match(regexp.MustCompile("[a-zA-Z0-9 _-]+$")).Unique(),
 		field.String("description").Optional(),
 		field.Int("ctftime_id").Optional().Nillable(),
 		field.Time("ctftime_verified_at").Optional().Nillable(),

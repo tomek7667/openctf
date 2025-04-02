@@ -6,6 +6,7 @@ import (
 	"fmt"
 
 	"openctfbackend/ent"
+	"openctfbackend/ent/migrate"
 
 	_ "github.com/lib/pq"
 )
@@ -19,7 +20,9 @@ func New(credentials string) (*Client, error) {
 	if err != nil {
 		return nil, errors.Join(fmt.Errorf("failed opening connection to pg"), err)
 	}
-	if err := client.Schema.Create(context.Background()); err != nil {
+	if err := client.Schema.Create(context.Background(), migrate.WithDropIndex(true),
+		migrate.WithDropColumn(true),
+	); err != nil {
 		return nil, errors.Join(fmt.Errorf("failed creating schema resources"), err)
 	}
 

@@ -4,7 +4,6 @@ package ent
 
 import (
 	"fmt"
-	"openctfbackend/ent/contest"
 	"openctfbackend/ent/place"
 	"openctfbackend/ent/team"
 	"strings"
@@ -33,30 +32,18 @@ type Place struct {
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the PlaceQuery when eager-loading is set.
 	Edges                 PlaceEdges `json:"edges"`
+	contest_places        *int
 	place_associated_team *int
 	selectValues          sql.SelectValues
 }
 
 // PlaceEdges holds the relations/edges for other nodes in the graph.
 type PlaceEdges struct {
-	// AssociatedContest holds the value of the associated_contest edge.
-	AssociatedContest *Contest `json:"associated_contest,omitempty"`
 	// AssociatedTeam holds the value of the associated_team edge.
 	AssociatedTeam *Team `json:"associated_team,omitempty"`
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [2]bool
-}
-
-// AssociatedContestOrErr returns the AssociatedContest value or an error if the edge
-// was not loaded in eager-loading, or loaded but was not found.
-func (e PlaceEdges) AssociatedContestOrErr() (*Contest, error) {
-	if e.AssociatedContest != nil {
-		return e.AssociatedContest, nil
-	} else if e.loadedTypes[0] {
-		return nil, &NotFoundError{label: contest.Label}
-	}
-	return nil, &NotLoadedError{edge: "associated_contest"}
+	loadedTypes [1]bool
 }
 
 // AssociatedTeamOrErr returns the AssociatedTeam value or an error if the edge
@@ -64,7 +51,7 @@ func (e PlaceEdges) AssociatedContestOrErr() (*Contest, error) {
 func (e PlaceEdges) AssociatedTeamOrErr() (*Team, error) {
 	if e.AssociatedTeam != nil {
 		return e.AssociatedTeam, nil
-	} else if e.loadedTypes[1] {
+	} else if e.loadedTypes[0] {
 		return nil, &NotFoundError{label: team.Label}
 	}
 	return nil, &NotLoadedError{edge: "associated_team"}
@@ -81,7 +68,9 @@ func (*Place) scanValues(columns []string) ([]any, error) {
 			values[i] = new(sql.NullInt64)
 		case place.FieldTeamName:
 			values[i] = new(sql.NullString)
-		case place.ForeignKeys[0]: // place_associated_team
+		case place.ForeignKeys[0]: // contest_places
+			values[i] = new(sql.NullInt64)
+		case place.ForeignKeys[1]: // place_associated_team
 			values[i] = new(sql.NullInt64)
 		default:
 			values[i] = new(sql.UnknownType)
@@ -144,6 +133,13 @@ func (pl *Place) assignValues(columns []string, values []any) error {
 			}
 		case place.ForeignKeys[0]:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for edge-field contest_places", value)
+			} else if value.Valid {
+				pl.contest_places = new(int)
+				*pl.contest_places = int(value.Int64)
+			}
+		case place.ForeignKeys[1]:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for edge-field place_associated_team", value)
 			} else if value.Valid {
 				pl.place_associated_team = new(int)
@@ -160,11 +156,6 @@ func (pl *Place) assignValues(columns []string, values []any) error {
 // This includes values selected through modifiers, order, etc.
 func (pl *Place) Value(name string) (ent.Value, error) {
 	return pl.selectValues.Get(name)
-}
-
-// QueryAssociatedContest queries the "associated_contest" edge of the Place entity.
-func (pl *Place) QueryAssociatedContest() *ContestQuery {
-	return NewPlaceClient(pl.config).QueryAssociatedContest(pl)
 }
 
 // QueryAssociatedTeam queries the "associated_team" edge of the Place entity.

@@ -6,7 +6,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"openctfbackend/ent/contest"
 	"openctfbackend/ent/place"
 	"openctfbackend/ent/predicate"
 	"openctfbackend/ent/team"
@@ -120,6 +119,7 @@ func (pu *PlaceUpdate) ClearOpenctfPoints() *PlaceUpdate {
 
 // SetAssociatedContestID sets the "associated_contest_id" field.
 func (pu *PlaceUpdate) SetAssociatedContestID(i int) *PlaceUpdate {
+	pu.mutation.ResetAssociatedContestID()
 	pu.mutation.SetAssociatedContestID(i)
 	return pu
 }
@@ -129,6 +129,12 @@ func (pu *PlaceUpdate) SetNillableAssociatedContestID(i *int) *PlaceUpdate {
 	if i != nil {
 		pu.SetAssociatedContestID(*i)
 	}
+	return pu
+}
+
+// AddAssociatedContestID adds i to the "associated_contest_id" field.
+func (pu *PlaceUpdate) AddAssociatedContestID(i int) *PlaceUpdate {
+	pu.mutation.AddAssociatedContestID(i)
 	return pu
 }
 
@@ -153,11 +159,6 @@ func (pu *PlaceUpdate) AddAssignedWeightPoints(i int) *PlaceUpdate {
 	return pu
 }
 
-// SetAssociatedContest sets the "associated_contest" edge to the Contest entity.
-func (pu *PlaceUpdate) SetAssociatedContest(c *Contest) *PlaceUpdate {
-	return pu.SetAssociatedContestID(c.ID)
-}
-
 // SetAssociatedTeamID sets the "associated_team" edge to the Team entity by ID.
 func (pu *PlaceUpdate) SetAssociatedTeamID(id int) *PlaceUpdate {
 	pu.mutation.SetAssociatedTeamID(id)
@@ -180,12 +181,6 @@ func (pu *PlaceUpdate) SetAssociatedTeam(t *Team) *PlaceUpdate {
 // Mutation returns the PlaceMutation object of the builder.
 func (pu *PlaceUpdate) Mutation() *PlaceMutation {
 	return pu.mutation
-}
-
-// ClearAssociatedContest clears the "associated_contest" edge to the Contest entity.
-func (pu *PlaceUpdate) ClearAssociatedContest() *PlaceUpdate {
-	pu.mutation.ClearAssociatedContest()
-	return pu
 }
 
 // ClearAssociatedTeam clears the "associated_team" edge to the Team entity.
@@ -243,9 +238,6 @@ func (pu *PlaceUpdate) check() error {
 			return &ValidationError{Name: "openctf_points", err: fmt.Errorf(`ent: validator failed for field "Place.openctf_points": %w`, err)}
 		}
 	}
-	if pu.mutation.AssociatedContestCleared() && len(pu.mutation.AssociatedContestIDs()) > 0 {
-		return errors.New(`ent: clearing a required unique edge "Place.associated_contest"`)
-	}
 	return nil
 }
 
@@ -288,40 +280,17 @@ func (pu *PlaceUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	if pu.mutation.OpenctfPointsCleared() {
 		_spec.ClearField(place.FieldOpenctfPoints, field.TypeFloat64)
 	}
+	if value, ok := pu.mutation.AssociatedContestID(); ok {
+		_spec.SetField(place.FieldAssociatedContestID, field.TypeInt, value)
+	}
+	if value, ok := pu.mutation.AddedAssociatedContestID(); ok {
+		_spec.AddField(place.FieldAssociatedContestID, field.TypeInt, value)
+	}
 	if value, ok := pu.mutation.AssignedWeightPoints(); ok {
 		_spec.SetField(place.FieldAssignedWeightPoints, field.TypeInt, value)
 	}
 	if value, ok := pu.mutation.AddedAssignedWeightPoints(); ok {
 		_spec.AddField(place.FieldAssignedWeightPoints, field.TypeInt, value)
-	}
-	if pu.mutation.AssociatedContestCleared() {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2O,
-			Inverse: true,
-			Table:   place.AssociatedContestTable,
-			Columns: []string{place.AssociatedContestColumn},
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(contest.FieldID, field.TypeInt),
-			},
-		}
-		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
-	}
-	if nodes := pu.mutation.AssociatedContestIDs(); len(nodes) > 0 {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2O,
-			Inverse: true,
-			Table:   place.AssociatedContestTable,
-			Columns: []string{place.AssociatedContestColumn},
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(contest.FieldID, field.TypeInt),
-			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
 	if pu.mutation.AssociatedTeamCleared() {
 		edge := &sqlgraph.EdgeSpec{
@@ -463,6 +432,7 @@ func (puo *PlaceUpdateOne) ClearOpenctfPoints() *PlaceUpdateOne {
 
 // SetAssociatedContestID sets the "associated_contest_id" field.
 func (puo *PlaceUpdateOne) SetAssociatedContestID(i int) *PlaceUpdateOne {
+	puo.mutation.ResetAssociatedContestID()
 	puo.mutation.SetAssociatedContestID(i)
 	return puo
 }
@@ -472,6 +442,12 @@ func (puo *PlaceUpdateOne) SetNillableAssociatedContestID(i *int) *PlaceUpdateOn
 	if i != nil {
 		puo.SetAssociatedContestID(*i)
 	}
+	return puo
+}
+
+// AddAssociatedContestID adds i to the "associated_contest_id" field.
+func (puo *PlaceUpdateOne) AddAssociatedContestID(i int) *PlaceUpdateOne {
+	puo.mutation.AddAssociatedContestID(i)
 	return puo
 }
 
@@ -496,11 +472,6 @@ func (puo *PlaceUpdateOne) AddAssignedWeightPoints(i int) *PlaceUpdateOne {
 	return puo
 }
 
-// SetAssociatedContest sets the "associated_contest" edge to the Contest entity.
-func (puo *PlaceUpdateOne) SetAssociatedContest(c *Contest) *PlaceUpdateOne {
-	return puo.SetAssociatedContestID(c.ID)
-}
-
 // SetAssociatedTeamID sets the "associated_team" edge to the Team entity by ID.
 func (puo *PlaceUpdateOne) SetAssociatedTeamID(id int) *PlaceUpdateOne {
 	puo.mutation.SetAssociatedTeamID(id)
@@ -523,12 +494,6 @@ func (puo *PlaceUpdateOne) SetAssociatedTeam(t *Team) *PlaceUpdateOne {
 // Mutation returns the PlaceMutation object of the builder.
 func (puo *PlaceUpdateOne) Mutation() *PlaceMutation {
 	return puo.mutation
-}
-
-// ClearAssociatedContest clears the "associated_contest" edge to the Contest entity.
-func (puo *PlaceUpdateOne) ClearAssociatedContest() *PlaceUpdateOne {
-	puo.mutation.ClearAssociatedContest()
-	return puo
 }
 
 // ClearAssociatedTeam clears the "associated_team" edge to the Team entity.
@@ -599,9 +564,6 @@ func (puo *PlaceUpdateOne) check() error {
 			return &ValidationError{Name: "openctf_points", err: fmt.Errorf(`ent: validator failed for field "Place.openctf_points": %w`, err)}
 		}
 	}
-	if puo.mutation.AssociatedContestCleared() && len(puo.mutation.AssociatedContestIDs()) > 0 {
-		return errors.New(`ent: clearing a required unique edge "Place.associated_contest"`)
-	}
 	return nil
 }
 
@@ -661,40 +623,17 @@ func (puo *PlaceUpdateOne) sqlSave(ctx context.Context) (_node *Place, err error
 	if puo.mutation.OpenctfPointsCleared() {
 		_spec.ClearField(place.FieldOpenctfPoints, field.TypeFloat64)
 	}
+	if value, ok := puo.mutation.AssociatedContestID(); ok {
+		_spec.SetField(place.FieldAssociatedContestID, field.TypeInt, value)
+	}
+	if value, ok := puo.mutation.AddedAssociatedContestID(); ok {
+		_spec.AddField(place.FieldAssociatedContestID, field.TypeInt, value)
+	}
 	if value, ok := puo.mutation.AssignedWeightPoints(); ok {
 		_spec.SetField(place.FieldAssignedWeightPoints, field.TypeInt, value)
 	}
 	if value, ok := puo.mutation.AddedAssignedWeightPoints(); ok {
 		_spec.AddField(place.FieldAssignedWeightPoints, field.TypeInt, value)
-	}
-	if puo.mutation.AssociatedContestCleared() {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2O,
-			Inverse: true,
-			Table:   place.AssociatedContestTable,
-			Columns: []string{place.AssociatedContestColumn},
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(contest.FieldID, field.TypeInt),
-			},
-		}
-		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
-	}
-	if nodes := puo.mutation.AssociatedContestIDs(); len(nodes) > 0 {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2O,
-			Inverse: true,
-			Table:   place.AssociatedContestTable,
-			Columns: []string{place.AssociatedContestColumn},
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(contest.FieldID, field.TypeInt),
-			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
 	if puo.mutation.AssociatedTeamCleared() {
 		edge := &sqlgraph.EdgeSpec{

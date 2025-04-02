@@ -309,6 +309,26 @@ func AssociatedContestIDNotIn(vs ...int) predicate.Place {
 	return predicate.Place(sql.FieldNotIn(FieldAssociatedContestID, vs...))
 }
 
+// AssociatedContestIDGT applies the GT predicate on the "associated_contest_id" field.
+func AssociatedContestIDGT(v int) predicate.Place {
+	return predicate.Place(sql.FieldGT(FieldAssociatedContestID, v))
+}
+
+// AssociatedContestIDGTE applies the GTE predicate on the "associated_contest_id" field.
+func AssociatedContestIDGTE(v int) predicate.Place {
+	return predicate.Place(sql.FieldGTE(FieldAssociatedContestID, v))
+}
+
+// AssociatedContestIDLT applies the LT predicate on the "associated_contest_id" field.
+func AssociatedContestIDLT(v int) predicate.Place {
+	return predicate.Place(sql.FieldLT(FieldAssociatedContestID, v))
+}
+
+// AssociatedContestIDLTE applies the LTE predicate on the "associated_contest_id" field.
+func AssociatedContestIDLTE(v int) predicate.Place {
+	return predicate.Place(sql.FieldLTE(FieldAssociatedContestID, v))
+}
+
 // AssignedWeightPointsEQ applies the EQ predicate on the "assigned_weight_points" field.
 func AssignedWeightPointsEQ(v int) predicate.Place {
 	return predicate.Place(sql.FieldEQ(FieldAssignedWeightPoints, v))
@@ -347,29 +367,6 @@ func AssignedWeightPointsLT(v int) predicate.Place {
 // AssignedWeightPointsLTE applies the LTE predicate on the "assigned_weight_points" field.
 func AssignedWeightPointsLTE(v int) predicate.Place {
 	return predicate.Place(sql.FieldLTE(FieldAssignedWeightPoints, v))
-}
-
-// HasAssociatedContest applies the HasEdge predicate on the "associated_contest" edge.
-func HasAssociatedContest() predicate.Place {
-	return predicate.Place(func(s *sql.Selector) {
-		step := sqlgraph.NewStep(
-			sqlgraph.From(Table, FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, AssociatedContestTable, AssociatedContestColumn),
-		)
-		sqlgraph.HasNeighbors(s, step)
-	})
-}
-
-// HasAssociatedContestWith applies the HasEdge predicate on the "associated_contest" edge with a given conditions (other predicates).
-func HasAssociatedContestWith(preds ...predicate.Contest) predicate.Place {
-	return predicate.Place(func(s *sql.Selector) {
-		step := newAssociatedContestStep()
-		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
-			for _, p := range preds {
-				p(s)
-			}
-		})
-	})
 }
 
 // HasAssociatedTeam applies the HasEdge predicate on the "associated_team" edge.
