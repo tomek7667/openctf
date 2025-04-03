@@ -40,23 +40,19 @@ func init() {
 	// place.PlaceValidator is a validator for the "place" field. It is called by the builders before save.
 	place.PlaceValidator = placeDescPlace.Validators[0].(func(int) error)
 	// placeDescContestPoints is the schema descriptor for contest_points field.
-	placeDescContestPoints := placeFields[2].Descriptor()
+	placeDescContestPoints := placeFields[3].Descriptor()
 	// place.ContestPointsValidator is a validator for the "contest_points" field. It is called by the builders before save.
 	place.ContestPointsValidator = placeDescContestPoints.Validators[0].(func(float64) error)
 	// placeDescOpenctfPoints is the schema descriptor for openctf_points field.
-	placeDescOpenctfPoints := placeFields[3].Descriptor()
+	placeDescOpenctfPoints := placeFields[4].Descriptor()
 	// place.OpenctfPointsValidator is a validator for the "openctf_points" field. It is called by the builders before save.
 	place.OpenctfPointsValidator = placeDescOpenctfPoints.Validators[0].(func(float64) error)
 	// placeDescAssignedWeightPoints is the schema descriptor for assigned_weight_points field.
-	placeDescAssignedWeightPoints := placeFields[5].Descriptor()
+	placeDescAssignedWeightPoints := placeFields[6].Descriptor()
 	// place.DefaultAssignedWeightPoints holds the default value on creation for the assigned_weight_points field.
 	place.DefaultAssignedWeightPoints = placeDescAssignedWeightPoints.Default.(int)
 	teamFields := schema.Team{}.Fields()
 	_ = teamFields
-	// teamDescName is the schema descriptor for name field.
-	teamDescName := teamFields[0].Descriptor()
-	// team.NameValidator is a validator for the "name" field. It is called by the builders before save.
-	team.NameValidator = teamDescName.Validators[0].(func(string) error)
 	// teamDescLogo is the schema descriptor for logo field.
 	teamDescLogo := teamFields[4].Descriptor()
 	// team.LogoValidator is a validator for the "logo" field. It is called by the builders before save.

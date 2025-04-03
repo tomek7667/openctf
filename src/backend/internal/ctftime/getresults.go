@@ -10,8 +10,8 @@ import (
 
 // `CtftimeResultsResponse` the map of ctftime event id to title+scores
 type CtftimeResultsResponse map[int]struct {
-	Title  string  `json:"title"`
-	Scores []Place `json:"scores"`
+	Title  string      `json:"title"`
+	Scores []YearPlace `json:"scores"`
 }
 
 func (c *Client) GetResults(ctx context.Context, year int) (*CtftimeResultsResponse, error) {

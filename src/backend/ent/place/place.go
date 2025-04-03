@@ -16,6 +16,8 @@ const (
 	FieldTeamName = "team_name"
 	// FieldPlace holds the string denoting the place field in the database.
 	FieldPlace = "place"
+	// FieldCtftimeTeamID holds the string denoting the ctftime_team_id field in the database.
+	FieldCtftimeTeamID = "ctftime_team_id"
 	// FieldContestPoints holds the string denoting the contest_points field in the database.
 	FieldContestPoints = "contest_points"
 	// FieldOpenctfPoints holds the string denoting the openctf_points field in the database.
@@ -42,6 +44,7 @@ var Columns = []string{
 	FieldID,
 	FieldTeamName,
 	FieldPlace,
+	FieldCtftimeTeamID,
 	FieldContestPoints,
 	FieldOpenctfPoints,
 	FieldAssociatedContestID,
@@ -99,6 +102,11 @@ func ByTeamName(opts ...sql.OrderTermOption) OrderOption {
 // ByPlace orders the results by the place field.
 func ByPlace(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldPlace, opts...).ToFunc()
+}
+
+// ByCtftimeTeamID orders the results by the ctftime_team_id field.
+func ByCtftimeTeamID(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldCtftimeTeamID, opts...).ToFunc()
 }
 
 // ByContestPoints orders the results by the contest_points field.

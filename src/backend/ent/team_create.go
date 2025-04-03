@@ -179,11 +179,6 @@ func (tc *TeamCreate) check() error {
 	if _, ok := tc.mutation.Name(); !ok {
 		return &ValidationError{Name: "name", err: errors.New(`ent: missing required field "Team.name"`)}
 	}
-	if v, ok := tc.mutation.Name(); ok {
-		if err := team.NameValidator(v); err != nil {
-			return &ValidationError{Name: "name", err: fmt.Errorf(`ent: validator failed for field "Team.name": %w`, err)}
-		}
-	}
 	if v, ok := tc.mutation.Logo(); ok {
 		if err := team.LogoValidator(v); err != nil {
 			return &ValidationError{Name: "logo", err: fmt.Errorf(`ent: validator failed for field "Team.logo": %w`, err)}

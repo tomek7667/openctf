@@ -20,7 +20,7 @@ func (c *Client) CreateTeam(ctx context.Context, captain *ent.User, dto *CreateT
 	tq := c.C.Team.
 		Create().
 		SetDescription(dto.Description).
-		SetName(sanitizeCtftimeTeamName(dto.Name)).
+		SetName(dto.Name).
 		SetLogo(dto.Logo).
 		SetCaptain(captain).
 		AddMembers(captain)

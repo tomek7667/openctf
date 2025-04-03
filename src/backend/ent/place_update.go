@@ -63,6 +63,33 @@ func (pu *PlaceUpdate) AddPlace(i int) *PlaceUpdate {
 	return pu
 }
 
+// SetCtftimeTeamID sets the "ctftime_team_id" field.
+func (pu *PlaceUpdate) SetCtftimeTeamID(i int) *PlaceUpdate {
+	pu.mutation.ResetCtftimeTeamID()
+	pu.mutation.SetCtftimeTeamID(i)
+	return pu
+}
+
+// SetNillableCtftimeTeamID sets the "ctftime_team_id" field if the given value is not nil.
+func (pu *PlaceUpdate) SetNillableCtftimeTeamID(i *int) *PlaceUpdate {
+	if i != nil {
+		pu.SetCtftimeTeamID(*i)
+	}
+	return pu
+}
+
+// AddCtftimeTeamID adds i to the "ctftime_team_id" field.
+func (pu *PlaceUpdate) AddCtftimeTeamID(i int) *PlaceUpdate {
+	pu.mutation.AddCtftimeTeamID(i)
+	return pu
+}
+
+// ClearCtftimeTeamID clears the value of the "ctftime_team_id" field.
+func (pu *PlaceUpdate) ClearCtftimeTeamID() *PlaceUpdate {
+	pu.mutation.ClearCtftimeTeamID()
+	return pu
+}
+
 // SetContestPoints sets the "contest_points" field.
 func (pu *PlaceUpdate) SetContestPoints(f float64) *PlaceUpdate {
 	pu.mutation.ResetContestPoints()
@@ -262,6 +289,15 @@ func (pu *PlaceUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	if value, ok := pu.mutation.AddedPlace(); ok {
 		_spec.AddField(place.FieldPlace, field.TypeInt, value)
 	}
+	if value, ok := pu.mutation.CtftimeTeamID(); ok {
+		_spec.SetField(place.FieldCtftimeTeamID, field.TypeInt, value)
+	}
+	if value, ok := pu.mutation.AddedCtftimeTeamID(); ok {
+		_spec.AddField(place.FieldCtftimeTeamID, field.TypeInt, value)
+	}
+	if pu.mutation.CtftimeTeamIDCleared() {
+		_spec.ClearField(place.FieldCtftimeTeamID, field.TypeInt)
+	}
 	if value, ok := pu.mutation.ContestPoints(); ok {
 		_spec.SetField(place.FieldContestPoints, field.TypeFloat64, value)
 	}
@@ -373,6 +409,33 @@ func (puo *PlaceUpdateOne) SetNillablePlace(i *int) *PlaceUpdateOne {
 // AddPlace adds i to the "place" field.
 func (puo *PlaceUpdateOne) AddPlace(i int) *PlaceUpdateOne {
 	puo.mutation.AddPlace(i)
+	return puo
+}
+
+// SetCtftimeTeamID sets the "ctftime_team_id" field.
+func (puo *PlaceUpdateOne) SetCtftimeTeamID(i int) *PlaceUpdateOne {
+	puo.mutation.ResetCtftimeTeamID()
+	puo.mutation.SetCtftimeTeamID(i)
+	return puo
+}
+
+// SetNillableCtftimeTeamID sets the "ctftime_team_id" field if the given value is not nil.
+func (puo *PlaceUpdateOne) SetNillableCtftimeTeamID(i *int) *PlaceUpdateOne {
+	if i != nil {
+		puo.SetCtftimeTeamID(*i)
+	}
+	return puo
+}
+
+// AddCtftimeTeamID adds i to the "ctftime_team_id" field.
+func (puo *PlaceUpdateOne) AddCtftimeTeamID(i int) *PlaceUpdateOne {
+	puo.mutation.AddCtftimeTeamID(i)
+	return puo
+}
+
+// ClearCtftimeTeamID clears the value of the "ctftime_team_id" field.
+func (puo *PlaceUpdateOne) ClearCtftimeTeamID() *PlaceUpdateOne {
+	puo.mutation.ClearCtftimeTeamID()
 	return puo
 }
 
@@ -604,6 +667,15 @@ func (puo *PlaceUpdateOne) sqlSave(ctx context.Context) (_node *Place, err error
 	}
 	if value, ok := puo.mutation.AddedPlace(); ok {
 		_spec.AddField(place.FieldPlace, field.TypeInt, value)
+	}
+	if value, ok := puo.mutation.CtftimeTeamID(); ok {
+		_spec.SetField(place.FieldCtftimeTeamID, field.TypeInt, value)
+	}
+	if value, ok := puo.mutation.AddedCtftimeTeamID(); ok {
+		_spec.AddField(place.FieldCtftimeTeamID, field.TypeInt, value)
+	}
+	if puo.mutation.CtftimeTeamIDCleared() {
+		_spec.ClearField(place.FieldCtftimeTeamID, field.TypeInt)
 	}
 	if value, ok := puo.mutation.ContestPoints(); ok {
 		_spec.SetField(place.FieldContestPoints, field.TypeFloat64, value)

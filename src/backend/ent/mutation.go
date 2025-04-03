@@ -1120,6 +1120,8 @@ type PlaceMutation struct {
 	team_name                 *string
 	place                     *int
 	addplace                  *int
+	ctftime_team_id           *int
+	addctftime_team_id        *int
 	contest_points            *float64
 	addcontest_points         *float64
 	openctf_points            *float64
@@ -1324,6 +1326,76 @@ func (m *PlaceMutation) AddedPlace() (r int, exists bool) {
 func (m *PlaceMutation) ResetPlace() {
 	m.place = nil
 	m.addplace = nil
+}
+
+// SetCtftimeTeamID sets the "ctftime_team_id" field.
+func (m *PlaceMutation) SetCtftimeTeamID(i int) {
+	m.ctftime_team_id = &i
+	m.addctftime_team_id = nil
+}
+
+// CtftimeTeamID returns the value of the "ctftime_team_id" field in the mutation.
+func (m *PlaceMutation) CtftimeTeamID() (r int, exists bool) {
+	v := m.ctftime_team_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldCtftimeTeamID returns the old "ctftime_team_id" field's value of the Place entity.
+// If the Place object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *PlaceMutation) OldCtftimeTeamID(ctx context.Context) (v *int, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldCtftimeTeamID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldCtftimeTeamID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldCtftimeTeamID: %w", err)
+	}
+	return oldValue.CtftimeTeamID, nil
+}
+
+// AddCtftimeTeamID adds i to the "ctftime_team_id" field.
+func (m *PlaceMutation) AddCtftimeTeamID(i int) {
+	if m.addctftime_team_id != nil {
+		*m.addctftime_team_id += i
+	} else {
+		m.addctftime_team_id = &i
+	}
+}
+
+// AddedCtftimeTeamID returns the value that was added to the "ctftime_team_id" field in this mutation.
+func (m *PlaceMutation) AddedCtftimeTeamID() (r int, exists bool) {
+	v := m.addctftime_team_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ClearCtftimeTeamID clears the value of the "ctftime_team_id" field.
+func (m *PlaceMutation) ClearCtftimeTeamID() {
+	m.ctftime_team_id = nil
+	m.addctftime_team_id = nil
+	m.clearedFields[place.FieldCtftimeTeamID] = struct{}{}
+}
+
+// CtftimeTeamIDCleared returns if the "ctftime_team_id" field was cleared in this mutation.
+func (m *PlaceMutation) CtftimeTeamIDCleared() bool {
+	_, ok := m.clearedFields[place.FieldCtftimeTeamID]
+	return ok
+}
+
+// ResetCtftimeTeamID resets all changes to the "ctftime_team_id" field.
+func (m *PlaceMutation) ResetCtftimeTeamID() {
+	m.ctftime_team_id = nil
+	m.addctftime_team_id = nil
+	delete(m.clearedFields, place.FieldCtftimeTeamID)
 }
 
 // SetContestPoints sets the "contest_points" field.
@@ -1651,12 +1723,15 @@ func (m *PlaceMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *PlaceMutation) Fields() []string {
-	fields := make([]string, 0, 6)
+	fields := make([]string, 0, 7)
 	if m.team_name != nil {
 		fields = append(fields, place.FieldTeamName)
 	}
 	if m.place != nil {
 		fields = append(fields, place.FieldPlace)
+	}
+	if m.ctftime_team_id != nil {
+		fields = append(fields, place.FieldCtftimeTeamID)
 	}
 	if m.contest_points != nil {
 		fields = append(fields, place.FieldContestPoints)
@@ -1682,6 +1757,8 @@ func (m *PlaceMutation) Field(name string) (ent.Value, bool) {
 		return m.TeamName()
 	case place.FieldPlace:
 		return m.Place()
+	case place.FieldCtftimeTeamID:
+		return m.CtftimeTeamID()
 	case place.FieldContestPoints:
 		return m.ContestPoints()
 	case place.FieldOpenctfPoints:
@@ -1703,6 +1780,8 @@ func (m *PlaceMutation) OldField(ctx context.Context, name string) (ent.Value, e
 		return m.OldTeamName(ctx)
 	case place.FieldPlace:
 		return m.OldPlace(ctx)
+	case place.FieldCtftimeTeamID:
+		return m.OldCtftimeTeamID(ctx)
 	case place.FieldContestPoints:
 		return m.OldContestPoints(ctx)
 	case place.FieldOpenctfPoints:
@@ -1733,6 +1812,13 @@ func (m *PlaceMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetPlace(v)
+		return nil
+	case place.FieldCtftimeTeamID:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCtftimeTeamID(v)
 		return nil
 	case place.FieldContestPoints:
 		v, ok := value.(float64)
@@ -1773,6 +1859,9 @@ func (m *PlaceMutation) AddedFields() []string {
 	if m.addplace != nil {
 		fields = append(fields, place.FieldPlace)
 	}
+	if m.addctftime_team_id != nil {
+		fields = append(fields, place.FieldCtftimeTeamID)
+	}
 	if m.addcontest_points != nil {
 		fields = append(fields, place.FieldContestPoints)
 	}
@@ -1795,6 +1884,8 @@ func (m *PlaceMutation) AddedField(name string) (ent.Value, bool) {
 	switch name {
 	case place.FieldPlace:
 		return m.AddedPlace()
+	case place.FieldCtftimeTeamID:
+		return m.AddedCtftimeTeamID()
 	case place.FieldContestPoints:
 		return m.AddedContestPoints()
 	case place.FieldOpenctfPoints:
@@ -1818,6 +1909,13 @@ func (m *PlaceMutation) AddField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.AddPlace(v)
+		return nil
+	case place.FieldCtftimeTeamID:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddCtftimeTeamID(v)
 		return nil
 	case place.FieldContestPoints:
 		v, ok := value.(float64)
@@ -1855,6 +1953,9 @@ func (m *PlaceMutation) AddField(name string, value ent.Value) error {
 // mutation.
 func (m *PlaceMutation) ClearedFields() []string {
 	var fields []string
+	if m.FieldCleared(place.FieldCtftimeTeamID) {
+		fields = append(fields, place.FieldCtftimeTeamID)
+	}
 	if m.FieldCleared(place.FieldContestPoints) {
 		fields = append(fields, place.FieldContestPoints)
 	}
@@ -1875,6 +1976,9 @@ func (m *PlaceMutation) FieldCleared(name string) bool {
 // error if the field is not defined in the schema.
 func (m *PlaceMutation) ClearField(name string) error {
 	switch name {
+	case place.FieldCtftimeTeamID:
+		m.ClearCtftimeTeamID()
+		return nil
 	case place.FieldContestPoints:
 		m.ClearContestPoints()
 		return nil
@@ -1894,6 +1998,9 @@ func (m *PlaceMutation) ResetField(name string) error {
 		return nil
 	case place.FieldPlace:
 		m.ResetPlace()
+		return nil
+	case place.FieldCtftimeTeamID:
+		m.ResetCtftimeTeamID()
 		return nil
 	case place.FieldContestPoints:
 		m.ResetContestPoints()

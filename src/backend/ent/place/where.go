@@ -64,6 +64,11 @@ func Place(v int) predicate.Place {
 	return predicate.Place(sql.FieldEQ(FieldPlace, v))
 }
 
+// CtftimeTeamID applies equality check predicate on the "ctftime_team_id" field. It's identical to CtftimeTeamIDEQ.
+func CtftimeTeamID(v int) predicate.Place {
+	return predicate.Place(sql.FieldEQ(FieldCtftimeTeamID, v))
+}
+
 // ContestPoints applies equality check predicate on the "contest_points" field. It's identical to ContestPointsEQ.
 func ContestPoints(v float64) predicate.Place {
 	return predicate.Place(sql.FieldEQ(FieldContestPoints, v))
@@ -187,6 +192,56 @@ func PlaceLT(v int) predicate.Place {
 // PlaceLTE applies the LTE predicate on the "place" field.
 func PlaceLTE(v int) predicate.Place {
 	return predicate.Place(sql.FieldLTE(FieldPlace, v))
+}
+
+// CtftimeTeamIDEQ applies the EQ predicate on the "ctftime_team_id" field.
+func CtftimeTeamIDEQ(v int) predicate.Place {
+	return predicate.Place(sql.FieldEQ(FieldCtftimeTeamID, v))
+}
+
+// CtftimeTeamIDNEQ applies the NEQ predicate on the "ctftime_team_id" field.
+func CtftimeTeamIDNEQ(v int) predicate.Place {
+	return predicate.Place(sql.FieldNEQ(FieldCtftimeTeamID, v))
+}
+
+// CtftimeTeamIDIn applies the In predicate on the "ctftime_team_id" field.
+func CtftimeTeamIDIn(vs ...int) predicate.Place {
+	return predicate.Place(sql.FieldIn(FieldCtftimeTeamID, vs...))
+}
+
+// CtftimeTeamIDNotIn applies the NotIn predicate on the "ctftime_team_id" field.
+func CtftimeTeamIDNotIn(vs ...int) predicate.Place {
+	return predicate.Place(sql.FieldNotIn(FieldCtftimeTeamID, vs...))
+}
+
+// CtftimeTeamIDGT applies the GT predicate on the "ctftime_team_id" field.
+func CtftimeTeamIDGT(v int) predicate.Place {
+	return predicate.Place(sql.FieldGT(FieldCtftimeTeamID, v))
+}
+
+// CtftimeTeamIDGTE applies the GTE predicate on the "ctftime_team_id" field.
+func CtftimeTeamIDGTE(v int) predicate.Place {
+	return predicate.Place(sql.FieldGTE(FieldCtftimeTeamID, v))
+}
+
+// CtftimeTeamIDLT applies the LT predicate on the "ctftime_team_id" field.
+func CtftimeTeamIDLT(v int) predicate.Place {
+	return predicate.Place(sql.FieldLT(FieldCtftimeTeamID, v))
+}
+
+// CtftimeTeamIDLTE applies the LTE predicate on the "ctftime_team_id" field.
+func CtftimeTeamIDLTE(v int) predicate.Place {
+	return predicate.Place(sql.FieldLTE(FieldCtftimeTeamID, v))
+}
+
+// CtftimeTeamIDIsNil applies the IsNil predicate on the "ctftime_team_id" field.
+func CtftimeTeamIDIsNil() predicate.Place {
+	return predicate.Place(sql.FieldIsNull(FieldCtftimeTeamID))
+}
+
+// CtftimeTeamIDNotNil applies the NotNil predicate on the "ctftime_team_id" field.
+func CtftimeTeamIDNotNil() predicate.Place {
+	return predicate.Place(sql.FieldNotNull(FieldCtftimeTeamID))
 }
 
 // ContestPointsEQ applies the EQ predicate on the "contest_points" field.

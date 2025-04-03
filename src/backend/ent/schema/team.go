@@ -1,8 +1,6 @@
 package schema
 
 import (
-	"regexp"
-
 	"entgo.io/ent"
 	"entgo.io/ent/schema/edge"
 	"entgo.io/ent/schema/field"
@@ -14,7 +12,7 @@ type Team struct {
 
 func (Team) Fields() []ent.Field {
 	return []ent.Field{
-		field.String("name").Match(regexp.MustCompile("[a-zA-Z0-9 _-]+$")).Unique(),
+		field.String("name").Unique(),
 		field.String("description").Optional(),
 		field.Int("ctftime_id").Optional().Nillable(),
 		field.Time("ctftime_verified_at").Optional().Nillable(),

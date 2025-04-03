@@ -22,7 +22,7 @@ type ServiceClient interface {
 type CtftimeClient interface {
 	GetTeam(id int) (*ctftime.Team, error)
 	GetEventsBetween(ctx context.Context, start, finish time.Time) ([]ctftime.Event, error)
-	GetCurrentYearResults(ctx context.Context) (*ctftime.CtftimeResultsResponse, error)
+	GetEventPlaces(id int) ([]*ctftime.Place, error)
 }
 
 type Handler struct {

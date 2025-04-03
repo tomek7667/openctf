@@ -32,6 +32,20 @@ func (pc *PlaceCreate) SetPlace(i int) *PlaceCreate {
 	return pc
 }
 
+// SetCtftimeTeamID sets the "ctftime_team_id" field.
+func (pc *PlaceCreate) SetCtftimeTeamID(i int) *PlaceCreate {
+	pc.mutation.SetCtftimeTeamID(i)
+	return pc
+}
+
+// SetNillableCtftimeTeamID sets the "ctftime_team_id" field if the given value is not nil.
+func (pc *PlaceCreate) SetNillableCtftimeTeamID(i *int) *PlaceCreate {
+	if i != nil {
+		pc.SetCtftimeTeamID(*i)
+	}
+	return pc
+}
+
 // SetContestPoints sets the "contest_points" field.
 func (pc *PlaceCreate) SetContestPoints(f float64) *PlaceCreate {
 	pc.mutation.SetContestPoints(f)
@@ -207,6 +221,10 @@ func (pc *PlaceCreate) createSpec() (*Place, *sqlgraph.CreateSpec) {
 	if value, ok := pc.mutation.Place(); ok {
 		_spec.SetField(place.FieldPlace, field.TypeInt, value)
 		_node.Place = value
+	}
+	if value, ok := pc.mutation.CtftimeTeamID(); ok {
+		_spec.SetField(place.FieldCtftimeTeamID, field.TypeInt, value)
+		_node.CtftimeTeamID = &value
 	}
 	if value, ok := pc.mutation.ContestPoints(); ok {
 		_spec.SetField(place.FieldContestPoints, field.TypeFloat64, value)

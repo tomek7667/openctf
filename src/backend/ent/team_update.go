@@ -262,11 +262,6 @@ func (tu *TeamUpdate) ExecX(ctx context.Context) {
 
 // check runs all checks and user-defined validators on the builder.
 func (tu *TeamUpdate) check() error {
-	if v, ok := tu.mutation.Name(); ok {
-		if err := team.NameValidator(v); err != nil {
-			return &ValidationError{Name: "name", err: fmt.Errorf(`ent: validator failed for field "Team.name": %w`, err)}
-		}
-	}
 	if v, ok := tu.mutation.Logo(); ok {
 		if err := team.LogoValidator(v); err != nil {
 			return &ValidationError{Name: "logo", err: fmt.Errorf(`ent: validator failed for field "Team.logo": %w`, err)}
@@ -692,11 +687,6 @@ func (tuo *TeamUpdateOne) ExecX(ctx context.Context) {
 
 // check runs all checks and user-defined validators on the builder.
 func (tuo *TeamUpdateOne) check() error {
-	if v, ok := tuo.mutation.Name(); ok {
-		if err := team.NameValidator(v); err != nil {
-			return &ValidationError{Name: "name", err: fmt.Errorf(`ent: validator failed for field "Team.name": %w`, err)}
-		}
-	}
 	if v, ok := tuo.mutation.Logo(); ok {
 		if err := team.LogoValidator(v); err != nil {
 			return &ValidationError{Name: "logo", err: fmt.Errorf(`ent: validator failed for field "Team.logo": %w`, err)}

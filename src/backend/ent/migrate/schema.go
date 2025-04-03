@@ -41,6 +41,7 @@ var (
 		{Name: "id", Type: field.TypeInt, Increment: true},
 		{Name: "team_name", Type: field.TypeString},
 		{Name: "place", Type: field.TypeInt},
+		{Name: "ctftime_team_id", Type: field.TypeInt, Nullable: true},
 		{Name: "contest_points", Type: field.TypeFloat64, Nullable: true},
 		{Name: "openctf_points", Type: field.TypeFloat64, Nullable: true},
 		{Name: "associated_contest_id", Type: field.TypeInt},
@@ -56,22 +57,22 @@ var (
 		ForeignKeys: []*schema.ForeignKey{
 			{
 				Symbol:     "places_contests_places",
-				Columns:    []*schema.Column{PlacesColumns[7]},
+				Columns:    []*schema.Column{PlacesColumns[8]},
 				RefColumns: []*schema.Column{ContestsColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 			{
 				Symbol:     "places_teams_associated_team",
-				Columns:    []*schema.Column{PlacesColumns[8]},
+				Columns:    []*schema.Column{PlacesColumns[9]},
 				RefColumns: []*schema.Column{TeamsColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 		},
 		Indexes: []*schema.Index{
 			{
-				Name:    "place_team_name_associated_contest_id",
+				Name:    "place_team_name_ctftime_team_id_associated_contest_id",
 				Unique:  true,
-				Columns: []*schema.Column{PlacesColumns[1], PlacesColumns[5]},
+				Columns: []*schema.Column{PlacesColumns[1], PlacesColumns[3], PlacesColumns[6]},
 			},
 		},
 	}

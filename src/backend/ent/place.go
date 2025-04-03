@@ -21,6 +21,8 @@ type Place struct {
 	TeamName string `json:"team_name,omitempty"`
 	// Place holds the value of the "place" field.
 	Place int `json:"place,omitempty"`
+	// CtftimeTeamID holds the value of the "ctftime_team_id" field.
+	CtftimeTeamID *int `json:"ctftime_team_id,omitempty"`
 	// the actual amount of points obtained by the place holder in the ctf
 	ContestPoints *float64 `json:"contest_points,omitempty"`
 	// these points are normalized based on contest_points being max multiplied by the ctf weight
@@ -64,7 +66,7 @@ func (*Place) scanValues(columns []string) ([]any, error) {
 		switch columns[i] {
 		case place.FieldContestPoints, place.FieldOpenctfPoints:
 			values[i] = new(sql.NullFloat64)
-		case place.FieldID, place.FieldPlace, place.FieldAssociatedContestID, place.FieldAssignedWeightPoints:
+		case place.FieldID, place.FieldPlace, place.FieldCtftimeTeamID, place.FieldAssociatedContestID, place.FieldAssignedWeightPoints:
 			values[i] = new(sql.NullInt64)
 		case place.FieldTeamName:
 			values[i] = new(sql.NullString)
@@ -104,6 +106,13 @@ func (pl *Place) assignValues(columns []string, values []any) error {
 				return fmt.Errorf("unexpected type %T for field place", values[i])
 			} else if value.Valid {
 				pl.Place = int(value.Int64)
+			}
+		case place.FieldCtftimeTeamID:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field ctftime_team_id", values[i])
+			} else if value.Valid {
+				pl.CtftimeTeamID = new(int)
+				*pl.CtftimeTeamID = int(value.Int64)
 			}
 		case place.FieldContestPoints:
 			if value, ok := values[i].(*sql.NullFloat64); !ok {
@@ -191,6 +200,11 @@ func (pl *Place) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("place=")
 	builder.WriteString(fmt.Sprintf("%v", pl.Place))
+	builder.WriteString(", ")
+	if v := pl.CtftimeTeamID; v != nil {
+		builder.WriteString("ctftime_team_id=")
+		builder.WriteString(fmt.Sprintf("%v", *v))
+	}
 	builder.WriteString(", ")
 	if v := pl.ContestPoints; v != nil {
 		builder.WriteString("contest_points=")
