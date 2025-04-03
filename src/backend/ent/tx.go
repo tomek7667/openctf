@@ -14,6 +14,8 @@ type Tx struct {
 	config
 	// Contest is the client for interacting with the Contest builders.
 	Contest *ContestClient
+	// ContestRating is the client for interacting with the ContestRating builders.
+	ContestRating *ContestRatingClient
 	// Place is the client for interacting with the Place builders.
 	Place *PlaceClient
 	// Team is the client for interacting with the Team builders.
@@ -152,6 +154,7 @@ func (tx *Tx) Client() *Client {
 
 func (tx *Tx) init() {
 	tx.Contest = NewContestClient(tx.config)
+	tx.ContestRating = NewContestRatingClient(tx.config)
 	tx.Place = NewPlaceClient(tx.config)
 	tx.Team = NewTeamClient(tx.config)
 	tx.User = NewUserClient(tx.config)

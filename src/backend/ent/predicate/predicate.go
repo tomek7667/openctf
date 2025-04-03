@@ -9,6 +9,9 @@ import (
 // Contest is the predicate function for contest builders.
 type Contest func(*sql.Selector)
 
+// ContestRating is the predicate function for contestrating builders.
+type ContestRating func(*sql.Selector)
+
 // Place is the predicate function for place builders.
 type Place func(*sql.Selector)
 

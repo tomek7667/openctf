@@ -36,6 +36,34 @@ var (
 			},
 		},
 	}
+	// ContestRatingsColumns holds the columns for the "contest_ratings" table.
+	ContestRatingsColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "rating", Type: field.TypeInt},
+		{Name: "relevant", Type: field.TypeBool, Default: false},
+		{Name: "contest_rating_user", Type: field.TypeInt},
+		{Name: "contest_rating_contest", Type: field.TypeInt},
+	}
+	// ContestRatingsTable holds the schema information for the "contest_ratings" table.
+	ContestRatingsTable = &schema.Table{
+		Name:       "contest_ratings",
+		Columns:    ContestRatingsColumns,
+		PrimaryKey: []*schema.Column{ContestRatingsColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{
+			{
+				Symbol:     "contest_ratings_users_user",
+				Columns:    []*schema.Column{ContestRatingsColumns[3]},
+				RefColumns: []*schema.Column{UsersColumns[0]},
+				OnDelete:   schema.NoAction,
+			},
+			{
+				Symbol:     "contest_ratings_users_contest",
+				Columns:    []*schema.Column{ContestRatingsColumns[4]},
+				RefColumns: []*schema.Column{UsersColumns[0]},
+				OnDelete:   schema.NoAction,
+			},
+		},
+	}
 	// PlacesColumns holds the columns for the "places" table.
 	PlacesColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
@@ -138,6 +166,7 @@ var (
 	// Tables holds all the tables in the schema.
 	Tables = []*schema.Table{
 		ContestsTable,
+		ContestRatingsTable,
 		PlacesTable,
 		TeamsTable,
 		UsersTable,
@@ -146,6 +175,8 @@ var (
 
 func init() {
 	ContestsTable.ForeignKeys[0].RefTable = TeamsTable
+	ContestRatingsTable.ForeignKeys[0].RefTable = UsersTable
+	ContestRatingsTable.ForeignKeys[1].RefTable = UsersTable
 	PlacesTable.ForeignKeys[0].RefTable = ContestsTable
 	PlacesTable.ForeignKeys[1].RefTable = TeamsTable
 	TeamsTable.ForeignKeys[0].RefTable = UsersTable

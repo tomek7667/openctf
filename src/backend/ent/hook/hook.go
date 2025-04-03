@@ -20,6 +20,18 @@ func (f ContestFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, err
 	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.ContestMutation", m)
 }
 
+// The ContestRatingFunc type is an adapter to allow the use of ordinary
+// function as ContestRating mutator.
+type ContestRatingFunc func(context.Context, *ent.ContestRatingMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f ContestRatingFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	if mv, ok := m.(*ent.ContestRatingMutation); ok {
+		return f(ctx, mv)
+	}
+	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.ContestRatingMutation", m)
+}
+
 // The PlaceFunc type is an adapter to allow the use of ordinary
 // function as Place mutator.
 type PlaceFunc func(context.Context, *ent.PlaceMutation) (ent.Value, error)

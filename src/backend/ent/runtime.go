@@ -4,6 +4,7 @@ package ent
 
 import (
 	"openctfbackend/ent/contest"
+	"openctfbackend/ent/contestrating"
 	"openctfbackend/ent/place"
 	"openctfbackend/ent/schema"
 	"openctfbackend/ent/team"
@@ -29,6 +30,30 @@ func init() {
 	contestDescAssignedWeightPoints := contestFields[8].Descriptor()
 	// contest.DefaultAssignedWeightPoints holds the default value on creation for the assigned_weight_points field.
 	contest.DefaultAssignedWeightPoints = contestDescAssignedWeightPoints.Default.(int)
+	contestratingFields := schema.ContestRating{}.Fields()
+	_ = contestratingFields
+	// contestratingDescRating is the schema descriptor for rating field.
+	contestratingDescRating := contestratingFields[0].Descriptor()
+	// contestrating.RatingValidator is a validator for the "rating" field. It is called by the builders before save.
+	contestrating.RatingValidator = func() func(int) error {
+		validators := contestratingDescRating.Validators
+		fns := [...]func(int) error{
+			validators[0].(func(int) error),
+			validators[1].(func(int) error),
+		}
+		return func(rating int) error {
+			for _, fn := range fns {
+				if err := fn(rating); err != nil {
+					return err
+				}
+			}
+			return nil
+		}
+	}()
+	// contestratingDescRelevant is the schema descriptor for relevant field.
+	contestratingDescRelevant := contestratingFields[1].Descriptor()
+	// contestrating.DefaultRelevant holds the default value on creation for the relevant field.
+	contestrating.DefaultRelevant = contestratingDescRelevant.Default.(bool)
 	placeFields := schema.Place{}.Fields()
 	_ = placeFields
 	// placeDescTeamName is the schema descriptor for team_name field.

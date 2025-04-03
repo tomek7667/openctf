@@ -12,6 +12,7 @@ import (
 	"openctfbackend/ent/migrate"
 
 	"openctfbackend/ent/contest"
+	"openctfbackend/ent/contestrating"
 	"openctfbackend/ent/place"
 	"openctfbackend/ent/team"
 	"openctfbackend/ent/user"
@@ -29,6 +30,8 @@ type Client struct {
 	Schema *migrate.Schema
 	// Contest is the client for interacting with the Contest builders.
 	Contest *ContestClient
+	// ContestRating is the client for interacting with the ContestRating builders.
+	ContestRating *ContestRatingClient
 	// Place is the client for interacting with the Place builders.
 	Place *PlaceClient
 	// Team is the client for interacting with the Team builders.
@@ -47,6 +50,7 @@ func NewClient(opts ...Option) *Client {
 func (c *Client) init() {
 	c.Schema = migrate.NewSchema(c.driver)
 	c.Contest = NewContestClient(c.config)
+	c.ContestRating = NewContestRatingClient(c.config)
 	c.Place = NewPlaceClient(c.config)
 	c.Team = NewTeamClient(c.config)
 	c.User = NewUserClient(c.config)
@@ -140,12 +144,13 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 	cfg := c.config
 	cfg.driver = tx
 	return &Tx{
-		ctx:     ctx,
-		config:  cfg,
-		Contest: NewContestClient(cfg),
-		Place:   NewPlaceClient(cfg),
-		Team:    NewTeamClient(cfg),
-		User:    NewUserClient(cfg),
+		ctx:           ctx,
+		config:        cfg,
+		Contest:       NewContestClient(cfg),
+		ContestRating: NewContestRatingClient(cfg),
+		Place:         NewPlaceClient(cfg),
+		Team:          NewTeamClient(cfg),
+		User:          NewUserClient(cfg),
 	}, nil
 }
 
@@ -163,12 +168,13 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 	cfg := c.config
 	cfg.driver = &txDriver{tx: tx, drv: c.driver}
 	return &Tx{
-		ctx:     ctx,
-		config:  cfg,
-		Contest: NewContestClient(cfg),
-		Place:   NewPlaceClient(cfg),
-		Team:    NewTeamClient(cfg),
-		User:    NewUserClient(cfg),
+		ctx:           ctx,
+		config:        cfg,
+		Contest:       NewContestClient(cfg),
+		ContestRating: NewContestRatingClient(cfg),
+		Place:         NewPlaceClient(cfg),
+		Team:          NewTeamClient(cfg),
+		User:          NewUserClient(cfg),
 	}, nil
 }
 
@@ -198,6 +204,7 @@ func (c *Client) Close() error {
 // In order to add hooks to a specific client, call: `client.Node.Use(...)`.
 func (c *Client) Use(hooks ...Hook) {
 	c.Contest.Use(hooks...)
+	c.ContestRating.Use(hooks...)
 	c.Place.Use(hooks...)
 	c.Team.Use(hooks...)
 	c.User.Use(hooks...)
@@ -207,6 +214,7 @@ func (c *Client) Use(hooks ...Hook) {
 // In order to add interceptors to a specific client, call: `client.Node.Intercept(...)`.
 func (c *Client) Intercept(interceptors ...Interceptor) {
 	c.Contest.Intercept(interceptors...)
+	c.ContestRating.Intercept(interceptors...)
 	c.Place.Intercept(interceptors...)
 	c.Team.Intercept(interceptors...)
 	c.User.Intercept(interceptors...)
@@ -217,6 +225,8 @@ func (c *Client) Mutate(ctx context.Context, m Mutation) (Value, error) {
 	switch m := m.(type) {
 	case *ContestMutation:
 		return c.Contest.mutate(ctx, m)
+	case *ContestRatingMutation:
+		return c.ContestRating.mutate(ctx, m)
 	case *PlaceMutation:
 		return c.Place.mutate(ctx, m)
 	case *TeamMutation:
@@ -390,6 +400,171 @@ func (c *ContestClient) mutate(ctx context.Context, m *ContestMutation) (Value, 
 		return (&ContestDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
 	default:
 		return nil, fmt.Errorf("ent: unknown Contest mutation op: %q", m.Op())
+	}
+}
+
+// ContestRatingClient is a client for the ContestRating schema.
+type ContestRatingClient struct {
+	config
+}
+
+// NewContestRatingClient returns a client for the ContestRating from the given config.
+func NewContestRatingClient(c config) *ContestRatingClient {
+	return &ContestRatingClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `contestrating.Hooks(f(g(h())))`.
+func (c *ContestRatingClient) Use(hooks ...Hook) {
+	c.hooks.ContestRating = append(c.hooks.ContestRating, hooks...)
+}
+
+// Intercept adds a list of query interceptors to the interceptors stack.
+// A call to `Intercept(f, g, h)` equals to `contestrating.Intercept(f(g(h())))`.
+func (c *ContestRatingClient) Intercept(interceptors ...Interceptor) {
+	c.inters.ContestRating = append(c.inters.ContestRating, interceptors...)
+}
+
+// Create returns a builder for creating a ContestRating entity.
+func (c *ContestRatingClient) Create() *ContestRatingCreate {
+	mutation := newContestRatingMutation(c.config, OpCreate)
+	return &ContestRatingCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of ContestRating entities.
+func (c *ContestRatingClient) CreateBulk(builders ...*ContestRatingCreate) *ContestRatingCreateBulk {
+	return &ContestRatingCreateBulk{config: c.config, builders: builders}
+}
+
+// MapCreateBulk creates a bulk creation builder from the given slice. For each item in the slice, the function creates
+// a builder and applies setFunc on it.
+func (c *ContestRatingClient) MapCreateBulk(slice any, setFunc func(*ContestRatingCreate, int)) *ContestRatingCreateBulk {
+	rv := reflect.ValueOf(slice)
+	if rv.Kind() != reflect.Slice {
+		return &ContestRatingCreateBulk{err: fmt.Errorf("calling to ContestRatingClient.MapCreateBulk with wrong type %T, need slice", slice)}
+	}
+	builders := make([]*ContestRatingCreate, rv.Len())
+	for i := 0; i < rv.Len(); i++ {
+		builders[i] = c.Create()
+		setFunc(builders[i], i)
+	}
+	return &ContestRatingCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for ContestRating.
+func (c *ContestRatingClient) Update() *ContestRatingUpdate {
+	mutation := newContestRatingMutation(c.config, OpUpdate)
+	return &ContestRatingUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *ContestRatingClient) UpdateOne(cr *ContestRating) *ContestRatingUpdateOne {
+	mutation := newContestRatingMutation(c.config, OpUpdateOne, withContestRating(cr))
+	return &ContestRatingUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *ContestRatingClient) UpdateOneID(id int) *ContestRatingUpdateOne {
+	mutation := newContestRatingMutation(c.config, OpUpdateOne, withContestRatingID(id))
+	return &ContestRatingUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for ContestRating.
+func (c *ContestRatingClient) Delete() *ContestRatingDelete {
+	mutation := newContestRatingMutation(c.config, OpDelete)
+	return &ContestRatingDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *ContestRatingClient) DeleteOne(cr *ContestRating) *ContestRatingDeleteOne {
+	return c.DeleteOneID(cr.ID)
+}
+
+// DeleteOneID returns a builder for deleting the given entity by its id.
+func (c *ContestRatingClient) DeleteOneID(id int) *ContestRatingDeleteOne {
+	builder := c.Delete().Where(contestrating.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &ContestRatingDeleteOne{builder}
+}
+
+// Query returns a query builder for ContestRating.
+func (c *ContestRatingClient) Query() *ContestRatingQuery {
+	return &ContestRatingQuery{
+		config: c.config,
+		ctx:    &QueryContext{Type: TypeContestRating},
+		inters: c.Interceptors(),
+	}
+}
+
+// Get returns a ContestRating entity by its id.
+func (c *ContestRatingClient) Get(ctx context.Context, id int) (*ContestRating, error) {
+	return c.Query().Where(contestrating.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *ContestRatingClient) GetX(ctx context.Context, id int) *ContestRating {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// QueryUser queries the user edge of a ContestRating.
+func (c *ContestRatingClient) QueryUser(cr *ContestRating) *UserQuery {
+	query := (&UserClient{config: c.config}).Query()
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
+		id := cr.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(contestrating.Table, contestrating.FieldID, id),
+			sqlgraph.To(user.Table, user.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, false, contestrating.UserTable, contestrating.UserColumn),
+		)
+		fromV = sqlgraph.Neighbors(cr.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QueryContest queries the contest edge of a ContestRating.
+func (c *ContestRatingClient) QueryContest(cr *ContestRating) *UserQuery {
+	query := (&UserClient{config: c.config}).Query()
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
+		id := cr.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(contestrating.Table, contestrating.FieldID, id),
+			sqlgraph.To(user.Table, user.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, false, contestrating.ContestTable, contestrating.ContestColumn),
+		)
+		fromV = sqlgraph.Neighbors(cr.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// Hooks returns the client hooks.
+func (c *ContestRatingClient) Hooks() []Hook {
+	return c.hooks.ContestRating
+}
+
+// Interceptors returns the client interceptors.
+func (c *ContestRatingClient) Interceptors() []Interceptor {
+	return c.inters.ContestRating
+}
+
+func (c *ContestRatingClient) mutate(ctx context.Context, m *ContestRatingMutation) (Value, error) {
+	switch m.Op() {
+	case OpCreate:
+		return (&ContestRatingCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdate:
+		return (&ContestRatingUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdateOne:
+		return (&ContestRatingUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpDelete, OpDeleteOne:
+		return (&ContestRatingDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
+	default:
+		return nil, fmt.Errorf("ent: unknown ContestRating mutation op: %q", m.Op())
 	}
 }
 
@@ -859,9 +1034,9 @@ func (c *UserClient) mutate(ctx context.Context, m *UserMutation) (Value, error)
 // hooks and interceptors per client, for fast access.
 type (
 	hooks struct {
-		Contest, Place, Team, User []ent.Hook
+		Contest, ContestRating, Place, Team, User []ent.Hook
 	}
 	inters struct {
-		Contest, Place, Team, User []ent.Interceptor
+		Contest, ContestRating, Place, Team, User []ent.Interceptor
 	}
 )
