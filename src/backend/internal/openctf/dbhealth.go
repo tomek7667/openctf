@@ -50,7 +50,9 @@ func (h *Handler) DbHealth() {
 
 	for range ticker.C {
 		if _, err := h.ServiceClient.GetEnt().User.Get(context.Background(), admin.ID); err != nil {
-			slog.Error("database unavailable", "error", err)
+			slog.Error("database unavailable reconnecting...", "error", err)
+			err = h.ServiceClient.GetEnt().Schema.Create(context.Background())
+			slog.Info("reconnection status", "err", err)
 		} else {
 			// slog.Info("database is available")
 		}
