@@ -4,6 +4,7 @@ package ent
 
 import (
 	"fmt"
+	"openctfbackend/ent/contest"
 	"openctfbackend/ent/contestrating"
 	"openctfbackend/ent/user"
 	"strings"
@@ -34,7 +35,7 @@ type ContestRatingEdges struct {
 	// User holds the value of the user edge.
 	User *User `json:"user,omitempty"`
 	// Contest holds the value of the contest edge.
-	Contest *User `json:"contest,omitempty"`
+	Contest *Contest `json:"contest,omitempty"`
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
 	loadedTypes [2]bool
@@ -53,11 +54,11 @@ func (e ContestRatingEdges) UserOrErr() (*User, error) {
 
 // ContestOrErr returns the Contest value or an error if the edge
 // was not loaded in eager-loading, or loaded but was not found.
-func (e ContestRatingEdges) ContestOrErr() (*User, error) {
+func (e ContestRatingEdges) ContestOrErr() (*Contest, error) {
 	if e.Contest != nil {
 		return e.Contest, nil
 	} else if e.loadedTypes[1] {
-		return nil, &NotFoundError{label: user.Label}
+		return nil, &NotFoundError{label: contest.Label}
 	}
 	return nil, &NotLoadedError{edge: "contest"}
 }
@@ -141,7 +142,7 @@ func (cr *ContestRating) QueryUser() *UserQuery {
 }
 
 // QueryContest queries the "contest" edge of the ContestRating entity.
-func (cr *ContestRating) QueryContest() *UserQuery {
+func (cr *ContestRating) QueryContest() *ContestQuery {
 	return NewContestRatingClient(cr.config).QueryContest(cr)
 }
 

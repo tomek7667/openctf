@@ -6,6 +6,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"openctfbackend/ent/contest"
 	"openctfbackend/ent/contestrating"
 	"openctfbackend/ent/predicate"
 	"openctfbackend/ent/user"
@@ -74,15 +75,15 @@ func (cru *ContestRatingUpdate) SetUser(u *User) *ContestRatingUpdate {
 	return cru.SetUserID(u.ID)
 }
 
-// SetContestID sets the "contest" edge to the User entity by ID.
+// SetContestID sets the "contest" edge to the Contest entity by ID.
 func (cru *ContestRatingUpdate) SetContestID(id int) *ContestRatingUpdate {
 	cru.mutation.SetContestID(id)
 	return cru
 }
 
-// SetContest sets the "contest" edge to the User entity.
-func (cru *ContestRatingUpdate) SetContest(u *User) *ContestRatingUpdate {
-	return cru.SetContestID(u.ID)
+// SetContest sets the "contest" edge to the Contest entity.
+func (cru *ContestRatingUpdate) SetContest(c *Contest) *ContestRatingUpdate {
+	return cru.SetContestID(c.ID)
 }
 
 // Mutation returns the ContestRatingMutation object of the builder.
@@ -96,7 +97,7 @@ func (cru *ContestRatingUpdate) ClearUser() *ContestRatingUpdate {
 	return cru
 }
 
-// ClearContest clears the "contest" edge to the User entity.
+// ClearContest clears the "contest" edge to the Contest entity.
 func (cru *ContestRatingUpdate) ClearContest() *ContestRatingUpdate {
 	cru.mutation.ClearContest()
 	return cru
@@ -203,7 +204,7 @@ func (cru *ContestRatingUpdate) sqlSave(ctx context.Context) (n int, err error) 
 			Columns: []string{contestrating.ContestColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(user.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(contest.FieldID, field.TypeInt),
 			},
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
@@ -216,7 +217,7 @@ func (cru *ContestRatingUpdate) sqlSave(ctx context.Context) (n int, err error) 
 			Columns: []string{contestrating.ContestColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(user.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(contest.FieldID, field.TypeInt),
 			},
 		}
 		for _, k := range nodes {
@@ -290,15 +291,15 @@ func (cruo *ContestRatingUpdateOne) SetUser(u *User) *ContestRatingUpdateOne {
 	return cruo.SetUserID(u.ID)
 }
 
-// SetContestID sets the "contest" edge to the User entity by ID.
+// SetContestID sets the "contest" edge to the Contest entity by ID.
 func (cruo *ContestRatingUpdateOne) SetContestID(id int) *ContestRatingUpdateOne {
 	cruo.mutation.SetContestID(id)
 	return cruo
 }
 
-// SetContest sets the "contest" edge to the User entity.
-func (cruo *ContestRatingUpdateOne) SetContest(u *User) *ContestRatingUpdateOne {
-	return cruo.SetContestID(u.ID)
+// SetContest sets the "contest" edge to the Contest entity.
+func (cruo *ContestRatingUpdateOne) SetContest(c *Contest) *ContestRatingUpdateOne {
+	return cruo.SetContestID(c.ID)
 }
 
 // Mutation returns the ContestRatingMutation object of the builder.
@@ -312,7 +313,7 @@ func (cruo *ContestRatingUpdateOne) ClearUser() *ContestRatingUpdateOne {
 	return cruo
 }
 
-// ClearContest clears the "contest" edge to the User entity.
+// ClearContest clears the "contest" edge to the Contest entity.
 func (cruo *ContestRatingUpdateOne) ClearContest() *ContestRatingUpdateOne {
 	cruo.mutation.ClearContest()
 	return cruo
@@ -449,7 +450,7 @@ func (cruo *ContestRatingUpdateOne) sqlSave(ctx context.Context) (_node *Contest
 			Columns: []string{contestrating.ContestColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(user.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(contest.FieldID, field.TypeInt),
 			},
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
@@ -462,7 +463,7 @@ func (cruo *ContestRatingUpdateOne) sqlSave(ctx context.Context) (_node *Contest
 			Columns: []string{contestrating.ContestColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(user.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(contest.FieldID, field.TypeInt),
 			},
 		}
 		for _, k := range nodes {

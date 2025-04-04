@@ -6,9 +6,11 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"openctfbackend/ent/contest"
 	"openctfbackend/ent/contestrating"
 	"openctfbackend/ent/user"
 
+	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
 )
@@ -18,6 +20,7 @@ type ContestRatingCreate struct {
 	config
 	mutation *ContestRatingMutation
 	hooks    []Hook
+	conflict []sql.ConflictOption
 }
 
 // SetRating sets the "rating" field.
@@ -51,15 +54,15 @@ func (crc *ContestRatingCreate) SetUser(u *User) *ContestRatingCreate {
 	return crc.SetUserID(u.ID)
 }
 
-// SetContestID sets the "contest" edge to the User entity by ID.
+// SetContestID sets the "contest" edge to the Contest entity by ID.
 func (crc *ContestRatingCreate) SetContestID(id int) *ContestRatingCreate {
 	crc.mutation.SetContestID(id)
 	return crc
 }
 
-// SetContest sets the "contest" edge to the User entity.
-func (crc *ContestRatingCreate) SetContest(u *User) *ContestRatingCreate {
-	return crc.SetContestID(u.ID)
+// SetContest sets the "contest" edge to the Contest entity.
+func (crc *ContestRatingCreate) SetContest(c *Contest) *ContestRatingCreate {
+	return crc.SetContestID(c.ID)
 }
 
 // Mutation returns the ContestRatingMutation object of the builder.
@@ -148,6 +151,7 @@ func (crc *ContestRatingCreate) createSpec() (*ContestRating, *sqlgraph.CreateSp
 		_node = &ContestRating{config: crc.config}
 		_spec = sqlgraph.NewCreateSpec(contestrating.Table, sqlgraph.NewFieldSpec(contestrating.FieldID, field.TypeInt))
 	)
+	_spec.OnConflict = crc.conflict
 	if value, ok := crc.mutation.Rating(); ok {
 		_spec.SetField(contestrating.FieldRating, field.TypeInt, value)
 		_node.Rating = value
@@ -181,7 +185,7 @@ func (crc *ContestRatingCreate) createSpec() (*ContestRating, *sqlgraph.CreateSp
 			Columns: []string{contestrating.ContestColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(user.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(contest.FieldID, field.TypeInt),
 			},
 		}
 		for _, k := range nodes {
@@ -193,11 +197,199 @@ func (crc *ContestRatingCreate) createSpec() (*ContestRating, *sqlgraph.CreateSp
 	return _node, _spec
 }
 
+// OnConflict allows configuring the `ON CONFLICT` / `ON DUPLICATE KEY` clause
+// of the `INSERT` statement. For example:
+//
+//	client.ContestRating.Create().
+//		SetRating(v).
+//		OnConflict(
+//			// Update the row with the new values
+//			// the was proposed for insertion.
+//			sql.ResolveWithNewValues(),
+//		).
+//		// Override some of the fields with custom
+//		// update values.
+//		Update(func(u *ent.ContestRatingUpsert) {
+//			SetRating(v+v).
+//		}).
+//		Exec(ctx)
+func (crc *ContestRatingCreate) OnConflict(opts ...sql.ConflictOption) *ContestRatingUpsertOne {
+	crc.conflict = opts
+	return &ContestRatingUpsertOne{
+		create: crc,
+	}
+}
+
+// OnConflictColumns calls `OnConflict` and configures the columns
+// as conflict target. Using this option is equivalent to using:
+//
+//	client.ContestRating.Create().
+//		OnConflict(sql.ConflictColumns(columns...)).
+//		Exec(ctx)
+func (crc *ContestRatingCreate) OnConflictColumns(columns ...string) *ContestRatingUpsertOne {
+	crc.conflict = append(crc.conflict, sql.ConflictColumns(columns...))
+	return &ContestRatingUpsertOne{
+		create: crc,
+	}
+}
+
+type (
+	// ContestRatingUpsertOne is the builder for "upsert"-ing
+	//  one ContestRating node.
+	ContestRatingUpsertOne struct {
+		create *ContestRatingCreate
+	}
+
+	// ContestRatingUpsert is the "OnConflict" setter.
+	ContestRatingUpsert struct {
+		*sql.UpdateSet
+	}
+)
+
+// SetRating sets the "rating" field.
+func (u *ContestRatingUpsert) SetRating(v int) *ContestRatingUpsert {
+	u.Set(contestrating.FieldRating, v)
+	return u
+}
+
+// UpdateRating sets the "rating" field to the value that was provided on create.
+func (u *ContestRatingUpsert) UpdateRating() *ContestRatingUpsert {
+	u.SetExcluded(contestrating.FieldRating)
+	return u
+}
+
+// AddRating adds v to the "rating" field.
+func (u *ContestRatingUpsert) AddRating(v int) *ContestRatingUpsert {
+	u.Add(contestrating.FieldRating, v)
+	return u
+}
+
+// SetRelevant sets the "relevant" field.
+func (u *ContestRatingUpsert) SetRelevant(v bool) *ContestRatingUpsert {
+	u.Set(contestrating.FieldRelevant, v)
+	return u
+}
+
+// UpdateRelevant sets the "relevant" field to the value that was provided on create.
+func (u *ContestRatingUpsert) UpdateRelevant() *ContestRatingUpsert {
+	u.SetExcluded(contestrating.FieldRelevant)
+	return u
+}
+
+// UpdateNewValues updates the mutable fields using the new values that were set on create.
+// Using this option is equivalent to using:
+//
+//	client.ContestRating.Create().
+//		OnConflict(
+//			sql.ResolveWithNewValues(),
+//		).
+//		Exec(ctx)
+func (u *ContestRatingUpsertOne) UpdateNewValues() *ContestRatingUpsertOne {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
+	return u
+}
+
+// Ignore sets each column to itself in case of conflict.
+// Using this option is equivalent to using:
+//
+//	client.ContestRating.Create().
+//	    OnConflict(sql.ResolveWithIgnore()).
+//	    Exec(ctx)
+func (u *ContestRatingUpsertOne) Ignore() *ContestRatingUpsertOne {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
+	return u
+}
+
+// DoNothing configures the conflict_action to `DO NOTHING`.
+// Supported only by SQLite and PostgreSQL.
+func (u *ContestRatingUpsertOne) DoNothing() *ContestRatingUpsertOne {
+	u.create.conflict = append(u.create.conflict, sql.DoNothing())
+	return u
+}
+
+// Update allows overriding fields `UPDATE` values. See the ContestRatingCreate.OnConflict
+// documentation for more info.
+func (u *ContestRatingUpsertOne) Update(set func(*ContestRatingUpsert)) *ContestRatingUpsertOne {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(update *sql.UpdateSet) {
+		set(&ContestRatingUpsert{UpdateSet: update})
+	}))
+	return u
+}
+
+// SetRating sets the "rating" field.
+func (u *ContestRatingUpsertOne) SetRating(v int) *ContestRatingUpsertOne {
+	return u.Update(func(s *ContestRatingUpsert) {
+		s.SetRating(v)
+	})
+}
+
+// AddRating adds v to the "rating" field.
+func (u *ContestRatingUpsertOne) AddRating(v int) *ContestRatingUpsertOne {
+	return u.Update(func(s *ContestRatingUpsert) {
+		s.AddRating(v)
+	})
+}
+
+// UpdateRating sets the "rating" field to the value that was provided on create.
+func (u *ContestRatingUpsertOne) UpdateRating() *ContestRatingUpsertOne {
+	return u.Update(func(s *ContestRatingUpsert) {
+		s.UpdateRating()
+	})
+}
+
+// SetRelevant sets the "relevant" field.
+func (u *ContestRatingUpsertOne) SetRelevant(v bool) *ContestRatingUpsertOne {
+	return u.Update(func(s *ContestRatingUpsert) {
+		s.SetRelevant(v)
+	})
+}
+
+// UpdateRelevant sets the "relevant" field to the value that was provided on create.
+func (u *ContestRatingUpsertOne) UpdateRelevant() *ContestRatingUpsertOne {
+	return u.Update(func(s *ContestRatingUpsert) {
+		s.UpdateRelevant()
+	})
+}
+
+// Exec executes the query.
+func (u *ContestRatingUpsertOne) Exec(ctx context.Context) error {
+	if len(u.create.conflict) == 0 {
+		return errors.New("ent: missing options for ContestRatingCreate.OnConflict")
+	}
+	return u.create.Exec(ctx)
+}
+
+// ExecX is like Exec, but panics if an error occurs.
+func (u *ContestRatingUpsertOne) ExecX(ctx context.Context) {
+	if err := u.create.Exec(ctx); err != nil {
+		panic(err)
+	}
+}
+
+// Exec executes the UPSERT query and returns the inserted/updated ID.
+func (u *ContestRatingUpsertOne) ID(ctx context.Context) (id int, err error) {
+	node, err := u.create.Save(ctx)
+	if err != nil {
+		return id, err
+	}
+	return node.ID, nil
+}
+
+// IDX is like ID, but panics if an error occurs.
+func (u *ContestRatingUpsertOne) IDX(ctx context.Context) int {
+	id, err := u.ID(ctx)
+	if err != nil {
+		panic(err)
+	}
+	return id
+}
+
 // ContestRatingCreateBulk is the builder for creating many ContestRating entities in bulk.
 type ContestRatingCreateBulk struct {
 	config
 	err      error
 	builders []*ContestRatingCreate
+	conflict []sql.ConflictOption
 }
 
 // Save creates the ContestRating entities in the database.
@@ -227,6 +419,7 @@ func (crcb *ContestRatingCreateBulk) Save(ctx context.Context) ([]*ContestRating
 					_, err = mutators[i+1].Mutate(root, crcb.builders[i+1].mutation)
 				} else {
 					spec := &sqlgraph.BatchCreateSpec{Nodes: specs}
+					spec.OnConflict = crcb.conflict
 					// Invoke the actual operation on the latest mutation in the chain.
 					if err = sqlgraph.BatchCreate(ctx, crcb.driver, spec); err != nil {
 						if sqlgraph.IsConstraintError(err) {
@@ -277,6 +470,145 @@ func (crcb *ContestRatingCreateBulk) Exec(ctx context.Context) error {
 // ExecX is like Exec, but panics if an error occurs.
 func (crcb *ContestRatingCreateBulk) ExecX(ctx context.Context) {
 	if err := crcb.Exec(ctx); err != nil {
+		panic(err)
+	}
+}
+
+// OnConflict allows configuring the `ON CONFLICT` / `ON DUPLICATE KEY` clause
+// of the `INSERT` statement. For example:
+//
+//	client.ContestRating.CreateBulk(builders...).
+//		OnConflict(
+//			// Update the row with the new values
+//			// the was proposed for insertion.
+//			sql.ResolveWithNewValues(),
+//		).
+//		// Override some of the fields with custom
+//		// update values.
+//		Update(func(u *ent.ContestRatingUpsert) {
+//			SetRating(v+v).
+//		}).
+//		Exec(ctx)
+func (crcb *ContestRatingCreateBulk) OnConflict(opts ...sql.ConflictOption) *ContestRatingUpsertBulk {
+	crcb.conflict = opts
+	return &ContestRatingUpsertBulk{
+		create: crcb,
+	}
+}
+
+// OnConflictColumns calls `OnConflict` and configures the columns
+// as conflict target. Using this option is equivalent to using:
+//
+//	client.ContestRating.Create().
+//		OnConflict(sql.ConflictColumns(columns...)).
+//		Exec(ctx)
+func (crcb *ContestRatingCreateBulk) OnConflictColumns(columns ...string) *ContestRatingUpsertBulk {
+	crcb.conflict = append(crcb.conflict, sql.ConflictColumns(columns...))
+	return &ContestRatingUpsertBulk{
+		create: crcb,
+	}
+}
+
+// ContestRatingUpsertBulk is the builder for "upsert"-ing
+// a bulk of ContestRating nodes.
+type ContestRatingUpsertBulk struct {
+	create *ContestRatingCreateBulk
+}
+
+// UpdateNewValues updates the mutable fields using the new values that
+// were set on create. Using this option is equivalent to using:
+//
+//	client.ContestRating.Create().
+//		OnConflict(
+//			sql.ResolveWithNewValues(),
+//		).
+//		Exec(ctx)
+func (u *ContestRatingUpsertBulk) UpdateNewValues() *ContestRatingUpsertBulk {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
+	return u
+}
+
+// Ignore sets each column to itself in case of conflict.
+// Using this option is equivalent to using:
+//
+//	client.ContestRating.Create().
+//		OnConflict(sql.ResolveWithIgnore()).
+//		Exec(ctx)
+func (u *ContestRatingUpsertBulk) Ignore() *ContestRatingUpsertBulk {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
+	return u
+}
+
+// DoNothing configures the conflict_action to `DO NOTHING`.
+// Supported only by SQLite and PostgreSQL.
+func (u *ContestRatingUpsertBulk) DoNothing() *ContestRatingUpsertBulk {
+	u.create.conflict = append(u.create.conflict, sql.DoNothing())
+	return u
+}
+
+// Update allows overriding fields `UPDATE` values. See the ContestRatingCreateBulk.OnConflict
+// documentation for more info.
+func (u *ContestRatingUpsertBulk) Update(set func(*ContestRatingUpsert)) *ContestRatingUpsertBulk {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(update *sql.UpdateSet) {
+		set(&ContestRatingUpsert{UpdateSet: update})
+	}))
+	return u
+}
+
+// SetRating sets the "rating" field.
+func (u *ContestRatingUpsertBulk) SetRating(v int) *ContestRatingUpsertBulk {
+	return u.Update(func(s *ContestRatingUpsert) {
+		s.SetRating(v)
+	})
+}
+
+// AddRating adds v to the "rating" field.
+func (u *ContestRatingUpsertBulk) AddRating(v int) *ContestRatingUpsertBulk {
+	return u.Update(func(s *ContestRatingUpsert) {
+		s.AddRating(v)
+	})
+}
+
+// UpdateRating sets the "rating" field to the value that was provided on create.
+func (u *ContestRatingUpsertBulk) UpdateRating() *ContestRatingUpsertBulk {
+	return u.Update(func(s *ContestRatingUpsert) {
+		s.UpdateRating()
+	})
+}
+
+// SetRelevant sets the "relevant" field.
+func (u *ContestRatingUpsertBulk) SetRelevant(v bool) *ContestRatingUpsertBulk {
+	return u.Update(func(s *ContestRatingUpsert) {
+		s.SetRelevant(v)
+	})
+}
+
+// UpdateRelevant sets the "relevant" field to the value that was provided on create.
+func (u *ContestRatingUpsertBulk) UpdateRelevant() *ContestRatingUpsertBulk {
+	return u.Update(func(s *ContestRatingUpsert) {
+		s.UpdateRelevant()
+	})
+}
+
+// Exec executes the query.
+func (u *ContestRatingUpsertBulk) Exec(ctx context.Context) error {
+	if u.create.err != nil {
+		return u.create.err
+	}
+	for i, b := range u.create.builders {
+		if len(b.conflict) != 0 {
+			return fmt.Errorf("ent: OnConflict was set for builder %d. Set it on the ContestRatingCreateBulk instead", i)
+		}
+	}
+	if len(u.create.conflict) == 0 {
+		return errors.New("ent: missing options for ContestRatingCreateBulk.OnConflict")
+	}
+	return u.create.Exec(ctx)
+}
+
+// ExecX is like Exec, but panics if an error occurs.
+func (u *ContestRatingUpsertBulk) ExecX(ctx context.Context) {
+	if err := u.create.Exec(ctx); err != nil {
 		panic(err)
 	}
 }

@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"entgo.io/ent"
+	"entgo.io/ent/schema/edge"
 	"entgo.io/ent/schema/field"
 )
 
@@ -26,5 +27,7 @@ func (User) Fields() []ent.Field {
 }
 
 func (User) Edges() []ent.Edge {
-	return nil
+	return []ent.Edge{
+		edge.From("teams", Team.Type).Ref("members"),
+	}
 }

@@ -9,13 +9,22 @@ the backend is using [ent go project _(external link)_](https://entgo.io) as the
 - To codegen the models after adding a new model / modifying:
 
 ```sh
-go generate ./ent
+go run ./cmd/entgen/main.go
 ```
 
 - To add a new model:
 
 ```sh
 go run -mod=mod entgo.io/ent/cmd/ent new <UpperCamelCaseModelName>
+```
+
+## visualizing
+
+can be done with various tools -- example with [`enter`]():
+
+```sh
+go install github.com/a8m/enter # install the visualizer
+enter # run it; a `er.html` file should appear
 ```
 
 ## routing

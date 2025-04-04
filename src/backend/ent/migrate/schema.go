@@ -57,10 +57,17 @@ var (
 				OnDelete:   schema.NoAction,
 			},
 			{
-				Symbol:     "contest_ratings_users_contest",
+				Symbol:     "contest_ratings_contests_contest",
 				Columns:    []*schema.Column{ContestRatingsColumns[4]},
-				RefColumns: []*schema.Column{UsersColumns[0]},
+				RefColumns: []*schema.Column{ContestsColumns[0]},
 				OnDelete:   schema.NoAction,
+			},
+		},
+		Indexes: []*schema.Index{
+			{
+				Name:    "contestrating_contest_rating_user_contest_rating_contest",
+				Unique:  true,
+				Columns: []*schema.Column{ContestRatingsColumns[3], ContestRatingsColumns[4]},
 			},
 		},
 	}
@@ -147,19 +154,35 @@ var (
 		{Name: "description", Type: field.TypeString, Nullable: true},
 		{Name: "password", Type: field.TypeString},
 		{Name: "created_at", Type: field.TypeTime},
-		{Name: "team_members", Type: field.TypeInt, Nullable: true},
 	}
 	// UsersTable holds the schema information for the "users" table.
 	UsersTable = &schema.Table{
 		Name:       "users",
 		Columns:    UsersColumns,
 		PrimaryKey: []*schema.Column{UsersColumns[0]},
+	}
+	// TeamMembersColumns holds the columns for the "team_members" table.
+	TeamMembersColumns = []*schema.Column{
+		{Name: "team_id", Type: field.TypeInt},
+		{Name: "user_id", Type: field.TypeInt},
+	}
+	// TeamMembersTable holds the schema information for the "team_members" table.
+	TeamMembersTable = &schema.Table{
+		Name:       "team_members",
+		Columns:    TeamMembersColumns,
+		PrimaryKey: []*schema.Column{TeamMembersColumns[0], TeamMembersColumns[1]},
 		ForeignKeys: []*schema.ForeignKey{
 			{
-				Symbol:     "users_teams_members",
-				Columns:    []*schema.Column{UsersColumns[9]},
+				Symbol:     "team_members_team_id",
+				Columns:    []*schema.Column{TeamMembersColumns[0]},
 				RefColumns: []*schema.Column{TeamsColumns[0]},
-				OnDelete:   schema.SetNull,
+				OnDelete:   schema.Cascade,
+			},
+			{
+				Symbol:     "team_members_user_id",
+				Columns:    []*schema.Column{TeamMembersColumns[1]},
+				RefColumns: []*schema.Column{UsersColumns[0]},
+				OnDelete:   schema.Cascade,
 			},
 		},
 	}
@@ -170,16 +193,18 @@ var (
 		PlacesTable,
 		TeamsTable,
 		UsersTable,
+		TeamMembersTable,
 	}
 )
 
 func init() {
 	ContestsTable.ForeignKeys[0].RefTable = TeamsTable
 	ContestRatingsTable.ForeignKeys[0].RefTable = UsersTable
-	ContestRatingsTable.ForeignKeys[1].RefTable = UsersTable
+	ContestRatingsTable.ForeignKeys[1].RefTable = ContestsTable
 	PlacesTable.ForeignKeys[0].RefTable = ContestsTable
 	PlacesTable.ForeignKeys[1].RefTable = TeamsTable
 	TeamsTable.ForeignKeys[0].RefTable = UsersTable
 	TeamsTable.ForeignKeys[1].RefTable = UsersTable
-	UsersTable.ForeignKeys[0].RefTable = TeamsTable
+	TeamMembersTable.ForeignKeys[0].RefTable = TeamsTable
+	TeamMembersTable.ForeignKeys[1].RefTable = UsersTable
 }

@@ -31,9 +31,9 @@ const (
 	UserColumn = "contest_rating_user"
 	// ContestTable is the table that holds the contest relation/edge.
 	ContestTable = "contest_ratings"
-	// ContestInverseTable is the table name for the User entity.
-	// It exists in this package in order to avoid circular dependency with the "user" package.
-	ContestInverseTable = "users"
+	// ContestInverseTable is the table name for the Contest entity.
+	// It exists in this package in order to avoid circular dependency with the "contest" package.
+	ContestInverseTable = "contests"
 	// ContestColumn is the table column denoting the contest relation/edge.
 	ContestColumn = "contest_rating_contest"
 )

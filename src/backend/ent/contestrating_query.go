@@ -6,6 +6,7 @@ import (
 	"context"
 	"fmt"
 	"math"
+	"openctfbackend/ent/contest"
 	"openctfbackend/ent/contestrating"
 	"openctfbackend/ent/predicate"
 	"openctfbackend/ent/user"
@@ -24,7 +25,7 @@ type ContestRatingQuery struct {
 	inters      []Interceptor
 	predicates  []predicate.ContestRating
 	withUser    *UserQuery
-	withContest *UserQuery
+	withContest *ContestQuery
 	withFKs     bool
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
@@ -85,8 +86,8 @@ func (crq *ContestRatingQuery) QueryUser() *UserQuery {
 }
 
 // QueryContest chains the current query on the "contest" edge.
-func (crq *ContestRatingQuery) QueryContest() *UserQuery {
-	query := (&UserClient{config: crq.config}).Query()
+func (crq *ContestRatingQuery) QueryContest() *ContestQuery {
+	query := (&ContestClient{config: crq.config}).Query()
 	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
 		if err := crq.prepareQuery(ctx); err != nil {
 			return nil, err
@@ -97,7 +98,7 @@ func (crq *ContestRatingQuery) QueryContest() *UserQuery {
 		}
 		step := sqlgraph.NewStep(
 			sqlgraph.From(contestrating.Table, contestrating.FieldID, selector),
-			sqlgraph.To(user.Table, user.FieldID),
+			sqlgraph.To(contest.Table, contest.FieldID),
 			sqlgraph.Edge(sqlgraph.M2O, false, contestrating.ContestTable, contestrating.ContestColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(crq.driver.Dialect(), step)
@@ -319,8 +320,8 @@ func (crq *ContestRatingQuery) WithUser(opts ...func(*UserQuery)) *ContestRating
 
 // WithContest tells the query-builder to eager-load the nodes that are connected to
 // the "contest" edge. The optional arguments are used to configure the query builder of the edge.
-func (crq *ContestRatingQuery) WithContest(opts ...func(*UserQuery)) *ContestRatingQuery {
-	query := (&UserClient{config: crq.config}).Query()
+func (crq *ContestRatingQuery) WithContest(opts ...func(*ContestQuery)) *ContestRatingQuery {
+	query := (&ContestClient{config: crq.config}).Query()
 	for _, opt := range opts {
 		opt(query)
 	}
@@ -444,7 +445,7 @@ func (crq *ContestRatingQuery) sqlAll(ctx context.Context, hooks ...queryHook) (
 	}
 	if query := crq.withContest; query != nil {
 		if err := crq.loadContest(ctx, query, nodes, nil,
-			func(n *ContestRating, e *User) { n.Edges.Contest = e }); err != nil {
+			func(n *ContestRating, e *Contest) { n.Edges.Contest = e }); err != nil {
 			return nil, err
 		}
 	}
@@ -483,7 +484,7 @@ func (crq *ContestRatingQuery) loadUser(ctx context.Context, query *UserQuery, n
 	}
 	return nil
 }
-func (crq *ContestRatingQuery) loadContest(ctx context.Context, query *UserQuery, nodes []*ContestRating, init func(*ContestRating), assign func(*ContestRating, *User)) error {
+func (crq *ContestRatingQuery) loadContest(ctx context.Context, query *ContestQuery, nodes []*ContestRating, init func(*ContestRating), assign func(*ContestRating, *Contest)) error {
 	ids := make([]int, 0, len(nodes))
 	nodeids := make(map[int][]*ContestRating)
 	for i := range nodes {
@@ -499,7 +500,7 @@ func (crq *ContestRatingQuery) loadContest(ctx context.Context, query *UserQuery
 	if len(ids) == 0 {
 		return nil
 	}
-	query.Where(user.IDIn(ids...))
+	query.Where(contest.IDIn(ids...))
 	neighbors, err := query.All(ctx)
 	if err != nil {
 		return err

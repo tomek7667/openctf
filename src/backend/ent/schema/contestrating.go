@@ -4,6 +4,7 @@ import (
 	"entgo.io/ent"
 	"entgo.io/ent/schema/edge"
 	"entgo.io/ent/schema/field"
+	"entgo.io/ent/schema/index"
 )
 
 type ContestRating struct {
@@ -22,6 +23,12 @@ func (ContestRating) Fields() []ent.Field {
 func (ContestRating) Edges() []ent.Edge {
 	return []ent.Edge{
 		edge.To("user", User.Type).Unique().Required(),
-		edge.To("contest", User.Type).Unique().Required(),
+		edge.To("contest", Contest.Type).Unique().Required(),
+	}
+}
+
+func (ContestRating) Indexes() []ent.Index {
+	return []ent.Index{
+		index.Edges("user", "contest").Unique(),
 	}
 }

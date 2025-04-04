@@ -9,6 +9,7 @@ import (
 	"openctfbackend/ent/place"
 	"openctfbackend/ent/team"
 
+	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
 )
@@ -18,6 +19,7 @@ type PlaceCreate struct {
 	config
 	mutation *PlaceMutation
 	hooks    []Hook
+	conflict []sql.ConflictOption
 }
 
 // SetTeamName sets the "team_name" field.
@@ -214,6 +216,7 @@ func (pc *PlaceCreate) createSpec() (*Place, *sqlgraph.CreateSpec) {
 		_node = &Place{config: pc.config}
 		_spec = sqlgraph.NewCreateSpec(place.Table, sqlgraph.NewFieldSpec(place.FieldID, field.TypeInt))
 	)
+	_spec.OnConflict = pc.conflict
 	if value, ok := pc.mutation.TeamName(); ok {
 		_spec.SetField(place.FieldTeamName, field.TypeString, value)
 		_node.TeamName = value
@@ -262,11 +265,433 @@ func (pc *PlaceCreate) createSpec() (*Place, *sqlgraph.CreateSpec) {
 	return _node, _spec
 }
 
+// OnConflict allows configuring the `ON CONFLICT` / `ON DUPLICATE KEY` clause
+// of the `INSERT` statement. For example:
+//
+//	client.Place.Create().
+//		SetTeamName(v).
+//		OnConflict(
+//			// Update the row with the new values
+//			// the was proposed for insertion.
+//			sql.ResolveWithNewValues(),
+//		).
+//		// Override some of the fields with custom
+//		// update values.
+//		Update(func(u *ent.PlaceUpsert) {
+//			SetTeamName(v+v).
+//		}).
+//		Exec(ctx)
+func (pc *PlaceCreate) OnConflict(opts ...sql.ConflictOption) *PlaceUpsertOne {
+	pc.conflict = opts
+	return &PlaceUpsertOne{
+		create: pc,
+	}
+}
+
+// OnConflictColumns calls `OnConflict` and configures the columns
+// as conflict target. Using this option is equivalent to using:
+//
+//	client.Place.Create().
+//		OnConflict(sql.ConflictColumns(columns...)).
+//		Exec(ctx)
+func (pc *PlaceCreate) OnConflictColumns(columns ...string) *PlaceUpsertOne {
+	pc.conflict = append(pc.conflict, sql.ConflictColumns(columns...))
+	return &PlaceUpsertOne{
+		create: pc,
+	}
+}
+
+type (
+	// PlaceUpsertOne is the builder for "upsert"-ing
+	//  one Place node.
+	PlaceUpsertOne struct {
+		create *PlaceCreate
+	}
+
+	// PlaceUpsert is the "OnConflict" setter.
+	PlaceUpsert struct {
+		*sql.UpdateSet
+	}
+)
+
+// SetTeamName sets the "team_name" field.
+func (u *PlaceUpsert) SetTeamName(v string) *PlaceUpsert {
+	u.Set(place.FieldTeamName, v)
+	return u
+}
+
+// UpdateTeamName sets the "team_name" field to the value that was provided on create.
+func (u *PlaceUpsert) UpdateTeamName() *PlaceUpsert {
+	u.SetExcluded(place.FieldTeamName)
+	return u
+}
+
+// SetPlace sets the "place" field.
+func (u *PlaceUpsert) SetPlace(v int) *PlaceUpsert {
+	u.Set(place.FieldPlace, v)
+	return u
+}
+
+// UpdatePlace sets the "place" field to the value that was provided on create.
+func (u *PlaceUpsert) UpdatePlace() *PlaceUpsert {
+	u.SetExcluded(place.FieldPlace)
+	return u
+}
+
+// AddPlace adds v to the "place" field.
+func (u *PlaceUpsert) AddPlace(v int) *PlaceUpsert {
+	u.Add(place.FieldPlace, v)
+	return u
+}
+
+// SetCtftimeTeamID sets the "ctftime_team_id" field.
+func (u *PlaceUpsert) SetCtftimeTeamID(v int) *PlaceUpsert {
+	u.Set(place.FieldCtftimeTeamID, v)
+	return u
+}
+
+// UpdateCtftimeTeamID sets the "ctftime_team_id" field to the value that was provided on create.
+func (u *PlaceUpsert) UpdateCtftimeTeamID() *PlaceUpsert {
+	u.SetExcluded(place.FieldCtftimeTeamID)
+	return u
+}
+
+// AddCtftimeTeamID adds v to the "ctftime_team_id" field.
+func (u *PlaceUpsert) AddCtftimeTeamID(v int) *PlaceUpsert {
+	u.Add(place.FieldCtftimeTeamID, v)
+	return u
+}
+
+// ClearCtftimeTeamID clears the value of the "ctftime_team_id" field.
+func (u *PlaceUpsert) ClearCtftimeTeamID() *PlaceUpsert {
+	u.SetNull(place.FieldCtftimeTeamID)
+	return u
+}
+
+// SetContestPoints sets the "contest_points" field.
+func (u *PlaceUpsert) SetContestPoints(v float64) *PlaceUpsert {
+	u.Set(place.FieldContestPoints, v)
+	return u
+}
+
+// UpdateContestPoints sets the "contest_points" field to the value that was provided on create.
+func (u *PlaceUpsert) UpdateContestPoints() *PlaceUpsert {
+	u.SetExcluded(place.FieldContestPoints)
+	return u
+}
+
+// AddContestPoints adds v to the "contest_points" field.
+func (u *PlaceUpsert) AddContestPoints(v float64) *PlaceUpsert {
+	u.Add(place.FieldContestPoints, v)
+	return u
+}
+
+// ClearContestPoints clears the value of the "contest_points" field.
+func (u *PlaceUpsert) ClearContestPoints() *PlaceUpsert {
+	u.SetNull(place.FieldContestPoints)
+	return u
+}
+
+// SetOpenctfPoints sets the "openctf_points" field.
+func (u *PlaceUpsert) SetOpenctfPoints(v float64) *PlaceUpsert {
+	u.Set(place.FieldOpenctfPoints, v)
+	return u
+}
+
+// UpdateOpenctfPoints sets the "openctf_points" field to the value that was provided on create.
+func (u *PlaceUpsert) UpdateOpenctfPoints() *PlaceUpsert {
+	u.SetExcluded(place.FieldOpenctfPoints)
+	return u
+}
+
+// AddOpenctfPoints adds v to the "openctf_points" field.
+func (u *PlaceUpsert) AddOpenctfPoints(v float64) *PlaceUpsert {
+	u.Add(place.FieldOpenctfPoints, v)
+	return u
+}
+
+// ClearOpenctfPoints clears the value of the "openctf_points" field.
+func (u *PlaceUpsert) ClearOpenctfPoints() *PlaceUpsert {
+	u.SetNull(place.FieldOpenctfPoints)
+	return u
+}
+
+// SetAssociatedContestID sets the "associated_contest_id" field.
+func (u *PlaceUpsert) SetAssociatedContestID(v int) *PlaceUpsert {
+	u.Set(place.FieldAssociatedContestID, v)
+	return u
+}
+
+// UpdateAssociatedContestID sets the "associated_contest_id" field to the value that was provided on create.
+func (u *PlaceUpsert) UpdateAssociatedContestID() *PlaceUpsert {
+	u.SetExcluded(place.FieldAssociatedContestID)
+	return u
+}
+
+// AddAssociatedContestID adds v to the "associated_contest_id" field.
+func (u *PlaceUpsert) AddAssociatedContestID(v int) *PlaceUpsert {
+	u.Add(place.FieldAssociatedContestID, v)
+	return u
+}
+
+// SetAssignedWeightPoints sets the "assigned_weight_points" field.
+func (u *PlaceUpsert) SetAssignedWeightPoints(v int) *PlaceUpsert {
+	u.Set(place.FieldAssignedWeightPoints, v)
+	return u
+}
+
+// UpdateAssignedWeightPoints sets the "assigned_weight_points" field to the value that was provided on create.
+func (u *PlaceUpsert) UpdateAssignedWeightPoints() *PlaceUpsert {
+	u.SetExcluded(place.FieldAssignedWeightPoints)
+	return u
+}
+
+// AddAssignedWeightPoints adds v to the "assigned_weight_points" field.
+func (u *PlaceUpsert) AddAssignedWeightPoints(v int) *PlaceUpsert {
+	u.Add(place.FieldAssignedWeightPoints, v)
+	return u
+}
+
+// UpdateNewValues updates the mutable fields using the new values that were set on create.
+// Using this option is equivalent to using:
+//
+//	client.Place.Create().
+//		OnConflict(
+//			sql.ResolveWithNewValues(),
+//		).
+//		Exec(ctx)
+func (u *PlaceUpsertOne) UpdateNewValues() *PlaceUpsertOne {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
+	return u
+}
+
+// Ignore sets each column to itself in case of conflict.
+// Using this option is equivalent to using:
+//
+//	client.Place.Create().
+//	    OnConflict(sql.ResolveWithIgnore()).
+//	    Exec(ctx)
+func (u *PlaceUpsertOne) Ignore() *PlaceUpsertOne {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
+	return u
+}
+
+// DoNothing configures the conflict_action to `DO NOTHING`.
+// Supported only by SQLite and PostgreSQL.
+func (u *PlaceUpsertOne) DoNothing() *PlaceUpsertOne {
+	u.create.conflict = append(u.create.conflict, sql.DoNothing())
+	return u
+}
+
+// Update allows overriding fields `UPDATE` values. See the PlaceCreate.OnConflict
+// documentation for more info.
+func (u *PlaceUpsertOne) Update(set func(*PlaceUpsert)) *PlaceUpsertOne {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(update *sql.UpdateSet) {
+		set(&PlaceUpsert{UpdateSet: update})
+	}))
+	return u
+}
+
+// SetTeamName sets the "team_name" field.
+func (u *PlaceUpsertOne) SetTeamName(v string) *PlaceUpsertOne {
+	return u.Update(func(s *PlaceUpsert) {
+		s.SetTeamName(v)
+	})
+}
+
+// UpdateTeamName sets the "team_name" field to the value that was provided on create.
+func (u *PlaceUpsertOne) UpdateTeamName() *PlaceUpsertOne {
+	return u.Update(func(s *PlaceUpsert) {
+		s.UpdateTeamName()
+	})
+}
+
+// SetPlace sets the "place" field.
+func (u *PlaceUpsertOne) SetPlace(v int) *PlaceUpsertOne {
+	return u.Update(func(s *PlaceUpsert) {
+		s.SetPlace(v)
+	})
+}
+
+// AddPlace adds v to the "place" field.
+func (u *PlaceUpsertOne) AddPlace(v int) *PlaceUpsertOne {
+	return u.Update(func(s *PlaceUpsert) {
+		s.AddPlace(v)
+	})
+}
+
+// UpdatePlace sets the "place" field to the value that was provided on create.
+func (u *PlaceUpsertOne) UpdatePlace() *PlaceUpsertOne {
+	return u.Update(func(s *PlaceUpsert) {
+		s.UpdatePlace()
+	})
+}
+
+// SetCtftimeTeamID sets the "ctftime_team_id" field.
+func (u *PlaceUpsertOne) SetCtftimeTeamID(v int) *PlaceUpsertOne {
+	return u.Update(func(s *PlaceUpsert) {
+		s.SetCtftimeTeamID(v)
+	})
+}
+
+// AddCtftimeTeamID adds v to the "ctftime_team_id" field.
+func (u *PlaceUpsertOne) AddCtftimeTeamID(v int) *PlaceUpsertOne {
+	return u.Update(func(s *PlaceUpsert) {
+		s.AddCtftimeTeamID(v)
+	})
+}
+
+// UpdateCtftimeTeamID sets the "ctftime_team_id" field to the value that was provided on create.
+func (u *PlaceUpsertOne) UpdateCtftimeTeamID() *PlaceUpsertOne {
+	return u.Update(func(s *PlaceUpsert) {
+		s.UpdateCtftimeTeamID()
+	})
+}
+
+// ClearCtftimeTeamID clears the value of the "ctftime_team_id" field.
+func (u *PlaceUpsertOne) ClearCtftimeTeamID() *PlaceUpsertOne {
+	return u.Update(func(s *PlaceUpsert) {
+		s.ClearCtftimeTeamID()
+	})
+}
+
+// SetContestPoints sets the "contest_points" field.
+func (u *PlaceUpsertOne) SetContestPoints(v float64) *PlaceUpsertOne {
+	return u.Update(func(s *PlaceUpsert) {
+		s.SetContestPoints(v)
+	})
+}
+
+// AddContestPoints adds v to the "contest_points" field.
+func (u *PlaceUpsertOne) AddContestPoints(v float64) *PlaceUpsertOne {
+	return u.Update(func(s *PlaceUpsert) {
+		s.AddContestPoints(v)
+	})
+}
+
+// UpdateContestPoints sets the "contest_points" field to the value that was provided on create.
+func (u *PlaceUpsertOne) UpdateContestPoints() *PlaceUpsertOne {
+	return u.Update(func(s *PlaceUpsert) {
+		s.UpdateContestPoints()
+	})
+}
+
+// ClearContestPoints clears the value of the "contest_points" field.
+func (u *PlaceUpsertOne) ClearContestPoints() *PlaceUpsertOne {
+	return u.Update(func(s *PlaceUpsert) {
+		s.ClearContestPoints()
+	})
+}
+
+// SetOpenctfPoints sets the "openctf_points" field.
+func (u *PlaceUpsertOne) SetOpenctfPoints(v float64) *PlaceUpsertOne {
+	return u.Update(func(s *PlaceUpsert) {
+		s.SetOpenctfPoints(v)
+	})
+}
+
+// AddOpenctfPoints adds v to the "openctf_points" field.
+func (u *PlaceUpsertOne) AddOpenctfPoints(v float64) *PlaceUpsertOne {
+	return u.Update(func(s *PlaceUpsert) {
+		s.AddOpenctfPoints(v)
+	})
+}
+
+// UpdateOpenctfPoints sets the "openctf_points" field to the value that was provided on create.
+func (u *PlaceUpsertOne) UpdateOpenctfPoints() *PlaceUpsertOne {
+	return u.Update(func(s *PlaceUpsert) {
+		s.UpdateOpenctfPoints()
+	})
+}
+
+// ClearOpenctfPoints clears the value of the "openctf_points" field.
+func (u *PlaceUpsertOne) ClearOpenctfPoints() *PlaceUpsertOne {
+	return u.Update(func(s *PlaceUpsert) {
+		s.ClearOpenctfPoints()
+	})
+}
+
+// SetAssociatedContestID sets the "associated_contest_id" field.
+func (u *PlaceUpsertOne) SetAssociatedContestID(v int) *PlaceUpsertOne {
+	return u.Update(func(s *PlaceUpsert) {
+		s.SetAssociatedContestID(v)
+	})
+}
+
+// AddAssociatedContestID adds v to the "associated_contest_id" field.
+func (u *PlaceUpsertOne) AddAssociatedContestID(v int) *PlaceUpsertOne {
+	return u.Update(func(s *PlaceUpsert) {
+		s.AddAssociatedContestID(v)
+	})
+}
+
+// UpdateAssociatedContestID sets the "associated_contest_id" field to the value that was provided on create.
+func (u *PlaceUpsertOne) UpdateAssociatedContestID() *PlaceUpsertOne {
+	return u.Update(func(s *PlaceUpsert) {
+		s.UpdateAssociatedContestID()
+	})
+}
+
+// SetAssignedWeightPoints sets the "assigned_weight_points" field.
+func (u *PlaceUpsertOne) SetAssignedWeightPoints(v int) *PlaceUpsertOne {
+	return u.Update(func(s *PlaceUpsert) {
+		s.SetAssignedWeightPoints(v)
+	})
+}
+
+// AddAssignedWeightPoints adds v to the "assigned_weight_points" field.
+func (u *PlaceUpsertOne) AddAssignedWeightPoints(v int) *PlaceUpsertOne {
+	return u.Update(func(s *PlaceUpsert) {
+		s.AddAssignedWeightPoints(v)
+	})
+}
+
+// UpdateAssignedWeightPoints sets the "assigned_weight_points" field to the value that was provided on create.
+func (u *PlaceUpsertOne) UpdateAssignedWeightPoints() *PlaceUpsertOne {
+	return u.Update(func(s *PlaceUpsert) {
+		s.UpdateAssignedWeightPoints()
+	})
+}
+
+// Exec executes the query.
+func (u *PlaceUpsertOne) Exec(ctx context.Context) error {
+	if len(u.create.conflict) == 0 {
+		return errors.New("ent: missing options for PlaceCreate.OnConflict")
+	}
+	return u.create.Exec(ctx)
+}
+
+// ExecX is like Exec, but panics if an error occurs.
+func (u *PlaceUpsertOne) ExecX(ctx context.Context) {
+	if err := u.create.Exec(ctx); err != nil {
+		panic(err)
+	}
+}
+
+// Exec executes the UPSERT query and returns the inserted/updated ID.
+func (u *PlaceUpsertOne) ID(ctx context.Context) (id int, err error) {
+	node, err := u.create.Save(ctx)
+	if err != nil {
+		return id, err
+	}
+	return node.ID, nil
+}
+
+// IDX is like ID, but panics if an error occurs.
+func (u *PlaceUpsertOne) IDX(ctx context.Context) int {
+	id, err := u.ID(ctx)
+	if err != nil {
+		panic(err)
+	}
+	return id
+}
+
 // PlaceCreateBulk is the builder for creating many Place entities in bulk.
 type PlaceCreateBulk struct {
 	config
 	err      error
 	builders []*PlaceCreate
+	conflict []sql.ConflictOption
 }
 
 // Save creates the Place entities in the database.
@@ -296,6 +721,7 @@ func (pcb *PlaceCreateBulk) Save(ctx context.Context) ([]*Place, error) {
 					_, err = mutators[i+1].Mutate(root, pcb.builders[i+1].mutation)
 				} else {
 					spec := &sqlgraph.BatchCreateSpec{Nodes: specs}
+					spec.OnConflict = pcb.conflict
 					// Invoke the actual operation on the latest mutation in the chain.
 					if err = sqlgraph.BatchCreate(ctx, pcb.driver, spec); err != nil {
 						if sqlgraph.IsConstraintError(err) {
@@ -346,6 +772,271 @@ func (pcb *PlaceCreateBulk) Exec(ctx context.Context) error {
 // ExecX is like Exec, but panics if an error occurs.
 func (pcb *PlaceCreateBulk) ExecX(ctx context.Context) {
 	if err := pcb.Exec(ctx); err != nil {
+		panic(err)
+	}
+}
+
+// OnConflict allows configuring the `ON CONFLICT` / `ON DUPLICATE KEY` clause
+// of the `INSERT` statement. For example:
+//
+//	client.Place.CreateBulk(builders...).
+//		OnConflict(
+//			// Update the row with the new values
+//			// the was proposed for insertion.
+//			sql.ResolveWithNewValues(),
+//		).
+//		// Override some of the fields with custom
+//		// update values.
+//		Update(func(u *ent.PlaceUpsert) {
+//			SetTeamName(v+v).
+//		}).
+//		Exec(ctx)
+func (pcb *PlaceCreateBulk) OnConflict(opts ...sql.ConflictOption) *PlaceUpsertBulk {
+	pcb.conflict = opts
+	return &PlaceUpsertBulk{
+		create: pcb,
+	}
+}
+
+// OnConflictColumns calls `OnConflict` and configures the columns
+// as conflict target. Using this option is equivalent to using:
+//
+//	client.Place.Create().
+//		OnConflict(sql.ConflictColumns(columns...)).
+//		Exec(ctx)
+func (pcb *PlaceCreateBulk) OnConflictColumns(columns ...string) *PlaceUpsertBulk {
+	pcb.conflict = append(pcb.conflict, sql.ConflictColumns(columns...))
+	return &PlaceUpsertBulk{
+		create: pcb,
+	}
+}
+
+// PlaceUpsertBulk is the builder for "upsert"-ing
+// a bulk of Place nodes.
+type PlaceUpsertBulk struct {
+	create *PlaceCreateBulk
+}
+
+// UpdateNewValues updates the mutable fields using the new values that
+// were set on create. Using this option is equivalent to using:
+//
+//	client.Place.Create().
+//		OnConflict(
+//			sql.ResolveWithNewValues(),
+//		).
+//		Exec(ctx)
+func (u *PlaceUpsertBulk) UpdateNewValues() *PlaceUpsertBulk {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
+	return u
+}
+
+// Ignore sets each column to itself in case of conflict.
+// Using this option is equivalent to using:
+//
+//	client.Place.Create().
+//		OnConflict(sql.ResolveWithIgnore()).
+//		Exec(ctx)
+func (u *PlaceUpsertBulk) Ignore() *PlaceUpsertBulk {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
+	return u
+}
+
+// DoNothing configures the conflict_action to `DO NOTHING`.
+// Supported only by SQLite and PostgreSQL.
+func (u *PlaceUpsertBulk) DoNothing() *PlaceUpsertBulk {
+	u.create.conflict = append(u.create.conflict, sql.DoNothing())
+	return u
+}
+
+// Update allows overriding fields `UPDATE` values. See the PlaceCreateBulk.OnConflict
+// documentation for more info.
+func (u *PlaceUpsertBulk) Update(set func(*PlaceUpsert)) *PlaceUpsertBulk {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(update *sql.UpdateSet) {
+		set(&PlaceUpsert{UpdateSet: update})
+	}))
+	return u
+}
+
+// SetTeamName sets the "team_name" field.
+func (u *PlaceUpsertBulk) SetTeamName(v string) *PlaceUpsertBulk {
+	return u.Update(func(s *PlaceUpsert) {
+		s.SetTeamName(v)
+	})
+}
+
+// UpdateTeamName sets the "team_name" field to the value that was provided on create.
+func (u *PlaceUpsertBulk) UpdateTeamName() *PlaceUpsertBulk {
+	return u.Update(func(s *PlaceUpsert) {
+		s.UpdateTeamName()
+	})
+}
+
+// SetPlace sets the "place" field.
+func (u *PlaceUpsertBulk) SetPlace(v int) *PlaceUpsertBulk {
+	return u.Update(func(s *PlaceUpsert) {
+		s.SetPlace(v)
+	})
+}
+
+// AddPlace adds v to the "place" field.
+func (u *PlaceUpsertBulk) AddPlace(v int) *PlaceUpsertBulk {
+	return u.Update(func(s *PlaceUpsert) {
+		s.AddPlace(v)
+	})
+}
+
+// UpdatePlace sets the "place" field to the value that was provided on create.
+func (u *PlaceUpsertBulk) UpdatePlace() *PlaceUpsertBulk {
+	return u.Update(func(s *PlaceUpsert) {
+		s.UpdatePlace()
+	})
+}
+
+// SetCtftimeTeamID sets the "ctftime_team_id" field.
+func (u *PlaceUpsertBulk) SetCtftimeTeamID(v int) *PlaceUpsertBulk {
+	return u.Update(func(s *PlaceUpsert) {
+		s.SetCtftimeTeamID(v)
+	})
+}
+
+// AddCtftimeTeamID adds v to the "ctftime_team_id" field.
+func (u *PlaceUpsertBulk) AddCtftimeTeamID(v int) *PlaceUpsertBulk {
+	return u.Update(func(s *PlaceUpsert) {
+		s.AddCtftimeTeamID(v)
+	})
+}
+
+// UpdateCtftimeTeamID sets the "ctftime_team_id" field to the value that was provided on create.
+func (u *PlaceUpsertBulk) UpdateCtftimeTeamID() *PlaceUpsertBulk {
+	return u.Update(func(s *PlaceUpsert) {
+		s.UpdateCtftimeTeamID()
+	})
+}
+
+// ClearCtftimeTeamID clears the value of the "ctftime_team_id" field.
+func (u *PlaceUpsertBulk) ClearCtftimeTeamID() *PlaceUpsertBulk {
+	return u.Update(func(s *PlaceUpsert) {
+		s.ClearCtftimeTeamID()
+	})
+}
+
+// SetContestPoints sets the "contest_points" field.
+func (u *PlaceUpsertBulk) SetContestPoints(v float64) *PlaceUpsertBulk {
+	return u.Update(func(s *PlaceUpsert) {
+		s.SetContestPoints(v)
+	})
+}
+
+// AddContestPoints adds v to the "contest_points" field.
+func (u *PlaceUpsertBulk) AddContestPoints(v float64) *PlaceUpsertBulk {
+	return u.Update(func(s *PlaceUpsert) {
+		s.AddContestPoints(v)
+	})
+}
+
+// UpdateContestPoints sets the "contest_points" field to the value that was provided on create.
+func (u *PlaceUpsertBulk) UpdateContestPoints() *PlaceUpsertBulk {
+	return u.Update(func(s *PlaceUpsert) {
+		s.UpdateContestPoints()
+	})
+}
+
+// ClearContestPoints clears the value of the "contest_points" field.
+func (u *PlaceUpsertBulk) ClearContestPoints() *PlaceUpsertBulk {
+	return u.Update(func(s *PlaceUpsert) {
+		s.ClearContestPoints()
+	})
+}
+
+// SetOpenctfPoints sets the "openctf_points" field.
+func (u *PlaceUpsertBulk) SetOpenctfPoints(v float64) *PlaceUpsertBulk {
+	return u.Update(func(s *PlaceUpsert) {
+		s.SetOpenctfPoints(v)
+	})
+}
+
+// AddOpenctfPoints adds v to the "openctf_points" field.
+func (u *PlaceUpsertBulk) AddOpenctfPoints(v float64) *PlaceUpsertBulk {
+	return u.Update(func(s *PlaceUpsert) {
+		s.AddOpenctfPoints(v)
+	})
+}
+
+// UpdateOpenctfPoints sets the "openctf_points" field to the value that was provided on create.
+func (u *PlaceUpsertBulk) UpdateOpenctfPoints() *PlaceUpsertBulk {
+	return u.Update(func(s *PlaceUpsert) {
+		s.UpdateOpenctfPoints()
+	})
+}
+
+// ClearOpenctfPoints clears the value of the "openctf_points" field.
+func (u *PlaceUpsertBulk) ClearOpenctfPoints() *PlaceUpsertBulk {
+	return u.Update(func(s *PlaceUpsert) {
+		s.ClearOpenctfPoints()
+	})
+}
+
+// SetAssociatedContestID sets the "associated_contest_id" field.
+func (u *PlaceUpsertBulk) SetAssociatedContestID(v int) *PlaceUpsertBulk {
+	return u.Update(func(s *PlaceUpsert) {
+		s.SetAssociatedContestID(v)
+	})
+}
+
+// AddAssociatedContestID adds v to the "associated_contest_id" field.
+func (u *PlaceUpsertBulk) AddAssociatedContestID(v int) *PlaceUpsertBulk {
+	return u.Update(func(s *PlaceUpsert) {
+		s.AddAssociatedContestID(v)
+	})
+}
+
+// UpdateAssociatedContestID sets the "associated_contest_id" field to the value that was provided on create.
+func (u *PlaceUpsertBulk) UpdateAssociatedContestID() *PlaceUpsertBulk {
+	return u.Update(func(s *PlaceUpsert) {
+		s.UpdateAssociatedContestID()
+	})
+}
+
+// SetAssignedWeightPoints sets the "assigned_weight_points" field.
+func (u *PlaceUpsertBulk) SetAssignedWeightPoints(v int) *PlaceUpsertBulk {
+	return u.Update(func(s *PlaceUpsert) {
+		s.SetAssignedWeightPoints(v)
+	})
+}
+
+// AddAssignedWeightPoints adds v to the "assigned_weight_points" field.
+func (u *PlaceUpsertBulk) AddAssignedWeightPoints(v int) *PlaceUpsertBulk {
+	return u.Update(func(s *PlaceUpsert) {
+		s.AddAssignedWeightPoints(v)
+	})
+}
+
+// UpdateAssignedWeightPoints sets the "assigned_weight_points" field to the value that was provided on create.
+func (u *PlaceUpsertBulk) UpdateAssignedWeightPoints() *PlaceUpsertBulk {
+	return u.Update(func(s *PlaceUpsert) {
+		s.UpdateAssignedWeightPoints()
+	})
+}
+
+// Exec executes the query.
+func (u *PlaceUpsertBulk) Exec(ctx context.Context) error {
+	if u.create.err != nil {
+		return u.create.err
+	}
+	for i, b := range u.create.builders {
+		if len(b.conflict) != 0 {
+			return fmt.Errorf("ent: OnConflict was set for builder %d. Set it on the PlaceCreateBulk instead", i)
+		}
+	}
+	if len(u.create.conflict) == 0 {
+		return errors.New("ent: missing options for PlaceCreateBulk.OnConflict")
+	}
+	return u.create.Exec(ctx)
+}
+
+// ExecX is like Exec, but panics if an error occurs.
+func (u *PlaceUpsertBulk) ExecX(ctx context.Context) {
+	if err := u.create.Exec(ctx); err != nil {
 		panic(err)
 	}
 }

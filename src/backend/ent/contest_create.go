@@ -11,6 +11,7 @@ import (
 	"openctfbackend/ent/team"
 	"time"
 
+	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
 )
@@ -20,6 +21,7 @@ type ContestCreate struct {
 	config
 	mutation *ContestMutation
 	hooks    []Hook
+	conflict []sql.ConflictOption
 }
 
 // SetName sets the "name" field.
@@ -249,6 +251,7 @@ func (cc *ContestCreate) createSpec() (*Contest, *sqlgraph.CreateSpec) {
 		_node = &Contest{config: cc.config}
 		_spec = sqlgraph.NewCreateSpec(contest.Table, sqlgraph.NewFieldSpec(contest.FieldID, field.TypeInt))
 	)
+	_spec.OnConflict = cc.conflict
 	if value, ok := cc.mutation.Name(); ok {
 		_spec.SetField(contest.FieldName, field.TypeString, value)
 		_node.Name = value
@@ -321,11 +324,459 @@ func (cc *ContestCreate) createSpec() (*Contest, *sqlgraph.CreateSpec) {
 	return _node, _spec
 }
 
+// OnConflict allows configuring the `ON CONFLICT` / `ON DUPLICATE KEY` clause
+// of the `INSERT` statement. For example:
+//
+//	client.Contest.Create().
+//		SetName(v).
+//		OnConflict(
+//			// Update the row with the new values
+//			// the was proposed for insertion.
+//			sql.ResolveWithNewValues(),
+//		).
+//		// Override some of the fields with custom
+//		// update values.
+//		Update(func(u *ent.ContestUpsert) {
+//			SetName(v+v).
+//		}).
+//		Exec(ctx)
+func (cc *ContestCreate) OnConflict(opts ...sql.ConflictOption) *ContestUpsertOne {
+	cc.conflict = opts
+	return &ContestUpsertOne{
+		create: cc,
+	}
+}
+
+// OnConflictColumns calls `OnConflict` and configures the columns
+// as conflict target. Using this option is equivalent to using:
+//
+//	client.Contest.Create().
+//		OnConflict(sql.ConflictColumns(columns...)).
+//		Exec(ctx)
+func (cc *ContestCreate) OnConflictColumns(columns ...string) *ContestUpsertOne {
+	cc.conflict = append(cc.conflict, sql.ConflictColumns(columns...))
+	return &ContestUpsertOne{
+		create: cc,
+	}
+}
+
+type (
+	// ContestUpsertOne is the builder for "upsert"-ing
+	//  one Contest node.
+	ContestUpsertOne struct {
+		create *ContestCreate
+	}
+
+	// ContestUpsert is the "OnConflict" setter.
+	ContestUpsert struct {
+		*sql.UpdateSet
+	}
+)
+
+// SetName sets the "name" field.
+func (u *ContestUpsert) SetName(v string) *ContestUpsert {
+	u.Set(contest.FieldName, v)
+	return u
+}
+
+// UpdateName sets the "name" field to the value that was provided on create.
+func (u *ContestUpsert) UpdateName() *ContestUpsert {
+	u.SetExcluded(contest.FieldName)
+	return u
+}
+
+// SetDescription sets the "description" field.
+func (u *ContestUpsert) SetDescription(v string) *ContestUpsert {
+	u.Set(contest.FieldDescription, v)
+	return u
+}
+
+// UpdateDescription sets the "description" field to the value that was provided on create.
+func (u *ContestUpsert) UpdateDescription() *ContestUpsert {
+	u.SetExcluded(contest.FieldDescription)
+	return u
+}
+
+// ClearDescription clears the value of the "description" field.
+func (u *ContestUpsert) ClearDescription() *ContestUpsert {
+	u.SetNull(contest.FieldDescription)
+	return u
+}
+
+// SetRules sets the "rules" field.
+func (u *ContestUpsert) SetRules(v string) *ContestUpsert {
+	u.Set(contest.FieldRules, v)
+	return u
+}
+
+// UpdateRules sets the "rules" field to the value that was provided on create.
+func (u *ContestUpsert) UpdateRules() *ContestUpsert {
+	u.SetExcluded(contest.FieldRules)
+	return u
+}
+
+// ClearRules clears the value of the "rules" field.
+func (u *ContestUpsert) ClearRules() *ContestUpsert {
+	u.SetNull(contest.FieldRules)
+	return u
+}
+
+// SetPrizes sets the "prizes" field.
+func (u *ContestUpsert) SetPrizes(v string) *ContestUpsert {
+	u.Set(contest.FieldPrizes, v)
+	return u
+}
+
+// UpdatePrizes sets the "prizes" field to the value that was provided on create.
+func (u *ContestUpsert) UpdatePrizes() *ContestUpsert {
+	u.SetExcluded(contest.FieldPrizes)
+	return u
+}
+
+// ClearPrizes clears the value of the "prizes" field.
+func (u *ContestUpsert) ClearPrizes() *ContestUpsert {
+	u.SetNull(contest.FieldPrizes)
+	return u
+}
+
+// SetStart sets the "start" field.
+func (u *ContestUpsert) SetStart(v time.Time) *ContestUpsert {
+	u.Set(contest.FieldStart, v)
+	return u
+}
+
+// UpdateStart sets the "start" field to the value that was provided on create.
+func (u *ContestUpsert) UpdateStart() *ContestUpsert {
+	u.SetExcluded(contest.FieldStart)
+	return u
+}
+
+// SetEnd sets the "end" field.
+func (u *ContestUpsert) SetEnd(v time.Time) *ContestUpsert {
+	u.Set(contest.FieldEnd, v)
+	return u
+}
+
+// UpdateEnd sets the "end" field to the value that was provided on create.
+func (u *ContestUpsert) UpdateEnd() *ContestUpsert {
+	u.SetExcluded(contest.FieldEnd)
+	return u
+}
+
+// SetURL sets the "url" field.
+func (u *ContestUpsert) SetURL(v string) *ContestUpsert {
+	u.Set(contest.FieldURL, v)
+	return u
+}
+
+// UpdateURL sets the "url" field to the value that was provided on create.
+func (u *ContestUpsert) UpdateURL() *ContestUpsert {
+	u.SetExcluded(contest.FieldURL)
+	return u
+}
+
+// ClearURL clears the value of the "url" field.
+func (u *ContestUpsert) ClearURL() *ContestUpsert {
+	u.SetNull(contest.FieldURL)
+	return u
+}
+
+// SetCtftimeID sets the "ctftime_id" field.
+func (u *ContestUpsert) SetCtftimeID(v int) *ContestUpsert {
+	u.Set(contest.FieldCtftimeID, v)
+	return u
+}
+
+// UpdateCtftimeID sets the "ctftime_id" field to the value that was provided on create.
+func (u *ContestUpsert) UpdateCtftimeID() *ContestUpsert {
+	u.SetExcluded(contest.FieldCtftimeID)
+	return u
+}
+
+// AddCtftimeID adds v to the "ctftime_id" field.
+func (u *ContestUpsert) AddCtftimeID(v int) *ContestUpsert {
+	u.Add(contest.FieldCtftimeID, v)
+	return u
+}
+
+// ClearCtftimeID clears the value of the "ctftime_id" field.
+func (u *ContestUpsert) ClearCtftimeID() *ContestUpsert {
+	u.SetNull(contest.FieldCtftimeID)
+	return u
+}
+
+// SetAssignedWeightPoints sets the "assigned_weight_points" field.
+func (u *ContestUpsert) SetAssignedWeightPoints(v int) *ContestUpsert {
+	u.Set(contest.FieldAssignedWeightPoints, v)
+	return u
+}
+
+// UpdateAssignedWeightPoints sets the "assigned_weight_points" field to the value that was provided on create.
+func (u *ContestUpsert) UpdateAssignedWeightPoints() *ContestUpsert {
+	u.SetExcluded(contest.FieldAssignedWeightPoints)
+	return u
+}
+
+// AddAssignedWeightPoints adds v to the "assigned_weight_points" field.
+func (u *ContestUpsert) AddAssignedWeightPoints(v int) *ContestUpsert {
+	u.Add(contest.FieldAssignedWeightPoints, v)
+	return u
+}
+
+// UpdateNewValues updates the mutable fields using the new values that were set on create.
+// Using this option is equivalent to using:
+//
+//	client.Contest.Create().
+//		OnConflict(
+//			sql.ResolveWithNewValues(),
+//		).
+//		Exec(ctx)
+func (u *ContestUpsertOne) UpdateNewValues() *ContestUpsertOne {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
+	return u
+}
+
+// Ignore sets each column to itself in case of conflict.
+// Using this option is equivalent to using:
+//
+//	client.Contest.Create().
+//	    OnConflict(sql.ResolveWithIgnore()).
+//	    Exec(ctx)
+func (u *ContestUpsertOne) Ignore() *ContestUpsertOne {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
+	return u
+}
+
+// DoNothing configures the conflict_action to `DO NOTHING`.
+// Supported only by SQLite and PostgreSQL.
+func (u *ContestUpsertOne) DoNothing() *ContestUpsertOne {
+	u.create.conflict = append(u.create.conflict, sql.DoNothing())
+	return u
+}
+
+// Update allows overriding fields `UPDATE` values. See the ContestCreate.OnConflict
+// documentation for more info.
+func (u *ContestUpsertOne) Update(set func(*ContestUpsert)) *ContestUpsertOne {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(update *sql.UpdateSet) {
+		set(&ContestUpsert{UpdateSet: update})
+	}))
+	return u
+}
+
+// SetName sets the "name" field.
+func (u *ContestUpsertOne) SetName(v string) *ContestUpsertOne {
+	return u.Update(func(s *ContestUpsert) {
+		s.SetName(v)
+	})
+}
+
+// UpdateName sets the "name" field to the value that was provided on create.
+func (u *ContestUpsertOne) UpdateName() *ContestUpsertOne {
+	return u.Update(func(s *ContestUpsert) {
+		s.UpdateName()
+	})
+}
+
+// SetDescription sets the "description" field.
+func (u *ContestUpsertOne) SetDescription(v string) *ContestUpsertOne {
+	return u.Update(func(s *ContestUpsert) {
+		s.SetDescription(v)
+	})
+}
+
+// UpdateDescription sets the "description" field to the value that was provided on create.
+func (u *ContestUpsertOne) UpdateDescription() *ContestUpsertOne {
+	return u.Update(func(s *ContestUpsert) {
+		s.UpdateDescription()
+	})
+}
+
+// ClearDescription clears the value of the "description" field.
+func (u *ContestUpsertOne) ClearDescription() *ContestUpsertOne {
+	return u.Update(func(s *ContestUpsert) {
+		s.ClearDescription()
+	})
+}
+
+// SetRules sets the "rules" field.
+func (u *ContestUpsertOne) SetRules(v string) *ContestUpsertOne {
+	return u.Update(func(s *ContestUpsert) {
+		s.SetRules(v)
+	})
+}
+
+// UpdateRules sets the "rules" field to the value that was provided on create.
+func (u *ContestUpsertOne) UpdateRules() *ContestUpsertOne {
+	return u.Update(func(s *ContestUpsert) {
+		s.UpdateRules()
+	})
+}
+
+// ClearRules clears the value of the "rules" field.
+func (u *ContestUpsertOne) ClearRules() *ContestUpsertOne {
+	return u.Update(func(s *ContestUpsert) {
+		s.ClearRules()
+	})
+}
+
+// SetPrizes sets the "prizes" field.
+func (u *ContestUpsertOne) SetPrizes(v string) *ContestUpsertOne {
+	return u.Update(func(s *ContestUpsert) {
+		s.SetPrizes(v)
+	})
+}
+
+// UpdatePrizes sets the "prizes" field to the value that was provided on create.
+func (u *ContestUpsertOne) UpdatePrizes() *ContestUpsertOne {
+	return u.Update(func(s *ContestUpsert) {
+		s.UpdatePrizes()
+	})
+}
+
+// ClearPrizes clears the value of the "prizes" field.
+func (u *ContestUpsertOne) ClearPrizes() *ContestUpsertOne {
+	return u.Update(func(s *ContestUpsert) {
+		s.ClearPrizes()
+	})
+}
+
+// SetStart sets the "start" field.
+func (u *ContestUpsertOne) SetStart(v time.Time) *ContestUpsertOne {
+	return u.Update(func(s *ContestUpsert) {
+		s.SetStart(v)
+	})
+}
+
+// UpdateStart sets the "start" field to the value that was provided on create.
+func (u *ContestUpsertOne) UpdateStart() *ContestUpsertOne {
+	return u.Update(func(s *ContestUpsert) {
+		s.UpdateStart()
+	})
+}
+
+// SetEnd sets the "end" field.
+func (u *ContestUpsertOne) SetEnd(v time.Time) *ContestUpsertOne {
+	return u.Update(func(s *ContestUpsert) {
+		s.SetEnd(v)
+	})
+}
+
+// UpdateEnd sets the "end" field to the value that was provided on create.
+func (u *ContestUpsertOne) UpdateEnd() *ContestUpsertOne {
+	return u.Update(func(s *ContestUpsert) {
+		s.UpdateEnd()
+	})
+}
+
+// SetURL sets the "url" field.
+func (u *ContestUpsertOne) SetURL(v string) *ContestUpsertOne {
+	return u.Update(func(s *ContestUpsert) {
+		s.SetURL(v)
+	})
+}
+
+// UpdateURL sets the "url" field to the value that was provided on create.
+func (u *ContestUpsertOne) UpdateURL() *ContestUpsertOne {
+	return u.Update(func(s *ContestUpsert) {
+		s.UpdateURL()
+	})
+}
+
+// ClearURL clears the value of the "url" field.
+func (u *ContestUpsertOne) ClearURL() *ContestUpsertOne {
+	return u.Update(func(s *ContestUpsert) {
+		s.ClearURL()
+	})
+}
+
+// SetCtftimeID sets the "ctftime_id" field.
+func (u *ContestUpsertOne) SetCtftimeID(v int) *ContestUpsertOne {
+	return u.Update(func(s *ContestUpsert) {
+		s.SetCtftimeID(v)
+	})
+}
+
+// AddCtftimeID adds v to the "ctftime_id" field.
+func (u *ContestUpsertOne) AddCtftimeID(v int) *ContestUpsertOne {
+	return u.Update(func(s *ContestUpsert) {
+		s.AddCtftimeID(v)
+	})
+}
+
+// UpdateCtftimeID sets the "ctftime_id" field to the value that was provided on create.
+func (u *ContestUpsertOne) UpdateCtftimeID() *ContestUpsertOne {
+	return u.Update(func(s *ContestUpsert) {
+		s.UpdateCtftimeID()
+	})
+}
+
+// ClearCtftimeID clears the value of the "ctftime_id" field.
+func (u *ContestUpsertOne) ClearCtftimeID() *ContestUpsertOne {
+	return u.Update(func(s *ContestUpsert) {
+		s.ClearCtftimeID()
+	})
+}
+
+// SetAssignedWeightPoints sets the "assigned_weight_points" field.
+func (u *ContestUpsertOne) SetAssignedWeightPoints(v int) *ContestUpsertOne {
+	return u.Update(func(s *ContestUpsert) {
+		s.SetAssignedWeightPoints(v)
+	})
+}
+
+// AddAssignedWeightPoints adds v to the "assigned_weight_points" field.
+func (u *ContestUpsertOne) AddAssignedWeightPoints(v int) *ContestUpsertOne {
+	return u.Update(func(s *ContestUpsert) {
+		s.AddAssignedWeightPoints(v)
+	})
+}
+
+// UpdateAssignedWeightPoints sets the "assigned_weight_points" field to the value that was provided on create.
+func (u *ContestUpsertOne) UpdateAssignedWeightPoints() *ContestUpsertOne {
+	return u.Update(func(s *ContestUpsert) {
+		s.UpdateAssignedWeightPoints()
+	})
+}
+
+// Exec executes the query.
+func (u *ContestUpsertOne) Exec(ctx context.Context) error {
+	if len(u.create.conflict) == 0 {
+		return errors.New("ent: missing options for ContestCreate.OnConflict")
+	}
+	return u.create.Exec(ctx)
+}
+
+// ExecX is like Exec, but panics if an error occurs.
+func (u *ContestUpsertOne) ExecX(ctx context.Context) {
+	if err := u.create.Exec(ctx); err != nil {
+		panic(err)
+	}
+}
+
+// Exec executes the UPSERT query and returns the inserted/updated ID.
+func (u *ContestUpsertOne) ID(ctx context.Context) (id int, err error) {
+	node, err := u.create.Save(ctx)
+	if err != nil {
+		return id, err
+	}
+	return node.ID, nil
+}
+
+// IDX is like ID, but panics if an error occurs.
+func (u *ContestUpsertOne) IDX(ctx context.Context) int {
+	id, err := u.ID(ctx)
+	if err != nil {
+		panic(err)
+	}
+	return id
+}
+
 // ContestCreateBulk is the builder for creating many Contest entities in bulk.
 type ContestCreateBulk struct {
 	config
 	err      error
 	builders []*ContestCreate
+	conflict []sql.ConflictOption
 }
 
 // Save creates the Contest entities in the database.
@@ -355,6 +806,7 @@ func (ccb *ContestCreateBulk) Save(ctx context.Context) ([]*Contest, error) {
 					_, err = mutators[i+1].Mutate(root, ccb.builders[i+1].mutation)
 				} else {
 					spec := &sqlgraph.BatchCreateSpec{Nodes: specs}
+					spec.OnConflict = ccb.conflict
 					// Invoke the actual operation on the latest mutation in the chain.
 					if err = sqlgraph.BatchCreate(ctx, ccb.driver, spec); err != nil {
 						if sqlgraph.IsConstraintError(err) {
@@ -405,6 +857,285 @@ func (ccb *ContestCreateBulk) Exec(ctx context.Context) error {
 // ExecX is like Exec, but panics if an error occurs.
 func (ccb *ContestCreateBulk) ExecX(ctx context.Context) {
 	if err := ccb.Exec(ctx); err != nil {
+		panic(err)
+	}
+}
+
+// OnConflict allows configuring the `ON CONFLICT` / `ON DUPLICATE KEY` clause
+// of the `INSERT` statement. For example:
+//
+//	client.Contest.CreateBulk(builders...).
+//		OnConflict(
+//			// Update the row with the new values
+//			// the was proposed for insertion.
+//			sql.ResolveWithNewValues(),
+//		).
+//		// Override some of the fields with custom
+//		// update values.
+//		Update(func(u *ent.ContestUpsert) {
+//			SetName(v+v).
+//		}).
+//		Exec(ctx)
+func (ccb *ContestCreateBulk) OnConflict(opts ...sql.ConflictOption) *ContestUpsertBulk {
+	ccb.conflict = opts
+	return &ContestUpsertBulk{
+		create: ccb,
+	}
+}
+
+// OnConflictColumns calls `OnConflict` and configures the columns
+// as conflict target. Using this option is equivalent to using:
+//
+//	client.Contest.Create().
+//		OnConflict(sql.ConflictColumns(columns...)).
+//		Exec(ctx)
+func (ccb *ContestCreateBulk) OnConflictColumns(columns ...string) *ContestUpsertBulk {
+	ccb.conflict = append(ccb.conflict, sql.ConflictColumns(columns...))
+	return &ContestUpsertBulk{
+		create: ccb,
+	}
+}
+
+// ContestUpsertBulk is the builder for "upsert"-ing
+// a bulk of Contest nodes.
+type ContestUpsertBulk struct {
+	create *ContestCreateBulk
+}
+
+// UpdateNewValues updates the mutable fields using the new values that
+// were set on create. Using this option is equivalent to using:
+//
+//	client.Contest.Create().
+//		OnConflict(
+//			sql.ResolveWithNewValues(),
+//		).
+//		Exec(ctx)
+func (u *ContestUpsertBulk) UpdateNewValues() *ContestUpsertBulk {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
+	return u
+}
+
+// Ignore sets each column to itself in case of conflict.
+// Using this option is equivalent to using:
+//
+//	client.Contest.Create().
+//		OnConflict(sql.ResolveWithIgnore()).
+//		Exec(ctx)
+func (u *ContestUpsertBulk) Ignore() *ContestUpsertBulk {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
+	return u
+}
+
+// DoNothing configures the conflict_action to `DO NOTHING`.
+// Supported only by SQLite and PostgreSQL.
+func (u *ContestUpsertBulk) DoNothing() *ContestUpsertBulk {
+	u.create.conflict = append(u.create.conflict, sql.DoNothing())
+	return u
+}
+
+// Update allows overriding fields `UPDATE` values. See the ContestCreateBulk.OnConflict
+// documentation for more info.
+func (u *ContestUpsertBulk) Update(set func(*ContestUpsert)) *ContestUpsertBulk {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(update *sql.UpdateSet) {
+		set(&ContestUpsert{UpdateSet: update})
+	}))
+	return u
+}
+
+// SetName sets the "name" field.
+func (u *ContestUpsertBulk) SetName(v string) *ContestUpsertBulk {
+	return u.Update(func(s *ContestUpsert) {
+		s.SetName(v)
+	})
+}
+
+// UpdateName sets the "name" field to the value that was provided on create.
+func (u *ContestUpsertBulk) UpdateName() *ContestUpsertBulk {
+	return u.Update(func(s *ContestUpsert) {
+		s.UpdateName()
+	})
+}
+
+// SetDescription sets the "description" field.
+func (u *ContestUpsertBulk) SetDescription(v string) *ContestUpsertBulk {
+	return u.Update(func(s *ContestUpsert) {
+		s.SetDescription(v)
+	})
+}
+
+// UpdateDescription sets the "description" field to the value that was provided on create.
+func (u *ContestUpsertBulk) UpdateDescription() *ContestUpsertBulk {
+	return u.Update(func(s *ContestUpsert) {
+		s.UpdateDescription()
+	})
+}
+
+// ClearDescription clears the value of the "description" field.
+func (u *ContestUpsertBulk) ClearDescription() *ContestUpsertBulk {
+	return u.Update(func(s *ContestUpsert) {
+		s.ClearDescription()
+	})
+}
+
+// SetRules sets the "rules" field.
+func (u *ContestUpsertBulk) SetRules(v string) *ContestUpsertBulk {
+	return u.Update(func(s *ContestUpsert) {
+		s.SetRules(v)
+	})
+}
+
+// UpdateRules sets the "rules" field to the value that was provided on create.
+func (u *ContestUpsertBulk) UpdateRules() *ContestUpsertBulk {
+	return u.Update(func(s *ContestUpsert) {
+		s.UpdateRules()
+	})
+}
+
+// ClearRules clears the value of the "rules" field.
+func (u *ContestUpsertBulk) ClearRules() *ContestUpsertBulk {
+	return u.Update(func(s *ContestUpsert) {
+		s.ClearRules()
+	})
+}
+
+// SetPrizes sets the "prizes" field.
+func (u *ContestUpsertBulk) SetPrizes(v string) *ContestUpsertBulk {
+	return u.Update(func(s *ContestUpsert) {
+		s.SetPrizes(v)
+	})
+}
+
+// UpdatePrizes sets the "prizes" field to the value that was provided on create.
+func (u *ContestUpsertBulk) UpdatePrizes() *ContestUpsertBulk {
+	return u.Update(func(s *ContestUpsert) {
+		s.UpdatePrizes()
+	})
+}
+
+// ClearPrizes clears the value of the "prizes" field.
+func (u *ContestUpsertBulk) ClearPrizes() *ContestUpsertBulk {
+	return u.Update(func(s *ContestUpsert) {
+		s.ClearPrizes()
+	})
+}
+
+// SetStart sets the "start" field.
+func (u *ContestUpsertBulk) SetStart(v time.Time) *ContestUpsertBulk {
+	return u.Update(func(s *ContestUpsert) {
+		s.SetStart(v)
+	})
+}
+
+// UpdateStart sets the "start" field to the value that was provided on create.
+func (u *ContestUpsertBulk) UpdateStart() *ContestUpsertBulk {
+	return u.Update(func(s *ContestUpsert) {
+		s.UpdateStart()
+	})
+}
+
+// SetEnd sets the "end" field.
+func (u *ContestUpsertBulk) SetEnd(v time.Time) *ContestUpsertBulk {
+	return u.Update(func(s *ContestUpsert) {
+		s.SetEnd(v)
+	})
+}
+
+// UpdateEnd sets the "end" field to the value that was provided on create.
+func (u *ContestUpsertBulk) UpdateEnd() *ContestUpsertBulk {
+	return u.Update(func(s *ContestUpsert) {
+		s.UpdateEnd()
+	})
+}
+
+// SetURL sets the "url" field.
+func (u *ContestUpsertBulk) SetURL(v string) *ContestUpsertBulk {
+	return u.Update(func(s *ContestUpsert) {
+		s.SetURL(v)
+	})
+}
+
+// UpdateURL sets the "url" field to the value that was provided on create.
+func (u *ContestUpsertBulk) UpdateURL() *ContestUpsertBulk {
+	return u.Update(func(s *ContestUpsert) {
+		s.UpdateURL()
+	})
+}
+
+// ClearURL clears the value of the "url" field.
+func (u *ContestUpsertBulk) ClearURL() *ContestUpsertBulk {
+	return u.Update(func(s *ContestUpsert) {
+		s.ClearURL()
+	})
+}
+
+// SetCtftimeID sets the "ctftime_id" field.
+func (u *ContestUpsertBulk) SetCtftimeID(v int) *ContestUpsertBulk {
+	return u.Update(func(s *ContestUpsert) {
+		s.SetCtftimeID(v)
+	})
+}
+
+// AddCtftimeID adds v to the "ctftime_id" field.
+func (u *ContestUpsertBulk) AddCtftimeID(v int) *ContestUpsertBulk {
+	return u.Update(func(s *ContestUpsert) {
+		s.AddCtftimeID(v)
+	})
+}
+
+// UpdateCtftimeID sets the "ctftime_id" field to the value that was provided on create.
+func (u *ContestUpsertBulk) UpdateCtftimeID() *ContestUpsertBulk {
+	return u.Update(func(s *ContestUpsert) {
+		s.UpdateCtftimeID()
+	})
+}
+
+// ClearCtftimeID clears the value of the "ctftime_id" field.
+func (u *ContestUpsertBulk) ClearCtftimeID() *ContestUpsertBulk {
+	return u.Update(func(s *ContestUpsert) {
+		s.ClearCtftimeID()
+	})
+}
+
+// SetAssignedWeightPoints sets the "assigned_weight_points" field.
+func (u *ContestUpsertBulk) SetAssignedWeightPoints(v int) *ContestUpsertBulk {
+	return u.Update(func(s *ContestUpsert) {
+		s.SetAssignedWeightPoints(v)
+	})
+}
+
+// AddAssignedWeightPoints adds v to the "assigned_weight_points" field.
+func (u *ContestUpsertBulk) AddAssignedWeightPoints(v int) *ContestUpsertBulk {
+	return u.Update(func(s *ContestUpsert) {
+		s.AddAssignedWeightPoints(v)
+	})
+}
+
+// UpdateAssignedWeightPoints sets the "assigned_weight_points" field to the value that was provided on create.
+func (u *ContestUpsertBulk) UpdateAssignedWeightPoints() *ContestUpsertBulk {
+	return u.Update(func(s *ContestUpsert) {
+		s.UpdateAssignedWeightPoints()
+	})
+}
+
+// Exec executes the query.
+func (u *ContestUpsertBulk) Exec(ctx context.Context) error {
+	if u.create.err != nil {
+		return u.create.err
+	}
+	for i, b := range u.create.builders {
+		if len(b.conflict) != 0 {
+			return fmt.Errorf("ent: OnConflict was set for builder %d. Set it on the ContestCreateBulk instead", i)
+		}
+	}
+	if len(u.create.conflict) == 0 {
+		return errors.New("ent: missing options for ContestCreateBulk.OnConflict")
+	}
+	return u.create.Exec(ctx)
+}
+
+// ExecX is like Exec, but panics if an error occurs.
+func (u *ContestUpsertBulk) ExecX(ctx context.Context) {
+	if err := u.create.Exec(ctx); err != nil {
 		panic(err)
 	}
 }

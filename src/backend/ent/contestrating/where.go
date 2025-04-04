@@ -149,7 +149,7 @@ func HasContest() predicate.ContestRating {
 }
 
 // HasContestWith applies the HasEdge predicate on the "contest" edge with a given conditions (other predicates).
-func HasContestWith(preds ...predicate.User) predicate.ContestRating {
+func HasContestWith(preds ...predicate.Contest) predicate.ContestRating {
 	return predicate.ContestRating(func(s *sql.Selector) {
 		step := newContestStep()
 		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {

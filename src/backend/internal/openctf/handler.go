@@ -32,6 +32,7 @@ type ServiceClient interface {
 	VerifyTeam(ctx context.Context, verifier *ent.User, dto *service.VerifyTeamDto) (*ent.Team, error)
 	MergeTeams(ctx context.Context, user *ent.User, dto *service.MergeTeamsDto) (*ent.Team, error)
 	VerifyToken(ctx context.Context, token string) (*ent.User, error)
+	RateContest(ctx context.Context, requester *ent.User, contestId int, dto *service.RateContestDto) (*ent.ContestRating, error)
 }
 
 type CtftimeClient interface {
