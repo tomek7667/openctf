@@ -14,3 +14,4 @@ Open-source alternative for [ctftime.org](https://ctftime.org)
 - [ ] organizational
   - notification based contact with administrators of the platform -- a good form with topic, message and attachments
 - [ ] mobile app in future
+- [ ] bigger presence on social media from openctf; like autoamted posts about incoming (only verified!) events etc. some profiles on X, instagram;
