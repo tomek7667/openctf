@@ -18,6 +18,7 @@ func (Team) Fields() []ent.Field {
 		field.Time("ctftime_verified_at").Optional().Nillable(),
 		field.Bytes("logo").MaxLen(50 * 1024 * 1024).Optional(), // Max 50 MB
 		field.Time("verified_at").Optional().Nillable(),
+		field.String("country_code").Default("global"),
 	}
 }
 

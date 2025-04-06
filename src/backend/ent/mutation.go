@@ -2649,6 +2649,7 @@ type TeamMutation struct {
 	ctftime_verified_at *time.Time
 	logo                *[]byte
 	verified_at         *time.Time
+	country_code        *string
 	clearedFields       map[string]struct{}
 	captain             *int
 	clearedcaptain      bool
@@ -3062,6 +3063,42 @@ func (m *TeamMutation) ResetVerifiedAt() {
 	delete(m.clearedFields, team.FieldVerifiedAt)
 }
 
+// SetCountryCode sets the "country_code" field.
+func (m *TeamMutation) SetCountryCode(s string) {
+	m.country_code = &s
+}
+
+// CountryCode returns the value of the "country_code" field in the mutation.
+func (m *TeamMutation) CountryCode() (r string, exists bool) {
+	v := m.country_code
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldCountryCode returns the old "country_code" field's value of the Team entity.
+// If the Team object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *TeamMutation) OldCountryCode(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldCountryCode is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldCountryCode requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldCountryCode: %w", err)
+	}
+	return oldValue.CountryCode, nil
+}
+
+// ResetCountryCode resets all changes to the "country_code" field.
+func (m *TeamMutation) ResetCountryCode() {
+	m.country_code = nil
+}
+
 // SetCaptainID sets the "captain" edge to the User entity by id.
 func (m *TeamMutation) SetCaptainID(id int) {
 	m.captain = &id
@@ -3228,7 +3265,7 @@ func (m *TeamMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *TeamMutation) Fields() []string {
-	fields := make([]string, 0, 6)
+	fields := make([]string, 0, 7)
 	if m.name != nil {
 		fields = append(fields, team.FieldName)
 	}
@@ -3246,6 +3283,9 @@ func (m *TeamMutation) Fields() []string {
 	}
 	if m.verified_at != nil {
 		fields = append(fields, team.FieldVerifiedAt)
+	}
+	if m.country_code != nil {
+		fields = append(fields, team.FieldCountryCode)
 	}
 	return fields
 }
@@ -3267,6 +3307,8 @@ func (m *TeamMutation) Field(name string) (ent.Value, bool) {
 		return m.Logo()
 	case team.FieldVerifiedAt:
 		return m.VerifiedAt()
+	case team.FieldCountryCode:
+		return m.CountryCode()
 	}
 	return nil, false
 }
@@ -3288,6 +3330,8 @@ func (m *TeamMutation) OldField(ctx context.Context, name string) (ent.Value, er
 		return m.OldLogo(ctx)
 	case team.FieldVerifiedAt:
 		return m.OldVerifiedAt(ctx)
+	case team.FieldCountryCode:
+		return m.OldCountryCode(ctx)
 	}
 	return nil, fmt.Errorf("unknown Team field %s", name)
 }
@@ -3338,6 +3382,13 @@ func (m *TeamMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetVerifiedAt(v)
+		return nil
+	case team.FieldCountryCode:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCountryCode(v)
 		return nil
 	}
 	return fmt.Errorf("unknown Team field %s", name)
@@ -3453,6 +3504,9 @@ func (m *TeamMutation) ResetField(name string) error {
 		return nil
 	case team.FieldVerifiedAt:
 		m.ResetVerifiedAt()
+		return nil
+	case team.FieldCountryCode:
+		m.ResetCountryCode()
 		return nil
 	}
 	return fmt.Errorf("unknown Team field %s", name)

@@ -82,6 +82,10 @@ func init() {
 	teamDescLogo := teamFields[4].Descriptor()
 	// team.LogoValidator is a validator for the "logo" field. It is called by the builders before save.
 	team.LogoValidator = teamDescLogo.Validators[0].(func([]byte) error)
+	// teamDescCountryCode is the schema descriptor for country_code field.
+	teamDescCountryCode := teamFields[6].Descriptor()
+	// team.DefaultCountryCode holds the default value on creation for the country_code field.
+	team.DefaultCountryCode = teamDescCountryCode.Default.(string)
 	userFields := schema.User{}.Fields()
 	_ = userFields
 	// userDescUsername is the schema descriptor for username field.

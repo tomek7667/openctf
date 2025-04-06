@@ -30,6 +30,8 @@ type Team struct {
 	Logo []byte `json:"logo,omitempty"`
 	// VerifiedAt holds the value of the "verified_at" field.
 	VerifiedAt *time.Time `json:"verified_at,omitempty"`
+	// CountryCode holds the value of the "country_code" field.
+	CountryCode string `json:"country_code,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the TeamQuery when eager-loading is set.
 	Edges            TeamEdges `json:"edges"`
@@ -91,7 +93,7 @@ func (*Team) scanValues(columns []string) ([]any, error) {
 			values[i] = new([]byte)
 		case team.FieldID, team.FieldCtftimeID:
 			values[i] = new(sql.NullInt64)
-		case team.FieldName, team.FieldDescription:
+		case team.FieldName, team.FieldDescription, team.FieldCountryCode:
 			values[i] = new(sql.NullString)
 		case team.FieldCtftimeVerifiedAt, team.FieldVerifiedAt:
 			values[i] = new(sql.NullTime)
@@ -158,6 +160,12 @@ func (t *Team) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				t.VerifiedAt = new(time.Time)
 				*t.VerifiedAt = value.Time
+			}
+		case team.FieldCountryCode:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field country_code", values[i])
+			} else if value.Valid {
+				t.CountryCode = value.String
 			}
 		case team.ForeignKeys[0]:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
@@ -247,6 +255,9 @@ func (t *Team) String() string {
 		builder.WriteString("verified_at=")
 		builder.WriteString(v.Format(time.ANSIC))
 	}
+	builder.WriteString(", ")
+	builder.WriteString("country_code=")
+	builder.WriteString(t.CountryCode)
 	builder.WriteByte(')')
 	return builder.String()
 }

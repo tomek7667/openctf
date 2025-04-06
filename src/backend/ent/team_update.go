@@ -142,6 +142,20 @@ func (tu *TeamUpdate) ClearVerifiedAt() *TeamUpdate {
 	return tu
 }
 
+// SetCountryCode sets the "country_code" field.
+func (tu *TeamUpdate) SetCountryCode(s string) *TeamUpdate {
+	tu.mutation.SetCountryCode(s)
+	return tu
+}
+
+// SetNillableCountryCode sets the "country_code" field if the given value is not nil.
+func (tu *TeamUpdate) SetNillableCountryCode(s *string) *TeamUpdate {
+	if s != nil {
+		tu.SetCountryCode(*s)
+	}
+	return tu
+}
+
 // SetCaptainID sets the "captain" edge to the User entity by ID.
 func (tu *TeamUpdate) SetCaptainID(id int) *TeamUpdate {
 	tu.mutation.SetCaptainID(id)
@@ -317,6 +331,9 @@ func (tu *TeamUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if tu.mutation.VerifiedAtCleared() {
 		_spec.ClearField(team.FieldVerifiedAt, field.TypeTime)
+	}
+	if value, ok := tu.mutation.CountryCode(); ok {
+		_spec.SetField(team.FieldCountryCode, field.TypeString, value)
 	}
 	if tu.mutation.CaptainCleared() {
 		edge := &sqlgraph.EdgeSpec{
@@ -554,6 +571,20 @@ func (tuo *TeamUpdateOne) ClearVerifiedAt() *TeamUpdateOne {
 	return tuo
 }
 
+// SetCountryCode sets the "country_code" field.
+func (tuo *TeamUpdateOne) SetCountryCode(s string) *TeamUpdateOne {
+	tuo.mutation.SetCountryCode(s)
+	return tuo
+}
+
+// SetNillableCountryCode sets the "country_code" field if the given value is not nil.
+func (tuo *TeamUpdateOne) SetNillableCountryCode(s *string) *TeamUpdateOne {
+	if s != nil {
+		tuo.SetCountryCode(*s)
+	}
+	return tuo
+}
+
 // SetCaptainID sets the "captain" edge to the User entity by ID.
 func (tuo *TeamUpdateOne) SetCaptainID(id int) *TeamUpdateOne {
 	tuo.mutation.SetCaptainID(id)
@@ -759,6 +790,9 @@ func (tuo *TeamUpdateOne) sqlSave(ctx context.Context) (_node *Team, err error) 
 	}
 	if tuo.mutation.VerifiedAtCleared() {
 		_spec.ClearField(team.FieldVerifiedAt, field.TypeTime)
+	}
+	if value, ok := tuo.mutation.CountryCode(); ok {
+		_spec.SetField(team.FieldCountryCode, field.TypeString, value)
 	}
 	if tuo.mutation.CaptainCleared() {
 		edge := &sqlgraph.EdgeSpec{

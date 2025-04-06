@@ -24,6 +24,8 @@ const (
 	FieldLogo = "logo"
 	// FieldVerifiedAt holds the string denoting the verified_at field in the database.
 	FieldVerifiedAt = "verified_at"
+	// FieldCountryCode holds the string denoting the country_code field in the database.
+	FieldCountryCode = "country_code"
 	// EdgeCaptain holds the string denoting the captain edge name in mutations.
 	EdgeCaptain = "captain"
 	// EdgeVerifiedBy holds the string denoting the verified_by edge name in mutations.
@@ -62,6 +64,7 @@ var Columns = []string{
 	FieldCtftimeVerifiedAt,
 	FieldLogo,
 	FieldVerifiedAt,
+	FieldCountryCode,
 }
 
 // ForeignKeys holds the SQL foreign-keys that are owned by the "teams"
@@ -95,6 +98,8 @@ func ValidColumn(column string) bool {
 var (
 	// LogoValidator is a validator for the "logo" field. It is called by the builders before save.
 	LogoValidator func([]byte) error
+	// DefaultCountryCode holds the default value on creation for the "country_code" field.
+	DefaultCountryCode string
 )
 
 // OrderOption defines the ordering options for the Team queries.
@@ -128,6 +133,11 @@ func ByCtftimeVerifiedAt(opts ...sql.OrderTermOption) OrderOption {
 // ByVerifiedAt orders the results by the verified_at field.
 func ByVerifiedAt(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldVerifiedAt, opts...).ToFunc()
+}
+
+// ByCountryCode orders the results by the country_code field.
+func ByCountryCode(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldCountryCode, opts...).ToFunc()
 }
 
 // ByCaptainField orders the results by captain field.

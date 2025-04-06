@@ -91,6 +91,20 @@ func (tc *TeamCreate) SetNillableVerifiedAt(t *time.Time) *TeamCreate {
 	return tc
 }
 
+// SetCountryCode sets the "country_code" field.
+func (tc *TeamCreate) SetCountryCode(s string) *TeamCreate {
+	tc.mutation.SetCountryCode(s)
+	return tc
+}
+
+// SetNillableCountryCode sets the "country_code" field if the given value is not nil.
+func (tc *TeamCreate) SetNillableCountryCode(s *string) *TeamCreate {
+	if s != nil {
+		tc.SetCountryCode(*s)
+	}
+	return tc
+}
+
 // SetCaptainID sets the "captain" edge to the User entity by ID.
 func (tc *TeamCreate) SetCaptainID(id int) *TeamCreate {
 	tc.mutation.SetCaptainID(id)
@@ -151,6 +165,7 @@ func (tc *TeamCreate) Mutation() *TeamMutation {
 
 // Save creates the Team in the database.
 func (tc *TeamCreate) Save(ctx context.Context) (*Team, error) {
+	tc.defaults()
 	return withHooks(ctx, tc.sqlSave, tc.mutation, tc.hooks)
 }
 
@@ -176,6 +191,14 @@ func (tc *TeamCreate) ExecX(ctx context.Context) {
 	}
 }
 
+// defaults sets the default values of the builder before save.
+func (tc *TeamCreate) defaults() {
+	if _, ok := tc.mutation.CountryCode(); !ok {
+		v := team.DefaultCountryCode
+		tc.mutation.SetCountryCode(v)
+	}
+}
+
 // check runs all checks and user-defined validators on the builder.
 func (tc *TeamCreate) check() error {
 	if _, ok := tc.mutation.Name(); !ok {
@@ -185,6 +208,9 @@ func (tc *TeamCreate) check() error {
 		if err := team.LogoValidator(v); err != nil {
 			return &ValidationError{Name: "logo", err: fmt.Errorf(`ent: validator failed for field "Team.logo": %w`, err)}
 		}
+	}
+	if _, ok := tc.mutation.CountryCode(); !ok {
+		return &ValidationError{Name: "country_code", err: errors.New(`ent: missing required field "Team.country_code"`)}
 	}
 	return nil
 }
@@ -236,6 +262,10 @@ func (tc *TeamCreate) createSpec() (*Team, *sqlgraph.CreateSpec) {
 	if value, ok := tc.mutation.VerifiedAt(); ok {
 		_spec.SetField(team.FieldVerifiedAt, field.TypeTime, value)
 		_node.VerifiedAt = &value
+	}
+	if value, ok := tc.mutation.CountryCode(); ok {
+		_spec.SetField(team.FieldCountryCode, field.TypeString, value)
+		_node.CountryCode = value
 	}
 	if nodes := tc.mutation.CaptainIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
@@ -447,6 +477,18 @@ func (u *TeamUpsert) ClearVerifiedAt() *TeamUpsert {
 	return u
 }
 
+// SetCountryCode sets the "country_code" field.
+func (u *TeamUpsert) SetCountryCode(v string) *TeamUpsert {
+	u.Set(team.FieldCountryCode, v)
+	return u
+}
+
+// UpdateCountryCode sets the "country_code" field to the value that was provided on create.
+func (u *TeamUpsert) UpdateCountryCode() *TeamUpsert {
+	u.SetExcluded(team.FieldCountryCode)
+	return u
+}
+
 // UpdateNewValues updates the mutable fields using the new values that were set on create.
 // Using this option is equivalent to using:
 //
@@ -613,6 +655,20 @@ func (u *TeamUpsertOne) ClearVerifiedAt() *TeamUpsertOne {
 	})
 }
 
+// SetCountryCode sets the "country_code" field.
+func (u *TeamUpsertOne) SetCountryCode(v string) *TeamUpsertOne {
+	return u.Update(func(s *TeamUpsert) {
+		s.SetCountryCode(v)
+	})
+}
+
+// UpdateCountryCode sets the "country_code" field to the value that was provided on create.
+func (u *TeamUpsertOne) UpdateCountryCode() *TeamUpsertOne {
+	return u.Update(func(s *TeamUpsert) {
+		s.UpdateCountryCode()
+	})
+}
+
 // Exec executes the query.
 func (u *TeamUpsertOne) Exec(ctx context.Context) error {
 	if len(u.create.conflict) == 0 {
@@ -665,6 +721,7 @@ func (tcb *TeamCreateBulk) Save(ctx context.Context) ([]*Team, error) {
 	for i := range tcb.builders {
 		func(i int, root context.Context) {
 			builder := tcb.builders[i]
+			builder.defaults()
 			var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
 				mutation, ok := m.(*TeamMutation)
 				if !ok {
@@ -939,6 +996,20 @@ func (u *TeamUpsertBulk) UpdateVerifiedAt() *TeamUpsertBulk {
 func (u *TeamUpsertBulk) ClearVerifiedAt() *TeamUpsertBulk {
 	return u.Update(func(s *TeamUpsert) {
 		s.ClearVerifiedAt()
+	})
+}
+
+// SetCountryCode sets the "country_code" field.
+func (u *TeamUpsertBulk) SetCountryCode(v string) *TeamUpsertBulk {
+	return u.Update(func(s *TeamUpsert) {
+		s.SetCountryCode(v)
+	})
+}
+
+// UpdateCountryCode sets the "country_code" field to the value that was provided on create.
+func (u *TeamUpsertBulk) UpdateCountryCode() *TeamUpsertBulk {
+	return u.Update(func(s *TeamUpsert) {
+		s.UpdateCountryCode()
 	})
 }
 

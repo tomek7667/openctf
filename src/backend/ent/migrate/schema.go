@@ -120,6 +120,7 @@ var (
 		{Name: "ctftime_verified_at", Type: field.TypeTime, Nullable: true},
 		{Name: "logo", Type: field.TypeBytes, Nullable: true, Size: 52428800},
 		{Name: "verified_at", Type: field.TypeTime, Nullable: true},
+		{Name: "country_code", Type: field.TypeString, Default: "global"},
 		{Name: "team_captain", Type: field.TypeInt, Nullable: true},
 		{Name: "team_verified_by", Type: field.TypeInt, Nullable: true},
 	}
@@ -131,13 +132,13 @@ var (
 		ForeignKeys: []*schema.ForeignKey{
 			{
 				Symbol:     "teams_users_captain",
-				Columns:    []*schema.Column{TeamsColumns[7]},
+				Columns:    []*schema.Column{TeamsColumns[8]},
 				RefColumns: []*schema.Column{UsersColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 			{
 				Symbol:     "teams_users_verified_by",
-				Columns:    []*schema.Column{TeamsColumns[8]},
+				Columns:    []*schema.Column{TeamsColumns[9]},
 				RefColumns: []*schema.Column{UsersColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
