@@ -111,6 +111,12 @@ func (uc *UserCreate) SetNillableCreatedAt(t *time.Time) *UserCreate {
 	return uc
 }
 
+// SetLogo sets the "logo" field.
+func (uc *UserCreate) SetLogo(b []byte) *UserCreate {
+	uc.mutation.SetLogo(b)
+	return uc
+}
+
 // AddTeamIDs adds the "teams" edge to the Team entity by IDs.
 func (uc *UserCreate) AddTeamIDs(ids ...int) *UserCreate {
 	uc.mutation.AddTeamIDs(ids...)
@@ -203,6 +209,11 @@ func (uc *UserCreate) check() error {
 	if _, ok := uc.mutation.CreatedAt(); !ok {
 		return &ValidationError{Name: "created_at", err: errors.New(`ent: missing required field "User.created_at"`)}
 	}
+	if v, ok := uc.mutation.Logo(); ok {
+		if err := user.LogoValidator(v); err != nil {
+			return &ValidationError{Name: "logo", err: fmt.Errorf(`ent: validator failed for field "User.logo": %w`, err)}
+		}
+	}
 	return nil
 }
 
@@ -261,6 +272,10 @@ func (uc *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 	if value, ok := uc.mutation.CreatedAt(); ok {
 		_spec.SetField(user.FieldCreatedAt, field.TypeTime, value)
 		_node.CreatedAt = value
+	}
+	if value, ok := uc.mutation.Logo(); ok {
+		_spec.SetField(user.FieldLogo, field.TypeBytes, value)
+		_node.Logo = value
 	}
 	if nodes := uc.mutation.TeamsIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
@@ -432,6 +447,24 @@ func (u *UserUpsert) UpdatePassword() *UserUpsert {
 	return u
 }
 
+// SetLogo sets the "logo" field.
+func (u *UserUpsert) SetLogo(v []byte) *UserUpsert {
+	u.Set(user.FieldLogo, v)
+	return u
+}
+
+// UpdateLogo sets the "logo" field to the value that was provided on create.
+func (u *UserUpsert) UpdateLogo() *UserUpsert {
+	u.SetExcluded(user.FieldLogo)
+	return u
+}
+
+// ClearLogo clears the value of the "logo" field.
+func (u *UserUpsert) ClearLogo() *UserUpsert {
+	u.SetNull(user.FieldLogo)
+	return u
+}
+
 // UpdateNewValues updates the mutable fields using the new values that were set on create.
 // Using this option is equivalent to using:
 //
@@ -593,6 +626,27 @@ func (u *UserUpsertOne) SetPassword(v string) *UserUpsertOne {
 func (u *UserUpsertOne) UpdatePassword() *UserUpsertOne {
 	return u.Update(func(s *UserUpsert) {
 		s.UpdatePassword()
+	})
+}
+
+// SetLogo sets the "logo" field.
+func (u *UserUpsertOne) SetLogo(v []byte) *UserUpsertOne {
+	return u.Update(func(s *UserUpsert) {
+		s.SetLogo(v)
+	})
+}
+
+// UpdateLogo sets the "logo" field to the value that was provided on create.
+func (u *UserUpsertOne) UpdateLogo() *UserUpsertOne {
+	return u.Update(func(s *UserUpsert) {
+		s.UpdateLogo()
+	})
+}
+
+// ClearLogo clears the value of the "logo" field.
+func (u *UserUpsertOne) ClearLogo() *UserUpsertOne {
+	return u.Update(func(s *UserUpsert) {
+		s.ClearLogo()
 	})
 }
 
@@ -923,6 +977,27 @@ func (u *UserUpsertBulk) SetPassword(v string) *UserUpsertBulk {
 func (u *UserUpsertBulk) UpdatePassword() *UserUpsertBulk {
 	return u.Update(func(s *UserUpsert) {
 		s.UpdatePassword()
+	})
+}
+
+// SetLogo sets the "logo" field.
+func (u *UserUpsertBulk) SetLogo(v []byte) *UserUpsertBulk {
+	return u.Update(func(s *UserUpsert) {
+		s.SetLogo(v)
+	})
+}
+
+// UpdateLogo sets the "logo" field to the value that was provided on create.
+func (u *UserUpsertBulk) UpdateLogo() *UserUpsertBulk {
+	return u.Update(func(s *UserUpsert) {
+		s.UpdateLogo()
+	})
+}
+
+// ClearLogo clears the value of the "logo" field.
+func (u *UserUpsertBulk) ClearLogo() *UserUpsertBulk {
+	return u.Update(func(s *UserUpsert) {
+		s.ClearLogo()
 	})
 }
 

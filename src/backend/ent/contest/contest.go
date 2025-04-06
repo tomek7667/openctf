@@ -30,6 +30,8 @@ const (
 	FieldCtftimeID = "ctftime_id"
 	// FieldAssignedWeightPoints holds the string denoting the assigned_weight_points field in the database.
 	FieldAssignedWeightPoints = "assigned_weight_points"
+	// FieldLogo holds the string denoting the logo field in the database.
+	FieldLogo = "logo"
 	// EdgeOrganizers holds the string denoting the organizers edge name in mutations.
 	EdgeOrganizers = "organizers"
 	// EdgePlaces holds the string denoting the places edge name in mutations.
@@ -64,6 +66,7 @@ var Columns = []string{
 	FieldURL,
 	FieldCtftimeID,
 	FieldAssignedWeightPoints,
+	FieldLogo,
 }
 
 // ForeignKeys holds the SQL foreign-keys that are owned by the "contests"
@@ -94,6 +97,8 @@ var (
 	URLValidator func(string) error
 	// DefaultAssignedWeightPoints holds the default value on creation for the "assigned_weight_points" field.
 	DefaultAssignedWeightPoints int
+	// LogoValidator is a validator for the "logo" field. It is called by the builders before save.
+	LogoValidator func([]byte) error
 )
 
 // OrderOption defines the ordering options for the Contest queries.

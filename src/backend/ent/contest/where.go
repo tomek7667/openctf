@@ -100,6 +100,11 @@ func AssignedWeightPoints(v int) predicate.Contest {
 	return predicate.Contest(sql.FieldEQ(FieldAssignedWeightPoints, v))
 }
 
+// Logo applies equality check predicate on the "logo" field. It's identical to LogoEQ.
+func Logo(v []byte) predicate.Contest {
+	return predicate.Contest(sql.FieldEQ(FieldLogo, v))
+}
+
 // NameEQ applies the EQ predicate on the "name" field.
 func NameEQ(v string) predicate.Contest {
 	return predicate.Contest(sql.FieldEQ(FieldName, v))
@@ -633,6 +638,56 @@ func AssignedWeightPointsLT(v int) predicate.Contest {
 // AssignedWeightPointsLTE applies the LTE predicate on the "assigned_weight_points" field.
 func AssignedWeightPointsLTE(v int) predicate.Contest {
 	return predicate.Contest(sql.FieldLTE(FieldAssignedWeightPoints, v))
+}
+
+// LogoEQ applies the EQ predicate on the "logo" field.
+func LogoEQ(v []byte) predicate.Contest {
+	return predicate.Contest(sql.FieldEQ(FieldLogo, v))
+}
+
+// LogoNEQ applies the NEQ predicate on the "logo" field.
+func LogoNEQ(v []byte) predicate.Contest {
+	return predicate.Contest(sql.FieldNEQ(FieldLogo, v))
+}
+
+// LogoIn applies the In predicate on the "logo" field.
+func LogoIn(vs ...[]byte) predicate.Contest {
+	return predicate.Contest(sql.FieldIn(FieldLogo, vs...))
+}
+
+// LogoNotIn applies the NotIn predicate on the "logo" field.
+func LogoNotIn(vs ...[]byte) predicate.Contest {
+	return predicate.Contest(sql.FieldNotIn(FieldLogo, vs...))
+}
+
+// LogoGT applies the GT predicate on the "logo" field.
+func LogoGT(v []byte) predicate.Contest {
+	return predicate.Contest(sql.FieldGT(FieldLogo, v))
+}
+
+// LogoGTE applies the GTE predicate on the "logo" field.
+func LogoGTE(v []byte) predicate.Contest {
+	return predicate.Contest(sql.FieldGTE(FieldLogo, v))
+}
+
+// LogoLT applies the LT predicate on the "logo" field.
+func LogoLT(v []byte) predicate.Contest {
+	return predicate.Contest(sql.FieldLT(FieldLogo, v))
+}
+
+// LogoLTE applies the LTE predicate on the "logo" field.
+func LogoLTE(v []byte) predicate.Contest {
+	return predicate.Contest(sql.FieldLTE(FieldLogo, v))
+}
+
+// LogoIsNil applies the IsNil predicate on the "logo" field.
+func LogoIsNil() predicate.Contest {
+	return predicate.Contest(sql.FieldIsNull(FieldLogo))
+}
+
+// LogoNotNil applies the NotNil predicate on the "logo" field.
+func LogoNotNil() predicate.Contest {
+	return predicate.Contest(sql.FieldNotNull(FieldLogo))
 }
 
 // HasOrganizers applies the HasEdge predicate on the "organizers" edge.

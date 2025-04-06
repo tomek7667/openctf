@@ -126,6 +126,12 @@ func (cc *ContestCreate) SetNillableAssignedWeightPoints(i *int) *ContestCreate 
 	return cc
 }
 
+// SetLogo sets the "logo" field.
+func (cc *ContestCreate) SetLogo(b []byte) *ContestCreate {
+	cc.mutation.SetLogo(b)
+	return cc
+}
+
 // SetOrganizersID sets the "organizers" edge to the Team entity by ID.
 func (cc *ContestCreate) SetOrganizersID(id int) *ContestCreate {
 	cc.mutation.SetOrganizersID(id)
@@ -225,6 +231,11 @@ func (cc *ContestCreate) check() error {
 	if _, ok := cc.mutation.AssignedWeightPoints(); !ok {
 		return &ValidationError{Name: "assigned_weight_points", err: errors.New(`ent: missing required field "Contest.assigned_weight_points"`)}
 	}
+	if v, ok := cc.mutation.Logo(); ok {
+		if err := contest.LogoValidator(v); err != nil {
+			return &ValidationError{Name: "logo", err: fmt.Errorf(`ent: validator failed for field "Contest.logo": %w`, err)}
+		}
+	}
 	return nil
 }
 
@@ -287,6 +298,10 @@ func (cc *ContestCreate) createSpec() (*Contest, *sqlgraph.CreateSpec) {
 	if value, ok := cc.mutation.AssignedWeightPoints(); ok {
 		_spec.SetField(contest.FieldAssignedWeightPoints, field.TypeInt, value)
 		_node.AssignedWeightPoints = value
+	}
+	if value, ok := cc.mutation.Logo(); ok {
+		_spec.SetField(contest.FieldLogo, field.TypeBytes, value)
+		_node.Logo = value
 	}
 	if nodes := cc.mutation.OrganizersIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
@@ -523,6 +538,24 @@ func (u *ContestUpsert) AddAssignedWeightPoints(v int) *ContestUpsert {
 	return u
 }
 
+// SetLogo sets the "logo" field.
+func (u *ContestUpsert) SetLogo(v []byte) *ContestUpsert {
+	u.Set(contest.FieldLogo, v)
+	return u
+}
+
+// UpdateLogo sets the "logo" field to the value that was provided on create.
+func (u *ContestUpsert) UpdateLogo() *ContestUpsert {
+	u.SetExcluded(contest.FieldLogo)
+	return u
+}
+
+// ClearLogo clears the value of the "logo" field.
+func (u *ContestUpsert) ClearLogo() *ContestUpsert {
+	u.SetNull(contest.FieldLogo)
+	return u
+}
+
 // UpdateNewValues updates the mutable fields using the new values that were set on create.
 // Using this option is equivalent to using:
 //
@@ -735,6 +768,27 @@ func (u *ContestUpsertOne) AddAssignedWeightPoints(v int) *ContestUpsertOne {
 func (u *ContestUpsertOne) UpdateAssignedWeightPoints() *ContestUpsertOne {
 	return u.Update(func(s *ContestUpsert) {
 		s.UpdateAssignedWeightPoints()
+	})
+}
+
+// SetLogo sets the "logo" field.
+func (u *ContestUpsertOne) SetLogo(v []byte) *ContestUpsertOne {
+	return u.Update(func(s *ContestUpsert) {
+		s.SetLogo(v)
+	})
+}
+
+// UpdateLogo sets the "logo" field to the value that was provided on create.
+func (u *ContestUpsertOne) UpdateLogo() *ContestUpsertOne {
+	return u.Update(func(s *ContestUpsert) {
+		s.UpdateLogo()
+	})
+}
+
+// ClearLogo clears the value of the "logo" field.
+func (u *ContestUpsertOne) ClearLogo() *ContestUpsertOne {
+	return u.Update(func(s *ContestUpsert) {
+		s.ClearLogo()
 	})
 }
 
@@ -1114,6 +1168,27 @@ func (u *ContestUpsertBulk) AddAssignedWeightPoints(v int) *ContestUpsertBulk {
 func (u *ContestUpsertBulk) UpdateAssignedWeightPoints() *ContestUpsertBulk {
 	return u.Update(func(s *ContestUpsert) {
 		s.UpdateAssignedWeightPoints()
+	})
+}
+
+// SetLogo sets the "logo" field.
+func (u *ContestUpsertBulk) SetLogo(v []byte) *ContestUpsertBulk {
+	return u.Update(func(s *ContestUpsert) {
+		s.SetLogo(v)
+	})
+}
+
+// UpdateLogo sets the "logo" field to the value that was provided on create.
+func (u *ContestUpsertBulk) UpdateLogo() *ContestUpsertBulk {
+	return u.Update(func(s *ContestUpsert) {
+		s.UpdateLogo()
+	})
+}
+
+// ClearLogo clears the value of the "logo" field.
+func (u *ContestUpsertBulk) ClearLogo() *ContestUpsertBulk {
+	return u.Update(func(s *ContestUpsert) {
+		s.ClearLogo()
 	})
 }
 

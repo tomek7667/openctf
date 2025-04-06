@@ -30,6 +30,10 @@ func init() {
 	contestDescAssignedWeightPoints := contestFields[8].Descriptor()
 	// contest.DefaultAssignedWeightPoints holds the default value on creation for the assigned_weight_points field.
 	contest.DefaultAssignedWeightPoints = contestDescAssignedWeightPoints.Default.(int)
+	// contestDescLogo is the schema descriptor for logo field.
+	contestDescLogo := contestFields[9].Descriptor()
+	// contest.LogoValidator is a validator for the "logo" field. It is called by the builders before save.
+	contest.LogoValidator = contestDescLogo.Validators[0].(func([]byte) error)
 	contestratingFields := schema.ContestRating{}.Fields()
 	_ = contestratingFields
 	// contestratingDescRating is the schema descriptor for rating field.
@@ -100,4 +104,8 @@ func init() {
 	userDescCreatedAt := userFields[7].Descriptor()
 	// user.DefaultCreatedAt holds the default value on creation for the created_at field.
 	user.DefaultCreatedAt = userDescCreatedAt.Default.(time.Time)
+	// userDescLogo is the schema descriptor for logo field.
+	userDescLogo := userFields[8].Descriptor()
+	// user.LogoValidator is a validator for the "logo" field. It is called by the builders before save.
+	user.LogoValidator = userDescLogo.Validators[0].(func([]byte) error)
 }

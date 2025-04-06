@@ -52,6 +52,7 @@ type ContestMutation struct {
 	addctftime_id             *int
 	assigned_weight_points    *int
 	addassigned_weight_points *int
+	logo                      *[]byte
 	clearedFields             map[string]struct{}
 	organizers                *int
 	clearedorganizers         bool
@@ -591,6 +592,55 @@ func (m *ContestMutation) ResetAssignedWeightPoints() {
 	m.addassigned_weight_points = nil
 }
 
+// SetLogo sets the "logo" field.
+func (m *ContestMutation) SetLogo(b []byte) {
+	m.logo = &b
+}
+
+// Logo returns the value of the "logo" field in the mutation.
+func (m *ContestMutation) Logo() (r []byte, exists bool) {
+	v := m.logo
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldLogo returns the old "logo" field's value of the Contest entity.
+// If the Contest object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ContestMutation) OldLogo(ctx context.Context) (v []byte, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldLogo is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldLogo requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldLogo: %w", err)
+	}
+	return oldValue.Logo, nil
+}
+
+// ClearLogo clears the value of the "logo" field.
+func (m *ContestMutation) ClearLogo() {
+	m.logo = nil
+	m.clearedFields[contest.FieldLogo] = struct{}{}
+}
+
+// LogoCleared returns if the "logo" field was cleared in this mutation.
+func (m *ContestMutation) LogoCleared() bool {
+	_, ok := m.clearedFields[contest.FieldLogo]
+	return ok
+}
+
+// ResetLogo resets all changes to the "logo" field.
+func (m *ContestMutation) ResetLogo() {
+	m.logo = nil
+	delete(m.clearedFields, contest.FieldLogo)
+}
+
 // SetOrganizersID sets the "organizers" edge to the Team entity by id.
 func (m *ContestMutation) SetOrganizersID(id int) {
 	m.organizers = &id
@@ -718,7 +768,7 @@ func (m *ContestMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *ContestMutation) Fields() []string {
-	fields := make([]string, 0, 9)
+	fields := make([]string, 0, 10)
 	if m.name != nil {
 		fields = append(fields, contest.FieldName)
 	}
@@ -746,6 +796,9 @@ func (m *ContestMutation) Fields() []string {
 	if m.assigned_weight_points != nil {
 		fields = append(fields, contest.FieldAssignedWeightPoints)
 	}
+	if m.logo != nil {
+		fields = append(fields, contest.FieldLogo)
+	}
 	return fields
 }
 
@@ -772,6 +825,8 @@ func (m *ContestMutation) Field(name string) (ent.Value, bool) {
 		return m.CtftimeID()
 	case contest.FieldAssignedWeightPoints:
 		return m.AssignedWeightPoints()
+	case contest.FieldLogo:
+		return m.Logo()
 	}
 	return nil, false
 }
@@ -799,6 +854,8 @@ func (m *ContestMutation) OldField(ctx context.Context, name string) (ent.Value,
 		return m.OldCtftimeID(ctx)
 	case contest.FieldAssignedWeightPoints:
 		return m.OldAssignedWeightPoints(ctx)
+	case contest.FieldLogo:
+		return m.OldLogo(ctx)
 	}
 	return nil, fmt.Errorf("unknown Contest field %s", name)
 }
@@ -870,6 +927,13 @@ func (m *ContestMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetAssignedWeightPoints(v)
+		return nil
+	case contest.FieldLogo:
+		v, ok := value.([]byte)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetLogo(v)
 		return nil
 	}
 	return fmt.Errorf("unknown Contest field %s", name)
@@ -943,6 +1007,9 @@ func (m *ContestMutation) ClearedFields() []string {
 	if m.FieldCleared(contest.FieldCtftimeID) {
 		fields = append(fields, contest.FieldCtftimeID)
 	}
+	if m.FieldCleared(contest.FieldLogo) {
+		fields = append(fields, contest.FieldLogo)
+	}
 	return fields
 }
 
@@ -971,6 +1038,9 @@ func (m *ContestMutation) ClearField(name string) error {
 		return nil
 	case contest.FieldCtftimeID:
 		m.ClearCtftimeID()
+		return nil
+	case contest.FieldLogo:
+		m.ClearLogo()
 		return nil
 	}
 	return fmt.Errorf("unknown Contest nullable field %s", name)
@@ -1006,6 +1076,9 @@ func (m *ContestMutation) ResetField(name string) error {
 		return nil
 	case contest.FieldAssignedWeightPoints:
 		m.ResetAssignedWeightPoints()
+		return nil
+	case contest.FieldLogo:
+		m.ResetLogo()
 		return nil
 	}
 	return fmt.Errorf("unknown Contest field %s", name)
@@ -3646,6 +3719,7 @@ type UserMutation struct {
 	description        *string
 	password           *string
 	created_at         *time.Time
+	logo               *[]byte
 	clearedFields      map[string]struct{}
 	teams              map[int]struct{}
 	removedteams       map[int]struct{}
@@ -4080,6 +4154,55 @@ func (m *UserMutation) ResetCreatedAt() {
 	m.created_at = nil
 }
 
+// SetLogo sets the "logo" field.
+func (m *UserMutation) SetLogo(b []byte) {
+	m.logo = &b
+}
+
+// Logo returns the value of the "logo" field in the mutation.
+func (m *UserMutation) Logo() (r []byte, exists bool) {
+	v := m.logo
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldLogo returns the old "logo" field's value of the User entity.
+// If the User object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *UserMutation) OldLogo(ctx context.Context) (v []byte, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldLogo is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldLogo requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldLogo: %w", err)
+	}
+	return oldValue.Logo, nil
+}
+
+// ClearLogo clears the value of the "logo" field.
+func (m *UserMutation) ClearLogo() {
+	m.logo = nil
+	m.clearedFields[user.FieldLogo] = struct{}{}
+}
+
+// LogoCleared returns if the "logo" field was cleared in this mutation.
+func (m *UserMutation) LogoCleared() bool {
+	_, ok := m.clearedFields[user.FieldLogo]
+	return ok
+}
+
+// ResetLogo resets all changes to the "logo" field.
+func (m *UserMutation) ResetLogo() {
+	m.logo = nil
+	delete(m.clearedFields, user.FieldLogo)
+}
+
 // AddTeamIDs adds the "teams" edge to the Team entity by ids.
 func (m *UserMutation) AddTeamIDs(ids ...int) {
 	if m.teams == nil {
@@ -4168,7 +4291,7 @@ func (m *UserMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *UserMutation) Fields() []string {
-	fields := make([]string, 0, 8)
+	fields := make([]string, 0, 9)
 	if m.username != nil {
 		fields = append(fields, user.FieldUsername)
 	}
@@ -4192,6 +4315,9 @@ func (m *UserMutation) Fields() []string {
 	}
 	if m.created_at != nil {
 		fields = append(fields, user.FieldCreatedAt)
+	}
+	if m.logo != nil {
+		fields = append(fields, user.FieldLogo)
 	}
 	return fields
 }
@@ -4217,6 +4343,8 @@ func (m *UserMutation) Field(name string) (ent.Value, bool) {
 		return m.Password()
 	case user.FieldCreatedAt:
 		return m.CreatedAt()
+	case user.FieldLogo:
+		return m.Logo()
 	}
 	return nil, false
 }
@@ -4242,6 +4370,8 @@ func (m *UserMutation) OldField(ctx context.Context, name string) (ent.Value, er
 		return m.OldPassword(ctx)
 	case user.FieldCreatedAt:
 		return m.OldCreatedAt(ctx)
+	case user.FieldLogo:
+		return m.OldLogo(ctx)
 	}
 	return nil, fmt.Errorf("unknown User field %s", name)
 }
@@ -4307,6 +4437,13 @@ func (m *UserMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetCreatedAt(v)
 		return nil
+	case user.FieldLogo:
+		v, ok := value.([]byte)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetLogo(v)
+		return nil
 	}
 	return fmt.Errorf("unknown User field %s", name)
 }
@@ -4346,6 +4483,9 @@ func (m *UserMutation) ClearedFields() []string {
 	if m.FieldCleared(user.FieldDescription) {
 		fields = append(fields, user.FieldDescription)
 	}
+	if m.FieldCleared(user.FieldLogo) {
+		fields = append(fields, user.FieldLogo)
+	}
 	return fields
 }
 
@@ -4368,6 +4508,9 @@ func (m *UserMutation) ClearField(name string) error {
 		return nil
 	case user.FieldDescription:
 		m.ClearDescription()
+		return nil
+	case user.FieldLogo:
+		m.ClearLogo()
 		return nil
 	}
 	return fmt.Errorf("unknown User nullable field %s", name)
@@ -4400,6 +4543,9 @@ func (m *UserMutation) ResetField(name string) error {
 		return nil
 	case user.FieldCreatedAt:
 		m.ResetCreatedAt()
+		return nil
+	case user.FieldLogo:
+		m.ResetLogo()
 		return nil
 	}
 	return fmt.Errorf("unknown User field %s", name)

@@ -145,6 +145,18 @@ func (uu *UserUpdate) SetNillablePassword(s *string) *UserUpdate {
 	return uu
 }
 
+// SetLogo sets the "logo" field.
+func (uu *UserUpdate) SetLogo(b []byte) *UserUpdate {
+	uu.mutation.SetLogo(b)
+	return uu
+}
+
+// ClearLogo clears the value of the "logo" field.
+func (uu *UserUpdate) ClearLogo() *UserUpdate {
+	uu.mutation.ClearLogo()
+	return uu
+}
+
 // AddTeamIDs adds the "teams" edge to the Team entity by IDs.
 func (uu *UserUpdate) AddTeamIDs(ids ...int) *UserUpdate {
 	uu.mutation.AddTeamIDs(ids...)
@@ -230,6 +242,11 @@ func (uu *UserUpdate) check() error {
 			return &ValidationError{Name: "permission_level", err: fmt.Errorf(`ent: validator failed for field "User.permission_level": %w`, err)}
 		}
 	}
+	if v, ok := uu.mutation.Logo(); ok {
+		if err := user.LogoValidator(v); err != nil {
+			return &ValidationError{Name: "logo", err: fmt.Errorf(`ent: validator failed for field "User.logo": %w`, err)}
+		}
+	}
 	return nil
 }
 
@@ -274,6 +291,12 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if value, ok := uu.mutation.Password(); ok {
 		_spec.SetField(user.FieldPassword, field.TypeString, value)
+	}
+	if value, ok := uu.mutation.Logo(); ok {
+		_spec.SetField(user.FieldLogo, field.TypeBytes, value)
+	}
+	if uu.mutation.LogoCleared() {
+		_spec.ClearField(user.FieldLogo, field.TypeBytes)
 	}
 	if uu.mutation.TeamsCleared() {
 		edge := &sqlgraph.EdgeSpec{
@@ -456,6 +479,18 @@ func (uuo *UserUpdateOne) SetNillablePassword(s *string) *UserUpdateOne {
 	return uuo
 }
 
+// SetLogo sets the "logo" field.
+func (uuo *UserUpdateOne) SetLogo(b []byte) *UserUpdateOne {
+	uuo.mutation.SetLogo(b)
+	return uuo
+}
+
+// ClearLogo clears the value of the "logo" field.
+func (uuo *UserUpdateOne) ClearLogo() *UserUpdateOne {
+	uuo.mutation.ClearLogo()
+	return uuo
+}
+
 // AddTeamIDs adds the "teams" edge to the Team entity by IDs.
 func (uuo *UserUpdateOne) AddTeamIDs(ids ...int) *UserUpdateOne {
 	uuo.mutation.AddTeamIDs(ids...)
@@ -554,6 +589,11 @@ func (uuo *UserUpdateOne) check() error {
 			return &ValidationError{Name: "permission_level", err: fmt.Errorf(`ent: validator failed for field "User.permission_level": %w`, err)}
 		}
 	}
+	if v, ok := uuo.mutation.Logo(); ok {
+		if err := user.LogoValidator(v); err != nil {
+			return &ValidationError{Name: "logo", err: fmt.Errorf(`ent: validator failed for field "User.logo": %w`, err)}
+		}
+	}
 	return nil
 }
 
@@ -615,6 +655,12 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 	}
 	if value, ok := uuo.mutation.Password(); ok {
 		_spec.SetField(user.FieldPassword, field.TypeString, value)
+	}
+	if value, ok := uuo.mutation.Logo(); ok {
+		_spec.SetField(user.FieldLogo, field.TypeBytes, value)
+	}
+	if uuo.mutation.LogoCleared() {
+		_spec.ClearField(user.FieldLogo, field.TypeBytes)
 	}
 	if uuo.mutation.TeamsCleared() {
 		edge := &sqlgraph.EdgeSpec{

@@ -20,6 +20,7 @@ var (
 		{Name: "url", Type: field.TypeString, Nullable: true},
 		{Name: "ctftime_id", Type: field.TypeInt, Nullable: true},
 		{Name: "assigned_weight_points", Type: field.TypeInt, Default: 0},
+		{Name: "logo", Type: field.TypeBytes, Nullable: true, Size: 52428800},
 		{Name: "contest_organizers", Type: field.TypeInt, Nullable: true},
 	}
 	// ContestsTable holds the schema information for the "contests" table.
@@ -30,7 +31,7 @@ var (
 		ForeignKeys: []*schema.ForeignKey{
 			{
 				Symbol:     "contests_teams_organizers",
-				Columns:    []*schema.Column{ContestsColumns[10]},
+				Columns:    []*schema.Column{ContestsColumns[11]},
 				RefColumns: []*schema.Column{TeamsColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
@@ -155,6 +156,7 @@ var (
 		{Name: "description", Type: field.TypeString, Nullable: true},
 		{Name: "password", Type: field.TypeString},
 		{Name: "created_at", Type: field.TypeTime},
+		{Name: "logo", Type: field.TypeBytes, Nullable: true, Size: 52428800},
 	}
 	// UsersTable holds the schema information for the "users" table.
 	UsersTable = &schema.Table{

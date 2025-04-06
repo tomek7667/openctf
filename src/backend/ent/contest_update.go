@@ -200,6 +200,18 @@ func (cu *ContestUpdate) AddAssignedWeightPoints(i int) *ContestUpdate {
 	return cu
 }
 
+// SetLogo sets the "logo" field.
+func (cu *ContestUpdate) SetLogo(b []byte) *ContestUpdate {
+	cu.mutation.SetLogo(b)
+	return cu
+}
+
+// ClearLogo clears the value of the "logo" field.
+func (cu *ContestUpdate) ClearLogo() *ContestUpdate {
+	cu.mutation.ClearLogo()
+	return cu
+}
+
 // SetOrganizersID sets the "organizers" edge to the Team entity by ID.
 func (cu *ContestUpdate) SetOrganizersID(id int) *ContestUpdate {
 	cu.mutation.SetOrganizersID(id)
@@ -305,6 +317,11 @@ func (cu *ContestUpdate) check() error {
 			return &ValidationError{Name: "url", err: fmt.Errorf(`ent: validator failed for field "Contest.url": %w`, err)}
 		}
 	}
+	if v, ok := cu.mutation.Logo(); ok {
+		if err := contest.LogoValidator(v); err != nil {
+			return &ValidationError{Name: "logo", err: fmt.Errorf(`ent: validator failed for field "Contest.logo": %w`, err)}
+		}
+	}
 	return nil
 }
 
@@ -367,6 +384,12 @@ func (cu *ContestUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if value, ok := cu.mutation.AddedAssignedWeightPoints(); ok {
 		_spec.AddField(contest.FieldAssignedWeightPoints, field.TypeInt, value)
+	}
+	if value, ok := cu.mutation.Logo(); ok {
+		_spec.SetField(contest.FieldLogo, field.TypeBytes, value)
+	}
+	if cu.mutation.LogoCleared() {
+		_spec.ClearField(contest.FieldLogo, field.TypeBytes)
 	}
 	if cu.mutation.OrganizersCleared() {
 		edge := &sqlgraph.EdgeSpec{
@@ -632,6 +655,18 @@ func (cuo *ContestUpdateOne) AddAssignedWeightPoints(i int) *ContestUpdateOne {
 	return cuo
 }
 
+// SetLogo sets the "logo" field.
+func (cuo *ContestUpdateOne) SetLogo(b []byte) *ContestUpdateOne {
+	cuo.mutation.SetLogo(b)
+	return cuo
+}
+
+// ClearLogo clears the value of the "logo" field.
+func (cuo *ContestUpdateOne) ClearLogo() *ContestUpdateOne {
+	cuo.mutation.ClearLogo()
+	return cuo
+}
+
 // SetOrganizersID sets the "organizers" edge to the Team entity by ID.
 func (cuo *ContestUpdateOne) SetOrganizersID(id int) *ContestUpdateOne {
 	cuo.mutation.SetOrganizersID(id)
@@ -750,6 +785,11 @@ func (cuo *ContestUpdateOne) check() error {
 			return &ValidationError{Name: "url", err: fmt.Errorf(`ent: validator failed for field "Contest.url": %w`, err)}
 		}
 	}
+	if v, ok := cuo.mutation.Logo(); ok {
+		if err := contest.LogoValidator(v); err != nil {
+			return &ValidationError{Name: "logo", err: fmt.Errorf(`ent: validator failed for field "Contest.logo": %w`, err)}
+		}
+	}
 	return nil
 }
 
@@ -829,6 +869,12 @@ func (cuo *ContestUpdateOne) sqlSave(ctx context.Context) (_node *Contest, err e
 	}
 	if value, ok := cuo.mutation.AddedAssignedWeightPoints(); ok {
 		_spec.AddField(contest.FieldAssignedWeightPoints, field.TypeInt, value)
+	}
+	if value, ok := cuo.mutation.Logo(); ok {
+		_spec.SetField(contest.FieldLogo, field.TypeBytes, value)
+	}
+	if cuo.mutation.LogoCleared() {
+		_spec.ClearField(contest.FieldLogo, field.TypeBytes)
 	}
 	if cuo.mutation.OrganizersCleared() {
 		edge := &sqlgraph.EdgeSpec{

@@ -31,6 +31,8 @@ const (
 	FieldPassword = "password"
 	// FieldCreatedAt holds the string denoting the created_at field in the database.
 	FieldCreatedAt = "created_at"
+	// FieldLogo holds the string denoting the logo field in the database.
+	FieldLogo = "logo"
 	// EdgeTeams holds the string denoting the teams edge name in mutations.
 	EdgeTeams = "teams"
 	// Table holds the table name of the user in the database.
@@ -53,6 +55,7 @@ var Columns = []string{
 	FieldDescription,
 	FieldPassword,
 	FieldCreatedAt,
+	FieldLogo,
 }
 
 var (
@@ -78,6 +81,8 @@ var (
 	EmailValidator func(string) error
 	// DefaultCreatedAt holds the default value on creation for the "created_at" field.
 	DefaultCreatedAt time.Time
+	// LogoValidator is a validator for the "logo" field. It is called by the builders before save.
+	LogoValidator func([]byte) error
 )
 
 // PermissionLevel defines the type for the "permission_level" enum field.

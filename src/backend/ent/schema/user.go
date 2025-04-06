@@ -23,6 +23,7 @@ func (User) Fields() []ent.Field {
 		field.String("description").Optional(),
 		field.String("password").Sensitive(),
 		field.Time("created_at").Default(time.Now()).Immutable(),
+		field.Bytes("logo").MaxLen(50 * 1024 * 1024).Optional(), // Max 50 MB
 	}
 }
 

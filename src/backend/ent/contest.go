@@ -36,6 +36,8 @@ type Contest struct {
 	CtftimeID *int `json:"ctftime_id,omitempty"`
 	// AssignedWeightPoints holds the value of the "assigned_weight_points" field.
 	AssignedWeightPoints int `json:"assigned_weight_points,omitempty"`
+	// Logo holds the value of the "logo" field.
+	Logo []byte `json:"logo,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the ContestQuery when eager-loading is set.
 	Edges              ContestEdges `json:"edges"`
@@ -79,6 +81,8 @@ func (*Contest) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
+		case contest.FieldLogo:
+			values[i] = new([]byte)
 		case contest.FieldID, contest.FieldCtftimeID, contest.FieldAssignedWeightPoints:
 			values[i] = new(sql.NullInt64)
 		case contest.FieldName, contest.FieldDescription, contest.FieldRules, contest.FieldPrizes, contest.FieldURL:
@@ -166,6 +170,12 @@ func (c *Contest) assignValues(columns []string, values []any) error {
 				return fmt.Errorf("unexpected type %T for field assigned_weight_points", values[i])
 			} else if value.Valid {
 				c.AssignedWeightPoints = int(value.Int64)
+			}
+		case contest.FieldLogo:
+			if value, ok := values[i].(*[]byte); !ok {
+				return fmt.Errorf("unexpected type %T for field logo", values[i])
+			} else if value != nil {
+				c.Logo = *value
 			}
 		case contest.ForeignKeys[0]:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
@@ -256,6 +266,9 @@ func (c *Contest) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("assigned_weight_points=")
 	builder.WriteString(fmt.Sprintf("%v", c.AssignedWeightPoints))
+	builder.WriteString(", ")
+	builder.WriteString("logo=")
+	builder.WriteString(fmt.Sprintf("%v", c.Logo))
 	builder.WriteByte(')')
 	return builder.String()
 }

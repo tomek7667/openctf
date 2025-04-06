@@ -23,6 +23,7 @@ func (Contest) Fields() []ent.Field {
 		field.String("url").Match(regexp.MustCompile(`https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)`)).Optional().Nillable(),
 		field.Int("ctftime_id").Optional().Nillable(), // automatically loaded ctftime event id if the ctf was submitted by the crawler and not an openctf user.
 		field.Int("assigned_weight_points").Default(0),
+		field.Bytes("logo").MaxLen(50 * 1024 * 1024).Optional(), // Max 50 MB
 	}
 }
 
