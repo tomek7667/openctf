@@ -15,7 +15,7 @@ type ServiceClient interface {
 	GetContestByCtftimeID(ctx context.Context, ctftimeID int) (*ent.Contest, error)
 	GetCtftimeTeam(ctx context.Context, teamId int) (*ent.Team, error)
 	GetContestsToBeUpdatedByPlacesCrawler(ctx context.Context) ([]*ent.Contest, error)
-	CreateContest(ctx context.Context, dto *service.CreateContestDto) (*ent.Contest, error)
+	CreateContest(ctx context.Context, organizers *ent.Team, dto *service.CreateContestDto) (*ent.Contest, error)
 	CreateCtftimePlace(ctx context.Context, dto *service.CreateCtftimePlaceDto) *ent.PlaceCreate
 }
 

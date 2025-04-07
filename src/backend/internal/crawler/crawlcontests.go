@@ -45,8 +45,15 @@ func (h *Handler) CrawlContests(interval time.Duration) error {
 			// slog.Debug("event already exists in the database", "db contest", dbContest.Name, "err", err)
 			continue
 		}
+
+		// if associated organizers exist in the database, mark the contest as theirs;
+		// TODO: Rethink if someone that is already on openctf if they wouldn't prefer to just add the contest on the platform here.
+		// TODO: ^regarding this some might argue that importing is good if the event doesn't exist yet (based on name e.g.),
+		// TODO: ^as the team can manage the ctftime imported contest as they are the organizers in openctf already.
+		organizers, _ := h.ServiceClient.GetCtftimeTeam(context.TODO(), ctftimeEvent.Organizers[0].ID)
 		_, err = h.ServiceClient.CreateContest(
 			context.TODO(),
+			organizers,
 			&service.CreateContestDto{
 				Name:        ctftimeEvent.Title,
 				Description: ctftimeEvent.Description,

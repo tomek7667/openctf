@@ -21,7 +21,7 @@ type CreateContestDto struct {
 	CtftimeID   *int
 }
 
-func (c *Client) CreateContest(ctx context.Context, dto *CreateContestDto) (*ent.Contest, error) {
+func (c *Client) CreateContest(ctx context.Context, organizers *ent.Team, dto *CreateContestDto) (*ent.Contest, error) {
 	if dto.CtftimeID != nil {
 	}
 	createOp := c.C.Contest.
@@ -33,9 +33,17 @@ func (c *Client) CreateContest(ctx context.Context, dto *CreateContestDto) (*ent
 		SetStart(dto.Start).
 		SetEnd(dto.End).
 		SetURL(dto.Url)
+
+		// the contest must have organizers or have ctftime ID
 	if dto.CtftimeID != nil && *dto.CtftimeID != 0 {
 		createOp.SetCtftimeID(*dto.CtftimeID)
+		if organizers != nil {
+			createOp.SetOrganizers(organizers)
+		}
+	} else {
+		createOp.SetOrganizers(organizers)
 	}
+
 	ctst, err := createOp.
 		Save(ctx)
 	if err != nil {
