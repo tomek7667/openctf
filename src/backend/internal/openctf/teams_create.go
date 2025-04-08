@@ -12,6 +12,19 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// TeamsCreate handles the creation of a new team.
+//
+//	@Summary		Create a new team
+//	@Description	Creates a new team with optional integration with CTFtime for additional details.
+//	@Tags			teams
+//	@Accept			json
+//	@Produce		json
+//	@Security		Authorization
+//	@Param			body	body		service.CreateTeamDto	true	"Team creation details"
+//	@Success		200		{object}	map[string]any			"Created team details"
+//	@Failure		400		{object}	map[string]any			"Bad request error"
+//	@Failure		500		{object}	map[string]any			"Internal server error"
+//	@Router			/teams/create [post]
 func (h *Handler) TeamsCreate(ctx *gin.Context, user *ent.User) {
 	dto := service.CreateTeamDto{}
 	err := ctx.ShouldBind(&dto)

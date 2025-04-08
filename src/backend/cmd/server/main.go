@@ -49,6 +49,16 @@ func init() {
 	}
 }
 
+// SetupSwaggerDocs configures the global docs settings for Swagger.
+// @title           OpenCTF API
+// @version         1.0
+// @description     OpenCTF API backend swagger docs. In order to use locked endpoints, paste your `Authorization` token after clicking the `Authorize` button. You can obtain one by either registering or logging in.
+// @host            127.0.0.1:7999
+// @BasePath        /api
+// @schemes         http https
+// @securityDefinitions.apikey Authorization
+// @in header
+// @name Authorization
 func main() {
 	openctf := openctf.New(
 		restClient,

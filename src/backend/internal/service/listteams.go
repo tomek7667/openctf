@@ -9,8 +9,8 @@ import (
 )
 
 type ListTeamsDto struct {
-	Offset int `json:"offset,omitempty"`
-	Limit  int `json:"limit,omitempty"`
+	Offset int `json:"offset,omitempty" form:"offset,omitempty"`
+	Limit  int `json:"limit,omitempty" form:"limit,omitempty"`
 }
 
 func (c *Client) ListTeams(ctx context.Context, dto *ListTeamsDto) ([]*ent.Team, error) {

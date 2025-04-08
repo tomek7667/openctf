@@ -4,7 +4,11 @@ import (
 	"log/slog"
 	"time"
 
+	"openctfbackend/docs"
+
 	"github.com/gin-gonic/gin"
+	swaggerfiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 type Client struct {
@@ -40,5 +44,10 @@ func (c *Client) Serve() {
 			return ""
 		}),
 	)
+
+	// Automatic swagger docs based on comments
+	docs.SwaggerInfo.BasePath = "/api"
+	c.Router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler, ginSwagger.PersistAuthorization(true)))
+
 	c.Router.Run(":" + c.Port)
 }

@@ -1,0 +1,375 @@
+basePath: /api
+definitions:
+  service.CreateTeamDto:
+    properties:
+      ctftimeId:
+        type: integer
+      description:
+        type: string
+      logo:
+        items:
+          type: integer
+        type: array
+      name:
+        type: string
+    type: object
+  service.LoginDto:
+    properties:
+      identity:
+        type: string
+      password:
+        type: string
+    type: object
+  service.MergeTeamsDto:
+    properties:
+      mergeeId:
+        type: integer
+      mergerId:
+        type: integer
+    type: object
+  service.RateContestDto:
+    properties:
+      rating:
+        type: integer
+    type: object
+  service.RegisterDto:
+    properties:
+      description:
+        type: string
+      email:
+        type: string
+      password:
+        type: string
+      username:
+        type: string
+    type: object
+  service.VerifyTeamDto:
+    properties:
+      teamId:
+        type: integer
+    type: object
+host: 127.0.0.1:7999
+info:
+  contact: {}
+  description: OpenCTF API backend swagger docs. In order to use locked endpoints,
+    paste your `Authorization` token after clicking the `Authorize` button. You can
+    obtain one by either registering or logging in.
+  title: OpenCTF API
+  version: "1.0"
+paths:
+  /auth/login:
+    post:
+      consumes:
+      - application/json
+      description: Authenticates a user and returns a token upon successful login.
+      parameters:
+      - description: Login credentials
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/service.LoginDto'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: User and token
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad request error
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Authenticate user
+      tags:
+      - authentication
+  /auth/me:
+    get:
+      consumes:
+      - application/json
+      description: Returns the details of the currently authenticated user.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Authenticated user details
+          schema:
+            additionalProperties: true
+            type: object
+        "401":
+          description: Unauthorized error
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - Authorization: []
+      summary: Get authenticated user
+      tags:
+      - authentication
+  /auth/register:
+    post:
+      consumes:
+      - application/json
+      description: Registers a new user and returns a token upon successful registration.
+      parameters:
+      - description: Registration details
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/service.RegisterDto'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: User and token
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad request error
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Register user
+      tags:
+      - authentication
+  /contests/{contestId}/rate:
+    post:
+      consumes:
+      - application/json
+      description: Allows a user to rate a contest and returns the updated rating.
+      parameters:
+      - description: Contest ID
+        in: path
+        name: contestId
+        required: true
+        type: integer
+      - description: Rating details
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/service.RateContestDto'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Updated rating
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad request error
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - Authorization: []
+      summary: Rate a contest
+      tags:
+      - contests
+  /teams/{teamId}:
+    get:
+      consumes:
+      - application/json
+      description: Retrieves information about a specific team using its unique ID.
+      parameters:
+      - description: Team ID
+        in: path
+        name: teamId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Team details
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad request error
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Get team details
+      tags:
+      - teams
+  /teams/create:
+    post:
+      consumes:
+      - application/json
+      description: Creates a new team with optional integration with CTFtime for additional
+        details.
+      parameters:
+      - description: Team creation details
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/service.CreateTeamDto'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Created team details
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad request error
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - Authorization: []
+      summary: Create a new team
+      tags:
+      - teams
+  /teams/list:
+    get:
+      consumes:
+      - application/json
+      description: Fetches and returns a list of teams based on the provided criteria.
+      parameters:
+      - description: Pagination offset
+        in: query
+        name: offset
+        type: integer
+      - description: Pagination limit
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: List of teams
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad request error
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Get list of teams
+      tags:
+      - teams
+  /teams/merge:
+    post:
+      consumes:
+      - application/json
+      description: Merges two teams into one based on the provided details.
+      parameters:
+      - description: Details for merging teams
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/service.MergeTeamsDto'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Merged team details
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad request error
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - Authorization: []
+      summary: Merge teams
+      tags:
+      - teams
+  /teams/verify:
+    post:
+      consumes:
+      - application/json
+      description: Verifies a team based on the provided data.
+      parameters:
+      - description: Team verification data
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/service.VerifyTeamDto'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Verified team details
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad request error
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - Authorization: []
+      summary: Verify team
+      tags:
+      - teams
+schemes:
+- http
+- https
+securityDefinitions:
+  Authorization:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

@@ -25,14 +25,8 @@
 						},
 						"url": {
 							"raw": "{{BASE_URL}}/api/auth/register",
-							"host": [
-								"{{BASE_URL}}"
-							],
-							"path": [
-								"api",
-								"auth",
-								"register"
-							]
+							"host": ["{{BASE_URL}}"],
+							"path": ["api", "auth", "register"]
 						}
 					},
 					"response": []
@@ -70,14 +64,8 @@
 						},
 						"url": {
 							"raw": "{{BASE_URL}}/api/auth/register",
-							"host": [
-								"{{BASE_URL}}"
-							],
-							"path": [
-								"api",
-								"auth",
-								"register"
-							]
+							"host": ["{{BASE_URL}}"],
+							"path": ["api", "auth", "register"]
 						}
 					},
 					"response": []
@@ -115,14 +103,8 @@
 						},
 						"url": {
 							"raw": "{{BASE_URL}}/api/auth/login",
-							"host": [
-								"{{BASE_URL}}"
-							],
-							"path": [
-								"api",
-								"auth",
-								"login"
-							]
+							"host": ["{{BASE_URL}}"],
+							"path": ["api", "auth", "login"]
 						}
 					},
 					"response": []
@@ -160,14 +142,8 @@
 						},
 						"url": {
 							"raw": "{{BASE_URL}}/api/auth/login",
-							"host": [
-								"{{BASE_URL}}"
-							],
-							"path": [
-								"api",
-								"auth",
-								"login"
-							]
+							"host": ["{{BASE_URL}}"],
+							"path": ["api", "auth", "login"]
 						}
 					},
 					"response": []
@@ -178,9 +154,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"exec": [
-									""
-								],
+								"exec": [""],
 								"type": "text/javascript",
 								"packages": {}
 							}
@@ -203,14 +177,8 @@
 						},
 						"url": {
 							"raw": "{{BASE_URL}}/api/auth/me",
-							"host": [
-								"{{BASE_URL}}"
-							],
-							"path": [
-								"api",
-								"auth",
-								"me"
-							]
+							"host": ["{{BASE_URL}}"],
+							"path": ["api", "auth", "me"]
 						}
 					},
 					"response": []
@@ -221,9 +189,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"exec": [
-									""
-								],
+								"exec": [""],
 								"type": "text/javascript",
 								"packages": {}
 							}
@@ -252,14 +218,8 @@
 						},
 						"url": {
 							"raw": "{{BASE_URL}}/api/auth/me",
-							"host": [
-								"{{BASE_URL}}"
-							],
-							"path": [
-								"api",
-								"auth",
-								"me"
-							]
+							"host": ["{{BASE_URL}}"],
+							"path": ["api", "auth", "me"]
 						}
 					},
 					"response": []
@@ -270,9 +230,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"exec": [
-									""
-								],
+								"exec": [""],
 								"type": "text/javascript",
 								"packages": {}
 							}
@@ -301,14 +259,8 @@
 						},
 						"url": {
 							"raw": "{{BASE_URL}}/api/auth/me",
-							"host": [
-								"{{BASE_URL}}"
-							],
-							"path": [
-								"api",
-								"auth",
-								"me"
-							]
+							"host": ["{{BASE_URL}}"],
+							"path": ["api", "auth", "me"]
 						}
 					},
 					"response": []
@@ -357,14 +309,8 @@
 						},
 						"url": {
 							"raw": "{{BASE_URL}}/api/teams/create",
-							"host": [
-								"{{BASE_URL}}"
-							],
-							"path": [
-								"api",
-								"teams",
-								"create"
-							]
+							"host": ["{{BASE_URL}}"],
+							"path": ["api", "teams", "create"]
 						}
 					},
 					"response": []
@@ -395,14 +341,8 @@
 						},
 						"url": {
 							"raw": "{{BASE_URL}}/api/teams/{{TEST_TEAM_ID}}",
-							"host": [
-								"{{BASE_URL}}"
-							],
-							"path": [
-								"api",
-								"teams",
-								"{{TEST_TEAM_ID}}"
-							]
+							"host": ["{{BASE_URL}}"],
+							"path": ["api", "teams", "{{TEST_TEAM_ID}}"]
 						}
 					},
 					"response": []
@@ -433,14 +373,8 @@
 						},
 						"url": {
 							"raw": "{{BASE_URL}}/api/teams/list",
-							"host": [
-								"{{BASE_URL}}"
-							],
-							"path": [
-								"api",
-								"teams",
-								"list"
-							]
+							"host": ["{{BASE_URL}}"],
+							"path": ["api", "teams", "list"]
 						}
 					},
 					"response": []
@@ -467,14 +401,8 @@
 						},
 						"url": {
 							"raw": "{{BASE_URL}}/api/teams/verify",
-							"host": [
-								"{{BASE_URL}}"
-							],
-							"path": [
-								"api",
-								"teams",
-								"verify"
-							]
+							"host": ["{{BASE_URL}}"],
+							"path": ["api", "teams", "verify"]
 						}
 					},
 					"response": []
@@ -501,14 +429,8 @@
 						},
 						"url": {
 							"raw": "{{BASE_URL}}/api/teams/verify",
-							"host": [
-								"{{BASE_URL}}"
-							],
-							"path": [
-								"api",
-								"teams",
-								"verify"
-							]
+							"host": ["{{BASE_URL}}"],
+							"path": ["api", "teams", "verify"]
 						}
 					},
 					"response": []

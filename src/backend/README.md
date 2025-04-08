@@ -27,6 +27,17 @@ go install github.com/a8m/enter # install the visualizer
 enter # run it; a `er.html` file should appear
 ```
 
+## swagger docs
+
+in order to generate the docs you need swag golang exec and run:
+
+```sh
+go install github.com/swaggo/swag/cmd/swag@latest # install swag tool
+swag init -g ./cmd/server/main.go # generating the docs from new comments
+```
+
+by default the dev docs will be available at [http://127.0.0.1:7999/swagger/docs/index.html](http://127.0.0.1:7999/swagger/docs/index.html).
+
 ## routing
 
 the project currently provides handful of utility functions and already has an established way of adding new routes. Note: `/api` will be called 0th level route, `/api/example` will be called 1st level route and `/api/example/something` will be called 2nd level route. Few rules that are currentl established:

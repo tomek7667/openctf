@@ -10,6 +10,19 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// TeamsVerify handles team verification.
+//
+//	@Summary		Verify team
+//	@Description	Verifies a team based on the provided data.
+//	@Tags			teams
+//	@Accept			json
+//	@Produce		json
+//	@Security		Authorization
+//	@Param			body	body		service.VerifyTeamDto	true	"Team verification data"
+//	@Success		200		{object}	map[string]any			"Verified team details"
+//	@Failure		400		{object}	map[string]any			"Bad request error"
+//	@Failure		500		{object}	map[string]any			"Internal server error"
+//	@Router			/teams/verify [post]
 func (h *Handler) TeamsVerify(ctx *gin.Context, user *ent.User) {
 	dto := service.VerifyTeamDto{}
 	err := ctx.ShouldBind(&dto)
