@@ -151,6 +151,39 @@ paths:
       summary: Register user
       tags:
       - authentication
+  /contests/{contestId}:
+    get:
+      consumes:
+      - application/json
+      description: Retrieves information about a specific contest using its unique
+        ID.
+      parameters:
+      - description: Contest ID
+        in: path
+        name: contestId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Contest details
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad request error
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Get contest details
+      tags:
+      - contests
   /contests/{contestId}/rate:
     post:
       consumes:
