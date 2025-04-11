@@ -341,6 +341,13 @@ paths:
         in: query
         name: limit
         type: integer
+      - collectionFormat: csv
+        description: Country codes to include
+        in: query
+        items:
+          type: string
+        name: countryCodes
+        type: array
       produces:
       - application/json
       responses:

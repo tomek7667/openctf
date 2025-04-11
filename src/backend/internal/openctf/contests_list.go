@@ -14,8 +14,8 @@ import (
 //	@Tags			contests
 //	@Accept			json
 //	@Produce		json
-//	@Param			offset	query	int	false	"Pagination offset"
-//	@Param			limit	query	int	false	"Pagination limit"
+//	@Param			offset	query		int				false	"Pagination offset"
+//	@Param			limit	query		int				false	"Pagination limit"
 //	@Success		200		{object}	map[string]any	"List of contests"
 //	@Failure		400		{object}	map[string]any	"Bad request error"
 //	@Failure		500		{object}	map[string]any	"Internal server error"

@@ -395,6 +395,16 @@ const docTemplate = `{
                         "description": "Pagination limit",
                         "name": "limit",
                         "in": "query"
+                    },
+                    {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "collectionFormat": "csv",
+                        "description": "Country codes to include",
+                        "name": "countryCodes",
+                        "in": "query"
                     }
                 ],
                 "responses": {

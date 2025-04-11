@@ -14,11 +14,12 @@ import (
 //	@Tags			teams
 //	@Accept			json
 //	@Produce		json
-//	@Param			offset	query	int	false	"Pagination offset"
-//	@Param			limit	query	int	false	"Pagination limit"
-//	@Success		200		{object}	map[string]any	"List of teams"
-//	@Failure		400		{object}	map[string]any	"Bad request error"
-//	@Failure		500		{object}	map[string]any	"Internal server error"
+//	@Param			offset			query		int				false	"Pagination offset"
+//	@Param			limit			query		int				false	"Pagination limit"
+//	@Param			countryCodes	query		[]string		false	"Country codes to include"
+//	@Success		200				{object}	map[string]any	"List of teams"
+//	@Failure		400				{object}	map[string]any	"Bad request error"
+//	@Failure		500				{object}	map[string]any	"Internal server error"
 //	@Router			/teams/list [get]
 func (h *Handler) TeamsList(ctx *gin.Context) {
 	var dto service.ListTeamsDto

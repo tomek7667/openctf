@@ -6,11 +6,13 @@ import (
 	"fmt"
 
 	"openctfbackend/ent"
+	"openctfbackend/ent/team"
 )
 
 type ListTeamsDto struct {
-	Offset int `json:"offset,omitempty" form:"offset,omitempty"`
-	Limit  int `json:"limit,omitempty" form:"limit,omitempty"`
+	Offset       int      `json:"offset,omitempty" form:"offset,omitempty"`
+	Limit        int      `json:"limit,omitempty" form:"limit,omitempty"`
+	CountryCodes []string `json:"countryCodes,omitempty" form:"countryCodes,omitempty"`
 }
 
 func (c *Client) ListTeams(ctx context.Context, dto *ListTeamsDto) ([]*ent.Team, error) {
@@ -24,13 +26,19 @@ func (c *Client) ListTeams(ctx context.Context, dto *ListTeamsDto) ([]*ent.Team,
 		dto.Offset = 0
 	}
 
-	t, err := c.C.Team.
+	tq := c.C.Team.
 		Query().
 		Limit(dto.Limit).
 		Offset(dto.Offset).
 		WithCaptain().
 		WithMembers().
-		WithVerifiedBy().
+		WithVerifiedBy()
+
+	if len(dto.CountryCodes) > 0 {
+		tq.Where(team.CountryCodeIn(dto.CountryCodes...))
+	}
+
+	t, err := tq.
 		All(ctx)
 	if err != nil {
 		return nil, errors.Join(fmt.Errorf("failed creating a team"), err)
