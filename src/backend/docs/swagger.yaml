@@ -224,6 +224,41 @@ paths:
       summary: Rate a contest
       tags:
       - contests
+  /contests/list:
+    get:
+      consumes:
+      - application/json
+      description: Fetches and returns a list of contests based on the provided criteria.
+      parameters:
+      - description: Pagination offset
+        in: query
+        name: offset
+        type: integer
+      - description: Pagination limit
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: List of contests
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad request error
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Get list of contests
+      tags:
+      - contests
   /teams/{teamId}:
     get:
       consumes:
