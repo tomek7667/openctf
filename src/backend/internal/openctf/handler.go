@@ -32,6 +32,7 @@ type ServiceClient interface {
 	VerifyTeam(ctx context.Context, verifier *ent.User, dto *service.VerifyTeamDto) (*ent.Team, error)
 	MergeTeams(ctx context.Context, user *ent.User, dto *service.MergeTeamsDto) (*ent.Team, error)
 	VerifyToken(ctx context.Context, token string) (*ent.User, error)
+	CreateContest(ctx context.Context, organizers *ent.Team, dto *service.CreateContestDto) (*ent.Contest, error)
 	GetContest(ctx context.Context, contestId int) (*ent.Contest, error)
 	ListContests(ctx context.Context, dto *service.ListContestsDto) ([]*ent.Contest, error)
 	RateContest(ctx context.Context, requester *ent.User, contestId int, dto *service.RateContestDto) (*ent.ContestRating, error)
