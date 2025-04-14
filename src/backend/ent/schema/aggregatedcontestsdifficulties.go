@@ -12,6 +12,7 @@ type AggregatedContestsDifficulties struct {
 }
 
 func (AggregatedContestsDifficulties) Annotations() []schema.Annotation {
+	// TODO: this doesn't show in dbeaver-figure out what's the problem with creating this view.
 	return []schema.Annotation{
 		entsql.View(`
 SELECT
