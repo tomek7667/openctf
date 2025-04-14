@@ -9,6 +9,7 @@ import (
 	"openctfbackend/ent/schema"
 	"openctfbackend/ent/team"
 	"openctfbackend/ent/user"
+	"openctfbackend/ent/weightrating"
 	"time"
 )
 
@@ -108,4 +109,24 @@ func init() {
 	userDescLogo := userFields[8].Descriptor()
 	// user.LogoValidator is a validator for the "logo" field. It is called by the builders before save.
 	user.LogoValidator = userDescLogo.Validators[0].(func([]byte) error)
+	weightratingFields := schema.WeightRating{}.Fields()
+	_ = weightratingFields
+	// weightratingDescDifficulty is the schema descriptor for difficulty field.
+	weightratingDescDifficulty := weightratingFields[0].Descriptor()
+	// weightrating.DifficultyValidator is a validator for the "difficulty" field. It is called by the builders before save.
+	weightrating.DifficultyValidator = func() func(int) error {
+		validators := weightratingDescDifficulty.Validators
+		fns := [...]func(int) error{
+			validators[0].(func(int) error),
+			validators[1].(func(int) error),
+		}
+		return func(difficulty int) error {
+			for _, fn := range fns {
+				if err := fn(difficulty); err != nil {
+					return err
+				}
+			}
+			return nil
+		}
+	}()
 }

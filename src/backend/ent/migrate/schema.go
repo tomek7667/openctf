@@ -164,6 +164,40 @@ var (
 		Columns:    UsersColumns,
 		PrimaryKey: []*schema.Column{UsersColumns[0]},
 	}
+	// WeightRatingsColumns holds the columns for the "weight_ratings" table.
+	WeightRatingsColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "difficulty", Type: field.TypeInt},
+		{Name: "weight_rating_captains_team", Type: field.TypeInt},
+		{Name: "weight_rating_contest", Type: field.TypeInt},
+	}
+	// WeightRatingsTable holds the schema information for the "weight_ratings" table.
+	WeightRatingsTable = &schema.Table{
+		Name:       "weight_ratings",
+		Columns:    WeightRatingsColumns,
+		PrimaryKey: []*schema.Column{WeightRatingsColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{
+			{
+				Symbol:     "weight_ratings_teams_captains_team",
+				Columns:    []*schema.Column{WeightRatingsColumns[2]},
+				RefColumns: []*schema.Column{TeamsColumns[0]},
+				OnDelete:   schema.NoAction,
+			},
+			{
+				Symbol:     "weight_ratings_contests_contest",
+				Columns:    []*schema.Column{WeightRatingsColumns[3]},
+				RefColumns: []*schema.Column{ContestsColumns[0]},
+				OnDelete:   schema.NoAction,
+			},
+		},
+		Indexes: []*schema.Index{
+			{
+				Name:    "weightrating_weight_rating_captains_team_weight_rating_contest",
+				Unique:  true,
+				Columns: []*schema.Column{WeightRatingsColumns[2], WeightRatingsColumns[3]},
+			},
+		},
+	}
 	// TeamMembersColumns holds the columns for the "team_members" table.
 	TeamMembersColumns = []*schema.Column{
 		{Name: "team_id", Type: field.TypeInt},
@@ -196,6 +230,7 @@ var (
 		PlacesTable,
 		TeamsTable,
 		UsersTable,
+		WeightRatingsTable,
 		TeamMembersTable,
 	}
 )
@@ -208,6 +243,8 @@ func init() {
 	PlacesTable.ForeignKeys[1].RefTable = TeamsTable
 	TeamsTable.ForeignKeys[0].RefTable = UsersTable
 	TeamsTable.ForeignKeys[1].RefTable = UsersTable
+	WeightRatingsTable.ForeignKeys[0].RefTable = TeamsTable
+	WeightRatingsTable.ForeignKeys[1].RefTable = ContestsTable
 	TeamMembersTable.ForeignKeys[0].RefTable = TeamsTable
 	TeamMembersTable.ForeignKeys[1].RefTable = UsersTable
 }

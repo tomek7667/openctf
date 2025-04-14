@@ -16,6 +16,7 @@ import (
 	"openctfbackend/ent/place"
 	"openctfbackend/ent/team"
 	"openctfbackend/ent/user"
+	"openctfbackend/ent/weightrating"
 
 	"entgo.io/ent"
 	"entgo.io/ent/dialect"
@@ -30,6 +31,8 @@ type Client struct {
 	config
 	// Schema is the client for creating, migrating and dropping schema.
 	Schema *migrate.Schema
+	// AggregatedContestsDifficulties is the client for interacting with the AggregatedContestsDifficulties builders.
+	AggregatedContestsDifficulties *AggregatedContestsDifficultiesClient
 	// Contest is the client for interacting with the Contest builders.
 	Contest *ContestClient
 	// ContestRating is the client for interacting with the ContestRating builders.
@@ -40,6 +43,8 @@ type Client struct {
 	Team *TeamClient
 	// User is the client for interacting with the User builders.
 	User *UserClient
+	// WeightRating is the client for interacting with the WeightRating builders.
+	WeightRating *WeightRatingClient
 }
 
 // NewClient creates a new client configured with the given options.
@@ -51,11 +56,13 @@ func NewClient(opts ...Option) *Client {
 
 func (c *Client) init() {
 	c.Schema = migrate.NewSchema(c.driver)
+	c.AggregatedContestsDifficulties = NewAggregatedContestsDifficultiesClient(c.config)
 	c.Contest = NewContestClient(c.config)
 	c.ContestRating = NewContestRatingClient(c.config)
 	c.Place = NewPlaceClient(c.config)
 	c.Team = NewTeamClient(c.config)
 	c.User = NewUserClient(c.config)
+	c.WeightRating = NewWeightRatingClient(c.config)
 }
 
 type (
@@ -146,13 +153,15 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 	cfg := c.config
 	cfg.driver = tx
 	return &Tx{
-		ctx:           ctx,
-		config:        cfg,
-		Contest:       NewContestClient(cfg),
-		ContestRating: NewContestRatingClient(cfg),
-		Place:         NewPlaceClient(cfg),
-		Team:          NewTeamClient(cfg),
-		User:          NewUserClient(cfg),
+		ctx:                            ctx,
+		config:                         cfg,
+		AggregatedContestsDifficulties: NewAggregatedContestsDifficultiesClient(cfg),
+		Contest:                        NewContestClient(cfg),
+		ContestRating:                  NewContestRatingClient(cfg),
+		Place:                          NewPlaceClient(cfg),
+		Team:                           NewTeamClient(cfg),
+		User:                           NewUserClient(cfg),
+		WeightRating:                   NewWeightRatingClient(cfg),
 	}, nil
 }
 
@@ -170,20 +179,22 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 	cfg := c.config
 	cfg.driver = &txDriver{tx: tx, drv: c.driver}
 	return &Tx{
-		ctx:           ctx,
-		config:        cfg,
-		Contest:       NewContestClient(cfg),
-		ContestRating: NewContestRatingClient(cfg),
-		Place:         NewPlaceClient(cfg),
-		Team:          NewTeamClient(cfg),
-		User:          NewUserClient(cfg),
+		ctx:                            ctx,
+		config:                         cfg,
+		AggregatedContestsDifficulties: NewAggregatedContestsDifficultiesClient(cfg),
+		Contest:                        NewContestClient(cfg),
+		ContestRating:                  NewContestRatingClient(cfg),
+		Place:                          NewPlaceClient(cfg),
+		Team:                           NewTeamClient(cfg),
+		User:                           NewUserClient(cfg),
+		WeightRating:                   NewWeightRatingClient(cfg),
 	}, nil
 }
 
 // Debug returns a new debug-client. It's used to get verbose logging on specific operations.
 //
 //	client.Debug().
-//		Contest.
+//		AggregatedContestsDifficulties.
 //		Query().
 //		Count(ctx)
 func (c *Client) Debug() *Client {
@@ -205,21 +216,22 @@ func (c *Client) Close() error {
 // Use adds the mutation hooks to all the entity clients.
 // In order to add hooks to a specific client, call: `client.Node.Use(...)`.
 func (c *Client) Use(hooks ...Hook) {
-	c.Contest.Use(hooks...)
-	c.ContestRating.Use(hooks...)
-	c.Place.Use(hooks...)
-	c.Team.Use(hooks...)
-	c.User.Use(hooks...)
+	for _, n := range []interface{ Use(...Hook) }{
+		c.Contest, c.ContestRating, c.Place, c.Team, c.User, c.WeightRating,
+	} {
+		n.Use(hooks...)
+	}
 }
 
 // Intercept adds the query interceptors to all the entity clients.
 // In order to add interceptors to a specific client, call: `client.Node.Intercept(...)`.
 func (c *Client) Intercept(interceptors ...Interceptor) {
-	c.Contest.Intercept(interceptors...)
-	c.ContestRating.Intercept(interceptors...)
-	c.Place.Intercept(interceptors...)
-	c.Team.Intercept(interceptors...)
-	c.User.Intercept(interceptors...)
+	for _, n := range []interface{ Intercept(...Interceptor) }{
+		c.AggregatedContestsDifficulties, c.Contest, c.ContestRating, c.Place, c.Team,
+		c.User, c.WeightRating,
+	} {
+		n.Intercept(interceptors...)
+	}
 }
 
 // Mutate implements the ent.Mutator interface.
@@ -235,9 +247,41 @@ func (c *Client) Mutate(ctx context.Context, m Mutation) (Value, error) {
 		return c.Team.mutate(ctx, m)
 	case *UserMutation:
 		return c.User.mutate(ctx, m)
+	case *WeightRatingMutation:
+		return c.WeightRating.mutate(ctx, m)
 	default:
 		return nil, fmt.Errorf("ent: unknown mutation type %T", m)
 	}
+}
+
+// AggregatedContestsDifficultiesClient is a client for the AggregatedContestsDifficulties schema.
+type AggregatedContestsDifficultiesClient struct {
+	config
+}
+
+// NewAggregatedContestsDifficultiesClient returns a client for the AggregatedContestsDifficulties from the given config.
+func NewAggregatedContestsDifficultiesClient(c config) *AggregatedContestsDifficultiesClient {
+	return &AggregatedContestsDifficultiesClient{config: c}
+}
+
+// Intercept adds a list of query interceptors to the interceptors stack.
+// A call to `Intercept(f, g, h)` equals to `aggregatedcontestsdifficulties.Intercept(f(g(h())))`.
+func (c *AggregatedContestsDifficultiesClient) Intercept(interceptors ...Interceptor) {
+	c.inters.AggregatedContestsDifficulties = append(c.inters.AggregatedContestsDifficulties, interceptors...)
+}
+
+// Query returns a query builder for AggregatedContestsDifficulties.
+func (c *AggregatedContestsDifficultiesClient) Query() *AggregatedContestsDifficultiesQuery {
+	return &AggregatedContestsDifficultiesQuery{
+		config: c.config,
+		ctx:    &QueryContext{Type: TypeAggregatedContestsDifficulties},
+		inters: c.Interceptors(),
+	}
+}
+
+// Interceptors returns the client interceptors.
+func (c *AggregatedContestsDifficultiesClient) Interceptors() []Interceptor {
+	return c.inters.AggregatedContestsDifficulties
 }
 
 // ContestClient is a client for the Contest schema.
@@ -1049,13 +1093,179 @@ func (c *UserClient) mutate(ctx context.Context, m *UserMutation) (Value, error)
 	}
 }
 
+// WeightRatingClient is a client for the WeightRating schema.
+type WeightRatingClient struct {
+	config
+}
+
+// NewWeightRatingClient returns a client for the WeightRating from the given config.
+func NewWeightRatingClient(c config) *WeightRatingClient {
+	return &WeightRatingClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `weightrating.Hooks(f(g(h())))`.
+func (c *WeightRatingClient) Use(hooks ...Hook) {
+	c.hooks.WeightRating = append(c.hooks.WeightRating, hooks...)
+}
+
+// Intercept adds a list of query interceptors to the interceptors stack.
+// A call to `Intercept(f, g, h)` equals to `weightrating.Intercept(f(g(h())))`.
+func (c *WeightRatingClient) Intercept(interceptors ...Interceptor) {
+	c.inters.WeightRating = append(c.inters.WeightRating, interceptors...)
+}
+
+// Create returns a builder for creating a WeightRating entity.
+func (c *WeightRatingClient) Create() *WeightRatingCreate {
+	mutation := newWeightRatingMutation(c.config, OpCreate)
+	return &WeightRatingCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of WeightRating entities.
+func (c *WeightRatingClient) CreateBulk(builders ...*WeightRatingCreate) *WeightRatingCreateBulk {
+	return &WeightRatingCreateBulk{config: c.config, builders: builders}
+}
+
+// MapCreateBulk creates a bulk creation builder from the given slice. For each item in the slice, the function creates
+// a builder and applies setFunc on it.
+func (c *WeightRatingClient) MapCreateBulk(slice any, setFunc func(*WeightRatingCreate, int)) *WeightRatingCreateBulk {
+	rv := reflect.ValueOf(slice)
+	if rv.Kind() != reflect.Slice {
+		return &WeightRatingCreateBulk{err: fmt.Errorf("calling to WeightRatingClient.MapCreateBulk with wrong type %T, need slice", slice)}
+	}
+	builders := make([]*WeightRatingCreate, rv.Len())
+	for i := 0; i < rv.Len(); i++ {
+		builders[i] = c.Create()
+		setFunc(builders[i], i)
+	}
+	return &WeightRatingCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for WeightRating.
+func (c *WeightRatingClient) Update() *WeightRatingUpdate {
+	mutation := newWeightRatingMutation(c.config, OpUpdate)
+	return &WeightRatingUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *WeightRatingClient) UpdateOne(wr *WeightRating) *WeightRatingUpdateOne {
+	mutation := newWeightRatingMutation(c.config, OpUpdateOne, withWeightRating(wr))
+	return &WeightRatingUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *WeightRatingClient) UpdateOneID(id int) *WeightRatingUpdateOne {
+	mutation := newWeightRatingMutation(c.config, OpUpdateOne, withWeightRatingID(id))
+	return &WeightRatingUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for WeightRating.
+func (c *WeightRatingClient) Delete() *WeightRatingDelete {
+	mutation := newWeightRatingMutation(c.config, OpDelete)
+	return &WeightRatingDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *WeightRatingClient) DeleteOne(wr *WeightRating) *WeightRatingDeleteOne {
+	return c.DeleteOneID(wr.ID)
+}
+
+// DeleteOneID returns a builder for deleting the given entity by its id.
+func (c *WeightRatingClient) DeleteOneID(id int) *WeightRatingDeleteOne {
+	builder := c.Delete().Where(weightrating.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &WeightRatingDeleteOne{builder}
+}
+
+// Query returns a query builder for WeightRating.
+func (c *WeightRatingClient) Query() *WeightRatingQuery {
+	return &WeightRatingQuery{
+		config: c.config,
+		ctx:    &QueryContext{Type: TypeWeightRating},
+		inters: c.Interceptors(),
+	}
+}
+
+// Get returns a WeightRating entity by its id.
+func (c *WeightRatingClient) Get(ctx context.Context, id int) (*WeightRating, error) {
+	return c.Query().Where(weightrating.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *WeightRatingClient) GetX(ctx context.Context, id int) *WeightRating {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// QueryCaptainsTeam queries the captains_team edge of a WeightRating.
+func (c *WeightRatingClient) QueryCaptainsTeam(wr *WeightRating) *TeamQuery {
+	query := (&TeamClient{config: c.config}).Query()
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
+		id := wr.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(weightrating.Table, weightrating.FieldID, id),
+			sqlgraph.To(team.Table, team.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, false, weightrating.CaptainsTeamTable, weightrating.CaptainsTeamColumn),
+		)
+		fromV = sqlgraph.Neighbors(wr.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QueryContest queries the contest edge of a WeightRating.
+func (c *WeightRatingClient) QueryContest(wr *WeightRating) *ContestQuery {
+	query := (&ContestClient{config: c.config}).Query()
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
+		id := wr.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(weightrating.Table, weightrating.FieldID, id),
+			sqlgraph.To(contest.Table, contest.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, false, weightrating.ContestTable, weightrating.ContestColumn),
+		)
+		fromV = sqlgraph.Neighbors(wr.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// Hooks returns the client hooks.
+func (c *WeightRatingClient) Hooks() []Hook {
+	return c.hooks.WeightRating
+}
+
+// Interceptors returns the client interceptors.
+func (c *WeightRatingClient) Interceptors() []Interceptor {
+	return c.inters.WeightRating
+}
+
+func (c *WeightRatingClient) mutate(ctx context.Context, m *WeightRatingMutation) (Value, error) {
+	switch m.Op() {
+	case OpCreate:
+		return (&WeightRatingCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdate:
+		return (&WeightRatingUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdateOne:
+		return (&WeightRatingUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpDelete, OpDeleteOne:
+		return (&WeightRatingDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
+	default:
+		return nil, fmt.Errorf("ent: unknown WeightRating mutation op: %q", m.Op())
+	}
+}
+
 // hooks and interceptors per client, for fast access.
 type (
 	hooks struct {
-		Contest, ContestRating, Place, Team, User []ent.Hook
+		Contest, ContestRating, Place, Team, User, WeightRating []ent.Hook
 	}
 	inters struct {
-		Contest, ContestRating, Place, Team, User []ent.Interceptor
+		AggregatedContestsDifficulties, Contest, ContestRating, Place, Team, User,
+		WeightRating []ent.Interceptor
 	}
 )
 

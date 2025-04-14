@@ -6,6 +6,7 @@ import (
 	"sync"
 
 	"openctfbackend/internal/crawler"
+	"openctfbackend/internal/croner"
 	"openctfbackend/internal/ctftime"
 	"openctfbackend/internal/logger"
 	"openctfbackend/internal/openctf"
@@ -50,6 +51,7 @@ func init() {
 }
 
 // SetupSwaggerDocs configures the global docs settings for Swagger.
+//
 //	@title						OpenCTF API
 //	@version					1.0
 //	@description				OpenCTF API backend swagger docs. In order to use locked endpoints, paste your `Authorization` token after clicking the `Authorize` button. You can obtain one by either registering or logging in.
@@ -69,9 +71,12 @@ func main() {
 		serviceClient,
 		ctftimeClient,
 	)
+	croner := croner.New(
+		serviceClient,
+	)
 
 	wg := &sync.WaitGroup{}
-	wg.Add(2)
+	wg.Add(3)
 	go func() {
 		defer wg.Done()
 		defer func() {
@@ -80,6 +85,15 @@ func main() {
 			}
 		}()
 		crawler.Handle()
+	}()
+	go func() {
+		defer wg.Done()
+		defer func() {
+			if r := recover(); r != nil {
+				slog.Error("panic recovered in croner.Handle", "err", r)
+			}
+		}()
+		croner.Handle()
 	}()
 	go func() {
 		defer wg.Done()

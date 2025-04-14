@@ -35,7 +35,7 @@ type Contest struct {
 	// CtftimeID holds the value of the "ctftime_id" field.
 	CtftimeID *int `json:"ctftime_id,omitempty"`
 	// AssignedWeightPoints holds the value of the "assigned_weight_points" field.
-	AssignedWeightPoints int `json:"assigned_weight_points,omitempty"`
+	AssignedWeightPoints int `json:"assigned_weight_points"`
 	// Logo holds the value of the "logo" field.
 	Logo []byte `json:"logo,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.

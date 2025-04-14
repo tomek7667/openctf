@@ -19,9 +19,9 @@ type ContestRating struct {
 	// ID of the ent.
 	ID int `json:"id,omitempty"`
 	// Rating holds the value of the "rating" field.
-	Rating int `json:"rating,omitempty"`
+	Rating int `json:"rating"`
 	// this will be true if the user is in a team that was participating in at least top 15%
-	Relevant bool `json:"relevant,omitempty"`
+	Relevant bool `json:"relevant"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the ContestRatingQuery when eager-loading is set.
 	Edges                  ContestRatingEdges `json:"edges"`

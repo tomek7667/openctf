@@ -335,7 +335,7 @@ func (crq *ContestRatingQuery) WithContest(opts ...func(*ContestQuery)) *Contest
 // Example:
 //
 //	var v []struct {
-//		Rating int `json:"rating,omitempty"`
+//		Rating int `json:"rating"`
 //		Count int `json:"count,omitempty"`
 //	}
 //
@@ -358,7 +358,7 @@ func (crq *ContestRatingQuery) GroupBy(field string, fields ...string) *ContestR
 // Example:
 //
 //	var v []struct {
-//		Rating int `json:"rating,omitempty"`
+//		Rating int `json:"rating"`
 //	}
 //
 //	client.ContestRating.Query().

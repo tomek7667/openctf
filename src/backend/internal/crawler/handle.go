@@ -42,7 +42,6 @@ func (h *Handler) Handle() {
 
 	for range ticker.C {
 		slog.Info("crawler: ticker ticked, performing periodic task")
-		// Add your periodic task logic here
 		err = h.CrawlContests(tickerDuration)
 		if err != nil {
 			slog.Error(

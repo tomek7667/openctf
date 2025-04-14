@@ -46,7 +46,7 @@ func (h *Handler) ContestsRate(ctx *gin.Context, user *ent.User) {
 		})
 		return
 	}
-	rating, err := h.ServiceClient.RateContest(ctx, user, contestId, &dto)
+	rating, err := h.ServiceClient.RateContestOpinion(ctx, user, contestId, &dto)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, map[string]any{
 			"success": false,

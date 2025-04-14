@@ -13,9 +13,10 @@ type ContestRating struct {
 
 func (ContestRating) Fields() []ent.Field {
 	return []ent.Field{
-		field.Int("rating").Min(0).Max(5),
+		field.Int("rating").Min(0).Max(5).StructTag(`json:"rating"`),
 		field.Bool("relevant").
 			Default(false).
+			StructTag(`json:"relevant"`).
 			Comment("this will be true if the user is in a team that was participating in at least top 15%"),
 	}
 }

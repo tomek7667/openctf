@@ -6,11 +6,13 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"openctfbackend/ent/aggregatedcontestsdifficulties"
 	"openctfbackend/ent/contest"
 	"openctfbackend/ent/contestrating"
 	"openctfbackend/ent/place"
 	"openctfbackend/ent/team"
 	"openctfbackend/ent/user"
+	"openctfbackend/ent/weightrating"
 	"reflect"
 	"sync"
 
@@ -77,11 +79,13 @@ var (
 func checkColumn(table, column string) error {
 	initCheck.Do(func() {
 		columnCheck = sql.NewColumnCheck(map[string]func(string) bool{
-			contest.Table:       contest.ValidColumn,
-			contestrating.Table: contestrating.ValidColumn,
-			place.Table:         place.ValidColumn,
-			team.Table:          team.ValidColumn,
-			user.Table:          user.ValidColumn,
+			aggregatedcontestsdifficulties.Table: aggregatedcontestsdifficulties.ValidColumn,
+			contest.Table:                        contest.ValidColumn,
+			contestrating.Table:                  contestrating.ValidColumn,
+			place.Table:                          place.ValidColumn,
+			team.Table:                           team.ValidColumn,
+			user.Table:                           user.ValidColumn,
+			weightrating.Table:                   weightrating.ValidColumn,
 		})
 	})
 	return columnCheck(table, column)

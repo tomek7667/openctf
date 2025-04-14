@@ -2,11 +2,12 @@ package service
 
 import (
 	"context"
+	"database/sql"
 	"errors"
 	"fmt"
-	"log/slog"
 
 	"openctfbackend/ent"
+	"openctfbackend/ent/contestrating"
 )
 
 type RateContestDto struct {
@@ -37,15 +38,14 @@ select
 	) as "total_places";
 `
 
-func (c *Client) RateContest(
+func (c *Client) RateContestOpinion(
 	ctx context.Context,
 	requester *ent.User,
 	contestId int,
 	dto *RateContestDto,
 ) (*ent.ContestRating, error) {
 	// if the user is not a member of any team that took part in the contest and got
-	// at least top 15%, then the rating "relevant" field should be set to false.
-	// isInAnyTeam := false
+	// at least top 30%, then the rating "relevant" field should be set to false.
 	res, err := c.C.QueryContext(ctx, SqlUserTeamPlaceInContest, requester.ID, contestId)
 	if err != nil {
 		return nil, errors.Join(
@@ -54,7 +54,8 @@ func (c *Client) RateContest(
 		)
 	}
 	defer res.Close()
-	var place, totalPlaces int
+	var place sql.NullInt64
+	var totalPlaces int
 	if res.Next() {
 		if err := res.Scan(&place, &totalPlaces); err != nil {
 			return nil, errors.Join(
@@ -63,8 +64,38 @@ func (c *Client) RateContest(
 			)
 		}
 	}
-	// TODO fix  "failed to scan result\nsql: Scan error on column index 0, name \"place\": converting NULL to int is unsupported",
-	// for unexisting -- there was this sql func something like unwrap or sth like this that chooses first non null val, maybe return -1 then
-	slog.Info("found n places", "r", place, "e", totalPlaces)
-	return nil, nil
+	if !place.Valid {
+		return nil, fmt.Errorf("place was not found")
+	}
+	relevant := false
+	if float64(place.Int64) <= float64(totalPlaces)*0.30 {
+		relevant = true
+	}
+	createContestOpinonQ := c.C.ContestRating.
+		Create().
+		SetRating(dto.Rating).
+		SetRelevant(relevant).
+		SetUserID(requester.ID).
+		SetContestID(contestId)
+
+	_opinion, err := createContestOpinonQ.Save(ctx)
+	if err != nil {
+		return nil, errors.Join(
+			fmt.Errorf("failed creating the contest rating in the database"),
+			err,
+		)
+	}
+	opinion, err := c.C.ContestRating.
+		Query().
+		WithContest().
+		WithUser().
+		Where(contestrating.ID(_opinion.ID)).
+		First(ctx)
+	if err != nil {
+		return nil, errors.Join(
+			fmt.Errorf("the rating was created in the database but there was a problem with retrieving it"),
+			err,
+		)
+	}
+	return opinion, nil
 }

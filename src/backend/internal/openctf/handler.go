@@ -35,7 +35,12 @@ type ServiceClient interface {
 	CreateContest(ctx context.Context, organizers *ent.Team, dto *service.CreateContestDto) (*ent.Contest, error)
 	GetContest(ctx context.Context, contestId int) (*ent.Contest, error)
 	ListContests(ctx context.Context, dto *service.ListContestsDto) ([]*ent.Contest, error)
-	RateContest(ctx context.Context, requester *ent.User, contestId int, dto *service.RateContestDto) (*ent.ContestRating, error)
+	RateContestOpinion(
+		ctx context.Context,
+		requester *ent.User,
+		contestId int,
+		dto *service.RateContestDto,
+	) (*ent.ContestRating, error)
 }
 
 type CtftimeClient interface {

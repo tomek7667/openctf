@@ -14,6 +14,8 @@ import (
 // Tx is a transactional client that is created by calling Client.Tx().
 type Tx struct {
 	config
+	// AggregatedContestsDifficulties is the client for interacting with the AggregatedContestsDifficulties builders.
+	AggregatedContestsDifficulties *AggregatedContestsDifficultiesClient
 	// Contest is the client for interacting with the Contest builders.
 	Contest *ContestClient
 	// ContestRating is the client for interacting with the ContestRating builders.
@@ -24,6 +26,8 @@ type Tx struct {
 	Team *TeamClient
 	// User is the client for interacting with the User builders.
 	User *UserClient
+	// WeightRating is the client for interacting with the WeightRating builders.
+	WeightRating *WeightRatingClient
 
 	// lazily loaded.
 	client     *Client
@@ -155,11 +159,13 @@ func (tx *Tx) Client() *Client {
 }
 
 func (tx *Tx) init() {
+	tx.AggregatedContestsDifficulties = NewAggregatedContestsDifficultiesClient(tx.config)
 	tx.Contest = NewContestClient(tx.config)
 	tx.ContestRating = NewContestRatingClient(tx.config)
 	tx.Place = NewPlaceClient(tx.config)
 	tx.Team = NewTeamClient(tx.config)
 	tx.User = NewUserClient(tx.config)
+	tx.WeightRating = NewWeightRatingClient(tx.config)
 }
 
 // txDriver wraps the given dialect.Tx with a nop dialect.Driver implementation.
@@ -169,7 +175,7 @@ func (tx *Tx) init() {
 // of them in order to commit or rollback the transaction.
 //
 // If a closed transaction is embedded in one of the generated entities, and the entity
-// applies a query, for example: Contest.QueryXXX(), the query will be executed
+// applies a query, for example: AggregatedContestsDifficulties.QueryXXX(), the query will be executed
 // through the driver which created this transaction.
 //
 // Note that txDriver is not goroutine safe.
