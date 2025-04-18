@@ -9,10 +9,10 @@ import (
 const (
 	// Label holds the string label denoting the aggregatedcontestsdifficulties type in the database.
 	Label = "aggregated_contests_difficulties"
-	// FieldID holds the string denoting the id field in the database.
-	FieldID = "id"
-	// FieldName holds the string denoting the name field in the database.
-	FieldName = "name"
+	// FieldContestID holds the string denoting the contest_id field in the database.
+	FieldContestID = "contest_id"
+	// FieldContestName holds the string denoting the contest_name field in the database.
+	FieldContestName = "contest_name"
 	// FieldEnd holds the string denoting the end field in the database.
 	FieldEnd = "end"
 	// FieldAvgDifficulty holds the string denoting the avg_difficulty field in the database.
@@ -23,8 +23,8 @@ const (
 
 // Columns holds all SQL columns for aggregatedcontestsdifficulties fields.
 var Columns = []string{
-	FieldID,
-	FieldName,
+	FieldContestID,
+	FieldContestName,
 	FieldEnd,
 	FieldAvgDifficulty,
 }
@@ -42,14 +42,14 @@ func ValidColumn(column string) bool {
 // OrderOption defines the ordering options for the AggregatedContestsDifficulties queries.
 type OrderOption func(*sql.Selector)
 
-// ByID orders the results by the id field.
-func ByID(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldID, opts...).ToFunc()
+// ByContestID orders the results by the contest_id field.
+func ByContestID(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldContestID, opts...).ToFunc()
 }
 
-// ByName orders the results by the name field.
-func ByName(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldName, opts...).ToFunc()
+// ByContestName orders the results by the contest_name field.
+func ByContestName(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldContestName, opts...).ToFunc()
 }
 
 // ByEnd orders the results by the end field.

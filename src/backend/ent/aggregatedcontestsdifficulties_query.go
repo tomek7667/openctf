@@ -189,12 +189,12 @@ func (acdq *AggregatedContestsDifficultiesQuery) Clone() *AggregatedContestsDiff
 // Example:
 //
 //	var v []struct {
-//		ID int `json:"id,omitempty"`
+//		ContestID int `json:"contest_id,omitempty"`
 //		Count int `json:"count,omitempty"`
 //	}
 //
 //	client.AggregatedContestsDifficulties.Query().
-//		GroupBy(aggregatedcontestsdifficulties.FieldID).
+//		GroupBy(aggregatedcontestsdifficulties.FieldContestID).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
 func (acdq *AggregatedContestsDifficultiesQuery) GroupBy(field string, fields ...string) *AggregatedContestsDifficultiesGroupBy {
@@ -212,11 +212,11 @@ func (acdq *AggregatedContestsDifficultiesQuery) GroupBy(field string, fields ..
 // Example:
 //
 //	var v []struct {
-//		ID int `json:"id,omitempty"`
+//		ContestID int `json:"contest_id,omitempty"`
 //	}
 //
 //	client.AggregatedContestsDifficulties.Query().
-//		Select(aggregatedcontestsdifficulties.FieldID).
+//		Select(aggregatedcontestsdifficulties.FieldContestID).
 //		Scan(ctx, &v)
 func (acdq *AggregatedContestsDifficultiesQuery) Select(fields ...string) *AggregatedContestsDifficultiesSelect {
 	acdq.ctx.Fields = append(acdq.ctx.Fields, fields...)

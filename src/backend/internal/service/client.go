@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"log/slog"
 
 	"openctfbackend/ent"
 	"openctfbackend/ent/migrate"
@@ -23,6 +24,7 @@ func New(credentials string) (*Client, error) {
 	if err := client.Schema.Create(context.Background(), migrate.WithDropIndex(true),
 		migrate.WithDropColumn(true),
 	); err != nil {
+		slog.Error("schema create failed", "err", err)
 		return nil, errors.Join(fmt.Errorf("failed creating schema resources"), err)
 	}
 

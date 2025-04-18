@@ -15,10 +15,10 @@ import (
 // AggregatedContestsDifficulties is the model entity for the AggregatedContestsDifficulties schema.
 type AggregatedContestsDifficulties struct {
 	config `json:"-"`
-	// ID holds the value of the "id" field.
-	ID int `json:"id,omitempty"`
-	// Name holds the value of the "name" field.
-	Name string `json:"name,omitempty"`
+	// ContestID holds the value of the "contest_id" field.
+	ContestID int `json:"contest_id,omitempty"`
+	// ContestName holds the value of the "contest_name" field.
+	ContestName string `json:"contest_name,omitempty"`
 	// End holds the value of the "end" field.
 	End time.Time `json:"end,omitempty"`
 	// AvgDifficulty holds the value of the "avg_difficulty" field.
@@ -33,9 +33,9 @@ func (*AggregatedContestsDifficulties) scanValues(columns []string) ([]any, erro
 		switch columns[i] {
 		case aggregatedcontestsdifficulties.FieldAvgDifficulty:
 			values[i] = new(sql.NullFloat64)
-		case aggregatedcontestsdifficulties.FieldID:
+		case aggregatedcontestsdifficulties.FieldContestID:
 			values[i] = new(sql.NullInt64)
-		case aggregatedcontestsdifficulties.FieldName:
+		case aggregatedcontestsdifficulties.FieldContestName:
 			values[i] = new(sql.NullString)
 		case aggregatedcontestsdifficulties.FieldEnd:
 			values[i] = new(sql.NullTime)
@@ -54,17 +54,17 @@ func (acd *AggregatedContestsDifficulties) assignValues(columns []string, values
 	}
 	for i := range columns {
 		switch columns[i] {
-		case aggregatedcontestsdifficulties.FieldID:
+		case aggregatedcontestsdifficulties.FieldContestID:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
-				return fmt.Errorf("unexpected type %T for field id", values[i])
+				return fmt.Errorf("unexpected type %T for field contest_id", values[i])
 			} else if value.Valid {
-				acd.ID = int(value.Int64)
+				acd.ContestID = int(value.Int64)
 			}
-		case aggregatedcontestsdifficulties.FieldName:
+		case aggregatedcontestsdifficulties.FieldContestName:
 			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field name", values[i])
+				return fmt.Errorf("unexpected type %T for field contest_name", values[i])
 			} else if value.Valid {
-				acd.Name = value.String
+				acd.ContestName = value.String
 			}
 		case aggregatedcontestsdifficulties.FieldEnd:
 			if value, ok := values[i].(*sql.NullTime); !ok {
@@ -106,11 +106,11 @@ func (acd *AggregatedContestsDifficulties) Unwrap() *AggregatedContestsDifficult
 func (acd *AggregatedContestsDifficulties) String() string {
 	var builder strings.Builder
 	builder.WriteString("AggregatedContestsDifficulties(")
-	builder.WriteString("id=")
-	builder.WriteString(fmt.Sprintf("%v", acd.ID))
+	builder.WriteString("contest_id=")
+	builder.WriteString(fmt.Sprintf("%v", acd.ContestID))
 	builder.WriteString(", ")
-	builder.WriteString("name=")
-	builder.WriteString(acd.Name)
+	builder.WriteString("contest_name=")
+	builder.WriteString(acd.ContestName)
 	builder.WriteString(", ")
 	builder.WriteString("end=")
 	builder.WriteString(acd.End.Format(time.ANSIC))

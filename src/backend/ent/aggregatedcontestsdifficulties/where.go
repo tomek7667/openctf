@@ -9,14 +9,14 @@ import (
 	"entgo.io/ent/dialect/sql"
 )
 
-// ID applies equality check predicate on the "id" field. It's identical to IDEQ.
-func ID(v int) predicate.AggregatedContestsDifficulties {
-	return predicate.AggregatedContestsDifficulties(sql.FieldEQ(FieldID, v))
+// ContestID applies equality check predicate on the "contest_id" field. It's identical to ContestIDEQ.
+func ContestID(v int) predicate.AggregatedContestsDifficulties {
+	return predicate.AggregatedContestsDifficulties(sql.FieldEQ(FieldContestID, v))
 }
 
-// Name applies equality check predicate on the "name" field. It's identical to NameEQ.
-func Name(v string) predicate.AggregatedContestsDifficulties {
-	return predicate.AggregatedContestsDifficulties(sql.FieldEQ(FieldName, v))
+// ContestName applies equality check predicate on the "contest_name" field. It's identical to ContestNameEQ.
+func ContestName(v string) predicate.AggregatedContestsDifficulties {
+	return predicate.AggregatedContestsDifficulties(sql.FieldEQ(FieldContestName, v))
 }
 
 // End applies equality check predicate on the "end" field. It's identical to EndEQ.
@@ -29,109 +29,109 @@ func AvgDifficulty(v float64) predicate.AggregatedContestsDifficulties {
 	return predicate.AggregatedContestsDifficulties(sql.FieldEQ(FieldAvgDifficulty, v))
 }
 
-// IDEQ applies the EQ predicate on the "id" field.
-func IDEQ(v int) predicate.AggregatedContestsDifficulties {
-	return predicate.AggregatedContestsDifficulties(sql.FieldEQ(FieldID, v))
+// ContestIDEQ applies the EQ predicate on the "contest_id" field.
+func ContestIDEQ(v int) predicate.AggregatedContestsDifficulties {
+	return predicate.AggregatedContestsDifficulties(sql.FieldEQ(FieldContestID, v))
 }
 
-// IDNEQ applies the NEQ predicate on the "id" field.
-func IDNEQ(v int) predicate.AggregatedContestsDifficulties {
-	return predicate.AggregatedContestsDifficulties(sql.FieldNEQ(FieldID, v))
+// ContestIDNEQ applies the NEQ predicate on the "contest_id" field.
+func ContestIDNEQ(v int) predicate.AggregatedContestsDifficulties {
+	return predicate.AggregatedContestsDifficulties(sql.FieldNEQ(FieldContestID, v))
 }
 
-// IDIn applies the In predicate on the "id" field.
-func IDIn(vs ...int) predicate.AggregatedContestsDifficulties {
-	return predicate.AggregatedContestsDifficulties(sql.FieldIn(FieldID, vs...))
+// ContestIDIn applies the In predicate on the "contest_id" field.
+func ContestIDIn(vs ...int) predicate.AggregatedContestsDifficulties {
+	return predicate.AggregatedContestsDifficulties(sql.FieldIn(FieldContestID, vs...))
 }
 
-// IDNotIn applies the NotIn predicate on the "id" field.
-func IDNotIn(vs ...int) predicate.AggregatedContestsDifficulties {
-	return predicate.AggregatedContestsDifficulties(sql.FieldNotIn(FieldID, vs...))
+// ContestIDNotIn applies the NotIn predicate on the "contest_id" field.
+func ContestIDNotIn(vs ...int) predicate.AggregatedContestsDifficulties {
+	return predicate.AggregatedContestsDifficulties(sql.FieldNotIn(FieldContestID, vs...))
 }
 
-// IDGT applies the GT predicate on the "id" field.
-func IDGT(v int) predicate.AggregatedContestsDifficulties {
-	return predicate.AggregatedContestsDifficulties(sql.FieldGT(FieldID, v))
+// ContestIDGT applies the GT predicate on the "contest_id" field.
+func ContestIDGT(v int) predicate.AggregatedContestsDifficulties {
+	return predicate.AggregatedContestsDifficulties(sql.FieldGT(FieldContestID, v))
 }
 
-// IDGTE applies the GTE predicate on the "id" field.
-func IDGTE(v int) predicate.AggregatedContestsDifficulties {
-	return predicate.AggregatedContestsDifficulties(sql.FieldGTE(FieldID, v))
+// ContestIDGTE applies the GTE predicate on the "contest_id" field.
+func ContestIDGTE(v int) predicate.AggregatedContestsDifficulties {
+	return predicate.AggregatedContestsDifficulties(sql.FieldGTE(FieldContestID, v))
 }
 
-// IDLT applies the LT predicate on the "id" field.
-func IDLT(v int) predicate.AggregatedContestsDifficulties {
-	return predicate.AggregatedContestsDifficulties(sql.FieldLT(FieldID, v))
+// ContestIDLT applies the LT predicate on the "contest_id" field.
+func ContestIDLT(v int) predicate.AggregatedContestsDifficulties {
+	return predicate.AggregatedContestsDifficulties(sql.FieldLT(FieldContestID, v))
 }
 
-// IDLTE applies the LTE predicate on the "id" field.
-func IDLTE(v int) predicate.AggregatedContestsDifficulties {
-	return predicate.AggregatedContestsDifficulties(sql.FieldLTE(FieldID, v))
+// ContestIDLTE applies the LTE predicate on the "contest_id" field.
+func ContestIDLTE(v int) predicate.AggregatedContestsDifficulties {
+	return predicate.AggregatedContestsDifficulties(sql.FieldLTE(FieldContestID, v))
 }
 
-// NameEQ applies the EQ predicate on the "name" field.
-func NameEQ(v string) predicate.AggregatedContestsDifficulties {
-	return predicate.AggregatedContestsDifficulties(sql.FieldEQ(FieldName, v))
+// ContestNameEQ applies the EQ predicate on the "contest_name" field.
+func ContestNameEQ(v string) predicate.AggregatedContestsDifficulties {
+	return predicate.AggregatedContestsDifficulties(sql.FieldEQ(FieldContestName, v))
 }
 
-// NameNEQ applies the NEQ predicate on the "name" field.
-func NameNEQ(v string) predicate.AggregatedContestsDifficulties {
-	return predicate.AggregatedContestsDifficulties(sql.FieldNEQ(FieldName, v))
+// ContestNameNEQ applies the NEQ predicate on the "contest_name" field.
+func ContestNameNEQ(v string) predicate.AggregatedContestsDifficulties {
+	return predicate.AggregatedContestsDifficulties(sql.FieldNEQ(FieldContestName, v))
 }
 
-// NameIn applies the In predicate on the "name" field.
-func NameIn(vs ...string) predicate.AggregatedContestsDifficulties {
-	return predicate.AggregatedContestsDifficulties(sql.FieldIn(FieldName, vs...))
+// ContestNameIn applies the In predicate on the "contest_name" field.
+func ContestNameIn(vs ...string) predicate.AggregatedContestsDifficulties {
+	return predicate.AggregatedContestsDifficulties(sql.FieldIn(FieldContestName, vs...))
 }
 
-// NameNotIn applies the NotIn predicate on the "name" field.
-func NameNotIn(vs ...string) predicate.AggregatedContestsDifficulties {
-	return predicate.AggregatedContestsDifficulties(sql.FieldNotIn(FieldName, vs...))
+// ContestNameNotIn applies the NotIn predicate on the "contest_name" field.
+func ContestNameNotIn(vs ...string) predicate.AggregatedContestsDifficulties {
+	return predicate.AggregatedContestsDifficulties(sql.FieldNotIn(FieldContestName, vs...))
 }
 
-// NameGT applies the GT predicate on the "name" field.
-func NameGT(v string) predicate.AggregatedContestsDifficulties {
-	return predicate.AggregatedContestsDifficulties(sql.FieldGT(FieldName, v))
+// ContestNameGT applies the GT predicate on the "contest_name" field.
+func ContestNameGT(v string) predicate.AggregatedContestsDifficulties {
+	return predicate.AggregatedContestsDifficulties(sql.FieldGT(FieldContestName, v))
 }
 
-// NameGTE applies the GTE predicate on the "name" field.
-func NameGTE(v string) predicate.AggregatedContestsDifficulties {
-	return predicate.AggregatedContestsDifficulties(sql.FieldGTE(FieldName, v))
+// ContestNameGTE applies the GTE predicate on the "contest_name" field.
+func ContestNameGTE(v string) predicate.AggregatedContestsDifficulties {
+	return predicate.AggregatedContestsDifficulties(sql.FieldGTE(FieldContestName, v))
 }
 
-// NameLT applies the LT predicate on the "name" field.
-func NameLT(v string) predicate.AggregatedContestsDifficulties {
-	return predicate.AggregatedContestsDifficulties(sql.FieldLT(FieldName, v))
+// ContestNameLT applies the LT predicate on the "contest_name" field.
+func ContestNameLT(v string) predicate.AggregatedContestsDifficulties {
+	return predicate.AggregatedContestsDifficulties(sql.FieldLT(FieldContestName, v))
 }
 
-// NameLTE applies the LTE predicate on the "name" field.
-func NameLTE(v string) predicate.AggregatedContestsDifficulties {
-	return predicate.AggregatedContestsDifficulties(sql.FieldLTE(FieldName, v))
+// ContestNameLTE applies the LTE predicate on the "contest_name" field.
+func ContestNameLTE(v string) predicate.AggregatedContestsDifficulties {
+	return predicate.AggregatedContestsDifficulties(sql.FieldLTE(FieldContestName, v))
 }
 
-// NameContains applies the Contains predicate on the "name" field.
-func NameContains(v string) predicate.AggregatedContestsDifficulties {
-	return predicate.AggregatedContestsDifficulties(sql.FieldContains(FieldName, v))
+// ContestNameContains applies the Contains predicate on the "contest_name" field.
+func ContestNameContains(v string) predicate.AggregatedContestsDifficulties {
+	return predicate.AggregatedContestsDifficulties(sql.FieldContains(FieldContestName, v))
 }
 
-// NameHasPrefix applies the HasPrefix predicate on the "name" field.
-func NameHasPrefix(v string) predicate.AggregatedContestsDifficulties {
-	return predicate.AggregatedContestsDifficulties(sql.FieldHasPrefix(FieldName, v))
+// ContestNameHasPrefix applies the HasPrefix predicate on the "contest_name" field.
+func ContestNameHasPrefix(v string) predicate.AggregatedContestsDifficulties {
+	return predicate.AggregatedContestsDifficulties(sql.FieldHasPrefix(FieldContestName, v))
 }
 
-// NameHasSuffix applies the HasSuffix predicate on the "name" field.
-func NameHasSuffix(v string) predicate.AggregatedContestsDifficulties {
-	return predicate.AggregatedContestsDifficulties(sql.FieldHasSuffix(FieldName, v))
+// ContestNameHasSuffix applies the HasSuffix predicate on the "contest_name" field.
+func ContestNameHasSuffix(v string) predicate.AggregatedContestsDifficulties {
+	return predicate.AggregatedContestsDifficulties(sql.FieldHasSuffix(FieldContestName, v))
 }
 
-// NameEqualFold applies the EqualFold predicate on the "name" field.
-func NameEqualFold(v string) predicate.AggregatedContestsDifficulties {
-	return predicate.AggregatedContestsDifficulties(sql.FieldEqualFold(FieldName, v))
+// ContestNameEqualFold applies the EqualFold predicate on the "contest_name" field.
+func ContestNameEqualFold(v string) predicate.AggregatedContestsDifficulties {
+	return predicate.AggregatedContestsDifficulties(sql.FieldEqualFold(FieldContestName, v))
 }
 
-// NameContainsFold applies the ContainsFold predicate on the "name" field.
-func NameContainsFold(v string) predicate.AggregatedContestsDifficulties {
-	return predicate.AggregatedContestsDifficulties(sql.FieldContainsFold(FieldName, v))
+// ContestNameContainsFold applies the ContainsFold predicate on the "contest_name" field.
+func ContestNameContainsFold(v string) predicate.AggregatedContestsDifficulties {
+	return predicate.AggregatedContestsDifficulties(sql.FieldContainsFold(FieldContestName, v))
 }
 
 // EndEQ applies the EQ predicate on the "end" field.
