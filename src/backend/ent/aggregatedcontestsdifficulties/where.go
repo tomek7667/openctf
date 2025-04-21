@@ -24,9 +24,19 @@ func End(v time.Time) predicate.AggregatedContestsDifficulties {
 	return predicate.AggregatedContestsDifficulties(sql.FieldEQ(FieldEnd, v))
 }
 
+// OrganizersID applies equality check predicate on the "organizers_id" field. It's identical to OrganizersIDEQ.
+func OrganizersID(v int) predicate.AggregatedContestsDifficulties {
+	return predicate.AggregatedContestsDifficulties(sql.FieldEQ(FieldOrganizersID, v))
+}
+
 // AvgDifficulty applies equality check predicate on the "avg_difficulty" field. It's identical to AvgDifficultyEQ.
 func AvgDifficulty(v float64) predicate.AggregatedContestsDifficulties {
 	return predicate.AggregatedContestsDifficulties(sql.FieldEQ(FieldAvgDifficulty, v))
+}
+
+// Participants applies equality check predicate on the "participants" field. It's identical to ParticipantsEQ.
+func Participants(v int) predicate.AggregatedContestsDifficulties {
+	return predicate.AggregatedContestsDifficulties(sql.FieldEQ(FieldParticipants, v))
 }
 
 // ContestIDEQ applies the EQ predicate on the "contest_id" field.
@@ -174,6 +184,46 @@ func EndLTE(v time.Time) predicate.AggregatedContestsDifficulties {
 	return predicate.AggregatedContestsDifficulties(sql.FieldLTE(FieldEnd, v))
 }
 
+// OrganizersIDEQ applies the EQ predicate on the "organizers_id" field.
+func OrganizersIDEQ(v int) predicate.AggregatedContestsDifficulties {
+	return predicate.AggregatedContestsDifficulties(sql.FieldEQ(FieldOrganizersID, v))
+}
+
+// OrganizersIDNEQ applies the NEQ predicate on the "organizers_id" field.
+func OrganizersIDNEQ(v int) predicate.AggregatedContestsDifficulties {
+	return predicate.AggregatedContestsDifficulties(sql.FieldNEQ(FieldOrganizersID, v))
+}
+
+// OrganizersIDIn applies the In predicate on the "organizers_id" field.
+func OrganizersIDIn(vs ...int) predicate.AggregatedContestsDifficulties {
+	return predicate.AggregatedContestsDifficulties(sql.FieldIn(FieldOrganizersID, vs...))
+}
+
+// OrganizersIDNotIn applies the NotIn predicate on the "organizers_id" field.
+func OrganizersIDNotIn(vs ...int) predicate.AggregatedContestsDifficulties {
+	return predicate.AggregatedContestsDifficulties(sql.FieldNotIn(FieldOrganizersID, vs...))
+}
+
+// OrganizersIDGT applies the GT predicate on the "organizers_id" field.
+func OrganizersIDGT(v int) predicate.AggregatedContestsDifficulties {
+	return predicate.AggregatedContestsDifficulties(sql.FieldGT(FieldOrganizersID, v))
+}
+
+// OrganizersIDGTE applies the GTE predicate on the "organizers_id" field.
+func OrganizersIDGTE(v int) predicate.AggregatedContestsDifficulties {
+	return predicate.AggregatedContestsDifficulties(sql.FieldGTE(FieldOrganizersID, v))
+}
+
+// OrganizersIDLT applies the LT predicate on the "organizers_id" field.
+func OrganizersIDLT(v int) predicate.AggregatedContestsDifficulties {
+	return predicate.AggregatedContestsDifficulties(sql.FieldLT(FieldOrganizersID, v))
+}
+
+// OrganizersIDLTE applies the LTE predicate on the "organizers_id" field.
+func OrganizersIDLTE(v int) predicate.AggregatedContestsDifficulties {
+	return predicate.AggregatedContestsDifficulties(sql.FieldLTE(FieldOrganizersID, v))
+}
+
 // AvgDifficultyEQ applies the EQ predicate on the "avg_difficulty" field.
 func AvgDifficultyEQ(v float64) predicate.AggregatedContestsDifficulties {
 	return predicate.AggregatedContestsDifficulties(sql.FieldEQ(FieldAvgDifficulty, v))
@@ -212,6 +262,46 @@ func AvgDifficultyLT(v float64) predicate.AggregatedContestsDifficulties {
 // AvgDifficultyLTE applies the LTE predicate on the "avg_difficulty" field.
 func AvgDifficultyLTE(v float64) predicate.AggregatedContestsDifficulties {
 	return predicate.AggregatedContestsDifficulties(sql.FieldLTE(FieldAvgDifficulty, v))
+}
+
+// ParticipantsEQ applies the EQ predicate on the "participants" field.
+func ParticipantsEQ(v int) predicate.AggregatedContestsDifficulties {
+	return predicate.AggregatedContestsDifficulties(sql.FieldEQ(FieldParticipants, v))
+}
+
+// ParticipantsNEQ applies the NEQ predicate on the "participants" field.
+func ParticipantsNEQ(v int) predicate.AggregatedContestsDifficulties {
+	return predicate.AggregatedContestsDifficulties(sql.FieldNEQ(FieldParticipants, v))
+}
+
+// ParticipantsIn applies the In predicate on the "participants" field.
+func ParticipantsIn(vs ...int) predicate.AggregatedContestsDifficulties {
+	return predicate.AggregatedContestsDifficulties(sql.FieldIn(FieldParticipants, vs...))
+}
+
+// ParticipantsNotIn applies the NotIn predicate on the "participants" field.
+func ParticipantsNotIn(vs ...int) predicate.AggregatedContestsDifficulties {
+	return predicate.AggregatedContestsDifficulties(sql.FieldNotIn(FieldParticipants, vs...))
+}
+
+// ParticipantsGT applies the GT predicate on the "participants" field.
+func ParticipantsGT(v int) predicate.AggregatedContestsDifficulties {
+	return predicate.AggregatedContestsDifficulties(sql.FieldGT(FieldParticipants, v))
+}
+
+// ParticipantsGTE applies the GTE predicate on the "participants" field.
+func ParticipantsGTE(v int) predicate.AggregatedContestsDifficulties {
+	return predicate.AggregatedContestsDifficulties(sql.FieldGTE(FieldParticipants, v))
+}
+
+// ParticipantsLT applies the LT predicate on the "participants" field.
+func ParticipantsLT(v int) predicate.AggregatedContestsDifficulties {
+	return predicate.AggregatedContestsDifficulties(sql.FieldLT(FieldParticipants, v))
+}
+
+// ParticipantsLTE applies the LTE predicate on the "participants" field.
+func ParticipantsLTE(v int) predicate.AggregatedContestsDifficulties {
+	return predicate.AggregatedContestsDifficulties(sql.FieldLTE(FieldParticipants, v))
 }
 
 // And groups predicates with the AND operator between them.

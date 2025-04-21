@@ -21,9 +21,13 @@ type AggregatedContestsDifficulties struct {
 	ContestName string `json:"contest_name,omitempty"`
 	// End holds the value of the "end" field.
 	End time.Time `json:"end,omitempty"`
+	// OrganizersID holds the value of the "organizers_id" field.
+	OrganizersID int `json:"organizers_id,omitempty"`
 	// AvgDifficulty holds the value of the "avg_difficulty" field.
 	AvgDifficulty float64 `json:"avg_difficulty,omitempty"`
-	selectValues  sql.SelectValues
+	// Participants holds the value of the "participants" field.
+	Participants int `json:"participants,omitempty"`
+	selectValues sql.SelectValues
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -33,7 +37,7 @@ func (*AggregatedContestsDifficulties) scanValues(columns []string) ([]any, erro
 		switch columns[i] {
 		case aggregatedcontestsdifficulties.FieldAvgDifficulty:
 			values[i] = new(sql.NullFloat64)
-		case aggregatedcontestsdifficulties.FieldContestID:
+		case aggregatedcontestsdifficulties.FieldContestID, aggregatedcontestsdifficulties.FieldOrganizersID, aggregatedcontestsdifficulties.FieldParticipants:
 			values[i] = new(sql.NullInt64)
 		case aggregatedcontestsdifficulties.FieldContestName:
 			values[i] = new(sql.NullString)
@@ -72,11 +76,23 @@ func (acd *AggregatedContestsDifficulties) assignValues(columns []string, values
 			} else if value.Valid {
 				acd.End = value.Time
 			}
+		case aggregatedcontestsdifficulties.FieldOrganizersID:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field organizers_id", values[i])
+			} else if value.Valid {
+				acd.OrganizersID = int(value.Int64)
+			}
 		case aggregatedcontestsdifficulties.FieldAvgDifficulty:
 			if value, ok := values[i].(*sql.NullFloat64); !ok {
 				return fmt.Errorf("unexpected type %T for field avg_difficulty", values[i])
 			} else if value.Valid {
 				acd.AvgDifficulty = value.Float64
+			}
+		case aggregatedcontestsdifficulties.FieldParticipants:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field participants", values[i])
+			} else if value.Valid {
+				acd.Participants = int(value.Int64)
 			}
 		default:
 			acd.selectValues.Set(columns[i], values[i])
@@ -115,8 +131,14 @@ func (acd *AggregatedContestsDifficulties) String() string {
 	builder.WriteString("end=")
 	builder.WriteString(acd.End.Format(time.ANSIC))
 	builder.WriteString(", ")
+	builder.WriteString("organizers_id=")
+	builder.WriteString(fmt.Sprintf("%v", acd.OrganizersID))
+	builder.WriteString(", ")
 	builder.WriteString("avg_difficulty=")
 	builder.WriteString(fmt.Sprintf("%v", acd.AvgDifficulty))
+	builder.WriteString(", ")
+	builder.WriteString("participants=")
+	builder.WriteString(fmt.Sprintf("%v", acd.Participants))
 	builder.WriteByte(')')
 	return builder.String()
 }

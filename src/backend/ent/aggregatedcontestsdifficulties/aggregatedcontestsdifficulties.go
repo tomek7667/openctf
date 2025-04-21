@@ -15,8 +15,12 @@ const (
 	FieldContestName = "contest_name"
 	// FieldEnd holds the string denoting the end field in the database.
 	FieldEnd = "end"
+	// FieldOrganizersID holds the string denoting the organizers_id field in the database.
+	FieldOrganizersID = "organizers_id"
 	// FieldAvgDifficulty holds the string denoting the avg_difficulty field in the database.
 	FieldAvgDifficulty = "avg_difficulty"
+	// FieldParticipants holds the string denoting the participants field in the database.
+	FieldParticipants = "participants"
 	// Table holds the table name of the aggregatedcontestsdifficulties in the database.
 	Table = "aggregated_contests_difficulties"
 )
@@ -26,7 +30,9 @@ var Columns = []string{
 	FieldContestID,
 	FieldContestName,
 	FieldEnd,
+	FieldOrganizersID,
 	FieldAvgDifficulty,
+	FieldParticipants,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -57,7 +63,17 @@ func ByEnd(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldEnd, opts...).ToFunc()
 }
 
+// ByOrganizersID orders the results by the organizers_id field.
+func ByOrganizersID(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldOrganizersID, opts...).ToFunc()
+}
+
 // ByAvgDifficulty orders the results by the avg_difficulty field.
 func ByAvgDifficulty(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldAvgDifficulty, opts...).ToFunc()
+}
+
+// ByParticipants orders the results by the participants field.
+func ByParticipants(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldParticipants, opts...).ToFunc()
 }
