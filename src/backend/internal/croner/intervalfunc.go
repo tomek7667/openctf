@@ -44,8 +44,7 @@ func (h *Handler) IntervalFunc() error {
 	).AllX(context.TODO())
 	slog.Debug("the stuff to be weighted found", "number of records found", len(records), "end greater than", before, "end less than or equal now", now, "example first record", records[0])
 
-	// 3. get avg out all weight ratings for all
-	// 4. normalize the difficulties with Math.floor to 0 decimal points wrt. the whole pool 100;
+	// 3. normalize the difficulties with Math.floor to 0 decimal points wrt. the whole pool 100;
 
 	// TODO: implement
 	return nil
