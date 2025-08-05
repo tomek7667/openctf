@@ -104,14 +104,14 @@ export function Header({ onAuthClick }: HeaderProps) {
                     key={item.id}
                     href={item.href}
                     onClick={() => setIsMobileMenuOpen(false)}
-                    className={`flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                    className={`flex items-center space-x-2 px-3 py-2 rounded-none text-sm font-bold font-mono transition-colors ${
                       isActive(item.href)
-                        ? 'bg-primary text-primary-foreground'
-                        : 'text-muted-foreground hover:text-foreground hover:bg-accent'
+                        ? 'bg-primary text-black glow-text'
+                        : 'text-muted-foreground hover:text-primary hover:bg-accent/50'
                     }`}
                   >
                     <Icon className="h-4 w-4" />
-                    <span>{item.label}</span>
+                    <span>[{item.label.toUpperCase()}]</span>
                   </Link>
                 )
               })}
