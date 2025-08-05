@@ -567,26 +567,6 @@ export const useTeamsStore = create<TeamsStore>()(
   )
 );
 
-// =============================================================================
-// Selectors
-// =============================================================================
 
-export const useTeamsSelectors = {
-  teams: () => useTeamsStore((state) => state.teams),
-  currentTeam: () => useTeamsStore((state) => state.currentTeam),
-  isLoading: () => useTeamsStore((state) => state.isLoading),
-  error: () => useTeamsStore((state) => state.error),
-  filters: () => useTeamsStore((state) => state.filters),
-  pagination: () => useTeamsStore((state) => ({
-    currentPage: state.currentPage,
-    pageSize: state.pageSize,
-    totalCount: state.totalCount,
-    hasNextPage: state.hasNextPage,
-    hasPrevPage: state.hasPrevPage,
-  })),
-  selectedTeams: () => useTeamsStore((state) => 
-    state.teams.filter(team => state.selectedTeamIds.has(team.id))
-  ),
-};
 
 export default useTeamsStore;

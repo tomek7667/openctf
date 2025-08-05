@@ -171,7 +171,8 @@ export const useAuthStore = create<AuthStore>()(
         // =====================================================================
 
         refreshUser: async () => {
-          if (!get().token) return;
+          const state = get();
+          if (!state.token || state.isLoading) return;
 
           try {
             const user = await authApi.getCurrentUser();
@@ -241,15 +242,6 @@ export const useAuthStore = create<AuthStore>()(
             return false;
           }
           
-          // Refresh token if it expires in the next 15 minutes
-          const refreshThreshold = 15 * 60 * 1000; // 15 minutes
-          if (sessionExpiry - now < refreshThreshold) {
-            authApi.refreshToken().catch(() => {
-              // If refresh fails, logout
-              get().logout();
-            });
-          }
-          
           return true;
         },
 
@@ -270,22 +262,21 @@ export const useAuthStore = create<AuthStore>()(
         },
 
         initialize: async () => {
-          set((state) => {
-            state.isLoading = true;
-          });
+          const state = get();
+          if (state.isInitialized) return;
 
           try {
             const { token } = get();
             
-            if (token && get().checkSession()) {
-              await get().refreshUser();
+            if (token) {
+              // Just check if session is valid without API call
+              get().checkSession();
             }
           } catch (error) {
             console.error('Auth initialization failed:', error);
             get().logout();
           } finally {
             set((state) => {
-              state.isLoading = false;
               state.isInitialized = true;
             });
           }
@@ -312,17 +303,7 @@ export const useAuthStore = create<AuthStore>()(
   )
 );
 
-// =============================================================================
-// Selectors (for performance optimization)
-// =============================================================================
 
-export const useAuthSelectors = {
-  user: () => useAuthStore((state) => state.user),
-  isAuthenticated: () => useAuthStore((state) => state.isAuthenticated),
-  isLoading: () => useAuthStore((state) => state.isLoading),
-  error: () => useAuthStore((state) => state.error),
-  isInitialized: () => useAuthStore((state) => state.isInitialized),
-};
 
 // =============================================================================
 // Session Activity Tracker

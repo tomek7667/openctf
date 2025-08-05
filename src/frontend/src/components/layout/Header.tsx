@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { useAuthStore } from '@/stores/auth'
 import { useNavigation } from '@/hooks/useNavigation'
 import { Button } from '@/components/ui/Button'
-import { LogIn, LogOut, Menu, X, User } from '@/components/icons'
+import { LogIn, LogOut, Menu, X, User } from '@/components/ui/icons'
 
 interface HeaderProps {
   onAuthClick: () => void

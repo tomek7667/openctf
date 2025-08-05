@@ -186,7 +186,7 @@ export function TeamsTable({ className }: TeamsTableProps) {
               <div className="text-destructive font-mono text-lg mb-2">
                 &gt; ERROR_LOADING_TEAMS
               </div>
-              <p className="text-muted-foreground text-sm">// {error}</p>
+              <p className="text-muted-foreground text-sm">{"// "}{error}</p>
             </div>
             <Button
               variant="outline"

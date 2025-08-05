@@ -51,12 +51,10 @@ function AuthInitializer({ children }: { children: React.ReactNode }) {
   const { initialize, isInitialized } = useAuthStore()
 
   useEffect(() => {
-    initialize()
-  }, [initialize])
-
-  if (!isInitialized) {
-    return <LoadingFallback message="Initializing application..." />
-  }
+    if (!isInitialized) {
+      initialize()
+    }
+  }, [initialize, isInitialized])
 
   return <>{children}</>
 }

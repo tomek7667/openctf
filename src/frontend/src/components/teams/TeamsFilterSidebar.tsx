@@ -172,7 +172,7 @@ export function TeamsFilterSidebar({ className }: TeamsFilterSidebarProps) {
             <div className="text-sm text-muted-foreground mb-2">Active filters:</div>
             <div className="space-y-1 text-xs">
               {filters.searchTerm && (
-                <div>Search: "{filters.searchTerm}"</div>
+                <div>Search: &quot;{filters.searchTerm}&quot;</div>
               )}
               {filters.year && (
                 <div>Year: {filters.year}</div>

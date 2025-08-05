@@ -5,9 +5,12 @@ name: Go
 
 on:
   push:
-    branches: [ "master" ]
-  pull_request:
-    branches: [ "master" ]
+    branches:
+      - master
+    paths:
+      - "src/backend/**"
+      - ".github/workflows/deploy_backend.yml"
+  workflow_dispatch:
 
 jobs:
   build:
@@ -16,15 +19,15 @@ jobs:
       run:
         working-directory: src/backend/
     steps:
-    - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-    - name: Set up Go
-      uses: actions/setup-go@v4
-      with:
-        go-version: '1.23'
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: "1.23"
 
-    - name: Build
-      run: go build -v ./...
+      - name: Build
+        run: go build -v ./...
 
-    - name: Test
-      run: go test -v ./...
+      - name: Test
+        run: go test -v ./...

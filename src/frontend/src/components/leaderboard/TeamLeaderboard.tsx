@@ -196,8 +196,6 @@ export function TeamLeaderboard() {
         const data = await leaderboardApi.getTopTeams(10)
         setTeams(data)
       } catch (error) {
-        const message = getErrorMessage(error)
-        toast.error('Failed to load leaderboard', message)
         console.error('Error fetching leaderboard:', error)
       } finally {
         setIsLoading(false)
@@ -205,7 +203,7 @@ export function TeamLeaderboard() {
     }
 
     fetchTeams()
-  }, [toast])
+  }, [])
 
   const teamData: TeamData[] = teams.map(team => ({
     place: team.place,
@@ -234,9 +232,9 @@ export function TeamLeaderboard() {
           <div className="terminal glass-terminal p-4 max-w-2xl mx-auto text-left">
             <div className="text-primary mb-2">root@openctf:~# cat leaderboard.txt</div>
             <p className="text-green-400">
-              // Monthly rankings for {currentMonth}<br/>
-              // Based on OpenCTF point system and contest performance<br/>
-              <span className="text-yellow-400">// Updated: $(date) | Weight pool: 100.0 pts</span>
+              {`// Monthly rankings for ${currentMonth}`}<br/>
+              {"// Based on OpenCTF point system and contest performance"}<br/>
+              <span className="text-yellow-400">{"// Updated: $(date) | Weight pool: 100.0 pts"}</span>
             </p>
           </div>
         </motion.div>
@@ -286,7 +284,7 @@ export function TeamLeaderboard() {
             <div className="text-center py-12">
               <div className="text-muted-foreground font-mono">
                 <p className="text-lg mb-2">&gt; NO_TEAMS_FOUND</p>
-                <p className="text-sm">// Failed to load team rankings</p>
+                <p className="text-sm">{"// Failed to load team rankings"}</p>
               </div>
             </div>
           )}
