@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState } from 'react'
-import { useAuth } from '@/contexts/AuthContext'
+import { useAuthStore } from '@/stores/auth'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
@@ -13,7 +13,7 @@ interface RegisterFormProps {
 }
 
 export function RegisterForm({ onSuccess, onSwitchToLogin }: RegisterFormProps) {
-  const { register, loading } = useAuth()
+  const { register, isLoading } = useAuthStore()
   const [formData, setFormData] = useState<RegisterDto>({
     username: '',
     email: '',
@@ -99,8 +99,8 @@ export function RegisterForm({ onSuccess, onSwitchToLogin }: RegisterFormProps) 
             <div className="text-sm text-destructive">{errors.general}</div>
           )}
 
-          <Button type="submit" className="w-full" disabled={loading}>
-            {loading ? 'Creating account...' : 'Create Account'}
+          <Button type="submit" className="w-full" disabled={isLoading}>
+            {isLoading ? 'Creating account...' : 'Create Account'}
           </Button>
 
           {onSwitchToLogin && (
