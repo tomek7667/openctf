@@ -16,12 +16,12 @@ export const statsApi = {
     await sleep(1000) // Simulate network delay
     
     // Simulate potential API failure
-    const random = Math.random()
-    if (random < 0.05) {
-      throw new Error('Network timeout while fetching statistics. Please check your connection.')
-    } else if (random < 0.1) {
-      throw new Error('Statistics service temporarily unavailable. Please try again in a moment.')
-    }
+    // const random = Math.random()
+    // if (random < 0.05) {
+    //   throw new Error('Network timeout while fetching statistics. Please check your connection.')
+    // } else if (random < 0.1) {
+    //   throw new Error('Statistics service temporarily unavailable. Please try again in a moment.')
+    // }
     
     return {
       rankedTeams: 142,
