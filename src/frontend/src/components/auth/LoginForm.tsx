@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState } from 'react'
-import { useAuth } from '@/contexts/AuthContext'
+import { useAuthStore } from '@/stores/auth'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
@@ -13,7 +13,7 @@ interface LoginFormProps {
 }
 
 export function LoginForm({ onSuccess, onSwitchToRegister }: LoginFormProps) {
-  const { login, loading } = useAuth()
+  const { login, isLoading } = useAuthStore()
   const [formData, setFormData] = useState<LoginDto>({
     identity: '',
     password: '',
@@ -75,8 +75,8 @@ export function LoginForm({ onSuccess, onSwitchToRegister }: LoginFormProps) {
             <div className="text-sm text-destructive">{errors.general}</div>
           )}
 
-          <Button type="submit" className="w-full" disabled={loading}>
-            {loading ? 'Signing in...' : 'Sign In'}
+          <Button type="submit" className="w-full" disabled={isLoading}>
+            {isLoading ? 'Signing in...' : 'Sign In'}
           </Button>
 
           {onSwitchToRegister && (
