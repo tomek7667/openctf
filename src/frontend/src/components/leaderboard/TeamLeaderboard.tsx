@@ -112,7 +112,7 @@ const TopThreePodium = ({ teams }: { teams: TeamData[] }) => {
       >
         <div className={`${getPodiumHeight(3)} w-20 bg-gradient-to-t from-amber-700/30 to-amber-600/20 border-t-4 border-amber-600 rounded-t-lg relative terminal mb-2`}>
           <div className="absolute -top-8 left-1/2 transform -translate-x-1/2">
-            <Award className="h-8 w-8 text-amber-600 glow-text" />
+            <div className="w-8 h-8 rounded-full bg-amber-600 flex items-center justify-center text-black font-bold glow-text">3</div>
           </div>
           <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 text-amber-600 font-bold text-xl">3</div>
         </div>
