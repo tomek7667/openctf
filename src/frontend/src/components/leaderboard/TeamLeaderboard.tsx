@@ -78,7 +78,7 @@ const TopThreePodium = ({ teams }: { teams: TeamData[] }) => {
       >
         <div className={`${getPodiumHeight(2)} w-24 bg-gradient-to-t from-gray-500/30 to-gray-400/20 border-t-4 border-gray-400 rounded-t-lg relative terminal mb-2`}>
           <div className="absolute -top-8 left-1/2 transform -translate-x-1/2">
-            <Medal className="h-8 w-8 text-gray-300 glow-text" />
+            <div className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center text-black font-bold glow-text">2</div>
           </div>
           <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 text-gray-300 font-bold text-xl">2</div>
         </div>
