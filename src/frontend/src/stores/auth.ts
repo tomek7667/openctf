@@ -2,7 +2,7 @@ import { create } from 'zustand'
 import { persist, createJSONStorage } from 'zustand/middleware'
 import { immer } from 'zustand/middleware/immer'
 import type { User, LoginDto, RegisterDto } from '@/types/api'
-import { apiClient } from '@/lib/api'
+import { authApi } from '@/api'
 
 interface AuthState {
   user: User | null
@@ -41,7 +41,7 @@ export const useAuthStore = create<AuthStore>()(
         })
 
         try {
-          const { user, token } = await apiClient.login(credentials)
+          const { user, token } = await authApi.login(credentials)
           
           set((state) => {
             state.user = user
@@ -65,7 +65,7 @@ export const useAuthStore = create<AuthStore>()(
         })
 
         try {
-          const { user, token } = await apiClient.register(userData)
+          const { user, token } = await authApi.register(userData)
           
           set((state) => {
             state.user = user
@@ -83,7 +83,7 @@ export const useAuthStore = create<AuthStore>()(
       },
 
       logout: () => {
-        apiClient.logout()
+        authApi.logout()
         set((state) => {
           state.user = null
           state.token = null
@@ -96,7 +96,7 @@ export const useAuthStore = create<AuthStore>()(
         if (!get().token) return
 
         try {
-          const user = await apiClient.me()
+          const { user } = await authApi.me()
           set((state) => {
             state.user = user
             state.isAuthenticated = true
@@ -129,7 +129,7 @@ export const useAuthStore = create<AuthStore>()(
       }),
       onRehydrateStorage: () => (state) => {
         if (state?.token) {
-          apiClient.setToken(state.token)
+          authApi.setToken(state.token)
         }
       },
     }
