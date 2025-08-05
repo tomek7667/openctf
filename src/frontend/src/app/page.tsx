@@ -7,7 +7,7 @@
 
 'use client'
 
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import {
@@ -22,6 +22,9 @@ import {
   BarChart
 } from '@/components/ui/icons'
 import { TeamLeaderboard } from '@/components/leaderboard/TeamLeaderboard'
+import { statsApi, PlatformStats } from '@/api/stats'
+import { useToast } from '@/hooks/useToast'
+import { getErrorMessage } from '@/lib/utils'
 
 interface FeatureCardProps {
   icon: React.ComponentType<{ className?: string }>
