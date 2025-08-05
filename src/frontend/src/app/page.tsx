@@ -197,37 +197,37 @@ export default function HomePage() {
             className="text-center mb-12"
           >
             <h2 className="text-3xl md:text-4xl font-bold mb-4 font-mono">
-              &gt; TRUSTED_BY_THE_CTF_COMMUNITY
+              &gt; PLATFORM_STATISTICS
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Join thousands of security enthusiasts and teams already competing on our platform.
+              Current rankings and contest data from the CTF community.
             </p>
           </motion.div>
           
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
             <StatCard
               icon={Shield}
-              value="500+"
-              label="Active Teams"
-              trend="+12% this month"
+              value="142"
+              label="Ranked Teams"
+              trend="Updated daily"
             />
             <StatCard
               icon={Users}
-              value="2.1K+"
-              label="Registered Users"
-              trend="+18% this month"
+              value="1.2K"
+              label="Team Members"
+              trend="Active players"
             />
             <StatCard
               icon={Trophy}
-              value="150+"
-              label="Competitions"
-              trend="+8% this month"
+              value="23"
+              label="Active Contests"
+              trend="This month"
             />
             <StatCard
               icon={Globe}
-              value="40+"
-              label="Countries"
-              trend="+5% this month"
+              value="15"
+              label="Past Events"
+              trend="Last 30 days"
             />
           </div>
         </div>
