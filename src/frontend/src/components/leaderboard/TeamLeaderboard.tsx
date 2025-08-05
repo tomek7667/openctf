@@ -112,6 +112,31 @@ const TopThreePodium = ({ teams }: { teams: TeamData[] }) => {
   )
 }
 
+const TeamRowSkeleton = ({ index }: { index: number }) => (
+  <motion.div
+    initial={{ opacity: 0, x: -20 }}
+    animate={{ opacity: 1, x: 0 }}
+    transition={{ delay: index * 0.1 }}
+    className="p-4 mb-2 rounded-none border bg-card/50 border-primary/20 font-mono"
+  >
+    <div className="flex items-center justify-between">
+      <div className="flex items-center space-x-4">
+        <div className="flex items-center justify-center w-10 h-10">
+          <div className="w-6 h-6 bg-primary/20 rounded animate-pulse" />
+        </div>
+        <div className="flex flex-col space-y-2">
+          <div className="h-5 bg-primary/20 rounded w-32 animate-pulse" />
+          <div className="h-3 bg-primary/10 rounded w-24 animate-pulse" />
+        </div>
+      </div>
+      <div className="text-right space-y-2">
+        <div className="h-6 bg-primary/20 rounded w-16 animate-pulse" />
+        <div className="h-3 bg-primary/10 rounded w-20 animate-pulse" />
+      </div>
+    </div>
+  </motion.div>
+)
+
 const TeamRow = ({ team, index }: { team: TeamData, index: number }) => (
   <motion.div
     initial={{ opacity: 0, x: -20 }}
