@@ -150,14 +150,50 @@
 }
 
 @layer components {
+  /* Terminal-style elements */
+  .terminal {
+    @apply bg-black border border-primary/30 rounded-none font-mono text-primary;
+    background-image: repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 2px,
+      rgba(0, 255, 255, 0.03) 2px,
+      rgba(0, 255, 255, 0.03) 4px
+    );
+  }
+
+  .terminal-prompt {
+    @apply text-primary;
+  }
+
+  .terminal-text {
+    @apply text-green-400;
+  }
+
+  .hacker-border {
+    @apply border border-primary/30;
+    box-shadow: 0 0 10px rgba(0, 255, 255, 0.1), inset 0 0 10px rgba(0, 255, 255, 0.05);
+  }
+
+  .glow-text {
+    text-shadow: 0 0 5px currentColor;
+  }
+
+  .matrix-bg {
+    background-image:
+      linear-gradient(rgba(0, 255, 255, 0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0, 255, 255, 0.03) 1px, transparent 1px);
+    background-size: 20px 20px;
+  }
+
   /* Loading states */
   .loading-pulse {
-    @apply animate-pulse bg-muted rounded;
+    @apply animate-pulse bg-muted rounded-none;
   }
 
   .loading-skeleton {
     @apply loading-pulse;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    background: linear-gradient(90deg, transparent, rgba(0, 255, 255, 0.2), transparent);
     background-size: 200px 100%;
     animation: loading 1.5s infinite;
   }
@@ -171,28 +207,52 @@
     }
   }
 
-  /* Glass morphism effect */
+  /* Hacker glass morphism effect */
   .glass {
-    @apply bg-white/10 backdrop-blur-md border border-white/20;
+    @apply bg-primary/5 backdrop-blur-md border border-primary/20;
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.1);
   }
 
-  .glass-dark {
-    @apply bg-black/10 backdrop-blur-md border border-black/20;
+  .glass-terminal {
+    @apply bg-black/80 backdrop-blur-md border border-primary/30;
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.2), inset 0 0 20px rgba(0, 255, 255, 0.05);
   }
 
-  /* Gradient text */
+  /* Terminal gradient text */
   .gradient-text {
-    @apply bg-gradient-to-r from-brand-600 to-brand-400 bg-clip-text text-transparent;
+    @apply bg-gradient-to-r from-primary via-green-400 to-primary bg-clip-text text-transparent;
   }
 
-  /* Card hover effects */
+  .hacker-gradient-text {
+    @apply bg-gradient-to-r from-primary to-green-400 bg-clip-text text-transparent;
+    text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+  }
+
+  /* Hacker card hover effects */
   .card-hover {
-    @apply transition-all duration-200 hover:shadow-lg hover:-translate-y-1;
+    @apply transition-all duration-200 hover:border-primary/50 hover:-translate-y-1;
+    transition: all 0.2s ease, box-shadow 0.2s ease;
   }
 
-  /* Button variants */
+  .card-hover:hover {
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.2), 0 10px 40px rgba(0, 0, 0, 0.3);
+  }
+
+  /* Terminal button variants */
   .btn-gradient {
-    @apply bg-gradient-to-r from-brand-600 to-brand-500 hover:from-brand-700 hover:to-brand-600 text-white;
+    @apply bg-gradient-to-r from-primary to-green-400 hover:from-green-400 hover:to-primary text-black font-bold;
+    text-shadow: none;
+    box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+  }
+
+  .btn-terminal {
+    @apply bg-transparent border border-primary text-primary hover:bg-primary hover:text-black;
+    box-shadow: 0 0 10px rgba(0, 255, 255, 0.2);
+    transition: all 0.2s ease;
+  }
+
+  .btn-terminal:hover {
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.4);
   }
 }
 
