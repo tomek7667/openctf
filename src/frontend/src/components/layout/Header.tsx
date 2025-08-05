@@ -26,13 +26,13 @@ export function Header({ onAuthClick }: HeaderProps) {
   }
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className="sticky top-0 z-50 w-full border-b border-primary/30 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container mx-auto px-4">
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-2">
-            <div className="h-8 w-8 rounded bg-primary"></div>
-            <span className="text-xl font-bold">OpenCTF</span>
+            <div className="h-8 w-8 rounded-none bg-primary glow-text flex items-center justify-center text-black font-bold">[O]</div>
+            <span className="text-xl font-bold font-mono glow-text">&gt; OpenCTF</span>
           </Link>
 
           {/* Desktop Navigation */}
@@ -43,14 +43,14 @@ export function Header({ onAuthClick }: HeaderProps) {
                 <Link
                   key={item.id}
                   href={item.href}
-                  className={`flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                  className={`flex items-center space-x-2 px-3 py-2 rounded-none text-sm font-bold font-mono transition-colors ${
                     isActive(item.href)
-                      ? 'bg-primary text-primary-foreground'
-                      : 'text-muted-foreground hover:text-foreground hover:bg-accent'
+                      ? 'bg-primary text-black glow-text'
+                      : 'text-muted-foreground hover:text-primary hover:bg-accent/50'
                   }`}
                 >
                   <Icon className="h-4 w-4" />
-                  <span>{item.label}</span>
+                  <span>[{item.label.toUpperCase()}]</span>
                 </Link>
               )
             })}
@@ -67,15 +67,15 @@ export function Header({ onAuthClick }: HeaderProps) {
                   <User className="h-4 w-4" />
                   <span>{user?.username}</span>
                 </Link>
-                <Button variant="outline" size="sm" onClick={handleLogout}>
+                <Button variant="outline" size="sm" onClick={handleLogout} className="btn-terminal font-mono font-bold">
                   <LogOut className="h-4 w-4 mr-2" />
-                  Logout
+                  [LOGOUT]
                 </Button>
               </div>
             ) : (
-              <Button size="sm" onClick={onAuthClick}>
+              <Button size="sm" onClick={onAuthClick} className="btn-terminal font-mono font-bold">
                 <LogIn className="h-4 w-4 mr-2" />
-                Sign In
+                [SIGN_IN]
               </Button>
             )}
 
