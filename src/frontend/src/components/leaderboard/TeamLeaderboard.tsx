@@ -242,7 +242,19 @@ export function TeamLeaderboard() {
         </motion.div>
 
         {/* Top 3 Podium */}
-        <TopThreePodium teams={mockTeamData} />
+        {isLoading ? (
+          <div className="flex items-end justify-center gap-4 mb-8">
+            {[0, 1, 2].map((i) => (
+              <div key={i} className="text-center">
+                <div className={`${i === 1 ? 'h-32 w-32' : i === 0 ? 'h-24 w-24' : 'h-20 w-20'} bg-primary/10 rounded-t-lg animate-pulse mb-2`} />
+                <div className="h-4 bg-primary/20 rounded w-16 animate-pulse mb-1" />
+                <div className="h-3 bg-primary/10 rounded w-12 animate-pulse" />
+              </div>
+            ))}
+          </div>
+        ) : teamData.length >= 3 ? (
+          <TopThreePodium teams={teamData} />
+        ) : null}
 
         {/* Full Leaderboard */}
         <motion.div
@@ -257,11 +269,28 @@ export function TeamLeaderboard() {
             </h3>
             <div className="h-px bg-primary/30 mb-4"></div>
           </div>
-          
-          {mockTeamData.map((team, index) => (
-            <TeamRow key={team.name} team={team} index={index} />
-          ))}
-          
+
+          {isLoading ? (
+            <>
+              {Array.from({ length: 10 }).map((_, index) => (
+                <TeamRowSkeleton key={index} index={index} />
+              ))}
+            </>
+          ) : teamData.length > 0 ? (
+            <>
+              {teamData.map((team, index) => (
+                <TeamRow key={team.name} team={team} index={index} />
+              ))}
+            </>
+          ) : (
+            <div className="text-center py-12">
+              <div className="text-muted-foreground font-mono">
+                <p className="text-lg mb-2">&gt; NO_TEAMS_FOUND</p>
+                <p className="text-sm">// Failed to load team rankings</p>
+              </div>
+            </div>
+          )}
+
           <div className="text-center mt-8">
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
               <button className="btn-terminal px-6 py-3 font-mono font-bold">
