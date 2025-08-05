@@ -4,18 +4,18 @@ import React from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
 import { Badge } from '@/components/ui/Badge'
-import { 
-  MessageSquare, 
-  Users, 
-  Clock, 
-  TrendingUp, 
-  Plus, 
+import {
+  MessageSquare,
+  Users,
+  Clock,
+  TrendingUp,
+  Plus,
   Search,
   Pin,
   MessageCircle,
   Eye,
   Calendar
-} from 'lucide-react'
+} from '@/components/icons'
 import { format, subDays, subHours } from 'date-fns'
 
 const mockPosts = [

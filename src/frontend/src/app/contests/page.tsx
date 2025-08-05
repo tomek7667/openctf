@@ -4,7 +4,7 @@ import React from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
 import { Badge } from '@/components/ui/Badge'
-import { Trophy, Calendar, Clock, Users, Plus, Filter, ExternalLink } from 'lucide-react'
+import { Trophy, Calendar, Clock, Users, Plus, Filter, ExternalLink } from '@/components/icons'
 import { format, addDays, subDays } from 'date-fns'
 
 const mockContests = [

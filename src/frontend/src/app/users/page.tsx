@@ -3,7 +3,7 @@
 import React from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
-import { Users, Trophy, Star, TrendingUp, Code, Shield, Zap } from 'lucide-react'
+import { Users, Trophy, Star, TrendingUp, Code, Shield, Zap } from '@/components/icons'
 
 const mockTopUsers = [
   { id: 1, username: 'h4ck3r_pr0', points: 2850, category: 'Web', rank: 1, weeklyChange: 15 },
