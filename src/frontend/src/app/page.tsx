@@ -69,16 +69,18 @@ const FeatureCard = ({ icon: Icon, title, description, href, gradient }: Feature
   </motion.div>
 )
 
-const StatCard = ({ 
-  value, 
-  label, 
+const StatCard = ({
+  value,
+  label,
   trend,
-  icon: Icon 
-}: { 
+  icon: Icon,
+  isLoading = false
+}: {
   value: string
   label: string
   trend?: string
   icon: React.ComponentType<{ className?: string }>
+  isLoading?: boolean
 }) => (
   <motion.div
     initial={{ opacity: 0, y: 20 }}
@@ -90,9 +92,13 @@ const StatCard = ({
         <Icon className="h-6 w-6 text-primary" />
       </div>
     </div>
-    <div className="text-3xl font-bold text-primary mb-1 font-mono glow-text">{value}</div>
+    {isLoading ? (
+      <div className="text-3xl font-bold text-primary mb-1 font-mono glow-text animate-pulse">---</div>
+    ) : (
+      <div className="text-3xl font-bold text-primary mb-1 font-mono glow-text">{value}</div>
+    )}
     <div className="text-sm text-muted-foreground mb-2 font-mono uppercase">{label}</div>
-    {trend && (
+    {trend && !isLoading && (
       <div className="flex items-center justify-center text-xs text-green-600">
         <TrendingUp className="h-3 w-3 mr-1" />
         {trend}
