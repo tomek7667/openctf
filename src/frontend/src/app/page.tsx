@@ -276,13 +276,13 @@ export default function HomePage() {
             viewport={{ once: true }}
           >
             <h2 className="text-3xl md:text-4xl font-bold mb-6 font-mono">
-              &gt; READY_TO_LEVEL_UP_YOUR_CTF_GAME?
+              &gt; EXPLORE_CTF_DATA
             </h2>
             <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
-              Join the OpenCTF community today and start competing, learning, and growing 
-              your cybersecurity skills with teams from around the world.
+              Browse team rankings, contest schedules, and results from the global
+              Capture The Flag community. Data updated in real-time.
             </p>
-            
+
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                 <Link
@@ -290,17 +290,17 @@ export default function HomePage() {
                   className="btn-gradient inline-flex items-center px-8 py-4 rounded-none font-bold text-lg transition-all duration-300"
                 >
                   <Shield className="mr-2 h-5 w-5" />
-                  [JOIN_TEAM]
+                  [VIEW_RANKINGS]
                 </Link>
               </motion.div>
-              
+
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                 <Link
                   href="/contests"
                   className="btn-terminal inline-flex items-center px-8 py-4 rounded-none font-bold text-lg transition-all duration-300"
                 >
                   <Trophy className="mr-2 h-5 w-5" />
-                  [BROWSE_CONTESTS]
+                  [CHECK_CONTESTS]
                 </Link>
               </motion.div>
             </div>
