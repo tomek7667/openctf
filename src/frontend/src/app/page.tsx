@@ -10,17 +10,18 @@
 import React from 'react'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
-import { 
-  Shield, 
-  Users, 
-  Trophy, 
-  MessageSquare, 
+import {
+  Shield,
+  Users,
+  Trophy,
+  MessageSquare,
   ArrowRight,
   TrendingUp,
   Globe,
   Target,
   BarChart
 } from '@/components/ui/icons'
+import { TeamLeaderboard } from '@/components/leaderboard/TeamLeaderboard'
 
 interface FeatureCardProps {
   icon: React.ComponentType<{ className?: string }>
