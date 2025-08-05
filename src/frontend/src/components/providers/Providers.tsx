@@ -61,39 +61,6 @@ function AuthInitializer({ children }: { children: React.ReactNode }) {
   return <>{children}</>
 }
 
-/**
- * Toast Configuration
- */
-const toastOptions = {
-  duration: 4000,
-  position: 'top-right' as const,
-  style: {
-    background: 'hsl(var(--card))',
-    color: 'hsl(var(--card-foreground))',
-    border: '1px solid hsl(var(--primary) / 0.3)',
-    borderRadius: '0',
-    fontFamily: 'JetBrains Mono, monospace',
-    boxShadow: '0 0 10px rgba(0, 255, 255, 0.2)',
-  },
-  success: {
-    iconTheme: {
-      primary: 'hsl(var(--success-500))',
-      secondary: 'hsl(var(--success-50))',
-    },
-  },
-  error: {
-    iconTheme: {
-      primary: 'hsl(var(--destructive))',
-      secondary: 'hsl(var(--destructive-foreground))',
-    },
-  },
-  loading: {
-    iconTheme: {
-      primary: 'hsl(var(--primary))',
-      secondary: 'hsl(var(--primary-foreground))',
-    },
-  },
-}
 
 /**
  * Main Providers Component
