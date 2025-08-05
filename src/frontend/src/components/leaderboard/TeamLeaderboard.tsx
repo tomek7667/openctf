@@ -184,8 +184,40 @@ const TeamRow = ({ team, index }: { team: TeamData, index: number }) => (
 )
 
 export function TeamLeaderboard() {
+  const [teams, setTeams] = useState<LeaderboardTeam[]>([])
+  const [isLoading, setIsLoading] = useState(true)
+  const { toast } = useToast()
   const currentMonth = new Date().toLocaleString('default', { month: 'long', year: 'numeric' })
-  
+
+  useEffect(() => {
+    const fetchTeams = async () => {
+      try {
+        setIsLoading(true)
+        const data = await leaderboardApi.getTopTeams(10)
+        setTeams(data)
+      } catch (error) {
+        const message = getErrorMessage(error)
+        toast.error('Failed to load leaderboard', message)
+        console.error('Error fetching leaderboard:', error)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    fetchTeams()
+  }, [toast])
+
+  const teamData: TeamData[] = teams.map(team => ({
+    place: team.place,
+    name: team.name,
+    country: team.country,
+    totalPoints: team.totalPoints,
+    contestsWon: team.contestsWon,
+    monthlyPoints: team.monthlyPoints,
+    isVerified: team.isVerified,
+    members: team.members
+  }))
+
   return (
     <section className="py-16 px-4">
       <div className="max-w-6xl mx-auto">
