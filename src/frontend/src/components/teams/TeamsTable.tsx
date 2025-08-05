@@ -1,6 +1,6 @@
 'use client'
 
-import React from 'react'
+import React, { useEffect } from 'react'
 import Link from 'next/link'
 import { useTeamsStore } from '@/stores/teams'
 import { Badge } from '@/components/ui/Badge'
@@ -16,6 +16,7 @@ import {
   Users,
   Trophy
 } from '@/components/icons'
+import { useToast } from '@/hooks/useToast'
 import type { Team } from '@/types/api'
 
 interface TeamsTableProps {
