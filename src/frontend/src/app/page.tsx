@@ -108,6 +108,28 @@ const StatCard = ({
 )
 
 export default function HomePage() {
+  const [stats, setStats] = useState<PlatformStats | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
+  const { toast } = useToast()
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        setIsLoading(true)
+        const data = await statsApi.getPlatformStats()
+        setStats(data)
+      } catch (error) {
+        const message = getErrorMessage(error)
+        toast.error('Failed to load stats', message)
+        console.error('Error fetching platform stats:', error)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    fetchStats()
+  }, [toast])
+
   const features = [
     {
       icon: Trophy,
