@@ -70,8 +70,10 @@ const toastOptions = {
   style: {
     background: 'hsl(var(--card))',
     color: 'hsl(var(--card-foreground))',
-    border: '1px solid hsl(var(--border))',
-    borderRadius: 'calc(var(--radius) - 2px)',
+    border: '1px solid hsl(var(--primary) / 0.3)',
+    borderRadius: '0',
+    fontFamily: 'JetBrains Mono, monospace',
+    boxShadow: '0 0 10px rgba(0, 255, 255, 0.2)',
   },
   success: {
     iconTheme: {
