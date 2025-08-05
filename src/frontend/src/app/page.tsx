@@ -239,27 +239,31 @@ export default function HomePage() {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
             <StatCard
               icon={Shield}
-              value="142"
+              value={stats ? stats.rankedTeams.toString() : "---"}
               label="Ranked Teams"
               trend="Updated daily"
+              isLoading={isLoading}
             />
             <StatCard
               icon={Users}
-              value="1.2K"
+              value={stats ? `${(stats.teamMembers / 1000).toFixed(1)}K` : "---"}
               label="Team Members"
               trend="Active players"
+              isLoading={isLoading}
             />
             <StatCard
               icon={Trophy}
-              value="23"
+              value={stats ? stats.activeContests.toString() : "---"}
               label="Active Contests"
               trend="This month"
+              isLoading={isLoading}
             />
             <StatCard
               icon={Globe}
-              value="15"
+              value={stats ? stats.pastEvents.toString() : "---"}
               label="Past Events"
               trend="Last 30 days"
+              isLoading={isLoading}
             />
           </div>
         </div>
