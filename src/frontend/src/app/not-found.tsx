@@ -2,7 +2,7 @@ import React from 'react'
 import Link from 'next/link'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
-import { Home, Search, ArrowLeft } from 'lucide-react'
+import { Home, Search, ArrowLeft } from '@/components/icons'
 
 export default function NotFound() {
   return (
