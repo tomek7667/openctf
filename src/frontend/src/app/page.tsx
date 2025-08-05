@@ -133,10 +133,10 @@ export default function HomePage() {
     <div className="relative min-h-screen">
       {/* Hero Section */}
       <section className="relative py-24 px-4 overflow-hidden">
-        {/* Background Effects */}
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-primary/5" />
-        <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-primary/5 rounded-full blur-3xl" />
-        <div className="absolute bottom-1/4 right-1/4 w-64 h-64 bg-blue-500/5 rounded-full blur-3xl" />
+        {/* Hacker Background Effects */}
+        <div className="absolute inset-0 matrix-bg opacity-30" />
+        <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-primary/10 rounded-full blur-3xl animate-pulse" />
+        <div className="absolute bottom-1/4 right-1/4 w-64 h-64 bg-green-400/10 rounded-full blur-3xl animate-pulse" />
         
         <div className="relative max-w-7xl mx-auto text-center">
           <motion.div
@@ -144,26 +144,32 @@ export default function HomePage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
           >
-            <h1 className="text-5xl md:text-7xl font-bold tracking-tight mb-8">
-              <span className="bg-gradient-to-r from-primary via-blue-600 to-primary bg-clip-text text-transparent">
+            <h1 className="text-5xl md:text-7xl font-bold tracking-tight mb-8 font-mono">
+              <span className="terminal-prompt">$ </span>
+              <span className="hacker-gradient-text glow-text">
                 OpenCTF
               </span>
               <br />
-              <span className="text-foreground">Platform</span>
+              <span className="text-foreground">&gt; Platform</span>
+              <span className="animate-pulse text-primary">_</span>
             </h1>
             
-            <p className="text-xl md:text-2xl text-muted-foreground mb-12 max-w-4xl mx-auto leading-relaxed">
-              The professional platform for Capture The Flag competitions. 
-              Connect teams, organize contests, and build the cybersecurity community.
-            </p>
+            <div className="terminal glass-terminal p-6 mb-12 max-w-4xl mx-auto text-left">
+              <div className="text-primary mb-2">root@openctf:~# cat mission.txt</div>
+              <p className="text-green-400 leading-relaxed">
+                // The professional platform for Capture The Flag competitions.<br/>
+                // Connect teams, organize contests, and build the cybersecurity community.<br/>
+                <span className="text-yellow-400">// Status: ACTIVE | Users: CONNECTING | Security: ENHANCED</span>
+              </p>
+            </div>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                 <Link
                   href="/teams"
-                  className="inline-flex items-center px-8 py-4 bg-primary text-primary-foreground rounded-lg font-semibold text-lg hover:bg-primary/90 transition-all duration-300 shadow-lg hover:shadow-xl"
+                  className="btn-terminal inline-flex items-center px-8 py-4 rounded-none font-bold text-lg transition-all duration-300"
                 >
-                  Explore Teams
+                  &gt; EXPLORE_TEAMS
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Link>
               </motion.div>
@@ -171,9 +177,9 @@ export default function HomePage() {
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                 <Link
                   href="/contests"
-                  className="inline-flex items-center px-8 py-4 border border-border bg-background/80 backdrop-blur-sm text-foreground rounded-lg font-semibold text-lg hover:bg-accent/50 transition-all duration-300"
+                  className="btn-terminal inline-flex items-center px-8 py-4 rounded-none font-bold text-lg transition-all duration-300"
                 >
-                  View Competitions
+                  &gt; VIEW_CONTESTS
                 </Link>
               </motion.div>
             </div>
