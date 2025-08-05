@@ -7,7 +7,7 @@ import { Select } from '@/components/ui/Select'
 import { Button } from '@/components/ui/Button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
 import { Badge } from '@/components/ui/Badge'
-import { X, Filter } from 'lucide-react'
+import { X, Filter } from '@/components/icons'
 
 // Mock country data - in real app, this would come from API
 const COUNTRIES = [

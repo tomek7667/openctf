@@ -7,7 +7,7 @@ import { TeamsTable } from '@/components/teams/TeamsTable'
 import { Pagination } from '@/components/ui/Pagination'
 import { Button } from '@/components/ui/Button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
-import { Shield, Plus, BarChart3 } from 'lucide-react'
+import { Shield, Plus, BarChart3 } from '@/components/icons'
 
 export default function TeamsPage() {
   const { 

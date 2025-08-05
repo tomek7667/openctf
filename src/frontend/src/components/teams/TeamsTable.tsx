@@ -6,16 +6,16 @@ import { useTeamsStore } from '@/stores/teams'
 import { Badge } from '@/components/ui/Badge'
 import { Button } from '@/components/ui/Button'
 import { Card, CardContent } from '@/components/ui/Card'
-import { 
-  TrendingUp, 
-  TrendingDown, 
-  Minus, 
-  CheckCircle, 
+import {
+  TrendingUp,
+  TrendingDown,
+  Minus,
+  CheckCircle,
   ExternalLink,
   MapPin,
   Users,
   Trophy
-} from 'lucide-react'
+} from '@/components/icons'
 import type { Team } from '@/types/api'
 
 interface TeamsTableProps {
