@@ -1,17 +1,23 @@
 /**
  * Unified API Services Export
- * 
+ *
  * This file provides a centralized export for all API services,
  * making it easy to import and use throughout the application.
  */
 
-// Export individual services
-export { authApi, AuthApiService } from './services/auth';
-export { teamsApi, TeamsApiService } from './services/teams';
-export { contestsApi, ContestsApiService } from './services/contests';
+// Import services
+import { authApi, AuthApiService } from './services/auth';
+import { teamsApi, TeamsApiService } from './services/teams';
+import { contestsApi, ContestsApiService } from './services/contests';
+import { apiClient, ApiClient } from './client';
+
+// Re-export individual services
+export { authApi, AuthApiService };
+export { teamsApi, TeamsApiService };
+export { contestsApi, ContestsApiService };
 
 // Export base client
-export { apiClient, ApiClient } from './client';
+export { apiClient, ApiClient };
 
 // Export error types
 export {
@@ -30,7 +36,7 @@ export const api = {
   auth: authApi,
   teams: teamsApi,
   contests: contestsApi,
-  
+
   // Utility methods
   isHealthy: () => apiClient.healthCheck(),
   cancelAllRequests: () => apiClient.cancelAllRequests(),
