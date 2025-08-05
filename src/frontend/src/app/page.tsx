@@ -268,7 +268,7 @@ export default function HomePage() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-24 px-4 bg-gradient-to-r from-primary/10 via-blue-500/10 to-primary/10">
+      <section className="py-24 px-4 bg-gradient-to-r from-primary/10 via-green-400/10 to-primary/10 matrix-bg">
         <div className="max-w-4xl mx-auto text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -287,20 +287,20 @@ export default function HomePage() {
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                 <Link
                   href="/teams"
-                  className="inline-flex items-center px-8 py-4 bg-primary text-primary-foreground rounded-lg font-semibold text-lg hover:bg-primary/90 transition-all duration-300 shadow-lg hover:shadow-xl"
+                  className="btn-gradient inline-flex items-center px-8 py-4 rounded-none font-bold text-lg transition-all duration-300"
                 >
                   <Shield className="mr-2 h-5 w-5" />
-                  Join a Team
+                  [JOIN_TEAM]
                 </Link>
               </motion.div>
               
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                 <Link
                   href="/contests"
-                  className="inline-flex items-center px-8 py-4 border border-border bg-background/80 backdrop-blur-sm text-foreground rounded-lg font-semibold text-lg hover:bg-accent/50 transition-all duration-300"
+                  className="btn-terminal inline-flex items-center px-8 py-4 rounded-none font-bold text-lg transition-all duration-300"
                 >
                   <Trophy className="mr-2 h-5 w-5" />
-                  Browse Contests
+                  [BROWSE_CONTESTS]
                 </Link>
               </motion.div>
             </div>
