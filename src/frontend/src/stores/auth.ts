@@ -12,7 +12,7 @@ import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import { immer } from 'zustand/middleware/immer';
 import { devtools } from 'zustand/middleware';
-import { authApi } from '@/api';
+import { authApi } from '@/api/services/auth';
 import type { User, LoginDto, RegisterDto, AuthResponse } from '@/types/api';
 import { ApiClientError, AuthenticationError } from '@/api/client';
 
