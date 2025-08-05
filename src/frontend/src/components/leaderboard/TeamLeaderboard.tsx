@@ -32,8 +32,12 @@ const mockTeamData: TeamData[] = [
 const getPlaceIcon = (place: number) => {
   switch (place) {
     case 1: return <Trophy className="h-6 w-6 text-yellow-400" />
-    case 2: return <Medal className="h-6 w-6 text-gray-300" />
-    case 3: return <Award className="h-6 w-6 text-amber-600" />
+    case 2: return (
+      <div className="w-6 h-6 rounded-full bg-gray-300 flex items-center justify-center text-black font-bold text-sm">2</div>
+    )
+    case 3: return (
+      <div className="w-6 h-6 rounded-full bg-amber-600 flex items-center justify-center text-black font-bold text-sm">3</div>
+    )
     default: return <span className="text-primary font-bold text-lg">#{place}</span>
   }
 }
