@@ -1,7 +1,7 @@
 import { create } from 'zustand'
 import { immer } from 'zustand/middleware/immer'
 import type { Team, ListTeamsDto, CreateTeamDto } from '@/types/api'
-import { apiClient } from '@/lib/api'
+import { teamsApi } from '@/api'
 
 interface TeamsState {
   teams: Team[]
@@ -66,7 +66,7 @@ export const useTeamsStore = create<TeamsStore>()(
           ...params,
         }
 
-        const response = await apiClient.getTeams(queryParams)
+        const response = await teamsApi.getTeams(queryParams)
         
         set((state) => {
           state.teams = response.teams || []
@@ -88,7 +88,7 @@ export const useTeamsStore = create<TeamsStore>()(
       })
 
       try {
-        const response = await apiClient.getTeam(teamId)
+        const response = await teamsApi.getTeam(teamId)
         
         set((state) => {
           state.currentTeam = response.team
@@ -109,7 +109,7 @@ export const useTeamsStore = create<TeamsStore>()(
       })
 
       try {
-        const response = await apiClient.createTeam(teamData)
+        const response = await teamsApi.createTeam(teamData)
         
         set((state) => {
           state.teams.unshift(response.team)
@@ -128,7 +128,7 @@ export const useTeamsStore = create<TeamsStore>()(
 
     verifyTeam: async (teamId: number) => {
       try {
-        await apiClient.verifyTeam(teamId)
+        await teamsApi.verifyTeam(teamId)
         
         set((state) => {
           const teamIndex = state.teams.findIndex(team => team.id === teamId)
