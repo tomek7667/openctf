@@ -2,7 +2,7 @@
 
 import React from 'react'
 import { motion } from 'framer-motion'
-import { Trophy, Medal, Award, Users, Flag, Star } from '@/components/ui/icons'
+import { Trophy, Users, Flag, Star } from '@/components/ui/icons'
 
 interface TeamData {
   place: number
