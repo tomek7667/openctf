@@ -100,31 +100,31 @@ const StatCard = ({
 export default function HomePage() {
   const features = [
     {
-      icon: Shield,
-      title: 'Team Management',
-      description: 'Create and manage CTF teams with comprehensive ranking systems, member management, and verification processes.',
+      icon: Trophy,
+      title: 'Team Rankings',
+      description: 'Global CTF team rankings based on contest performance. View team statistics, member rosters, and rating history.',
       href: '/teams',
       gradient: 'bg-gradient-to-br from-blue-500 to-blue-600',
     },
     {
-      icon: Users,
-      title: 'Player Rankings',
-      description: 'Track individual achievements and skill development across categories with detailed performance analytics.',
-      href: '/users',
+      icon: BarChart,
+      title: 'Contest Results',
+      description: 'Complete contest archives with scoreboards, writeups, and team placements from past CTF events.',
+      href: '/contests',
       gradient: 'bg-gradient-to-br from-green-500 to-green-600',
     },
     {
-      icon: Trophy,
-      title: 'Competitions',
-      description: 'Organize and participate in Capture The Flag competitions with real-time leaderboards and scoring.',
+      icon: Target,
+      title: 'Upcoming Events',
+      description: 'Schedule of upcoming CTF competitions with registration links, formats, and event details.',
       href: '/contests',
       gradient: 'bg-gradient-to-br from-yellow-500 to-yellow-600',
     },
     {
-      icon: MessageSquare,
-      title: 'Community Forum',
-      description: 'Connect with the CTF community, share strategies, discuss events, and collaborate on solutions.',
-      href: '/forum',
+      icon: Users,
+      title: 'Player Stats',
+      description: 'Individual player profiles with contest history, team affiliations, and performance metrics.',
+      href: '/users',
       gradient: 'bg-gradient-to-br from-purple-500 to-purple-600',
     },
   ]
@@ -243,11 +243,11 @@ export default function HomePage() {
             className="text-center mb-16"
           >
             <h2 className="text-3xl md:text-4xl font-bold mb-4 font-mono">
-              &gt; EVERYTHING_YOU_NEED_FOR_CTF_SUCCESS
+              &gt; CTF_RANKINGS_AND_CONTEST_DATA
             </h2>
             <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
-              Our comprehensive platform provides all the tools and features needed to excel in 
-              Capture The Flag competitions, from individual skill tracking to team management.
+              Track team rankings, contest schedules, and results from Capture The Flag
+              competitions worldwide. Real-time updates and historical data.
             </p>
           </motion.div>
           
