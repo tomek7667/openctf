@@ -20,12 +20,12 @@ export const leaderboardApi = {
     await sleep(1000) // Simulate network delay
     
     // Simulate potential API failure
-    const random = Math.random()
-    if (random < 0.05) {
-      throw new Error('Leaderboard database is currently being updated. Please try again shortly.')
-    } else if (random < 0.1) {
-      throw new Error('Failed to load team rankings. The leaderboard service is experiencing high load.')
-    }
+    // const random = Math.random()
+    // if (random < 0.05) {
+    //   throw new Error('Leaderboard database is currently being updated. Please try again shortly.')
+    // } else if (random < 0.1) {
+    //   throw new Error('Failed to load team rankings. The leaderboard service is experiencing high load.')
+    // }
     
     const mockTeamData: LeaderboardTeam[] = [
       { place: 1, name: "r3kapig", country: "CN", totalPoints: 1020.905, contestsWon: 5, monthlyPoints: 250.3, isVerified: true, members: 8 },
