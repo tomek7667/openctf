@@ -20,8 +20,11 @@ export const leaderboardApi = {
     await sleep(1000) // Simulate network delay
     
     // Simulate potential API failure
-    if (Math.random() < 0.1) {
-      throw new Error('Failed to fetch leaderboard data. Network connection error.')
+    const random = Math.random()
+    if (random < 0.05) {
+      throw new Error('Leaderboard database is currently being updated. Please try again shortly.')
+    } else if (random < 0.1) {
+      throw new Error('Failed to load team rankings. The leaderboard service is experiencing high load.')
     }
     
     const mockTeamData: LeaderboardTeam[] = [
