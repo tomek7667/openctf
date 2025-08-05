@@ -234,6 +234,9 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* Team Leaderboard */}
+      <TeamLeaderboard />
+
       {/* Features Section */}
       <section className="py-24 px-4">
         <div className="max-w-7xl mx-auto">
