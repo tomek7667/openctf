@@ -150,16 +150,16 @@ export default function HomePage() {
                 OpenCTF
               </span>
               <br />
-              <span className="text-foreground">&gt; Platform</span>
+              <span className="text-foreground">&gt; Rankings</span>
               <span className="animate-pulse text-primary">_</span>
             </h1>
             
             <div className="terminal glass-terminal p-6 mb-12 max-w-4xl mx-auto text-left">
-              <div className="text-primary mb-2">root@openctf:~# cat mission.txt</div>
+              <div className="text-primary mb-2">root@openctf:~# cat info.txt</div>
               <p className="text-green-400 leading-relaxed">
-                // The professional platform for Capture The Flag competitions.<br/>
-                // Connect teams, organize contests, and build the cybersecurity community.<br/>
-                <span className="text-yellow-400">// Status: ACTIVE | Users: CONNECTING | Security: ENHANCED</span>
+                // CTF team rankings and contest tracking platform<br/>
+                // Real-time contest results and team statistics<br/>
+                <span className="text-yellow-400">// Last updated: $(date) | Active contests: 15</span>
               </p>
             </div>
             
@@ -169,17 +169,17 @@ export default function HomePage() {
                   href="/teams"
                   className="btn-terminal inline-flex items-center px-8 py-4 rounded-none font-bold text-lg transition-all duration-300"
                 >
-                  &gt; EXPLORE_TEAMS
+                  &gt; TEAM_RANKINGS
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Link>
               </motion.div>
-              
+
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                 <Link
                   href="/contests"
                   className="btn-terminal inline-flex items-center px-8 py-4 rounded-none font-bold text-lg transition-all duration-300"
                 >
-                  &gt; VIEW_CONTESTS
+                  &gt; UPCOMING_CONTESTS
                 </Link>
               </motion.div>
             </div>
