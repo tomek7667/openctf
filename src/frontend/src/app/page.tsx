@@ -37,7 +37,7 @@ const FeatureCard = ({ icon: Icon, title, description, href, gradient }: Feature
     className="group relative overflow-hidden"
   >
     <Link href={href}>
-      <div className="relative p-8 h-full bg-card border rounded-xl hover:shadow-xl transition-all duration-300 group-hover:border-primary/50">
+      <div className="relative p-8 h-full bg-card hacker-border rounded-none card-hover transition-all duration-300 group-hover:border-primary">
         <div className={`absolute inset-0 opacity-0 group-hover:opacity-5 transition-opacity duration-300 ${gradient}`} />
         
         <div className="relative z-10">
@@ -47,16 +47,16 @@ const FeatureCard = ({ icon: Icon, title, description, href, gradient }: Feature
             </div>
           </div>
           
-          <h3 className="text-xl font-semibold mb-3 group-hover:text-primary transition-colors duration-300">
-            {title}
+          <h3 className="text-xl font-bold mb-3 group-hover:text-primary transition-colors duration-300 font-mono">
+            &gt; {title.toUpperCase().replace(' ', '_')}
           </h3>
           
           <p className="text-muted-foreground mb-4 leading-relaxed">
             {description}
           </p>
           
-          <div className="flex items-center text-primary font-medium group-hover:translate-x-1 transition-transform duration-300">
-            <span>Explore</span>
+          <div className="flex items-center text-primary font-bold group-hover:translate-x-1 transition-transform duration-300 font-mono">
+            <span>[EXPLORE]</span>
             <ArrowRight className="ml-2 h-4 w-4" />
           </div>
         </div>
@@ -79,15 +79,15 @@ const StatCard = ({
   <motion.div
     initial={{ opacity: 0, y: 20 }}
     animate={{ opacity: 1, y: 0 }}
-    className="text-center p-6 bg-card/50 backdrop-blur-sm rounded-lg border"
+    className="text-center p-6 bg-card/50 backdrop-blur-sm rounded-none hacker-border"
   >
     <div className="flex justify-center mb-3">
       <div className="p-3 bg-primary/10 rounded-full">
         <Icon className="h-6 w-6 text-primary" />
       </div>
     </div>
-    <div className="text-3xl font-bold text-foreground mb-1">{value}</div>
-    <div className="text-sm text-muted-foreground mb-2">{label}</div>
+    <div className="text-3xl font-bold text-primary mb-1 font-mono glow-text">{value}</div>
+    <div className="text-sm text-muted-foreground mb-2 font-mono uppercase">{label}</div>
     {trend && (
       <div className="flex items-center justify-center text-xs text-green-600">
         <TrendingUp className="h-3 w-3 mr-1" />
@@ -188,7 +188,7 @@ export default function HomePage() {
       </section>
 
       {/* Stats Section */}
-      <section className="py-16 px-4 bg-muted/30">
+      <section className="py-16 px-4 bg-muted/30 matrix-bg">
         <div className="max-w-7xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -196,8 +196,8 @@ export default function HomePage() {
             viewport={{ once: true }}
             className="text-center mb-12"
           >
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              Trusted by the CTF Community
+            <h2 className="text-3xl md:text-4xl font-bold mb-4 font-mono">
+              &gt; TRUSTED_BY_THE_CTF_COMMUNITY
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
               Join thousands of security enthusiasts and teams already competing on our platform.
@@ -242,8 +242,8 @@ export default function HomePage() {
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              Everything You Need for CTF Success
+            <h2 className="text-3xl md:text-4xl font-bold mb-4 font-mono">
+              &gt; EVERYTHING_YOU_NEED_FOR_CTF_SUCCESS
             </h2>
             <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
               Our comprehensive platform provides all the tools and features needed to excel in 
@@ -275,8 +275,8 @@ export default function HomePage() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
-            <h2 className="text-3xl md:text-4xl font-bold mb-6">
-              Ready to Level Up Your CTF Game?
+            <h2 className="text-3xl md:text-4xl font-bold mb-6 font-mono">
+              &gt; READY_TO_LEVEL_UP_YOUR_CTF_GAME?
             </h2>
             <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
               Join the OpenCTF community today and start competing, learning, and growing 
