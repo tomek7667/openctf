@@ -1,8 +1,11 @@
 'use client'
 
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { Trophy, Users, Flag, Star } from '@/components/ui/icons'
+import { leaderboardApi, LeaderboardTeam } from '@/api/leaderboard'
+import { useToast } from '@/hooks/useToast'
+import { getErrorMessage } from '@/lib/utils'
 
 interface TeamData {
   place: number
@@ -14,20 +17,6 @@ interface TeamData {
   isVerified: boolean
   members: number
 }
-
-// Mock data based on the actual schema structure
-const mockTeamData: TeamData[] = [
-  { place: 1, name: "r3kapig", country: "CN", totalPoints: 1020.905, contestsWon: 5, monthlyPoints: 250.3, isVerified: true, members: 8 },
-  { place: 2, name: "Kalmarunionen", country: "DK", totalPoints: 985.563, contestsWon: 4, monthlyPoints: 210.8, isVerified: true, members: 6 },
-  { place: 3, name: "Infobahn", country: "DE", totalPoints: 872.674, contestsWon: 3, monthlyPoints: 195.2, isVerified: true, members: 7 },
-  { place: 4, name: "team:placeholder", country: "US", totalPoints: 849.042, contestsWon: 2, monthlyPoints: 180.5, isVerified: true, members: 5 },
-  { place: 5, name: "Project Sekai", country: "JP", totalPoints: 813.723, contestsWon: 3, monthlyPoints: 165.9, isVerified: true, members: 9 },
-  { place: 6, name: "justCatTheFish", country: "PL", totalPoints: 783.644, contestsWon: 2, monthlyPoints: 145.3, isVerified: true, members: 4 },
-  { place: 7, name: "thehackerscrew", country: "IN", totalPoints: 765.696, contestsWon: 1, monthlyPoints: 135.7, isVerified: false, members: 6 },
-  { place: 8, name: "The Flat Network Society", country: "FR", totalPoints: 725.351, contestsWon: 2, monthlyPoints: 125.8, isVerified: true, members: 5 },
-  { place: 9, name: "L3ak", country: "US", totalPoints: 716.831, contestsWon: 1, monthlyPoints: 118.4, isVerified: false, members: 3 },
-  { place: 10, name: "Never Stop Exploiting", country: "CN", totalPoints: 708.169, contestsWon: 1, monthlyPoints: 112.6, isVerified: true, members: 7 }
-]
 
 const getPlaceIcon = (place: number) => {
   switch (place) {
