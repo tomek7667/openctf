@@ -1,12 +1,12 @@
 import './globals.css'
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
+import { JetBrains_Mono } from 'next/font/google'
 import { Providers } from '@/components/providers/Providers'
 
-const inter = Inter({ 
+const jetbrainsMono = JetBrains_Mono({
   subsets: ['latin'],
   display: 'swap',
-  variable: '--font-inter',
+  variable: '--font-jetbrains-mono',
 })
 
 export const metadata: Metadata = {
@@ -67,16 +67,16 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" className={inter.variable} suppressHydrationWarning>
+    <html lang="en" className={`${jetbrainsMono.variable} dark`} suppressHydrationWarning>
       <head>
         <link rel="icon" href="/favicon.ico" sizes="any" />
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
         <link rel="manifest" href="/manifest.json" />
-        <meta name="theme-color" content="#2563eb" />
-        <meta name="color-scheme" content="light dark" />
+        <meta name="theme-color" content="#00ffff" />
+        <meta name="color-scheme" content="dark" />
       </head>
-      <body className="font-sans antialiased">
+      <body className="font-mono antialiased bg-background text-foreground">
         <div id="root">
           <Providers>
             {children}
