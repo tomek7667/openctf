@@ -10,9 +10,9 @@
 import React, { useEffect, Suspense } from 'react'
 import { QueryClient, QueryClientProvider } from 'react-query'
 import { ReactQueryDevtools } from 'react-query/devtools'
-import { Toaster } from 'react-hot-toast'
 import { ErrorBoundary } from '@/components/ui/ErrorBoundary'
 import { LoadingFallback } from '@/components/ui/LoadingFallback'
+import ToastContainer from '@/components/ui/ToastContainer'
 import { useAuthStore } from '@/stores/auth'
 
 // Create a client
