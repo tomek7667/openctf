@@ -2,7 +2,7 @@
 
 import React, { useEffect } from 'react'
 import { createPortal } from 'react-dom'
-import { X } from 'lucide-react'
+import { X } from '@/components/icons'
 import { Button } from './Button'
 
 interface ModalProps {

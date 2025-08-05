@@ -1,6 +1,6 @@
 import React from 'react'
 import { clsx } from 'clsx'
-import { ChevronDown } from 'lucide-react'
+import { ChevronDown } from '@/components/icons'
 
 interface SelectProps extends React.SelectHTMLAttributes<HTMLSelectElement> {
   label?: string
