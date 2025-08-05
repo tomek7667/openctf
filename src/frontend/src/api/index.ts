@@ -33,9 +33,9 @@ export type { ApiClientConfig, RequestConfig } from './client';
 
 // Create unified API object for easy access
 export const api = {
-  auth: authApi,
-  teams: teamsApi,
-  contests: contestsApi,
+  get auth() { return authApi; },
+  get teams() { return teamsApi; },
+  get contests() { return contestsApi; },
 
   // Utility methods
   isHealthy: () => apiClient.healthCheck(),
