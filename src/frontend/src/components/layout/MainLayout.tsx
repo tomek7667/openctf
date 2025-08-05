@@ -1,9 +1,8 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { Header } from './Header'
 import { AuthModal } from '@/components/auth/AuthModal'
-import { useAuthStore } from '@/stores/auth'
 
 interface MainLayoutProps {
   children: React.ReactNode
@@ -11,12 +10,6 @@ interface MainLayoutProps {
 
 export function MainLayout({ children }: MainLayoutProps) {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false)
-  const { refreshUser } = useAuthStore()
-
-  useEffect(() => {
-    // Try to refresh user data on app load
-    refreshUser()
-  }, [refreshUser])
 
   const handleAuthClick = () => {
     setIsAuthModalOpen(true)

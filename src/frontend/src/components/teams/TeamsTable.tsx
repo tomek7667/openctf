@@ -1,6 +1,6 @@
 'use client'
 
-import React from 'react'
+import React, { useEffect } from 'react'
 import Link from 'next/link'
 import { useTeamsStore } from '@/stores/teams'
 import { Badge } from '@/components/ui/Badge'
@@ -16,6 +16,7 @@ import {
   Users,
   Trophy
 } from '@/components/icons'
+import { useToast } from '@/hooks/useToast'
 import type { Team } from '@/types/api'
 
 interface TeamsTableProps {
@@ -147,21 +148,53 @@ function TeamRow({ team, rank }: { team: Team; rank: number }) {
 }
 
 export function TeamsTable({ className }: TeamsTableProps) {
-  const { teams, isLoading, error, currentPage, limit } = useTeamsStore()
+  const { teams, isLoading, error, currentPage, limit, fetchTeams, clearError } = useTeamsStore()
+  const { toast } = useToast()
+
+  useEffect(() => {
+    // Auto-fetch teams on mount if not already loaded
+    if (teams.length === 0 && !isLoading) {
+      fetchTeams().catch(() => {
+        // Error handling is done in the store
+      })
+    }
+  }, [teams.length, isLoading, fetchTeams])
+
+  useEffect(() => {
+    // Show toast notification for errors
+    if (error) {
+      toast.error('Teams loading failed', error)
+      clearError()
+    }
+  }, [error, toast, clearError])
+
+  const handleRetry = async () => {
+    try {
+      await fetchTeams()
+      toast.success('Teams reloaded', 'Data refreshed successfully')
+    } catch (err) {
+      // Error will be handled by the effect above
+    }
+  }
 
   if (error) {
     return (
       <Card className={className}>
         <CardContent className="p-6">
-          <div className="text-center text-destructive">
-            <p>Error loading teams: {error}</p>
-            <Button 
-              variant="outline" 
-              size="sm" 
-              className="mt-2"
-              onClick={() => window.location.reload()}
+          <div className="text-center">
+            <div className="mb-4">
+              <div className="text-destructive font-mono text-lg mb-2">
+                &gt; ERROR_LOADING_TEAMS
+              </div>
+              <p className="text-muted-foreground text-sm">{"// "}{error}</p>
+            </div>
+            <Button
+              variant="outline"
+              size="sm"
+              className="btn-terminal"
+              onClick={handleRetry}
             >
-              Retry
+              [RETRY_LOADING]
             </Button>
           </div>
         </CardContent>

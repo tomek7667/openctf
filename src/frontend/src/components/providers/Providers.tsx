@@ -10,9 +10,9 @@
 import React, { useEffect, Suspense } from 'react'
 import { QueryClient, QueryClientProvider } from 'react-query'
 import { ReactQueryDevtools } from 'react-query/devtools'
-import { Toaster } from 'react-hot-toast'
 import { ErrorBoundary } from '@/components/ui/ErrorBoundary'
 import { LoadingFallback } from '@/components/ui/LoadingFallback'
+import ToastContainer from '@/components/ui/ToastContainer'
 import { useAuthStore } from '@/stores/auth'
 
 // Create a client
@@ -51,49 +51,14 @@ function AuthInitializer({ children }: { children: React.ReactNode }) {
   const { initialize, isInitialized } = useAuthStore()
 
   useEffect(() => {
-    initialize()
-  }, [initialize])
-
-  if (!isInitialized) {
-    return <LoadingFallback message="Initializing application..." />
-  }
+    if (!isInitialized) {
+      initialize()
+    }
+  }, [initialize, isInitialized])
 
   return <>{children}</>
 }
 
-/**
- * Toast Configuration
- */
-const toastOptions = {
-  duration: 4000,
-  position: 'top-right' as const,
-  style: {
-    background: 'hsl(var(--card))',
-    color: 'hsl(var(--card-foreground))',
-    border: '1px solid hsl(var(--primary) / 0.3)',
-    borderRadius: '0',
-    fontFamily: 'JetBrains Mono, monospace',
-    boxShadow: '0 0 10px rgba(0, 255, 255, 0.2)',
-  },
-  success: {
-    iconTheme: {
-      primary: 'hsl(var(--success-500))',
-      secondary: 'hsl(var(--success-50))',
-    },
-  },
-  error: {
-    iconTheme: {
-      primary: 'hsl(var(--destructive))',
-      secondary: 'hsl(var(--destructive-foreground))',
-    },
-  },
-  loading: {
-    iconTheme: {
-      primary: 'hsl(var(--primary))',
-      secondary: 'hsl(var(--primary-foreground))',
-    },
-  },
-}
 
 /**
  * Main Providers Component
@@ -109,10 +74,7 @@ export function Providers({ children }: ProvidersProps) {
         </Suspense>
         
         {/* Toast notifications */}
-        <Toaster
-          position={toastOptions.position}
-          toastOptions={toastOptions}
-        />
+        <ToastContainer />
         
         {/* Development tools */}
         {process.env.NODE_ENV === 'development' && (

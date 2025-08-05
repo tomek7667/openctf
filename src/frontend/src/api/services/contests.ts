@@ -9,6 +9,7 @@
  */
 
 import { apiClient } from '../client';
+import { sleep } from '@/lib/utils';
 import type {
   Contest,
   ListContestsDto,
@@ -26,11 +27,60 @@ export class ContestsApiService {
    * Get paginated list of contests with filtering and sorting
    */
   async getContests(params?: ListContestsDto): Promise<PaginatedResponse<Contest>> {
-    return apiClient.get<PaginatedResponse<Contest>>('/contests/list', {
-      params,
-      cacheKey: `contests:list:${JSON.stringify(params)}`,
-      cacheTTL: 300000, // 5 minutes
-    });
+    // TODO: add backend logic here
+    await sleep(1000); // Simulate network delay
+
+    // Simulate potential API failure
+    if (Math.random() < 0.1) {
+      throw new Error('Failed to load contests. Database connection timeout.');
+    }
+
+    // Mock contests data - basic structure for now
+    const mockContests: Contest[] = [
+      {
+        id: 1,
+        name: "BSidesSF 2024 CTF",
+        description: "Annual BSides San Francisco Capture The Flag competition",
+        start: "2024-05-18T18:00:00Z",
+        end: "2024-05-20T06:00:00Z",
+        status: "finished" as ContestStatus,
+        categories: ["web", "crypto", "pwn"] as CTFCategory[],
+        participants: 342,
+        createdAt: "2024-04-15T10:00:00Z",
+        updatedAt: "2024-05-20T06:30:00Z"
+      },
+      {
+        id: 2,
+        name: "picoCTF 2024",
+        description: "Educational CTF for beginners and advanced players alike",
+        start: "2024-03-12T12:00:00Z",
+        end: "2024-03-26T12:00:00Z",
+        status: "finished" as ContestStatus,
+        categories: ["general", "web", "forensics", "crypto"] as CTFCategory[],
+        participants: 8934,
+        createdAt: "2024-02-20T09:00:00Z",
+        updatedAt: "2024-03-26T14:00:00Z"
+      }
+    ];
+
+    const offset = params?.offset || 0;
+    const limit = params?.limit || 20;
+    const total = 45; // Total mock contests
+
+    const paginatedContests = mockContests.slice(offset, offset + limit);
+
+    return {
+      items: paginatedContests,
+      pagination: {
+        offset,
+        limit,
+        total,
+        hasNext: offset + limit < total,
+        hasPrev: offset > 0,
+        totalPages: Math.ceil(total / limit),
+        currentPage: Math.floor(offset / limit)
+      }
+    };
   }
 
   /**

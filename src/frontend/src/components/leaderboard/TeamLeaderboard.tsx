@@ -1,8 +1,11 @@
 'use client'
 
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { Trophy, Users, Flag, Star } from '@/components/ui/icons'
+import { leaderboardApi, LeaderboardTeam } from '@/api/leaderboard'
+import { useToast } from '@/hooks/useToast'
+import { getErrorMessage } from '@/lib/utils'
 
 interface TeamData {
   place: number
@@ -14,20 +17,6 @@ interface TeamData {
   isVerified: boolean
   members: number
 }
-
-// Mock data based on the actual schema structure
-const mockTeamData: TeamData[] = [
-  { place: 1, name: "r3kapig", country: "CN", totalPoints: 1020.905, contestsWon: 5, monthlyPoints: 250.3, isVerified: true, members: 8 },
-  { place: 2, name: "Kalmarunionen", country: "DK", totalPoints: 985.563, contestsWon: 4, monthlyPoints: 210.8, isVerified: true, members: 6 },
-  { place: 3, name: "Infobahn", country: "DE", totalPoints: 872.674, contestsWon: 3, monthlyPoints: 195.2, isVerified: true, members: 7 },
-  { place: 4, name: "team:placeholder", country: "US", totalPoints: 849.042, contestsWon: 2, monthlyPoints: 180.5, isVerified: true, members: 5 },
-  { place: 5, name: "Project Sekai", country: "JP", totalPoints: 813.723, contestsWon: 3, monthlyPoints: 165.9, isVerified: true, members: 9 },
-  { place: 6, name: "justCatTheFish", country: "PL", totalPoints: 783.644, contestsWon: 2, monthlyPoints: 145.3, isVerified: true, members: 4 },
-  { place: 7, name: "thehackerscrew", country: "IN", totalPoints: 765.696, contestsWon: 1, monthlyPoints: 135.7, isVerified: false, members: 6 },
-  { place: 8, name: "The Flat Network Society", country: "FR", totalPoints: 725.351, contestsWon: 2, monthlyPoints: 125.8, isVerified: true, members: 5 },
-  { place: 9, name: "L3ak", country: "US", totalPoints: 716.831, contestsWon: 1, monthlyPoints: 118.4, isVerified: false, members: 3 },
-  { place: 10, name: "Never Stop Exploiting", country: "CN", totalPoints: 708.169, contestsWon: 1, monthlyPoints: 112.6, isVerified: true, members: 7 }
-]
 
 const getPlaceIcon = (place: number) => {
   switch (place) {
@@ -123,6 +112,31 @@ const TopThreePodium = ({ teams }: { teams: TeamData[] }) => {
   )
 }
 
+const TeamRowSkeleton = ({ index }: { index: number }) => (
+  <motion.div
+    initial={{ opacity: 0, x: -20 }}
+    animate={{ opacity: 1, x: 0 }}
+    transition={{ delay: index * 0.1 }}
+    className="p-4 mb-2 rounded-none border bg-card/50 border-primary/20 font-mono"
+  >
+    <div className="flex items-center justify-between">
+      <div className="flex items-center space-x-4">
+        <div className="flex items-center justify-center w-10 h-10">
+          <div className="w-6 h-6 bg-primary/20 rounded animate-pulse" />
+        </div>
+        <div className="flex flex-col space-y-2">
+          <div className="h-5 bg-primary/20 rounded w-32 animate-pulse" />
+          <div className="h-3 bg-primary/10 rounded w-24 animate-pulse" />
+        </div>
+      </div>
+      <div className="text-right space-y-2">
+        <div className="h-6 bg-primary/20 rounded w-16 animate-pulse" />
+        <div className="h-3 bg-primary/10 rounded w-20 animate-pulse" />
+      </div>
+    </div>
+  </motion.div>
+)
+
 const TeamRow = ({ team, index }: { team: TeamData, index: number }) => (
   <motion.div
     initial={{ opacity: 0, x: -20 }}
@@ -170,8 +184,38 @@ const TeamRow = ({ team, index }: { team: TeamData, index: number }) => (
 )
 
 export function TeamLeaderboard() {
+  const [teams, setTeams] = useState<LeaderboardTeam[]>([])
+  const [isLoading, setIsLoading] = useState(true)
+  const { toast } = useToast()
   const currentMonth = new Date().toLocaleString('default', { month: 'long', year: 'numeric' })
-  
+
+  useEffect(() => {
+    const fetchTeams = async () => {
+      try {
+        setIsLoading(true)
+        const data = await leaderboardApi.getTopTeams(10)
+        setTeams(data)
+      } catch (error) {
+        console.error('Error fetching leaderboard:', error)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    fetchTeams()
+  }, [])
+
+  const teamData: TeamData[] = teams.map(team => ({
+    place: team.place,
+    name: team.name,
+    country: team.country,
+    totalPoints: team.totalPoints,
+    contestsWon: team.contestsWon,
+    monthlyPoints: team.monthlyPoints,
+    isVerified: team.isVerified,
+    members: team.members
+  }))
+
   return (
     <section className="py-16 px-4">
       <div className="max-w-6xl mx-auto">
@@ -188,15 +232,27 @@ export function TeamLeaderboard() {
           <div className="terminal glass-terminal p-4 max-w-2xl mx-auto text-left">
             <div className="text-primary mb-2">root@openctf:~# cat leaderboard.txt</div>
             <p className="text-green-400">
-              // Monthly rankings for {currentMonth}<br/>
-              // Based on OpenCTF point system and contest performance<br/>
-              <span className="text-yellow-400">// Updated: $(date) | Weight pool: 100.0 pts</span>
+              {`// Monthly rankings for ${currentMonth}`}<br/>
+              {"// Based on OpenCTF point system and contest performance"}<br/>
+              <span className="text-yellow-400">{"// Updated: $(date) | Weight pool: 100.0 pts"}</span>
             </p>
           </div>
         </motion.div>
 
         {/* Top 3 Podium */}
-        <TopThreePodium teams={mockTeamData} />
+        {isLoading ? (
+          <div className="flex items-end justify-center gap-4 mb-8">
+            {[0, 1, 2].map((i) => (
+              <div key={i} className="text-center">
+                <div className={`${i === 1 ? 'h-32 w-32' : i === 0 ? 'h-24 w-24' : 'h-20 w-20'} bg-primary/10 rounded-t-lg animate-pulse mb-2`} />
+                <div className="h-4 bg-primary/20 rounded w-16 animate-pulse mb-1" />
+                <div className="h-3 bg-primary/10 rounded w-12 animate-pulse" />
+              </div>
+            ))}
+          </div>
+        ) : teamData.length >= 3 ? (
+          <TopThreePodium teams={teamData} />
+        ) : null}
 
         {/* Full Leaderboard */}
         <motion.div
@@ -211,11 +267,28 @@ export function TeamLeaderboard() {
             </h3>
             <div className="h-px bg-primary/30 mb-4"></div>
           </div>
-          
-          {mockTeamData.map((team, index) => (
-            <TeamRow key={team.name} team={team} index={index} />
-          ))}
-          
+
+          {isLoading ? (
+            <>
+              {Array.from({ length: 10 }).map((_, index) => (
+                <TeamRowSkeleton key={index} index={index} />
+              ))}
+            </>
+          ) : teamData.length > 0 ? (
+            <>
+              {teamData.map((team, index) => (
+                <TeamRow key={team.name} team={team} index={index} />
+              ))}
+            </>
+          ) : (
+            <div className="text-center py-12">
+              <div className="text-muted-foreground font-mono">
+                <p className="text-lg mb-2">&gt; NO_TEAMS_FOUND</p>
+                <p className="text-sm">{"// Failed to load team rankings"}</p>
+              </div>
+            </div>
+          )}
+
           <div className="text-center mt-8">
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
               <button className="btn-terminal px-6 py-3 font-mono font-bold">
