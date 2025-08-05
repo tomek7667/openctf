@@ -76,10 +76,7 @@ export function Providers({ children }: ProvidersProps) {
         </Suspense>
         
         {/* Toast notifications */}
-        <Toaster
-          position={toastOptions.position}
-          toastOptions={toastOptions}
-        />
+        <ToastContainer />
         
         {/* Development tools */}
         {process.env.NODE_ENV === 'development' && (
