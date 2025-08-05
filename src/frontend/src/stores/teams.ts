@@ -1,198 +1,592 @@
-import { create } from 'zustand'
-import { immer } from 'zustand/middleware/immer'
-import type { Team, ListTeamsDto, CreateTeamDto } from '@/types/api'
-import { teamsApi } from '@/api'
+/**
+ * Teams Store
+ * 
+ * Manages teams data and related state with:
+ * - Comprehensive filtering and sorting
+ * - Optimistic updates
+ * - Real-time data sync
+ * - Advanced caching
+ */
+
+import { create } from 'zustand';
+import { immer } from 'zustand/middleware/immer';
+import { devtools, subscribeWithSelector } from 'zustand/middleware';
+import { teamsApi } from '@/api';
+import type {
+  Team,
+  ListTeamsDto,
+  CreateTeamDto,
+  TeamSortField,
+  SortOrder,
+  PaginatedResponse,
+  FilterOptions,
+} from '@/types/api';
+import { ApiClientError } from '@/api/client';
+
+// =============================================================================
+// Types
+// =============================================================================
 
 interface TeamsState {
-  teams: Team[]
-  currentTeam: Team | null
-  isLoading: boolean
-  error: string | null
-  totalCount: number
-  currentPage: number
-  limit: number
+  // Data
+  teams: Team[];
+  currentTeam: Team | null;
+  totalCount: number;
+  
+  // Pagination
+  currentPage: number;
+  pageSize: number;
+  hasNextPage: boolean;
+  hasPrevPage: boolean;
+  
+  // Filtering & Sorting
   filters: {
-    countryCodes: string[]
-    searchTerm: string
-    year?: number
-  }
-  availableCountries: string[]
+    search: string;
+    countryCodes: string[];
+    year?: number;
+    verified?: boolean;
+    minPoints?: number;
+  };
+  sortBy: TeamSortField;
+  sortOrder: SortOrder;
+  
+  // UI State
+  isLoading: boolean;
+  isLoadingMore: boolean;
+  error: string | null;
+  
+  // Cache & Metadata
+  lastFetchTime: number;
+  filterOptions: FilterOptions | null;
+  selectedTeamIds: Set<number>;
+  
+  // Real-time updates
+  pendingUpdates: Map<number, Partial<Team>>;
 }
 
 interface TeamsActions {
-  fetchTeams: (params?: Partial<ListTeamsDto>) => Promise<void>
-  fetchTeam: (teamId: number) => Promise<void>
-  createTeam: (teamData: CreateTeamDto) => Promise<Team>
-  verifyTeam: (teamId: number) => Promise<void>
-  setFilters: (filters: Partial<TeamsState['filters']>) => void
-  setCurrentPage: (page: number) => void
-  setLimit: (limit: number) => void
-  clearError: () => void
-  reset: () => void
+  // Data fetching
+  fetchTeams: (params?: Partial<ListTeamsDto>) => Promise<void>;
+  fetchMoreTeams: () => Promise<void>;
+  fetchTeam: (teamId: number) => Promise<void>;
+  refreshTeams: () => Promise<void>;
+  
+  // CRUD operations
+  createTeam: (teamData: CreateTeamDto) => Promise<Team>;
+  updateTeam: (teamId: number, teamData: Partial<CreateTeamDto>) => Promise<void>;
+  deleteTeam: (teamId: number) => Promise<void>;
+  
+  // Filtering & Sorting
+  setFilters: (filters: Partial<TeamsState['filters']>) => void;
+  setSorting: (sortBy: TeamSortField, sortOrder: SortOrder) => void;
+  clearFilters: () => void;
+  
+  // Pagination
+  setPage: (page: number) => void;
+  setPageSize: (size: number) => void;
+  
+  // Team operations
+  verifyTeam: (teamId: number, verified: boolean, reason?: string) => Promise<void>;
+  mergeTeams: (mergerId: number, mergeeId: number, reason: string) => Promise<void>;
+  
+  // Selection
+  selectTeam: (teamId: number) => void;
+  deselectTeam: (teamId: number) => void;
+  selectAllTeams: () => void;
+  clearSelection: () => void;
+  
+  // Utility
+  clearError: () => void;
+  resetStore: () => void;
+  
+  // Real-time updates
+  updateTeamOptimistic: (teamId: number, updates: Partial<Team>) => void;
+  commitPendingUpdates: () => void;
+  rollbackPendingUpdates: () => void;
 }
 
-type TeamsStore = TeamsState & TeamsActions
+type TeamsStore = TeamsState & TeamsActions;
+
+// =============================================================================
+// Initial State
+// =============================================================================
+
+const initialFilters = {
+  search: '',
+  countryCodes: [],
+  year: undefined,
+  verified: undefined,
+  minPoints: undefined,
+};
+
+const initialState: TeamsState = {
+  teams: [],
+  currentTeam: null,
+  totalCount: 0,
+  currentPage: 0,
+  pageSize: 30,
+  hasNextPage: false,
+  hasPrevPage: false,
+  filters: initialFilters,
+  sortBy: TeamSortField.POINTS,
+  sortOrder: SortOrder.DESC,
+  isLoading: false,
+  isLoadingMore: false,
+  error: null,
+  lastFetchTime: 0,
+  filterOptions: null,
+  selectedTeamIds: new Set(),
+  pendingUpdates: new Map(),
+};
+
+// =============================================================================
+// Store Implementation
+// =============================================================================
 
 export const useTeamsStore = create<TeamsStore>()(
-  immer((set, get) => ({
-    // State
-    teams: [],
-    currentTeam: null,
-    isLoading: false,
-    error: null,
-    totalCount: 0,
-    currentPage: 0,
-    limit: 30,
-    filters: {
-      countryCodes: [],
-      searchTerm: '',
-    },
-    availableCountries: [],
+  devtools(
+    subscribeWithSelector(
+      immer((set, get) => ({
+        ...initialState,
 
-    // Actions
-    fetchTeams: async (params) => {
-      set((state) => {
-        state.isLoading = true
-        state.error = null
-      })
+        // =====================================================================
+        // Data Fetching
+        // =====================================================================
 
-      try {
-        const { filters, currentPage, limit } = get()
-        
-        const queryParams: ListTeamsDto = {
-          offset: currentPage * limit,
-          limit,
-          countryCodes: filters.countryCodes.length > 0 ? filters.countryCodes : undefined,
-          ...params,
-        }
-
-        const response = await teamsApi.getTeams(queryParams)
-        
-        set((state) => {
-          state.teams = response.teams || []
-          state.totalCount = response.total || 0
-          state.isLoading = false
-        })
-      } catch (error: any) {
-        set((state) => {
-          state.error = error.response?.data?.message || 'Failed to fetch teams'
-          state.isLoading = false
-        })
-      }
-    },
-
-    fetchTeam: async (teamId: number) => {
-      set((state) => {
-        state.isLoading = true
-        state.error = null
-      })
-
-      try {
-        const response = await teamsApi.getTeam(teamId)
-        
-        set((state) => {
-          state.currentTeam = response.team
-          state.isLoading = false
-        })
-      } catch (error: any) {
-        set((state) => {
-          state.error = error.response?.data?.message || 'Failed to fetch team'
-          state.isLoading = false
-        })
-      }
-    },
-
-    createTeam: async (teamData: CreateTeamDto): Promise<Team> => {
-      set((state) => {
-        state.isLoading = true
-        state.error = null
-      })
-
-      try {
-        const response = await teamsApi.createTeam(teamData)
-        
-        set((state) => {
-          state.teams.unshift(response.team)
-          state.isLoading = false
-        })
-
-        return response.team
-      } catch (error: any) {
-        set((state) => {
-          state.error = error.response?.data?.message || 'Failed to create team'
-          state.isLoading = false
-        })
-        throw error
-      }
-    },
-
-    verifyTeam: async (teamId: number) => {
-      try {
-        await teamsApi.verifyTeam(teamId)
-        
-        set((state) => {
-          const teamIndex = state.teams.findIndex(team => team.id === teamId)
-          if (teamIndex !== -1) {
-            state.teams[teamIndex].verified = true
-          }
+        fetchTeams: async (params?: Partial<ListTeamsDto>) => {
+          const currentState = get();
           
-          if (state.currentTeam?.id === teamId) {
-            state.currentTeam.verified = true
+          set((state) => {
+            state.isLoading = true;
+            state.error = null;
+          });
+
+          try {
+            const requestParams: ListTeamsDto = {
+              offset: currentState.currentPage * currentState.pageSize,
+              limit: currentState.pageSize,
+              countryCodes: currentState.filters.countryCodes.length > 0 
+                ? currentState.filters.countryCodes 
+                : undefined,
+              search: currentState.filters.search || undefined,
+              year: currentState.filters.year,
+              verified: currentState.filters.verified,
+              minPoints: currentState.filters.minPoints,
+              sortBy: currentState.sortBy,
+              sortOrder: currentState.sortOrder,
+              ...params,
+            };
+
+            const response: PaginatedResponse<Team> = await teamsApi.getTeams(requestParams);
+            
+            set((state) => {
+              state.teams = response.items;
+              state.totalCount = response.pagination.total;
+              state.hasNextPage = response.pagination.hasNext;
+              state.hasPrevPage = response.pagination.hasPrev;
+              state.isLoading = false;
+              state.lastFetchTime = Date.now();
+            });
+          } catch (error) {
+            const errorMessage = error instanceof ApiClientError 
+              ? error.message 
+              : 'Failed to fetch teams';
+            
+            set((state) => {
+              state.error = errorMessage;
+              state.isLoading = false;
+            });
+            throw error;
           }
-        })
-      } catch (error: any) {
-        set((state) => {
-          state.error = error.response?.data?.message || 'Failed to verify team'
-        })
-        throw error
-      }
-    },
+        },
 
-    setFilters: (newFilters) => {
-      set((state) => {
-        state.filters = { ...state.filters, ...newFilters }
-        state.currentPage = 0 // Reset to first page when filters change
-      })
+        fetchMoreTeams: async () => {
+          const { hasNextPage, isLoadingMore, currentPage } = get();
+          
+          if (!hasNextPage || isLoadingMore) return;
 
-      // Automatically fetch teams with new filters
-      get().fetchTeams()
-    },
+          set((state) => {
+            state.isLoadingMore = true;
+          });
 
-    setCurrentPage: (page: number) => {
-      set((state) => {
-        state.currentPage = page
-      })
+          try {
+            // Temporarily increment page for the request
+            const nextPage = currentPage + 1;
+            const currentState = get();
+            
+            const requestParams: ListTeamsDto = {
+              offset: nextPage * currentState.pageSize,
+              limit: currentState.pageSize,
+              countryCodes: currentState.filters.countryCodes.length > 0 
+                ? currentState.filters.countryCodes 
+                : undefined,
+              search: currentState.filters.search || undefined,
+              year: currentState.filters.year,
+              verified: currentState.filters.verified,
+              minPoints: currentState.filters.minPoints,
+              sortBy: currentState.sortBy,
+              sortOrder: currentState.sortOrder,
+            };
 
-      get().fetchTeams()
-    },
+            const response: PaginatedResponse<Team> = await teamsApi.getTeams(requestParams);
+            
+            set((state) => {
+              state.teams = [...state.teams, ...response.items];
+              state.currentPage = nextPage;
+              state.hasNextPage = response.pagination.hasNext;
+              state.isLoadingMore = false;
+            });
+          } catch (error) {
+            set((state) => {
+              state.isLoadingMore = false;
+            });
+            throw error;
+          }
+        },
 
-    setLimit: (limit: number) => {
-      set((state) => {
-        state.limit = limit
-        state.currentPage = 0
-      })
+        fetchTeam: async (teamId: number) => {
+          try {
+            const team = await teamsApi.getTeam(teamId);
+            
+            set((state) => {
+              state.currentTeam = team;
+              
+              // Update in teams list if present
+              const index = state.teams.findIndex(t => t.id === teamId);
+              if (index !== -1) {
+                state.teams[index] = team;
+              }
+            });
+          } catch (error) {
+            throw error;
+          }
+        },
 
-      get().fetchTeams()
-    },
+        refreshTeams: async () => {
+          const { filters, sortBy, sortOrder, currentPage, pageSize } = get();
+          await get().fetchTeams({
+            offset: 0, // Reset to first page
+            limit: (currentPage + 1) * pageSize, // Load all currently visible items
+          });
+        },
 
-    clearError: () => {
-      set((state) => {
-        state.error = null
-      })
-    },
+        // =====================================================================
+        // CRUD Operations
+        // =====================================================================
 
-    reset: () => {
-      set((state) => {
-        state.teams = []
-        state.currentTeam = null
-        state.error = null
-        state.totalCount = 0
-        state.currentPage = 0
-        state.filters = {
-          countryCodes: [],
-          searchTerm: '',
-        }
-      })
-    },
-  }))
-)
+        createTeam: async (teamData: CreateTeamDto) => {
+          set((state) => {
+            state.isLoading = true;
+            state.error = null;
+          });
+
+          try {
+            const newTeam = await teamsApi.createTeam(teamData);
+            
+            set((state) => {
+              state.teams.unshift(newTeam); // Add to beginning
+              state.totalCount += 1;
+              state.isLoading = false;
+            });
+
+            return newTeam;
+          } catch (error) {
+            const errorMessage = error instanceof ApiClientError 
+              ? error.message 
+              : 'Failed to create team';
+            
+            set((state) => {
+              state.error = errorMessage;
+              state.isLoading = false;
+            });
+            throw error;
+          }
+        },
+
+        updateTeam: async (teamId: number, teamData: Partial<CreateTeamDto>) => {
+          // Optimistic update
+          const originalTeam = get().teams.find(t => t.id === teamId);
+          
+          set((state) => {
+            const index = state.teams.findIndex(t => t.id === teamId);
+            if (index !== -1) {
+              state.teams[index] = { ...state.teams[index], ...teamData };
+            }
+            if (state.currentTeam?.id === teamId) {
+              state.currentTeam = { ...state.currentTeam, ...teamData };
+            }
+          });
+
+          try {
+            const updatedTeam = await teamsApi.updateTeam(teamId, teamData);
+            
+            set((state) => {
+              const index = state.teams.findIndex(t => t.id === teamId);
+              if (index !== -1) {
+                state.teams[index] = updatedTeam;
+              }
+              if (state.currentTeam?.id === teamId) {
+                state.currentTeam = updatedTeam;
+              }
+            });
+          } catch (error) {
+            // Rollback optimistic update
+            if (originalTeam) {
+              set((state) => {
+                const index = state.teams.findIndex(t => t.id === teamId);
+                if (index !== -1) {
+                  state.teams[index] = originalTeam;
+                }
+                if (state.currentTeam?.id === teamId) {
+                  state.currentTeam = originalTeam;
+                }
+              });
+            }
+            throw error;
+          }
+        },
+
+        deleteTeam: async (teamId: number) => {
+          // Optimistic removal
+          const originalIndex = get().teams.findIndex(t => t.id === teamId);
+          const originalTeam = get().teams[originalIndex];
+          
+          set((state) => {
+            state.teams = state.teams.filter(t => t.id !== teamId);
+            state.totalCount -= 1;
+            if (state.currentTeam?.id === teamId) {
+              state.currentTeam = null;
+            }
+          });
+
+          try {
+            await teamsApi.deleteTeam(teamId);
+          } catch (error) {
+            // Rollback optimistic removal
+            if (originalTeam) {
+              set((state) => {
+                state.teams.splice(originalIndex, 0, originalTeam);
+                state.totalCount += 1;
+              });
+            }
+            throw error;
+          }
+        },
+
+        // =====================================================================
+        // Filtering & Sorting
+        // =====================================================================
+
+        setFilters: (newFilters: Partial<TeamsState['filters']>) => {
+          set((state) => {
+            state.filters = { ...state.filters, ...newFilters };
+            state.currentPage = 0; // Reset pagination
+          });
+
+          // Automatically fetch with new filters
+          get().fetchTeams();
+        },
+
+        setSorting: (sortBy: TeamSortField, sortOrder: SortOrder) => {
+          set((state) => {
+            state.sortBy = sortBy;
+            state.sortOrder = sortOrder;
+            state.currentPage = 0; // Reset pagination
+          });
+
+          get().fetchTeams();
+        },
+
+        clearFilters: () => {
+          set((state) => {
+            state.filters = initialFilters;
+            state.currentPage = 0;
+          });
+
+          get().fetchTeams();
+        },
+
+        // =====================================================================
+        // Pagination
+        // =====================================================================
+
+        setPage: (page: number) => {
+          set((state) => {
+            state.currentPage = page;
+          });
+
+          get().fetchTeams();
+        },
+
+        setPageSize: (size: number) => {
+          set((state) => {
+            state.pageSize = size;
+            state.currentPage = 0; // Reset to first page
+          });
+
+          get().fetchTeams();
+        },
+
+        // =====================================================================
+        // Team Operations
+        // =====================================================================
+
+        verifyTeam: async (teamId: number, verified: boolean, reason?: string) => {
+          // Optimistic update
+          set((state) => {
+            const index = state.teams.findIndex(t => t.id === teamId);
+            if (index !== -1) {
+              state.teams[index].isVerified = verified;
+            }
+            if (state.currentTeam?.id === teamId) {
+              state.currentTeam.isVerified = verified;
+            }
+          });
+
+          try {
+            await teamsApi.verifyTeam({ teamId, verified, reason });
+          } catch (error) {
+            // Rollback optimistic update
+            set((state) => {
+              const index = state.teams.findIndex(t => t.id === teamId);
+              if (index !== -1) {
+                state.teams[index].isVerified = !verified;
+              }
+              if (state.currentTeam?.id === teamId) {
+                state.currentTeam.isVerified = !verified;
+              }
+            });
+            throw error;
+          }
+        },
+
+        mergeTeams: async (mergerId: number, mergeeId: number, reason: string) => {
+          try {
+            await teamsApi.mergeTeams({ mergerId, mergeeId, reason });
+            
+            // Remove the merged team from the list
+            set((state) => {
+              state.teams = state.teams.filter(t => t.id !== mergeeId);
+              state.totalCount -= 1;
+            });
+
+            // Refresh the merger team data
+            get().fetchTeam(mergerId);
+          } catch (error) {
+            throw error;
+          }
+        },
+
+        // =====================================================================
+        // Selection
+        // =====================================================================
+
+        selectTeam: (teamId: number) => {
+          set((state) => {
+            state.selectedTeamIds.add(teamId);
+          });
+        },
+
+        deselectTeam: (teamId: number) => {
+          set((state) => {
+            state.selectedTeamIds.delete(teamId);
+          });
+        },
+
+        selectAllTeams: () => {
+          set((state) => {
+            state.teams.forEach(team => {
+              state.selectedTeamIds.add(team.id);
+            });
+          });
+        },
+
+        clearSelection: () => {
+          set((state) => {
+            state.selectedTeamIds.clear();
+          });
+        },
+
+        // =====================================================================
+        // Utility
+        // =====================================================================
+
+        clearError: () => {
+          set((state) => {
+            state.error = null;
+          });
+        },
+
+        resetStore: () => {
+          set(() => ({
+            ...initialState,
+            selectedTeamIds: new Set(),
+            pendingUpdates: new Map(),
+          }));
+        },
+
+        // =====================================================================
+        // Real-time Updates
+        // =====================================================================
+
+        updateTeamOptimistic: (teamId: number, updates: Partial<Team>) => {
+          set((state) => {
+            // Store pending update
+            const existing = state.pendingUpdates.get(teamId) || {};
+            state.pendingUpdates.set(teamId, { ...existing, ...updates });
+
+            // Apply optimistic update
+            const index = state.teams.findIndex(t => t.id === teamId);
+            if (index !== -1) {
+              state.teams[index] = { ...state.teams[index], ...updates };
+            }
+            if (state.currentTeam?.id === teamId) {
+              state.currentTeam = { ...state.currentTeam, ...updates };
+            }
+          });
+        },
+
+        commitPendingUpdates: () => {
+          set((state) => {
+            state.pendingUpdates.clear();
+          });
+        },
+
+        rollbackPendingUpdates: () => {
+          // This would require storing original values, implemented as needed
+          set((state) => {
+            state.pendingUpdates.clear();
+          });
+          
+          // Refresh data from server
+          get().refreshTeams();
+        },
+      }))
+    ),
+    { name: 'teams-store' }
+  )
+);
+
+// =============================================================================
+// Selectors
+// =============================================================================
+
+export const useTeamsSelectors = {
+  teams: () => useTeamsStore((state) => state.teams),
+  currentTeam: () => useTeamsStore((state) => state.currentTeam),
+  isLoading: () => useTeamsStore((state) => state.isLoading),
+  error: () => useTeamsStore((state) => state.error),
+  filters: () => useTeamsStore((state) => state.filters),
+  pagination: () => useTeamsStore((state) => ({
+    currentPage: state.currentPage,
+    pageSize: state.pageSize,
+    totalCount: state.totalCount,
+    hasNextPage: state.hasNextPage,
+    hasPrevPage: state.hasPrevPage,
+  })),
+  selectedTeams: () => useTeamsStore((state) => 
+    state.teams.filter(team => state.selectedTeamIds.has(team.id))
+  ),
+};
+
+export default useTeamsStore;
