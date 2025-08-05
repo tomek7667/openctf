@@ -1,4 +1,4 @@
-import { Users, Shield, MessageSquare, Trophy, Settings, User } from 'lucide-react'
+import { Users, Shield, MessageSquare, Trophy, Settings, User } from '@/components/icons'
 
 export interface NavigationItem {
   id: string

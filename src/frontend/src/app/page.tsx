@@ -4,7 +4,7 @@ import React from 'react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/Button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
-import { Shield, Users, Trophy, MessageSquare, ArrowRight } from 'lucide-react'
+import { Shield, Users, Trophy, MessageSquare, ArrowRight } from '@/components/icons'
 
 const features = [
   {
