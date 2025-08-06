@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { Search, Filter, Calendar, Trophy, Clock, Users, Target } from '@/components/ui/icons'
+import { Search, Filter, Calendar, Trophy, Clock, Users, Target, Star, Shield } from '@/components/ui/icons'
 import { Input } from '@/components/ui/Input'
 import { Button } from '@/components/ui/Button'
 import { Badge } from '@/components/ui/Badge'
@@ -10,9 +10,7 @@ import { LoadingSpinner } from '@/components/ui/LoadingSpinner'
 import { MainLayout } from '@/components/layout/MainLayout'
 import { ContestCard } from '@/components/contests/ContestCard'
 import { contestsApi } from '@/api/services/contests'
-import { Contest, ContestStatus, CTFCategory } from '@/types/api'
-import { useToast } from '@/hooks/useToast'
-import { getErrorMessage } from '@/lib/utils'
+import { Contest, ContestStatus } from '@/types/api'
 import { clsx } from 'clsx'
 
 const contestStatuses: { status: ContestStatus | 'all'; label: string; icon: React.ComponentType<{ className?: string }> }[] = [
@@ -22,14 +20,33 @@ const contestStatuses: { status: ContestStatus | 'all'; label: string; icon: Rea
   { status: 'finished', label: 'Finished', icon: Trophy },
 ]
 
-const categories: CTFCategory[] = [
-  'web', 'crypto', 'pwn', 'reverse', 'forensics', 'misc', 'osint'
+const ratingOptions = [
+  { min: 4, max: 5, label: '4+ Stars' },
+  { min: 3, max: 5, label: '3+ Stars' },
+  { min: 2, max: 5, label: '2+ Stars' },
+  { min: 1, max: 5, label: '1+ Stars' },
 ]
+
+const weightOptions = [
+  { min: 80, max: 100, label: 'Extreme (80+)' },
+  { min: 50, max: 79, label: 'Hard (50-79)' },
+  { min: 20, max: 49, label: 'Medium (20-49)' },
+  { min: 0, max: 19, label: 'Easy (0-19)' },
+]
+
+const getCurrentYear = () => new Date().getFullYear()
+const getYearOptions = () => {
+  const currentYear = getCurrentYear()
+  return Array.from({ length: 5 }, (_, i) => currentYear - i)
+}
 
 interface ContestFilters {
   search: string
   status: ContestStatus | 'all'
-  categories: CTFCategory[]
+  minRating?: number
+  maxRating?: number
+  minWeight?: number
+  maxWeight?: number
   year?: number
 }
 
@@ -70,20 +87,92 @@ const StatCard = ({
   </motion.div>
 )
 
+const ContestTableRow = ({ contest }: { contest: Contest }) => (
+  <tr className="border-b border-border/50 hover:bg-muted/20 transition-colors">
+    <td className="p-4 font-mono">
+      <div>
+        <div className="font-bold text-foreground">{contest.name.replace(/-/g, ' ').toUpperCase()}</div>
+        <div className="text-sm text-muted-foreground truncate max-w-xs">{contest.description}</div>
+      </div>
+    </td>
+    <td className="p-4 font-mono text-sm">
+      {new Date(contest.start).toLocaleDateString()}
+    </td>
+    <td className="p-4 font-mono text-sm">
+      <div className="flex items-center gap-1">
+        <Shield className="h-4 w-4 text-muted-foreground" />
+        <span className={clsx(
+          "font-bold",
+          contest.assignedWeightPoints >= 80 ? "text-red-400" :
+          contest.assignedWeightPoints >= 50 ? "text-yellow-400" :
+          contest.assignedWeightPoints >= 20 ? "text-blue-400" : "text-green-400"
+        )}>
+          {contest.assignedWeightPoints}
+        </span>
+      </div>
+    </td>
+    <td className="p-4">
+      {contest.averagRating && contest.totalRatings && contest.totalRatings > 0 ? (
+        <div className="flex items-center gap-1">
+          {Array.from({ length: 5 }).map((_, i) => (
+            <Star 
+              key={i} 
+              className={clsx(
+                "h-3 w-3",
+                i < Math.floor(contest.averagRating!) ? "text-yellow-400 fill-current" : "text-gray-600"
+              )} 
+            />
+          ))}
+          <span className="text-xs text-muted-foreground ml-1">({contest.averagRating.toFixed(1)})</span>
+        </div>
+      ) : (
+        <span className="text-xs text-muted-foreground">No ratings</span>
+      )}
+    </td>
+    <td className="p-4 font-mono text-sm">
+      <div className="flex items-center gap-1">
+        <Users className="h-4 w-4 text-muted-foreground" />
+        {contest.participantCount}
+      </div>
+    </td>
+    <td className="p-4">
+      <div className="flex items-center gap-2">
+        {contest.url && (
+          <a
+            href={contest.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="p-1.5 rounded transition-colors hover:bg-primary/10 text-muted-foreground hover:text-primary"
+          >
+            <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+            </svg>
+          </a>
+        )}
+        <a
+          href={`/contests/${contest.id}`}
+          className="btn-terminal px-2 py-1 text-xs font-mono font-bold"
+        >
+          DETAILS
+        </a>
+      </div>
+    </td>
+  </tr>
+)
+
 export default function ContestsPage() {
   const [contests, setContests] = useState<Contest[]>([])
   const [filteredContests, setFilteredContests] = useState<Contest[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [filters, setFilters] = useState<ContestFilters>({
     search: '',
-    status: 'all',
-    categories: []
+    status: 'all'
   })
-  const { toast } = useToast()
+
+  console.log("this is fetch")
 
   // Fetch contests on mount
   useEffect(() => {
-    console.log("this is fetch")
     const fetchContests = async () => {
       try {
         setIsLoading(true)
@@ -92,11 +181,6 @@ export default function ContestsPage() {
         setFilteredContests(response.items)
       } catch (error) {
         console.error('Error fetching contests:', error)
-        toast({
-          title: 'Error loading contests',
-          description: getErrorMessage(error),
-          variant: 'destructive'
-        })
       } finally {
         setIsLoading(false)
       }
@@ -123,10 +207,25 @@ export default function ContestsPage() {
       filtered = filtered.filter(contest => contest.status === filters.status)
     }
 
-    // Category filter
-    if (filters.categories.length > 0) {
+    // Rating filter
+    if (filters.minRating !== undefined) {
       filtered = filtered.filter(contest => 
-        contest.categories?.some(cat => filters.categories.includes(cat))
+        contest.averagRating && contest.averagRating >= filters.minRating!
+      )
+    }
+
+    // Weight filter
+    if (filters.minWeight !== undefined && filters.maxWeight !== undefined) {
+      filtered = filtered.filter(contest => 
+        contest.assignedWeightPoints >= filters.minWeight! && 
+        contest.assignedWeightPoints <= filters.maxWeight!
+      )
+    }
+
+    // Year filter
+    if (filters.year) {
+      filtered = filtered.filter(contest => 
+        new Date(contest.start).getFullYear() === filters.year
       )
     }
 
@@ -137,20 +236,18 @@ export default function ContestsPage() {
     setFilters(prev => ({ ...prev, [key]: value }))
   }
 
-  const toggleCategory = (category: CTFCategory) => {
-    setFilters(prev => ({
-      ...prev,
-      categories: prev.categories.includes(category)
-        ? prev.categories.filter(c => c !== category)
-        : [...prev.categories, category]
-    }))
+  const setRatingFilter = (min?: number, max?: number) => {
+    setFilters(prev => ({ ...prev, minRating: min, maxRating: max }))
+  }
+
+  const setWeightFilter = (min?: number, max?: number) => {
+    setFilters(prev => ({ ...prev, minWeight: min, maxWeight: max }))
   }
 
   const clearFilters = () => {
     setFilters({
       search: '',
-      status: 'all',
-      categories: []
+      status: 'all'
     })
   }
 
@@ -166,6 +263,8 @@ export default function ContestsPage() {
     upcoming: contests.filter(c => c.status === 'upcoming').length,
     finished: contests.filter(c => c.status === 'finished').length
   }
+
+  const hasActiveFilters = filters.search || filters.status !== 'all' || filters.minRating || filters.minWeight || filters.year
 
   return (
     <MainLayout>
@@ -267,34 +366,69 @@ export default function ContestsPage() {
                 </div>
               </div>
 
-              {/* Category Filters */}
-              <div className="space-y-3">
+              {/* Advanced Filters */}
+              <div className="space-y-4">
                 <div className="flex items-center gap-2">
                   <Filter className="h-4 w-4 text-muted-foreground" />
-                  <span className="text-sm font-mono text-muted-foreground">Categories:</span>
+                  <span className="text-sm font-mono text-muted-foreground">Advanced Filters:</span>
                 </div>
                 
-                <div className="flex flex-wrap gap-2">
-                  {categories.map((category) => (
-                    <Badge
-                      key={category}
-                      variant={filters.categories.includes(category) ? 'default' : 'outline'}
-                      className={clsx(
-                        "cursor-pointer transition-colors font-mono",
-                        filters.categories.includes(category) 
-                          ? "bg-primary text-primary-foreground" 
-                          : "hover:bg-primary/10"
-                      )}
-                      onClick={() => toggleCategory(category)}
-                    >
-                      {category.toUpperCase()}
-                    </Badge>
-                  ))}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  {/* Rating Filter */}
+                  <div className="space-y-2">
+                    <label className="text-sm font-mono text-muted-foreground">Quality Rating:</label>
+                    <div className="flex flex-wrap gap-1">
+                      {ratingOptions.map((option) => (
+                        <Badge
+                          key={`${option.min}-${option.max}`}
+                          variant={filters.minRating === option.min ? 'default' : 'outline'}
+                          className="cursor-pointer transition-colors font-mono"
+                          onClick={() => setRatingFilter(option.min, option.max)}
+                        >
+                          {option.label}
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Weight Filter */}
+                  <div className="space-y-2">
+                    <label className="text-sm font-mono text-muted-foreground">Difficulty Weight:</label>
+                    <div className="flex flex-wrap gap-1">
+                      {weightOptions.map((option) => (
+                        <Badge
+                          key={`${option.min}-${option.max}`}
+                          variant={filters.minWeight === option.min ? 'default' : 'outline'}
+                          className="cursor-pointer transition-colors font-mono"
+                          onClick={() => setWeightFilter(option.min, option.max)}
+                        >
+                          {option.label}
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Year Filter */}
+                  <div className="space-y-2">
+                    <label className="text-sm font-mono text-muted-foreground">Year:</label>
+                    <div className="flex flex-wrap gap-1">
+                      {getYearOptions().map((year) => (
+                        <Badge
+                          key={year}
+                          variant={filters.year === year ? 'default' : 'outline'}
+                          className="cursor-pointer transition-colors font-mono"
+                          onClick={() => updateFilter('year', year)}
+                        >
+                          {year}
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
                 </div>
               </div>
 
               {/* Clear Filters */}
-              {(filters.search || filters.status !== 'all' || filters.categories.length > 0) && (
+              {hasActiveFilters && (
                 <div className="flex justify-between items-center">
                   <span className="text-sm text-muted-foreground font-mono">
                     Showing {filteredContests.length} of {contests.length} contests
@@ -360,7 +494,7 @@ export default function ContestsPage() {
                   </motion.div>
                 )}
 
-                {/* Finished Contests */}
+                {/* Finished Contests - Table View */}
                 {(filters.status === 'all' || filters.status === 'finished') && finishedContests.length > 0 && (
                   <motion.div
                     initial={{ opacity: 0, y: 20 }}
@@ -374,10 +508,35 @@ export default function ContestsPage() {
                         &gt; FINISHED_CONTESTS ({finishedContests.length})
                       </h2>
                     </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                      {finishedContests.map((contest, index) => (
-                        <ContestCard key={contest.id} contest={contest} index={index} />
-                      ))}
+                    
+                    <div className="bg-card/30 rounded-none hacker-border overflow-hidden">
+                      <div className="overflow-x-auto">
+                        <table className="w-full">
+                          <thead className="bg-muted/50">
+                            <tr className="border-b border-border">
+                              <th className="p-4 text-left font-mono text-sm font-bold">Contest</th>
+                              <th className="p-4 text-left font-mono text-sm font-bold">Date</th>
+                              <th className="p-4 text-left font-mono text-sm font-bold">Weight</th>
+                              <th className="p-4 text-left font-mono text-sm font-bold">Rating</th>
+                              <th className="p-4 text-left font-mono text-sm font-bold">Teams</th>
+                              <th className="p-4 text-left font-mono text-sm font-bold">Actions</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {finishedContests.slice(0, 20).map((contest) => (
+                              <ContestTableRow key={contest.id} contest={contest} />
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                      
+                      {finishedContests.length > 20 && (
+                        <div className="p-4 bg-muted/20 border-t border-border">
+                          <p className="text-sm text-muted-foreground font-mono text-center">
+                            Showing first 20 of {finishedContests.length} finished contests
+                          </p>
+                        </div>
+                      )}
                     </div>
                   </motion.div>
                 )}
