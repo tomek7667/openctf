@@ -3,7 +3,7 @@
 import React from 'react'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
-import { format, formatDistanceToNow, isAfter, isBefore, parseISO } from 'date-fns'
+import { format, formatDistanceToNow, parseISO } from 'date-fns'
 import { 
   Clock, 
   Users, 
@@ -12,7 +12,8 @@ import {
   ExternalLink,
   Flag,
   Star,
-  Target
+  Target,
+  Shield
 } from '@/components/ui/icons'
 import { Badge } from '@/components/ui/Badge'
 import { Card, CardContent, CardHeader } from '@/components/ui/Card'
@@ -62,7 +63,6 @@ const formatContestDate = (dateString: string) => {
 const getTimeInfo = (start: string, end: string, status: ContestStatus) => {
   const startDate = parseISO(start)
   const endDate = parseISO(end)
-  const now = new Date()
 
   if (status === 'upcoming') {
     return `Starts ${formatDistanceToNow(startDate, { addSuffix: true })}`
@@ -87,6 +87,31 @@ const getDuration = (start: string, end: string) => {
   return `${hours}h`
 }
 
+const getWeightColor = (weight: number) => {
+  if (weight >= 80) return 'text-red-400'
+  if (weight >= 50) return 'text-yellow-400'
+  if (weight >= 20) return 'text-blue-400'
+  return 'text-green-400'
+}
+
+const renderStars = (rating?: number) => {
+  if (!rating) return null
+  return (
+    <div className="flex items-center gap-1">
+      {Array.from({ length: 5 }).map((_, i) => (
+        <Star 
+          key={i} 
+          className={clsx(
+            "h-3 w-3",
+            i < Math.floor(rating) ? "text-yellow-400 fill-current" : "text-gray-600"
+          )} 
+        />
+      ))}
+      <span className="text-xs text-muted-foreground ml-1">({rating.toFixed(1)})</span>
+    </div>
+  )
+}
+
 export function ContestCard({ contest, index = 0 }: ContestCardProps) {
   const timeInfo = getTimeInfo(contest.start, contest.end, contest.status)
   const duration = getDuration(contest.start, contest.end)
@@ -109,7 +134,7 @@ export function ContestCard({ contest, index = 0 }: ContestCardProps) {
           <div className="flex items-start justify-between gap-3">
             <div className="flex-1 min-w-0">
               <h3 className="font-bold text-lg text-foreground font-mono group-hover:text-primary transition-colors duration-300 truncate">
-                {contest.name}
+                {contest.name.replace(/-/g, ' ').toUpperCase()}
               </h3>
               <p className="text-sm text-muted-foreground mt-1 line-clamp-2">
                 {contest.description}
@@ -117,7 +142,7 @@ export function ContestCard({ contest, index = 0 }: ContestCardProps) {
             </div>
             
             <div className={clsx(
-              "px-2 py-1 rounded border text-xs font-mono font-bold flex items-center gap-1",
+              "px-2 py-1 rounded border text-xs font-mono font-bold flex items-center gap-1 shrink-0",
               getStatusColor(contest.status)
             )}>
               {getStatusIcon(contest.status)}
@@ -134,7 +159,7 @@ export function ContestCard({ contest, index = 0 }: ContestCardProps) {
                 <Calendar className="h-4 w-4" />
                 <span>Start</span>
               </div>
-              <div className="font-mono text-foreground">
+              <div className="font-mono text-foreground text-xs">
                 {formatContestDate(contest.start)}
               </div>
             </div>
@@ -160,26 +185,30 @@ export function ContestCard({ contest, index = 0 }: ContestCardProps) {
             </div>
           )}
 
-          {/* Categories */}
-          {contest.categories && contest.categories.length > 0 && (
-            <div className="space-y-2">
-              <div className="text-sm text-muted-foreground">Categories</div>
-              <div className="flex flex-wrap gap-1">
-                {contest.categories.slice(0, 4).map((category) => (
-                  <Badge key={category} variant="outline" size="sm" className="font-mono">
-                    {category.toUpperCase()}
-                  </Badge>
-                ))}
-                {contest.categories.length > 4 && (
-                  <Badge variant="outline" size="sm" className="font-mono">
-                    +{contest.categories.length - 4}
-                  </Badge>
-                )}
+          {/* Weight and Rating */}
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Shield className="h-4 w-4 text-muted-foreground" />
+                <span className="text-sm text-muted-foreground">Weight</span>
+              </div>
+              <div className={clsx("font-mono font-bold", getWeightColor(contest.assignedWeightPoints))}>
+                {contest.assignedWeightPoints} pts
               </div>
             </div>
-          )}
+            
+            {contest.averagRating && contest.totalRatings && contest.totalRatings > 0 && (
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Star className="h-4 w-4 text-muted-foreground" />
+                  <span className="text-sm text-muted-foreground">Quality</span>
+                </div>
+                {renderStars(contest.averagRating)}
+              </div>
+            )}
+          </div>
 
-          {/* Stats */}
+          {/* Stats & Actions */}
           <div className="flex items-center justify-between pt-2 border-t border-border/50">
             <div className="flex items-center gap-4 text-sm text-muted-foreground">
               <div className="flex items-center gap-1">
@@ -188,19 +217,19 @@ export function ContestCard({ contest, index = 0 }: ContestCardProps) {
               </div>
               {contest.ctftimeId && (
                 <div className="flex items-center gap-1">
-                  <Star className="h-4 w-4" />
-                  <span>CTFtime</span>
+                  <Flag className="h-4 w-4" />
+                  <span className="text-xs">CTFtime</span>
                 </div>
               )}
             </div>
 
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1">
               {contest.url && (
                 <Link 
                   href={contest.url} 
                   target="_blank" 
                   rel="noopener noreferrer"
-                  className="p-2 rounded transition-colors hover:bg-primary/10 text-muted-foreground hover:text-primary"
+                  className="p-1.5 rounded transition-colors hover:bg-primary/10 text-muted-foreground hover:text-primary"
                 >
                   <ExternalLink className="h-4 w-4" />
                 </Link>
@@ -208,9 +237,9 @@ export function ContestCard({ contest, index = 0 }: ContestCardProps) {
               
               <Link 
                 href={`/contests/${contest.id}`}
-                className="btn-terminal px-3 py-1 text-xs font-mono font-bold"
+                className="btn-terminal px-2 py-1 text-xs font-mono font-bold whitespace-nowrap"
               >
-                VIEW_DETAILS
+                DETAILS
               </Link>
             </div>
           </div>
