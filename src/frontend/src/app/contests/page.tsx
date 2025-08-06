@@ -103,7 +103,7 @@ export default function ContestsPage() {
     }
 
     fetchContests()
-  }, [toast])
+  }, [])
 
   // Apply filters whenever filters or contests change
   useEffect(() => {
