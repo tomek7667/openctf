@@ -209,8 +209,8 @@ export default function ContestsPage() {
 
     // Rating filter
     if (filters.minRating !== undefined) {
-      filtered = filtered.filter(contest => 
-        contest.averagRating && contest.averagRating >= filters.minRating!
+      filtered = filtered.filter(contest =>
+        contest.averageRating && contest.averageRating >= filters.minRating!
       )
     }
 
