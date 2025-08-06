@@ -86,55 +86,75 @@ const EligibilityCard = ({
   </Card>
 )
 
-const ContestHistoryRow = ({ contest }: { contest: ContestWeightHistory }) => (
+const ContestHistoryRow = ({ contestHistory }: { contestHistory: ContestWeightHistory }) => (
   <tr className={clsx(
     "border-b border-border/50 transition-colors hover:bg-muted/20",
-    !contest.eligible && "opacity-60"
+    !contestHistory.eligible && "opacity-60"
   )}>
     <td className="p-4">
-      <div className="font-mono font-bold text-foreground">{contest.name}</div>
-      <div className="text-xs text-muted-foreground">{contest.organizers}</div>
+      <div className="font-mono font-bold text-foreground">
+        {contestHistory.contest.name.replace(/-/g, ' ').toUpperCase()}
+      </div>
+      <div className="text-xs text-muted-foreground">{contestHistory.contest.description}</div>
     </td>
     <td className="p-4 font-mono text-sm">
-      {new Date(contest.date).toLocaleDateString()}
+      {new Date(contestHistory.contest.start).toLocaleDateString()}
     </td>
     <td className="p-4 font-mono text-sm text-center">
-      {contest.participants}
+      {contestHistory.participants}
     </td>
     <td className="p-4 font-mono text-sm text-center">
       <div className={clsx(
         "font-bold",
-        contest.difficulty >= 80 ? "text-red-400" :
-        contest.difficulty >= 60 ? "text-yellow-400" :
-        contest.difficulty >= 40 ? "text-blue-400" : "text-green-400"
+        contestHistory.avgDifficulty >= 80 ? "text-red-400" :
+        contestHistory.avgDifficulty >= 60 ? "text-yellow-400" :
+        contestHistory.avgDifficulty >= 40 ? "text-blue-400" : "text-green-400"
       )}>
-        {contest.difficulty}/100
+        {contestHistory.avgDifficulty.toFixed(1)}/100
       </div>
     </td>
     <td className="p-4 text-center">
+      {contestHistory.avgQuality ? (
+        <div className="flex items-center justify-center gap-1">
+          {Array.from({ length: 5 }).map((_, i) => (
+            <Star
+              key={i}
+              className={clsx(
+                "h-3 w-3",
+                i < Math.floor(contestHistory.avgQuality!) ? "text-yellow-400 fill-current" : "text-gray-600"
+              )}
+            />
+          ))}
+          <span className="text-xs text-muted-foreground ml-1">({contestHistory.avgQuality.toFixed(1)})</span>
+        </div>
+      ) : (
+        <span className="text-xs text-muted-foreground">No ratings</span>
+      )}
+    </td>
+    <td className="p-4 text-center">
       <div className="flex items-center justify-center gap-2">
-        {contest.eligible ? (
+        {contestHistory.eligible ? (
           <CheckCircle className="h-4 w-4 text-green-400" />
         ) : (
           <AlertCircle className="h-4 w-4 text-red-400" />
         )}
         <span className={clsx(
           "text-xs",
-          contest.eligible ? "text-green-400" : "text-red-400"
+          contestHistory.eligible ? "text-green-400" : "text-red-400"
         )}>
-          {contest.eligible ? "Yes" : "No"}
+          {contestHistory.eligible ? "Yes" : "No"}
         </span>
       </div>
-      {!contest.eligible && contest.reason && (
-        <div className="text-xs text-muted-foreground mt-1">{contest.reason}</div>
+      {!contestHistory.eligible && contestHistory.reason && (
+        <div className="text-xs text-muted-foreground mt-1">{contestHistory.reason}</div>
       )}
     </td>
     <td className="p-4 font-mono text-center">
       <div className={clsx(
         "font-bold",
-        contest.weightReceived > 0 ? "text-primary" : "text-muted-foreground"
+        contestHistory.weightReceived > 0 ? "text-primary" : "text-muted-foreground"
       )}>
-        {contest.weightReceived}
+        {contestHistory.weightReceived}
       </div>
     </td>
   </tr>
