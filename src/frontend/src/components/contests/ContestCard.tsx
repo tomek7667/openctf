@@ -203,7 +203,7 @@ export function ContestCard({ contest, index = 0 }: ContestCardProps) {
                   <Star className="h-4 w-4 text-muted-foreground" />
                   <span className="text-sm text-muted-foreground">Quality</span>
                 </div>
-                {renderStars(contest.averagRating)}
+                {renderStars(contest.averageRating)}
               </div>
             )}
           </div>
