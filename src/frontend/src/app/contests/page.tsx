@@ -83,6 +83,7 @@ export default function ContestsPage() {
 
   // Fetch contests on mount
   useEffect(() => {
+    console.log("this is fetch")
     const fetchContests = async () => {
       try {
         setIsLoading(true)
