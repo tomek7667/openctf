@@ -187,7 +187,7 @@ export function TeamLeaderboard() {
   const [teams, setTeams] = useState<LeaderboardTeam[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const { toast } = useToast()
-  const currentMonth = new Date().toLocaleString('default', { month: 'long', year: 'numeric' })
+  const currentMonth = new Date().toLocaleString('en-US', { month: 'long', year: 'numeric' })
 
   useEffect(() => {
     const fetchTeams = async () => {
