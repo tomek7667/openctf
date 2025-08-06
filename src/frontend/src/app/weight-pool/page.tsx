@@ -581,7 +581,7 @@ export default function WeightPoolPage() {
             >
               <h3 className="text-2xl font-bold font-mono mb-6 flex items-center gap-3">
                 <Clock className="h-6 w-6 text-primary" />
-                &gt; RECENT_CONTESTS_WEIGHT_ALLOCATION
+                &gt; CONTESTS_FOR_{selectedMonth.month.toUpperCase()}_{selectedMonth.year}
               </h3>
 
               <div className="bg-card/30 rounded-none hacker-border overflow-hidden">
