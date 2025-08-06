@@ -30,11 +30,6 @@ export class ContestsApiService {
     // TODO: add backend logic here
     await sleep(1000); // Simulate network delay
 
-    // Simulate potential API failure
-    if (Math.random() < 0.1) {
-      throw new Error('Failed to load contests. Database connection timeout.');
-    }
-
     // Mock contests data with comprehensive fields
     const mockContests: Contest[] = [
       // Ongoing Contest
