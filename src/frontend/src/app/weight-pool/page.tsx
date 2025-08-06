@@ -450,8 +450,8 @@ export default function WeightPoolPage() {
                           </td>
                         </tr>
                       ) : filteredContests.length > 0 ? (
-                        filteredContests.map((contest) => (
-                          <ContestHistoryRow key={contest.id} contest={contest} />
+                        filteredContests.map((contestHistory) => (
+                          <ContestHistoryRow key={contestHistory.contest.id} contestHistory={contestHistory} />
                         ))
                       ) : (
                         <tr>
