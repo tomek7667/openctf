@@ -437,6 +437,7 @@ export default function WeightPoolPage() {
                         <th className="p-4 text-left font-mono text-sm font-bold">Date</th>
                         <th className="p-4 text-center font-mono text-sm font-bold">Teams</th>
                         <th className="p-4 text-center font-mono text-sm font-bold">Difficulty</th>
+                        <th className="p-4 text-center font-mono text-sm font-bold">Quality</th>
                         <th className="p-4 text-center font-mono text-sm font-bold">Eligible</th>
                         <th className="p-4 text-center font-mono text-sm font-bold">Weight Pts</th>
                       </tr>
