@@ -422,7 +422,13 @@ export default function WeightPoolPage() {
                       </tr>
                     </thead>
                     <tbody>
-                      {filteredContests.length > 0 ? (
+                      {isLoadingContests ? (
+                        <tr>
+                          <td colSpan={6} className="p-8 text-center">
+                            <LoadingSpinner size="md" />
+                          </td>
+                        </tr>
+                      ) : filteredContests.length > 0 ? (
                         filteredContests.map((contest) => (
                           <ContestHistoryRow key={contest.id} contest={contest} />
                         ))
@@ -432,7 +438,7 @@ export default function WeightPoolPage() {
                             <div className="text-muted-foreground font-mono">
                               <div className="text-lg mb-2">&gt; NO_CONTESTS_FOUND</div>
                               <div className="text-sm">
-                                {"// No contests recorded for " + selectedMonth.month + " " + selectedMonth.year}
+                                {"// No contests recorded for " + (selectedMonth ? `${selectedMonth.month} ${selectedMonth.year}` : 'selected period')}
                               </div>
                             </div>
                           </td>
