@@ -598,9 +598,22 @@ export default function WeightPoolPage() {
                       </tr>
                     </thead>
                     <tbody>
-                      {filteredContests.map((contest) => (
-                        <ContestHistoryRow key={contest.id} contest={contest} />
-                      ))}
+                      {filteredContests.length > 0 ? (
+                        filteredContests.map((contest) => (
+                          <ContestHistoryRow key={contest.id} contest={contest} />
+                        ))
+                      ) : (
+                        <tr>
+                          <td colSpan={6} className="p-8 text-center">
+                            <div className="text-muted-foreground font-mono">
+                              <div className="text-lg mb-2">&gt; NO_CONTESTS_FOUND</div>
+                              <div className="text-sm">
+                                {"// No contests recorded for " + selectedMonth.month + " " + selectedMonth.year}
+                              </div>
+                            </div>
+                          </td>
+                        </tr>
+                      )}
                     </tbody>
                   </table>
                 </div>
