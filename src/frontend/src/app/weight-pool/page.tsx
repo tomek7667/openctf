@@ -234,28 +234,28 @@ export default function WeightPoolPage() {
                 icon={Shield}
                 title="Monthly Pool"
                 description="Total points available each month"
-                value="100 pts"
+                value={isLoading ? "---" : `${weightPoolStats?.currentMonthPool || 100} pts`}
                 color="text-primary"
               />
               <InfoCard
                 icon={Trophy}
                 title="This Month"
                 description="Points distributed so far"
-                value="85 pts"
+                value={isLoading ? "---" : `${weightPoolStats?.distributedThisMonth || 0} pts`}
                 color="text-green-400"
               />
               <InfoCard
                 icon={Target}
                 title="Eligible CTFs"
                 description="Contests that qualified this month"
-                value="3"
+                value={isLoading ? "---" : `${weightPoolStats?.eligibleContestsThisMonth || 0}`}
                 color="text-blue-400"
               />
               <InfoCard
                 icon={Calendar}
                 title="Remaining"
                 description="Points left in current pool"
-                value="15 pts"
+                value={isLoading ? "---" : `${weightPoolStats?.remainingPool || 0} pts`}
                 color="text-yellow-400"
               />
             </div>
@@ -329,7 +329,7 @@ export default function WeightPoolPage() {
                       <div>• Difficulty Score: Average of qualified voters' ratings (0-100)</div>
                       <div>• Total Difficulty: Sum of all eligible contests' difficulty scores</div>
                       <div>• Available Pool: 100 points per month</div>
-                      <div>• Unused points roll over to next month's special distributions</div>
+                      <div>��� Unused points roll over to next month's special distributions</div>
                     </div>
                   </div>
                 </CardContent>
