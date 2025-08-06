@@ -1,4 +1,4 @@
-import { Users, Shield, MessageSquare, Trophy, Settings, User } from '@/components/icons'
+import { Users, Shield, MessageSquare, Trophy, Settings, User } from '@/components/ui/icons'
 
 export interface NavigationItem {
   id: string
