@@ -1,4 +1,4 @@
-import { Users, Shield, MessageSquare, Trophy, Settings, User } from '@/components/icons'
+import { Users, Shield, MessageSquare, Trophy, Settings, User } from '@/components/ui/icons'
 
 export interface NavigationItem {
   id: string
@@ -15,14 +15,14 @@ export const MAIN_NAVIGATION: NavigationItem[] = [
     id: 'teams',
     label: 'Teams',
     href: '/teams',
-    icon: Shield,
+    icon: Users,
     description: 'Browse and manage CTF teams',
   },
   {
     id: 'users',
     label: 'Users',
     href: '/users',
-    icon: Users,
+    icon: User,
     description: 'User profiles and rankings',
   },
   {
@@ -38,6 +38,13 @@ export const MAIN_NAVIGATION: NavigationItem[] = [
     href: '/forum',
     icon: MessageSquare,
     description: 'Community discussions',
+  },
+  {
+    id: 'weight-pool',
+    label: 'Weight Pool',
+    href: '/weight-pool',
+    icon: Shield,
+    description: 'Contest weight point distribution system',
   },
 ]
 

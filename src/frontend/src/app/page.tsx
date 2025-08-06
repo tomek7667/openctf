@@ -23,8 +23,6 @@ import {
 } from "@/components/ui/icons";
 import { TeamLeaderboard } from "@/components/leaderboard/TeamLeaderboard";
 import { statsApi, PlatformStats } from "@/api/stats";
-import { useToast } from "@/hooks/useToast";
-import { getErrorMessage } from "@/lib/utils";
 
 interface FeatureCardProps {
 	icon: React.ComponentType<{ className?: string }>;
@@ -198,11 +196,11 @@ export default function HomePage() {
 			gradient: "bg-gradient-to-br from-yellow-500 to-yellow-600",
 		},
 		{
-			icon: Users,
-			title: "Player Stats",
+			icon: Shield,
+			title: "Weight Pool",
 			description:
-				"Individual player profiles with contest history, team affiliations, and performance metrics.",
-			href: "/users",
+				"Monthly weight point distribution system for CTF contests. Track difficulty ratings and allocation history.",
+			href: "/weight-pool",
 			gradient: "bg-gradient-to-br from-purple-500 to-purple-600",
 		},
 	];
