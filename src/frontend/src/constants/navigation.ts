@@ -39,6 +39,13 @@ export const MAIN_NAVIGATION: NavigationItem[] = [
     icon: MessageSquare,
     description: 'Community discussions',
   },
+  {
+    id: 'weight-pool',
+    label: 'Weight Pool',
+    href: '/weight-pool',
+    icon: Shield,
+    description: 'Contest weight point distribution system',
+  },
 ]
 
 export const USER_NAVIGATION: NavigationItem[] = [
