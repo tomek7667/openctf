@@ -329,7 +329,7 @@ export default function WeightPoolPage() {
                       <div>• Difficulty Score: Average of qualified voters' ratings (0-100)</div>
                       <div>• Total Difficulty: Sum of all eligible contests' difficulty scores</div>
                       <div>• Available Pool: 100 points per month</div>
-                      <div>��� Unused points roll over to next month's special distributions</div>
+                      <div>• Unused points roll over to next month's special distributions</div>
                     </div>
                   </div>
                 </CardContent>
@@ -354,41 +354,47 @@ export default function WeightPoolPage() {
               </p>
 
               {/* Monthly Overview */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-                {mockMonthlyData.map((month, index) => (
-                  <motion.div
-                    key={`${month.month}-${month.year}`}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: index * 0.1 }}
-                    className={clsx(
-                      "p-4 rounded-none hacker-border cursor-pointer transition-all duration-300",
-                      selectedMonth === month 
-                        ? "bg-primary/20 border-primary" 
-                        : "bg-card/30 hover:bg-card/50"
-                    )}
-                    onClick={() => setSelectedMonth(month)}
-                  >
-                    <div className="font-mono font-bold text-foreground mb-2">
-                      {month.month} {month.year}
-                    </div>
-                    <div className="space-y-1 text-sm">
-                      <div className="flex justify-between">
-                        <span className="text-muted-foreground">Distributed:</span>
-                        <span className="text-primary font-mono">{month.distributedPoints}pts</span>
+              {isLoading ? (
+                <div className="flex justify-center py-12">
+                  <LoadingSpinner size="lg" />
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+                  {monthlyData.map((month, index) => (
+                    <motion.div
+                      key={`${month.month}-${month.year}`}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: index * 0.1 }}
+                      className={clsx(
+                        "p-4 rounded-none hacker-border cursor-pointer transition-all duration-300",
+                        selectedMonth && selectedMonth.month === month.month && selectedMonth.year === month.year
+                          ? "bg-primary/20 border-primary"
+                          : "bg-card/30 hover:bg-card/50"
+                      )}
+                      onClick={() => handleMonthSelect(month)}
+                    >
+                      <div className="font-mono font-bold text-foreground mb-2">
+                        {month.month} {month.year}
                       </div>
-                      <div className="flex justify-between">
-                        <span className="text-muted-foreground">Contests:</span>
-                        <span className="font-mono">{month.eligibleContests}</span>
+                      <div className="space-y-1 text-sm">
+                        <div className="flex justify-between">
+                          <span className="text-muted-foreground">Distributed:</span>
+                          <span className="text-primary font-mono">{month.distributedPoints}pts</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-muted-foreground">Contests:</span>
+                          <span className="font-mono">{month.eligibleContests}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-muted-foreground">Remaining:</span>
+                          <span className="text-yellow-400 font-mono">{month.remainingPool}pts</span>
+                        </div>
                       </div>
-                      <div className="flex justify-between">
-                        <span className="text-muted-foreground">Remaining:</span>
-                        <span className="text-yellow-400 font-mono">{month.remainingPool}pts</span>
-                      </div>
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
+                    </motion.div>
+                  ))}
+                </div>
+              )}
             </motion.div>
 
             {/* Contest History Table */}
