@@ -445,7 +445,7 @@ export default function WeightPoolPage() {
                     <tbody>
                       {isLoadingContests ? (
                         <tr>
-                          <td colSpan={6} className="p-8 text-center">
+                          <td colSpan={7} className="p-8 text-center">
                             <LoadingSpinner size="md" />
                           </td>
                         </tr>
