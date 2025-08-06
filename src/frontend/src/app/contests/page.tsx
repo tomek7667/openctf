@@ -112,18 +112,18 @@ const ContestTableRow = ({ contest }: { contest: Contest }) => (
       </div>
     </td>
     <td className="p-4">
-      {contest.averagRating && contest.totalRatings && contest.totalRatings > 0 ? (
+      {contest.averageRating && contest.totalRatings && contest.totalRatings > 0 ? (
         <div className="flex items-center gap-1">
           {Array.from({ length: 5 }).map((_, i) => (
-            <Star 
-              key={i} 
+            <Star
+              key={i}
               className={clsx(
                 "h-3 w-3",
-                i < Math.floor(contest.averagRating!) ? "text-yellow-400 fill-current" : "text-gray-600"
-              )} 
+                i < Math.floor(contest.averageRating!) ? "text-yellow-400 fill-current" : "text-gray-600"
+              )}
             />
           ))}
-          <span className="text-xs text-muted-foreground ml-1">({contest.averagRating.toFixed(1)})</span>
+          <span className="text-xs text-muted-foreground ml-1">({contest.averageRating.toFixed(1)})</span>
         </div>
       ) : (
         <span className="text-xs text-muted-foreground">No ratings</span>
