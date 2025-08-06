@@ -141,16 +141,62 @@ const ContestHistoryRow = ({ contest }: { contest: ContestWeightHistory }) => (
 )
 
 export default function WeightPoolPage() {
-  const [selectedMonth, setSelectedMonth] = useState(mockMonthlyData[0])
+  const [monthlyData, setMonthlyData] = useState<MonthlyDistribution[]>([])
+  const [weightPoolStats, setWeightPoolStats] = useState<WeightPoolStats | null>(null)
+  const [selectedMonth, setSelectedMonth] = useState<MonthlyDistribution | null>(null)
+  const [filteredContests, setFilteredContests] = useState<ContestWeightHistory[]>([])
+  const [isLoading, setIsLoading] = useState(true)
+  const [isLoadingContests, setIsLoadingContests] = useState(false)
 
-  // Filter contests for the selected month
-  const filteredContests = mockContestHistory.filter(contest => {
-    const contestDate = new Date(contest.date)
-    const contestMonth = contestDate.toLocaleString('en-US', { month: 'long' })
-    const contestYear = contestDate.getFullYear()
+  // Fetch initial data
+  useEffect(() => {
+    const fetchInitialData = async () => {
+      try {
+        setIsLoading(true)
+        const [monthlyDistributions, poolStats] = await Promise.all([
+          weightPoolApi.getMonthlyDistributions(),
+          weightPoolApi.getWeightPoolStats()
+        ])
 
-    return contestMonth === selectedMonth.month && contestYear === selectedMonth.year
-  })
+        setMonthlyData(monthlyDistributions)
+        setWeightPoolStats(poolStats)
+
+        // Set default selected month to the first one
+        if (monthlyDistributions.length > 0) {
+          setSelectedMonth(monthlyDistributions[0])
+        }
+      } catch (error) {
+        console.error('Error fetching weight pool data:', error)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    fetchInitialData()
+  }, [])
+
+  // Fetch contests when selected month changes
+  useEffect(() => {
+    const fetchContestsForMonth = async () => {
+      if (!selectedMonth) return
+
+      try {
+        setIsLoadingContests(true)
+        const contests = await weightPoolApi.getContestsByMonth(selectedMonth.month, selectedMonth.year)
+        setFilteredContests(contests)
+      } catch (error) {
+        console.error('Error fetching contests for month:', error)
+      } finally {
+        setIsLoadingContests(false)
+      }
+    }
+
+    fetchContestsForMonth()
+  }, [selectedMonth])
+
+  const handleMonthSelect = (month: MonthlyDistribution) => {
+    setSelectedMonth(month)
+  }
 
   return (
     <MainLayout>
