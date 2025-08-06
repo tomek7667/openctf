@@ -47,10 +47,8 @@ export class ContestsApiService {
         status: "ongoing" as ContestStatus,
         duration: 48,
         participantCount: 287,
-        averagRating: 4.5,
+        averageRating: 4.5,
         totalRatings: 156,
-        organizer: { id: 1, name: "CyberSec Org" } as any,
-        organizerId: 1,
         places: [],
         createdAt: "2024-12-01T10:00:00Z",
         updatedAt: "2025-01-15T14:00:00Z"
@@ -68,10 +66,8 @@ export class ContestsApiService {
         status: "upcoming" as ContestStatus,
         duration: 48,
         participantCount: 0,
-        averagRating: undefined,
+        averageRating: undefined,
         totalRatings: 0,
-        organizer: { id: 2, name: "University Alliance" } as any,
-        organizerId: 2,
         places: [],
         createdAt: "2024-12-15T10:00:00Z",
         updatedAt: "2024-12-15T10:00:00Z"
@@ -90,10 +86,8 @@ export class ContestsApiService {
         status: "finished" as ContestStatus,
         duration: 36,
         participantCount: 342,
-        averagRating: 4.3,
+        averageRating: 4.3,
         totalRatings: 189,
-        organizer: { id: 3, name: "BSides SF" } as any,
-        organizerId: 3,
         places: [],
         createdAt: "2024-04-15T10:00:00Z",
         updatedAt: "2024-05-20T06:30:00Z"
@@ -112,10 +106,8 @@ export class ContestsApiService {
         status: "finished" as ContestStatus,
         duration: 336, // 2 weeks
         participantCount: 8934,
-        averagRating: 4.6,
+        averageRating: 4.6,
         totalRatings: 1247,
-        organizer: { id: 4, name: "Carnegie Mellon University" } as any,
-        organizerId: 4,
         places: [],
         createdAt: "2024-02-20T09:00:00Z",
         updatedAt: "2024-03-26T14:00:00Z"
@@ -133,10 +125,8 @@ export class ContestsApiService {
         status: "upcoming" as ContestStatus,
         duration: 192, // 1 week
         participantCount: 0,
-        averagRating: undefined,
+        averageRating: undefined,
         totalRatings: 0,
-        organizer: { id: 5, name: "Global Hack Initiative" } as any,
-        organizerId: 5,
         places: [],
         createdAt: "2024-12-20T10:00:00Z",
         updatedAt: "2024-12-20T10:00:00Z"
