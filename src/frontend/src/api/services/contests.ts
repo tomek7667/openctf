@@ -35,31 +35,160 @@ export class ContestsApiService {
       throw new Error('Failed to load contests. Database connection timeout.');
     }
 
-    // Mock contests data - basic structure for now
+    // Mock contests data with comprehensive fields
     const mockContests: Contest[] = [
+      // Ongoing Contest
       {
         id: 1,
+        name: "CyberSec Challenge 2025",
+        description: "International cybersecurity competition featuring web exploitation, cryptography, and reverse engineering challenges",
+        rules: "Team-based competition with maximum 4 members per team",
+        prizes: "$10,000 for first place, $5,000 for second, $2,500 for third",
+        start: "2025-01-15T14:00:00Z",
+        end: "2025-01-17T14:00:00Z",
+        url: "https://cybersec.example.com",
+        ctftimeId: 2847,
+        categories: ["web", "crypto", "pwn", "reverse"] as CTFCategory[],
+        maxTeams: 500,
+        registrationDeadline: "2025-01-14T23:59:59Z",
+        isPublic: true,
+        logoUrl: "https://example.com/logo1.png",
+        status: "ongoing" as ContestStatus,
+        duration: 48,
+        participantCount: 287,
+        organizer: { id: 1, name: "CyberSec Org" } as any,
+        organizerId: 1,
+        placements: [],
+        stats: {
+          totalParticipants: 287,
+          averageScore: 2450,
+          challengeCount: 25,
+          categoryDistribution: { web: 8, crypto: 6, pwn: 7, reverse: 4 } as any,
+          difficultyRating: 4.2,
+          qualityRating: 4.5,
+          ratingCount: 156
+        },
+        createdAt: "2024-12-01T10:00:00Z",
+        updatedAt: "2025-01-15T14:00:00Z"
+      },
+
+      // Upcoming Contest
+      {
+        id: 2,
+        name: "University CTF 2025",
+        description: "Annual university-level competition with beginner-friendly challenges and educational content",
+        start: "2025-02-10T16:00:00Z",
+        end: "2025-02-12T16:00:00Z",
+        url: "https://uni-ctf.example.com",
+        categories: ["web", "crypto", "forensics", "misc"] as CTFCategory[],
+        isPublic: true,
+        status: "upcoming" as ContestStatus,
+        duration: 48,
+        participantCount: 0,
+        organizer: { id: 2, name: "University Alliance" } as any,
+        organizerId: 2,
+        placements: [],
+        stats: {
+          totalParticipants: 0,
+          averageScore: 0,
+          challengeCount: 20,
+          categoryDistribution: { web: 5, crypto: 5, forensics: 6, misc: 4 } as any,
+          difficultyRating: 0,
+          qualityRating: 0,
+          ratingCount: 0
+        },
+        createdAt: "2024-12-15T10:00:00Z",
+        updatedAt: "2024-12-15T10:00:00Z"
+      },
+
+      // Finished Contest
+      {
+        id: 3,
         name: "BSidesSF 2024 CTF",
-        description: "Annual BSides San Francisco Capture The Flag competition",
+        description: "Annual BSides San Francisco Capture The Flag competition with industry-standard challenges",
         start: "2024-05-18T18:00:00Z",
         end: "2024-05-20T06:00:00Z",
+        url: "https://bsidessf.org/ctf",
+        ctftimeId: 2456,
+        categories: ["web", "crypto", "pwn", "reverse", "forensics"] as CTFCategory[],
+        isPublic: true,
         status: "finished" as ContestStatus,
-        categories: ["web", "crypto", "pwn"] as CTFCategory[],
-        participants: 342,
+        duration: 36,
+        participantCount: 342,
+        organizer: { id: 3, name: "BSides SF" } as any,
+        organizerId: 3,
+        placements: [],
+        stats: {
+          totalParticipants: 342,
+          averageScore: 3250,
+          challengeCount: 30,
+          categoryDistribution: { web: 8, crypto: 7, pwn: 6, reverse: 5, forensics: 4 } as any,
+          difficultyRating: 4.1,
+          qualityRating: 4.3,
+          ratingCount: 189
+        },
         createdAt: "2024-04-15T10:00:00Z",
         updatedAt: "2024-05-20T06:30:00Z"
       },
+
+      // Another Finished Contest
       {
-        id: 2,
+        id: 4,
         name: "picoCTF 2024",
-        description: "Educational CTF for beginners and advanced players alike",
+        description: "Educational CTF for beginners and advanced players alike, featuring progressive difficulty levels",
         start: "2024-03-12T12:00:00Z",
         end: "2024-03-26T12:00:00Z",
+        url: "https://picoctf.org",
+        ctftimeId: 2234,
+        categories: ["web", "forensics", "crypto", "reverse", "misc"] as CTFCategory[],
+        isPublic: true,
         status: "finished" as ContestStatus,
-        categories: ["general", "web", "forensics", "crypto"] as CTFCategory[],
-        participants: 8934,
+        duration: 336, // 2 weeks
+        participantCount: 8934,
+        organizer: { id: 4, name: "Carnegie Mellon University" } as any,
+        organizerId: 4,
+        placements: [],
+        stats: {
+          totalParticipants: 8934,
+          averageScore: 1850,
+          challengeCount: 45,
+          categoryDistribution: { web: 12, forensics: 10, crypto: 8, reverse: 8, misc: 7 } as any,
+          difficultyRating: 3.2,
+          qualityRating: 4.6,
+          ratingCount: 1247
+        },
         createdAt: "2024-02-20T09:00:00Z",
         updatedAt: "2024-03-26T14:00:00Z"
+      },
+
+      // Another Upcoming Contest
+      {
+        id: 5,
+        name: "Global Hack Week CTF",
+        description: "Week-long global cybersecurity challenge with 24/7 support and live streams",
+        start: "2025-03-15T00:00:00Z",
+        end: "2025-03-22T23:59:59Z",
+        url: "https://globalhack.example.com",
+        categories: ["web", "crypto", "pwn", "reverse", "forensics", "misc", "osint"] as CTFCategory[],
+        maxTeams: 1000,
+        isPublic: true,
+        status: "upcoming" as ContestStatus,
+        duration: 192, // 1 week
+        participantCount: 0,
+        organizer: { id: 5, name: "Global Hack Initiative" } as any,
+        organizerId: 5,
+        placements: [],
+        stats: {
+          totalParticipants: 0,
+          averageScore: 0,
+          challengeCount: 50,
+          categoryDistribution: { web: 8, crypto: 7, pwn: 7, reverse: 6, forensics: 6, misc: 8, osint: 8 } as any,
+          difficultyRating: 0,
+          qualityRating: 0,
+          ratingCount: 0
+        },
+        createdAt: "2024-12-20T10:00:00Z",
+        updatedAt: "2024-12-20T10:00:00Z"
       }
     ];
 
