@@ -15,14 +15,14 @@ export const MAIN_NAVIGATION: NavigationItem[] = [
     id: 'teams',
     label: 'Teams',
     href: '/teams',
-    icon: Shield,
+    icon: Users,
     description: 'Browse and manage CTF teams',
   },
   {
     id: 'users',
     label: 'Users',
     href: '/users',
-    icon: Users,
+    icon: User,
     description: 'User profiles and rankings',
   },
   {
