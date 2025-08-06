@@ -23,6 +23,8 @@ export interface PaginatedResponse<T = unknown> {
 		total: number;
 		hasNext: boolean;
 		hasPrev: boolean;
+		totalPages: number;
+		currentPage: number;
 	};
 }
 
@@ -51,43 +53,12 @@ export interface RegisterDto {
 export interface User extends BaseEntity {
 	username: string;
 	email: string;
+	emailConfirmedAt?: string;
+	confirmationCode?: string;
+	permissionLevel: 'player' | 'moderator' | 'administrator';
 	description?: string;
-	role: UserRole;
-	isVerified: boolean;
-	avatar?: string;
-	lastLoginAt?: string;
-	stats?: UserStats;
-}
-
-export enum UserRole {
-	USER = "user",
-	MODERATOR = "moderator",
-	ADMIN = "admin",
-}
-
-export interface UserStats {
-	totalPoints: number;
-	contestsParticipated: number;
-	teamsOwned: number;
-	rank?: number;
-	categoryRankings: CategoryRanking[];
-}
-
-export interface CategoryRanking {
-	category: CTFCategory;
-	points: number;
-	rank: number;
-	solves: number;
-}
-
-export enum CTFCategory {
-	WEB = "web",
-	REVERSE = "rev",
-	PWN = "pwn",
-	CRYPTO = "crypto",
-	MISC = "misc",
-	FORENSICS = "forensics",
-	OSINT = "osint",
+	password: string; // sensitive
+	logo?: string; // base64/blob data up to 50MB
 }
 
 export interface AuthResponse {
@@ -127,73 +98,30 @@ export enum SortOrder {
 
 export interface CreateTeamDto {
 	name: string;
-	description: string;
+	description?: string;
 	ctftimeId?: number;
 	logo?: File | string; // File for upload, string for base64
-	country?: string;
-	website?: string;
-	isPublic: boolean;
+	countryCode?: string;
 }
 
 export interface Team extends BaseEntity {
 	name: string;
 	description?: string;
 	ctftimeId?: number;
-	logo?: string; // URL to logo
-	country?: string;
-	website?: string;
-	isVerified: boolean;
-	isPublic: boolean;
-
-	// Computed fields
-	points: number;
-	rank?: number;
-	weeklyChange?: number; // Position change in current week
+	ctftimeVerifiedAt?: string;
+	logo?: string; // base64/blob data up to 50MB
+	verifiedAt?: string;
+	countryCode: string; // defaults to "global"
 
 	// Relations
-	members: TeamMember[];
-	captain: User;
-	captainId: number;
+	captain?: User;
+	verifiedBy?: User;
+	members?: User[];
 
-	// Stats
-	stats: TeamStats;
-}
-
-export interface TeamMember {
-	user: User;
-	userId: number;
-	team: Team;
-	teamId: number;
-	role: TeamMemberRole;
-	joinedAt: string;
-	isActive: boolean;
-}
-
-export enum TeamMemberRole {
-	CAPTAIN = "captain",
-	MEMBER = "member",
-}
-
-export interface TeamStats {
-	totalPoints: number;
-	contestsParticipated: number;
-	bestRank: number;
-	averageRank: number;
-	categoryBreakdown: Record<CTFCategory, number>;
-	yearlyPoints: Record<string, number>; // year -> points
-	recentPlacements: ContestPlacement[];
-}
-
-export interface VerifyTeamDto {
-	teamId: number;
-	verified: boolean;
-	reason?: string;
-}
-
-export interface MergeTeamsDto {
-	mergerId: number; // team to keep
-	mergeeId: number; // team to merge into merger
-	reason: string;
+	// Computed fields (not in schema but calculated)
+	points?: number;
+	rank?: number;
+	weeklyChange?: number;
 }
 
 // =============================================================================
@@ -252,90 +180,80 @@ export interface Contest extends BaseEntity {
 	end: string;
 	url?: string;
 	ctftimeId?: number;
-	assignedWeightPoints: number;
-	logo?: string; // base64 or blob data
+	assignedWeightPoints: number; // defaults to 0
+	logo?: string; // base64/blob data up to 50MB
 
-	// Computed fields
+	// Computed fields (not in schema)
 	status: ContestStatus;
 	duration: number; // in hours
 	participantCount: number;
-	averagRating?: number; // average star rating from users
-	totalRatings?: number; // number of ratings
+	averageRating?: number; // calculated from ContestRating
+	totalRatings?: number; // count of ContestRating
 
 	// Relations
 	organizer?: Team;
-	organizerId?: number;
 	places: Place[];
 }
 
-export interface ContestStats {
-	totalParticipants: number;
-	averageScore: number;
-	averagRating: number; // 1-5 stars (quality rating)
-	ratingCount: number;
-	assignedWeightPoints: number; // difficulty/hardness
-}
+// =============================================================================
+// Place Types (Contest Results)
+// =============================================================================
 
 export interface Place extends BaseEntity {
 	teamName: string;
-	place: number;
+	place: number; // minimum 1
 	ctftimeTeamId?: number;
 	contestPoints?: number; // actual points in the CTF
-	openctfPoints?: number; // normalized points
+	openctfPoints?: number; // normalized points based on contest weight
 	associatedContestId: number;
-	assignedWeightPoints: number;
+	assignedWeightPoints: number; // defaults to 0
+	
 	// Relations
 	associatedTeam?: Team;
 }
 
-export interface ChallengeSolve {
-	challengeName: string;
-	category: CTFCategory;
-	points: number;
-	solvedAt: string;
-	solvers: User[]; // Users who contributed to solve
+// =============================================================================
+// Rating Types
+// =============================================================================
+
+export interface ContestRating extends BaseEntity {
+	rating: number; // 0-5
+	relevant: boolean; // true if user's team was in top 15%
+	
+	// Relations  
+	user: User;
+	contest: Contest;
+}
+
+export interface WeightRating extends BaseEntity {
+	difficulty: number; // 0-100 difficulty rating
+	
+	// Relations
+	captainsTeam: Team;
+	contest: Contest;
 }
 
 export interface RateContestDto {
 	contestId: number;
-	difficulty: number; // 1-5
-	quality: number; // 1-5
-	comment?: string;
+	rating: number; // 1-5 stars
+}
+
+export interface RateContestWeightDto {
+	contestId: number;
+	difficulty: number; // 0-100
 }
 
 // =============================================================================
-// Forum/Event Types
+// Aggregated Contest Data (Database View)
 // =============================================================================
 
-export interface ForumPost extends BaseEntity {
-	title: string;
-	content: string;
-	author: User;
-	authorId: number;
-	contest?: Contest; // If post is about a contest
-	contestId?: number;
-	isPinned: boolean;
-	isLocked: boolean;
-	viewCount: number;
-
-	// Relations
-	comments: ForumComment[];
-	tags: string[];
-}
-
-export interface ForumComment extends BaseEntity {
-	content: string;
-	author: User;
-	authorId: number;
-	post: ForumPost;
-	postId: number;
-	parent?: ForumComment; // For nested comments
-	parentId?: number;
-
-	// Moderation
-	isDeleted: boolean;
-	deletedAt?: string;
-	deletedBy?: User;
+export interface AggregatedContestsDifficulties {
+	contestId: number;
+	contestName: string;
+	end: string;
+	organizersId: number;
+	avgDifficulty: number;
+	participants: number;
 }
 
 // =============================================================================
@@ -345,7 +263,6 @@ export interface ForumComment extends BaseEntity {
 export interface FilterOptions {
 	countries: CountryOption[];
 	years: number[];
-	categories: CTFCategory[];
 	contestStatuses: ContestStatus[];
 }
 
@@ -357,7 +274,6 @@ export interface CountryOption {
 
 export interface SearchFilters {
 	query?: string;
-	categories?: CTFCategory[];
 	countries?: string[];
 	dateRange?: {
 		start: string;
@@ -368,31 +284,6 @@ export interface SearchFilters {
 		max: number;
 	};
 	verified?: boolean;
-}
-
-// =============================================================================
-// Real-time & Notification Types
-// =============================================================================
-
-export interface Notification extends BaseEntity {
-	type: NotificationType;
-	title: string;
-	message: string;
-	data?: Record<string, unknown>; // Additional context data
-	isRead: boolean;
-	readAt?: string;
-	user: User;
-	userId: number;
-}
-
-export enum NotificationType {
-	CONTEST_STARTING = "contest_starting",
-	CONTEST_ENDING = "contest_ending",
-	TEAM_INVITATION = "team_invitation",
-	TEAM_VERIFIED = "team_verified",
-	RANK_CHANGE = "rank_change",
-	NEW_CONTEST = "new_contest",
-	SYSTEM_ANNOUNCEMENT = "system_announcement",
 }
 
 // =============================================================================
