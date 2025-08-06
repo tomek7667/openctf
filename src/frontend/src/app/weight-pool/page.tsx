@@ -598,7 +598,7 @@ export default function WeightPoolPage() {
                       </tr>
                     </thead>
                     <tbody>
-                      {mockContestHistory.map((contest) => (
+                      {filteredContests.map((contest) => (
                         <ContestHistoryRow key={contest.id} contest={contest} />
                       ))}
                     </tbody>
