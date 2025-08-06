@@ -464,7 +464,7 @@ export default function ContestsPage() {
                         &gt; LIVE_CONTESTS ({ongoingContests.length})
                       </h2>
                     </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       {ongoingContests.map((contest, index) => (
                         <ContestCard key={contest.id} contest={contest} index={index} />
                       ))}
