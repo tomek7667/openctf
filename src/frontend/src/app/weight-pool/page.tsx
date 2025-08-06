@@ -455,7 +455,7 @@ export default function WeightPoolPage() {
                         ))
                       ) : (
                         <tr>
-                          <td colSpan={6} className="p-8 text-center">
+                          <td colSpan={7} className="p-8 text-center">
                             <div className="text-muted-foreground font-mono">
                               <div className="text-lg mb-2">&gt; NO_CONTESTS_FOUND</div>
                               <div className="text-sm">
