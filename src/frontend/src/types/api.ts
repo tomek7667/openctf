@@ -206,7 +206,10 @@ export interface ListContestsDto {
 	search?: string;
 	status?: ContestStatus;
 	year?: number;
-	category?: CTFCategory[];
+	minWeightPoints?: number;
+	maxWeightPoints?: number;
+	minRating?: number; // 1-5 stars
+	maxRating?: number;
 	sortBy?: ContestSortField;
 	sortOrder?: SortOrder;
 	organizerId?: number;
@@ -229,18 +232,15 @@ export enum ContestSortField {
 
 export interface CreateContestDto {
 	name: string;
-	description: string;
+	description?: string;
 	rules?: string;
 	prizes?: string;
 	start: string; // ISO date
 	end: string; // ISO date
 	url?: string;
 	ctftimeId?: number;
-	categories: CTFCategory[];
-	maxTeams?: number;
-	registrationDeadline?: string;
-	isPublic: boolean;
-	logoUrl?: string;
+	assignedWeightPoints?: number;
+	logo?: File | string; // File upload or base64
 }
 
 export interface Contest extends BaseEntity {
@@ -252,44 +252,40 @@ export interface Contest extends BaseEntity {
 	end: string;
 	url?: string;
 	ctftimeId?: number;
-	categories: CTFCategory[];
-	maxTeams?: number;
-	registrationDeadline?: string;
-	isPublic: boolean;
-	logoUrl?: string;
+	assignedWeightPoints: number;
+	logo?: string; // base64 or blob data
 
 	// Computed fields
 	status: ContestStatus;
 	duration: number; // in hours
 	participantCount: number;
+	averagRating?: number; // average star rating from users
+	totalRatings?: number; // number of ratings
 
 	// Relations
-	organizer: Team;
-	organizerId: number;
-	placements: ContestPlacement[];
-
-	// Stats
-	stats: ContestStats;
+	organizer?: Team;
+	organizerId?: number;
+	places: Place[];
 }
 
 export interface ContestStats {
 	totalParticipants: number;
 	averageScore: number;
-	challengeCount: number;
-	categoryDistribution: Record<CTFCategory, number>;
-	difficultyRating: number; // 1-5 stars
-	qualityRating: number; // 1-5 stars
+	averagRating: number; // 1-5 stars (quality rating)
 	ratingCount: number;
+	assignedWeightPoints: number; // difficulty/hardness
 }
 
-export interface ContestPlacement extends BaseEntity {
-	contest: Contest;
-	contestId: number;
-	team: Team;
-	teamId: number;
-	rank: number;
-	points: number;
-	solves: ChallengeSolve[];
+export interface Place extends BaseEntity {
+	teamName: string;
+	place: number;
+	ctftimeTeamId?: number;
+	contestPoints?: number; // actual points in the CTF
+	openctfPoints?: number; // normalized points
+	associatedContestId: number;
+	assignedWeightPoints: number;
+	// Relations
+	associatedTeam?: Team;
 }
 
 export interface ChallengeSolve {
