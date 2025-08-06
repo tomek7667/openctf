@@ -2,12 +2,12 @@
 
 import React, { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { 
-  Shield, 
-  Calendar, 
-  Trophy, 
-  Users, 
-  Target, 
+import {
+  Shield,
+  Calendar,
+  Trophy,
+  Users,
+  Target,
   Star,
   TrendingUp,
   AlertCircle,
@@ -18,29 +18,10 @@ import {
 } from '@/components/ui/icons'
 import { Badge } from '@/components/ui/Badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
+import { LoadingSpinner } from '@/components/ui/LoadingSpinner'
 import { MainLayout } from '@/components/layout/MainLayout'
+import { weightPoolApi, MonthlyDistribution, ContestWeightHistory, WeightPoolStats } from '@/api/services/weightPool'
 import { clsx } from 'clsx'
-
-interface MonthlyDistribution {
-  month: string
-  year: number
-  totalPoints: number
-  eligibleContests: number
-  distributedPoints: number
-  remainingPool: number
-}
-
-interface ContestWeightHistory {
-  id: number
-  name: string
-  date: string
-  participants: number
-  organizers: string
-  weightReceived: number
-  difficulty: number
-  eligible: boolean
-  reason?: string
-}
 
 // Mock data for weight pool history
 const mockMonthlyData: MonthlyDistribution[] = [
