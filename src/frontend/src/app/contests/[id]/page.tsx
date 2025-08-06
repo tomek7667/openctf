@@ -412,13 +412,13 @@ export default function ContestDetailsPage() {
                       </div>
                     </div>
 
-                    {contest.averagRating && contest.totalRatings && contest.totalRatings > 0 && (
+                    {contest.averageRating && contest.totalRatings && contest.totalRatings > 0 && (
                       <div>
                         <div className="flex items-center gap-2 text-muted-foreground mb-1">
                           <Star className="h-4 w-4" />
                           <span className="text-sm">Quality Rating</span>
                         </div>
-                        {renderStars(contest.averagRating)}
+                        {renderStars(contest.averageRating)}
                         <div className="text-xs text-muted-foreground mt-1">
                           Based on {contest.totalRatings} ratings
                         </div>
