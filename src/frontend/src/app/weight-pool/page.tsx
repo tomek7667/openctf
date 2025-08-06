@@ -371,6 +371,15 @@ const ContestHistoryRow = ({ contest }: { contest: ContestWeightHistory }) => (
 export default function WeightPoolPage() {
   const [selectedMonth, setSelectedMonth] = useState(mockMonthlyData[0])
 
+  // Filter contests for the selected month
+  const filteredContests = mockContestHistory.filter(contest => {
+    const contestDate = new Date(contest.date)
+    const contestMonth = contestDate.toLocaleString('en-US', { month: 'long' })
+    const contestYear = contestDate.getFullYear()
+
+    return contestMonth === selectedMonth.month && contestYear === selectedMonth.year
+  })
+
   return (
     <MainLayout>
       <div className="min-h-screen">
