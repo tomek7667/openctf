@@ -197,7 +197,7 @@ export function ContestCard({ contest, index = 0 }: ContestCardProps) {
               </div>
             </div>
             
-            {contest.averagRating && contest.totalRatings && contest.totalRatings > 0 && (
+            {contest.averageRating && contest.totalRatings && contest.totalRatings > 0 && (
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <Star className="h-4 w-4 text-muted-foreground" />
