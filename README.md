@@ -2,6 +2,10 @@
 
 Open-source alternative for [ctftime.org](https://ctftime.org)
 
+[![Deploy Backend](https://github.com/tomek7667/openctf/actions/workflows/deploy_backend.yml/badge.svg?branch=master)](https://github.com/tomek7667/openctf/actions/workflows/deploy_backend.yml)
+[![Deploy Frontend](https://github.com/tomek7667/openctf/actions/workflows/deploy_frontend.yml/badge.svg)](https://github.com/tomek7667/openctf/actions/workflows/deploy_frontend.yml)
+[![Update nginx](https://github.com/tomek7667/openctf/actions/workflows/nginx.yml/badge.svg)](https://github.com/tomek7667/openctf/actions/workflows/nginx.yml)
+
 ## Checklist
 
 - [ ] CTF Teams model:
