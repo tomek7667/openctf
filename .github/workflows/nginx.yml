@@ -25,7 +25,7 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           key: ${{ secrets.SSH_KEY }}
           source: ./src/nginx/openctfapi
-          target: /tmp/openctfapi
+          target: /tmp/
           strip_components: 3
 
   deploy:
