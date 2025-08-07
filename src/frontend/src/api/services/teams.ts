@@ -14,11 +14,7 @@ import type {
 	Team,
 	ListTeamsDto,
 	CreateTeamDto,
-	VerifyTeamDto,
-	MergeTeamsDto,
 	PaginatedResponse,
-	TeamStats,
-	TeamMember,
 	User,
 	FilterOptions,
 } from "@/types/api";
@@ -27,7 +23,9 @@ export class TeamsApiService {
 	/**
 	 * Get paginated list of teams with filtering and sorting
 	 */
-	async getTeams(params?: ListTeamsDto): Promise<PaginatedResponse<Team>> {
+	async getTeams(
+		params?: undefined | ListTeamsDto
+	): Promise<PaginatedResponse<Team>> {
 		// TODO: add backend logic here
 		await sleep(1000); // Simulate network delay
 
@@ -45,13 +43,12 @@ export class TeamsApiService {
 				name: "r3kapig",
 				description:
 					"CTF team from China focusing on binary exploitation and reverse engineering",
-				country: "CN",
-				ctftimeID: 22319,
+				countryCode: "CN",
+				ctftimeId: 22319,
 				points: 1020.905,
 				weeklyChange: 12,
-				verified: true,
-				isVerified: true,
-				logo: null,
+				verifiedAt: new Date().toString(),
+				// logo: null,
 				createdAt: "2020-01-15T10:30:00Z",
 				updatedAt: "2024-01-20T15:45:30Z",
 			},
@@ -60,13 +57,12 @@ export class TeamsApiService {
 				name: "Kalmarunionen",
 				description:
 					"Nordic CTF team specializing in web security and cryptography",
-				country: "DK",
-				ctftimeID: 38914,
+				countryCode: "DK",
+				ctftimeId: 38914,
 				points: 985.563,
 				weeklyChange: -3,
-				verified: true,
-				isVerified: true,
-				logo: null,
+				verifiedAt: new Date().toString(),
+				// logo: null,
 				createdAt: "2019-08-22T14:20:00Z",
 				updatedAt: "2024-01-19T11:30:15Z",
 			},
@@ -75,13 +71,12 @@ export class TeamsApiService {
 				name: "Infobahn",
 				description:
 					"German cybersecurity experts with focus on advanced persistent threats",
-				country: "DE",
-				ctftimeID: 45672,
+				countryCode: "DE",
+				ctftimeId: 45672,
 				points: 872.674,
 				weeklyChange: 8,
-				verified: true,
-				isVerified: true,
-				logo: null,
+				verifiedAt: new Date().toString(),
+				// logo: null,
 				createdAt: "2020-03-10T09:15:00Z",
 				updatedAt: "2024-01-18T16:20:45Z",
 			},
@@ -89,13 +84,12 @@ export class TeamsApiService {
 				id: 4,
 				name: "team:placeholder",
 				description: "Elite hacking collective from the United States",
-				country: "US",
-				ctftimeID: 29384,
+				countryCode: "US",
+				ctftimeId: 29384,
 				points: 849.042,
 				weeklyChange: 0,
-				verified: true,
-				isVerified: true,
-				logo: null,
+				verifiedAt: new Date().toString(),
+				// logo: null,
 				createdAt: "2019-11-05T13:45:00Z",
 				updatedAt: "2024-01-17T12:10:20Z",
 			},
@@ -104,13 +98,12 @@ export class TeamsApiService {
 				name: "Project Sekai",
 				description:
 					"Japanese CTF team with expertise in mobile and IoT security",
-				country: "JP",
-				ctftimeID: 51029,
+				countryCode: "JP",
+				ctftimeId: 51029,
 				points: 813.723,
 				weeklyChange: 15,
-				verified: true,
-				isVerified: true,
-				logo: null,
+				verifiedAt: new Date().toString(),
+				// logo: null,
 				createdAt: "2021-02-14T08:30:00Z",
 				updatedAt: "2024-01-16T14:55:10Z",
 			},
@@ -210,36 +203,36 @@ export class TeamsApiService {
 	/**
 	 * Verify team (moderator/admin only)
 	 */
-	async verifyTeam(data: VerifyTeamDto): Promise<{ success: boolean }> {
-		return apiClient.post<{ success: boolean }>("/teams/verify", data);
-	}
+	// async verifyTeam(data: VerifyTeamDto): Promise<{ success: boolean }> {
+	// 	return apiClient.post<{ success: boolean }>("/teams/verify", data);
+	// }
 
 	/**
 	 * Merge two teams (captain of both teams required)
 	 */
-	async mergeTeams(data: MergeTeamsDto): Promise<{ success: boolean }> {
-		return apiClient.post<{ success: boolean }>("/teams/merge", data);
-	}
+	// async mergeTeams(data: MergeTeamsDto): Promise<{ success: boolean }> {
+	// 	return apiClient.post<{ success: boolean }>("/teams/merge", data);
+	// }
 
 	/**
 	 * Get team statistics
 	 */
-	async getTeamStats(teamId: number): Promise<TeamStats> {
-		return apiClient.get<TeamStats>(`/teams/${teamId}/stats`, {
-			cacheKey: `team:${teamId}:stats`,
-			cacheTTL: 600000, // 10 minutes
-		});
-	}
+	// async getTeamStats(teamId: number): Promise<TeamStats> {
+	// 	return apiClient.get<TeamStats>(`/teams/${teamId}/stats`, {
+	// 		cacheKey: `team:${teamId}:stats`,
+	// 		cacheTTL: 600000, // 10 minutes
+	// 	});
+	// }
 
 	/**
 	 * Get team members
 	 */
-	async getTeamMembers(teamId: number): Promise<TeamMember[]> {
-		return apiClient.get<TeamMember[]>(`/teams/${teamId}/members`, {
-			cacheKey: `team:${teamId}:members`,
-			cacheTTL: 300000,
-		});
-	}
+	// async getTeamMembers(teamId: number): Promise<TeamMember[]> {
+	// 	return apiClient.get<TeamMember[]>(`/teams/${teamId}/members`, {
+	// 		cacheKey: `team:${teamId}:members`,
+	// 		cacheTTL: 300000,
+	// 	});
+	// }
 
 	/**
 	 * Invite user to team
@@ -247,7 +240,7 @@ export class TeamsApiService {
 	async inviteTeamMember(
 		teamId: number,
 		userId: number,
-		message?: string
+		message?: undefined | string
 	): Promise<{ success: boolean }> {
 		return apiClient.post<{ success: boolean }>(
 			`/teams/${teamId}/members/invite`,
@@ -312,7 +305,7 @@ export class TeamsApiService {
 			id: number;
 			team: Team;
 			invitedBy: User;
-			message?: string;
+			message?: undefined | string;
 			createdAt: string;
 		}>
 	> {
@@ -321,7 +314,7 @@ export class TeamsApiService {
 				id: number;
 				team: Team;
 				invitedBy: User;
-				message?: string;
+				message?: undefined | string;
 				createdAt: string;
 			}>
 		>("/teams/invitations");
@@ -344,12 +337,16 @@ export class TeamsApiService {
 	/**
 	 * Get team rankings/leaderboard
 	 */
-	async getTeamRankings(params?: {
-		year?: number;
-		country?: string;
-		limit?: number;
-		category?: string;
-	}): Promise<Array<Team & { rank: number }>> {
+	async getTeamRankings(
+		params:
+			| undefined
+			| {
+					year?: undefined | number;
+					countryCode?: undefined | string;
+					limit?: undefined | number;
+					category?: undefined | string;
+			  }
+	): Promise<Array<Team & { rank: number }>> {
 		return apiClient.get<Array<Team & { rank: number }>>("/teams/rankings", {
 			params,
 			cacheKey: `teams:rankings:${JSON.stringify(params)}`,
@@ -392,8 +389,8 @@ export class TeamsApiService {
 	 */
 	async syncWithCtfTime(
 		teamId: number
-	): Promise<{ success: boolean; changes?: string[] }> {
-		return apiClient.post<{ success: boolean; changes?: string[] }>(
+	): Promise<{ success: boolean; changes?: undefined | string[] }> {
+		return apiClient.post<{ success: boolean; changes?: undefined | string[] }>(
 			`/teams/${teamId}/sync-ctftime`
 		);
 	}
@@ -410,7 +407,7 @@ export class TeamsApiService {
 			type: string;
 			description: string;
 			timestamp: string;
-			data?: Record<string, unknown>;
+			data?: undefined | Record<string, unknown>;
 		}>
 	> {
 		return apiClient.get<
@@ -419,7 +416,7 @@ export class TeamsApiService {
 				type: string;
 				description: string;
 				timestamp: string;
-				data?: Record<string, unknown>;
+				data?: undefined | Record<string, unknown>;
 			}>
 		>(`/teams/${teamId}/activity`, {
 			params: { limit },
@@ -434,7 +431,7 @@ export class TeamsApiService {
 	async reportTeam(
 		teamId: number,
 		reason: string,
-		description?: string
+		description?: undefined | string
 	): Promise<{ success: boolean }> {
 		return apiClient.post<{ success: boolean }>(`/teams/${teamId}/report`, {
 			reason,

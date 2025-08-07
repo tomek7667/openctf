@@ -55,7 +55,7 @@ export interface User extends BaseEntity {
 	email: string;
 	emailConfirmedAt?: string;
 	confirmationCode?: string;
-	permissionLevel: 'player' | 'moderator' | 'administrator';
+	permissionLevel: "player" | "moderator" | "administrator";
 	description?: string;
 	password: string; // sensitive
 	logo?: string; // base64/blob data up to 50MB
@@ -110,7 +110,7 @@ export interface Team extends BaseEntity {
 	ctftimeId?: number;
 	ctftimeVerifiedAt?: string;
 	logo?: string; // base64/blob data up to 50MB
-	verifiedAt?: string;
+	verifiedAt?: string | undefined;
 	countryCode: string; // defaults to "global"
 
 	// Relations
@@ -150,6 +150,12 @@ export enum ContestStatus {
 	CANCELLED = "cancelled",
 }
 
+export type ContestStatusType =
+	| ContestStatus.CANCELLED
+	| ContestStatus.FINISHED
+	| ContestStatus.ONGOING
+	| ContestStatus.UPCOMING;
+
 export enum ContestSortField {
 	NAME = "name",
 	START = "start",
@@ -186,7 +192,7 @@ export interface Contest extends BaseEntity {
 	// Computed fields (not in schema)
 	status: ContestStatus;
 	duration: number; // in hours
-	participantCount: number;
+	participantCount?: number;
 	averageRating?: number; // calculated from ContestRating
 	totalRatings?: number; // count of ContestRating
 
@@ -207,7 +213,7 @@ export interface Place extends BaseEntity {
 	openctfPoints?: number; // normalized points based on contest weight
 	associatedContestId: number;
 	assignedWeightPoints: number; // defaults to 0
-	
+
 	// Relations
 	associatedTeam?: Team;
 }
@@ -219,15 +225,15 @@ export interface Place extends BaseEntity {
 export interface ContestRating extends BaseEntity {
 	rating: number; // 0-5
 	relevant: boolean; // true if user's team was in top 15%
-	
-	// Relations  
+
+	// Relations
 	user: User;
 	contest: Contest;
 }
 
 export interface WeightRating extends BaseEntity {
 	difficulty: number; // 0-100 difficulty rating
-	
+
 	// Relations
 	captainsTeam: Team;
 	contest: Contest;

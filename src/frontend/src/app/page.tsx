@@ -14,7 +14,6 @@ import {
 	Shield,
 	Users,
 	Trophy,
-	MessageSquare,
 	ArrowRight,
 	TrendingUp,
 	Globe,
@@ -25,7 +24,7 @@ import { TeamLeaderboard } from "@/components/leaderboard/TeamLeaderboard";
 import { statsApi, PlatformStats } from "@/api/stats";
 
 interface FeatureCardProps {
-	icon: React.ComponentType<{ className?: string }>;
+	icon: React.ComponentType<{ className?: undefined | string }>;
 	title: string;
 	description: string;
 	href: string;
@@ -84,9 +83,9 @@ const StatCard = ({
 }: {
 	value: string;
 	label: string;
-	trend?: string;
-	icon: React.ComponentType<{ className?: string }>;
-	isLoading?: boolean;
+	trend?: undefined | string;
+	icon: React.ComponentType<{ className?: undefined | string }>;
+	isLoading?: undefined | boolean;
 }) => (
 	<motion.div
 		initial={{ opacity: 0, y: 20 }}
@@ -120,52 +119,52 @@ const StatCard = ({
 );
 
 export default function HomePage() {
-	console.log('🏠 HomePage render');
-	
+	console.log("🏠 HomePage render");
+
 	const [stats, setStats] = useState<PlatformStats | null>(null);
 	const [isLoading, setIsLoading] = useState(true);
 
 	useEffect(() => {
-		console.log('📊 useEffect triggered');
+		console.log("📊 useEffect triggered");
 		let mounted = true;
-		
+
 		const fetchStats = async () => {
-			console.log('🔄 fetchStats started');
+			console.log("🔄 fetchStats started");
 			try {
 				if (!mounted) {
-					console.log('❌ Component unmounted, aborting');
+					console.log("❌ Component unmounted, aborting");
 					return;
 				}
-				console.log('⏳ Setting loading true');
+				console.log("⏳ Setting loading true");
 				setIsLoading(true);
-				console.log('🌐 Calling statsApi.getPlatformStats()');
+				console.log("🌐 Calling statsApi.getPlatformStats()");
 				const data = await statsApi.getPlatformStats();
 				if (!mounted) {
-					console.log('❌ Component unmounted after API call');
+					console.log("❌ Component unmounted after API call");
 					return;
 				}
-				console.log('✅ Stats received:', data);
+				console.log("✅ Stats received:", data);
 				setStats(data);
 			} catch (error) {
 				if (!mounted) {
-					console.log('❌ Component unmounted in catch');
+					console.log("❌ Component unmounted in catch");
 					return;
 				}
-				console.error('💥 Error fetching platform stats:', error);
+				console.error("💥 Error fetching platform stats:", error);
 			} finally {
 				if (mounted) {
-					console.log('🏁 Setting loading false');
+					console.log("🏁 Setting loading false");
 					setIsLoading(false);
 				} else {
-					console.log('❌ Component unmounted in finally');
+					console.log("❌ Component unmounted in finally");
 				}
 			}
 		};
 
 		fetchStats();
-		
+
 		return () => {
-			console.log('🧹 useEffect cleanup');
+			console.log("🧹 useEffect cleanup");
 			mounted = false;
 		};
 	}, []);

@@ -1,6 +1,6 @@
 /**
  * Authentication Store
- * 
+ *
  * Manages global authentication state using Zustand with:
  * - Persistent storage
  * - Immer for immutable updates
@@ -8,52 +8,53 @@
  * - Error handling and loading states
  */
 
-import { create } from 'zustand';
-import { persist, createJSONStorage } from 'zustand/middleware';
-import { immer } from 'zustand/middleware/immer';
-import { devtools } from 'zustand/middleware';
-import { authApi } from '@/api/services/auth';
-import type { User, LoginDto, RegisterDto, AuthResponse } from '@/types/api';
-import { ApiClientError, AuthenticationError } from '@/api/client';
+import { create } from "zustand";
+import { persist, createJSONStorage } from "zustand/middleware";
+import { immer } from "zustand/middleware/immer";
+import { devtools } from "zustand/middleware";
+import { authApi } from "@/api/services/auth";
+import { apiClient } from "@/api/client";
+import type { User, LoginDto, RegisterDto, AuthResponse } from "@/types/api";
+import { ApiClientError, AuthenticationError } from "@/api/client";
 
 // =============================================================================
 // Types
 // =============================================================================
 
 interface AuthState {
-  // Core state
-  user: User | null;
-  token: string | null;
-  isAuthenticated: boolean;
-  
-  // UI state
-  isLoading: boolean;
-  isInitialized: boolean;
-  error: string | null;
-  
-  // Session state
-  lastActivity: number;
-  sessionExpiry: number | null;
+	// Core state
+	user: User | null;
+	token: string | null;
+	isAuthenticated: boolean;
+
+	// UI state
+	isLoading: boolean;
+	isInitialized: boolean;
+	error: string | null;
+
+	// Session state
+	lastActivity: number;
+	sessionExpiry: number | null;
 }
 
 interface AuthActions {
-  // Authentication actions
-  login: (credentials: LoginDto) => Promise<void>;
-  register: (userData: RegisterDto) => Promise<void>;
-  logout: () => void;
-  
-  // User management
-  refreshUser: () => Promise<void>;
-  updateProfile: (data: Partial<User>) => Promise<void>;
-  
-  // Session management
-  extendSession: () => void;
-  checkSession: () => boolean;
-  
-  // State management
-  clearError: () => void;
-  setLoading: (loading: boolean) => void;
-  initialize: () => Promise<void>;
+	// Authentication actions
+	login: (credentials: LoginDto) => Promise<void>;
+	register: (userData: RegisterDto) => Promise<void>;
+	logout: () => void;
+
+	// User management
+	refreshUser: () => Promise<void>;
+	updateProfile: (data: Partial<User>) => Promise<void>;
+
+	// Session management
+	extendSession: () => void;
+	checkSession: () => boolean;
+
+	// State management
+	clearError: () => void;
+	setLoading: (loading: boolean) => void;
+	initialize: () => Promise<void>;
 }
 
 type AuthStore = AuthState & AuthActions;
@@ -63,14 +64,14 @@ type AuthStore = AuthState & AuthActions;
 // =============================================================================
 
 const initialState: AuthState = {
-  user: null,
-  token: null,
-  isAuthenticated: false,
-  isLoading: false,
-  isInitialized: false,
-  error: null,
-  lastActivity: Date.now(),
-  sessionExpiry: null,
+	user: null,
+	token: null,
+	isAuthenticated: false,
+	isLoading: false,
+	isInitialized: false,
+	error: null,
+	lastActivity: Date.now(),
+	sessionExpiry: null,
 };
 
 // =============================================================================
@@ -78,265 +79,264 @@ const initialState: AuthState = {
 // =============================================================================
 
 export const useAuthStore = create<AuthStore>()(
-  devtools(
-    persist(
-      immer((set, get) => ({
-        ...initialState,
+	devtools(
+		persist(
+			immer((set, get) => ({
+				...initialState,
 
-        // =====================================================================
-        // Authentication Actions
-        // =====================================================================
+				// Authentication Actions
 
-        login: async (credentials: LoginDto) => {
-          set((state) => {
-            state.isLoading = true;
-            state.error = null;
-          });
+				login: async (credentials: LoginDto) => {
+					set((state) => {
+						state.isLoading = true;
+						state.error = null;
+					});
 
-          try {
-            const response: AuthResponse = await authApi.login(credentials);
-            
-            set((state) => {
-              state.user = response.user;
-              state.token = response.token;
-              state.isAuthenticated = true;
-              state.isLoading = false;
-              state.lastActivity = Date.now();
-              state.sessionExpiry = new Date(response.expiresAt).getTime();
-            });
-          } catch (error) {
-            const errorMessage = error instanceof ApiClientError 
-              ? error.message 
-              : 'Login failed. Please try again.';
-            
-            set((state) => {
-              state.error = errorMessage;
-              state.isLoading = false;
-              state.isAuthenticated = false;
-              state.user = null;
-              state.token = null;
-            });
-            throw error;
-          }
-        },
+					try {
+						const response: AuthResponse = await authApi.login(credentials);
 
-        register: async (userData: RegisterDto) => {
-          set((state) => {
-            state.isLoading = true;
-            state.error = null;
-          });
+						set((state) => {
+							state.user = response.user;
+							state.token = response.token;
+							state.isAuthenticated = true;
+							state.isLoading = false;
+							state.lastActivity = Date.now();
+							state.sessionExpiry = new Date(response.expiresAt).getTime();
+						});
+					} catch (error) {
+						const errorMessage =
+							error instanceof ApiClientError
+								? error.message
+								: "Login failed. Please try again.";
 
-          try {
-            const response: AuthResponse = await authApi.register(userData);
-            
-            set((state) => {
-              state.user = response.user;
-              state.token = response.token;
-              state.isAuthenticated = true;
-              state.isLoading = false;
-              state.lastActivity = Date.now();
-              state.sessionExpiry = new Date(response.expiresAt).getTime();
-            });
-          } catch (error) {
-            const errorMessage = error instanceof ApiClientError 
-              ? error.message 
-              : 'Registration failed. Please try again.';
-            
-            set((state) => {
-              state.error = errorMessage;
-              state.isLoading = false;
-              state.isAuthenticated = false;
-              state.user = null;
-              state.token = null;
-            });
-            throw error;
-          }
-        },
+						set((state) => {
+							state.error = errorMessage;
+							state.isLoading = false;
+							state.isAuthenticated = false;
+							state.user = null;
+							state.token = null;
+						});
+						throw error;
+					}
+				},
 
-        logout: () => {
-          // Call API logout (fire and forget)
-          authApi.logout().catch(console.error);
-          
-          set((state) => {
-            state.user = null;
-            state.token = null;
-            state.isAuthenticated = false;
-            state.error = null;
-            state.sessionExpiry = null;
-          });
-        },
+				register: async (userData: RegisterDto) => {
+					set((state) => {
+						state.isLoading = true;
+						state.error = null;
+					});
 
-        // =====================================================================
-        // User Management
-        // =====================================================================
+					try {
+						const response: AuthResponse = await authApi.register(userData);
 
-        refreshUser: async () => {
-          const state = get();
-          if (!state.token || state.isLoading) return;
+						set((state) => {
+							state.user = response.user;
+							state.token = response.token;
+							state.isAuthenticated = true;
+							state.isLoading = false;
+							state.lastActivity = Date.now();
+							state.sessionExpiry = new Date(response.expiresAt).getTime();
+						});
+					} catch (error) {
+						const errorMessage =
+							error instanceof ApiClientError
+								? error.message
+								: "Registration failed. Please try again.";
 
-          try {
-            const user = await authApi.getCurrentUser();
-            
-            set((state) => {
-              state.user = user;
-              state.lastActivity = Date.now();
-            });
-          } catch (error) {
-            if (error instanceof AuthenticationError) {
-              // Token is invalid, logout
-              get().logout();
-            }
-            throw error;
-          }
-        },
+						set((state) => {
+							state.error = errorMessage;
+							state.isLoading = false;
+							state.isAuthenticated = false;
+							state.user = null;
+							state.token = null;
+						});
+						throw error;
+					}
+				},
 
-        updateProfile: async (data: Partial<User>) => {
-          if (!get().isAuthenticated) throw new Error('Not authenticated');
+				logout: () => {
+					// Call API logout (fire and forget)
+					authApi.logout().catch(console.error);
 
-          set((state) => {
-            state.isLoading = true;
-            state.error = null;
-          });
+					set((state) => {
+						state.user = null;
+						state.token = null;
+						state.isAuthenticated = false;
+						state.error = null;
+						state.sessionExpiry = null;
+					});
+				},
 
-          try {
-            const updatedUser = await authApi.updateProfile(data);
-            
-            set((state) => {
-              state.user = updatedUser;
-              state.isLoading = false;
-              state.lastActivity = Date.now();
-            });
-          } catch (error) {
-            const errorMessage = error instanceof ApiClientError 
-              ? error.message 
-              : 'Profile update failed. Please try again.';
-            
-            set((state) => {
-              state.error = errorMessage;
-              state.isLoading = false;
-            });
-            throw error;
-          }
-        },
+				// User Management
 
-        // =====================================================================
-        // Session Management
-        // =====================================================================
+				refreshUser: async () => {
+					const state = get();
+					if (!state.token || state.isLoading) return;
 
-        extendSession: () => {
-          set((state) => {
-            state.lastActivity = Date.now();
-          });
-        },
+					try {
+						const user = await authApi.getCurrentUser();
 
-        checkSession: () => {
-          const { sessionExpiry, token } = get();
-          
-          if (!token || !sessionExpiry) return false;
-          
-          const now = Date.now();
-          const isExpired = now > sessionExpiry;
-          
-          if (isExpired) {
-            get().logout();
-            return false;
-          }
-          
-          return true;
-        },
+						set((state) => {
+							state.user = user;
+							state.lastActivity = Date.now();
+						});
+					} catch (error) {
+						if (error instanceof AuthenticationError) {
+							// Token is invalid, logout
+							get().logout();
+						}
+						throw error;
+					}
+				},
 
-        // =====================================================================
-        // State Management
-        // =====================================================================
+				updateProfile: async (data: Partial<User>) => {
+					if (!get().isAuthenticated) throw new Error("Not authenticated");
 
-        clearError: () => {
-          set((state) => {
-            state.error = null;
-          });
-        },
+					set((state) => {
+						state.isLoading = true;
+						state.error = null;
+					});
 
-        setLoading: (loading: boolean) => {
-          set((state) => {
-            state.isLoading = loading;
-          });
-        },
+					try {
+						const updatedUser = await authApi.updateProfile(data);
 
-        initialize: async () => {
-          const state = get();
-          if (state.isInitialized) return;
+						set((state) => {
+							state.user = updatedUser;
+							state.isLoading = false;
+							state.lastActivity = Date.now();
+						});
+					} catch (error) {
+						const errorMessage =
+							error instanceof ApiClientError
+								? error.message
+								: "Profile update failed. Please try again.";
 
-          try {
-            const { token } = get();
-            
-            if (token) {
-              // Just check if session is valid without API call
-              get().checkSession();
-            }
-          } catch (error) {
-            console.error('Auth initialization failed:', error);
-            get().logout();
-          } finally {
-            set((state) => {
-              state.isInitialized = true;
-            });
-          }
-        },
-      })),
-      {
-        name: 'openctf-auth',
-        storage: createJSONStorage(() => localStorage),
-        partialize: (state) => ({
-          user: state.user,
-          token: state.token,
-          isAuthenticated: state.isAuthenticated,
-          sessionExpiry: state.sessionExpiry,
-        }),
-        onRehydrateStorage: () => (state) => {
-          if (state?.token) {
-            // Set token in API client
-            authApi.setAuthToken?.(state.token);
-          }
-        },
-      }
-    ),
-    { name: 'auth-store' }
-  )
+						set((state) => {
+							state.error = errorMessage;
+							state.isLoading = false;
+						});
+						throw error;
+					}
+				},
+
+				// Session Management
+
+				extendSession: () => {
+					set((state) => {
+						state.lastActivity = Date.now();
+					});
+				},
+
+				checkSession: () => {
+					const { sessionExpiry, token } = get();
+
+					if (!token || !sessionExpiry) return false;
+
+					const now = Date.now();
+					const isExpired = now > sessionExpiry;
+
+					if (isExpired) {
+						get().logout();
+						return false;
+					}
+
+					return true;
+				},
+
+				// State Management
+
+				clearError: () => {
+					set((state) => {
+						state.error = null;
+					});
+				},
+
+				setLoading: (loading: boolean) => {
+					set((state) => {
+						state.isLoading = loading;
+					});
+				},
+
+				initialize: async () => {
+					const state = get();
+					if (state.isInitialized) return;
+
+					try {
+						const { token } = get();
+
+						if (token) {
+							// Just check if session is valid without API call
+							get().checkSession();
+						}
+					} catch (error) {
+						console.error("Auth initialization failed:", error);
+						get().logout();
+					} finally {
+						set((state) => {
+							state.isInitialized = true;
+						});
+					}
+				},
+			})),
+			{
+				name: "openctf-auth",
+				storage: createJSONStorage(() => localStorage),
+				partialize: (state) => ({
+					user: state.user,
+					token: state.token,
+					isAuthenticated: state.isAuthenticated,
+					sessionExpiry: state.sessionExpiry,
+				}),
+				onRehydrateStorage: () => (state) => {
+					if (state?.token) {
+						// Set token in API client
+						apiClient.setAuthToken(state.token);
+					}
+				},
+			}
+		),
+		{ name: "auth-store" }
+	)
 );
-
-
 
 // =============================================================================
 // Session Activity Tracker
 // =============================================================================
 
-if (typeof window !== 'undefined') {
-  // Track user activity to extend session
-  const activityEvents = ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart'];
-  
-  let activityTimer: NodeJS.Timeout;
-  
-  const handleActivity = () => {
-    const { isAuthenticated, extendSession } = useAuthStore.getState();
-    
-    if (isAuthenticated) {
-      clearTimeout(activityTimer);
-      activityTimer = setTimeout(() => {
-        extendSession();
-      }, 1000); // Debounce for 1 second
-    }
-  };
+if (typeof window !== "undefined") {
+	// Track user activity to extend session
+	const activityEvents = [
+		"mousedown",
+		"mousemove",
+		"keypress",
+		"scroll",
+		"touchstart",
+	];
 
-  activityEvents.forEach((event) => {
-    document.addEventListener(event, handleActivity, true);
-  });
+	let activityTimer: NodeJS.Timeout;
 
-  // Check session periodically
-  setInterval(() => {
-    const { isAuthenticated, checkSession } = useAuthStore.getState();
-    if (isAuthenticated) {
-      checkSession();
-    }
-  }, 60000); // Check every minute
+	const handleActivity = () => {
+		const { isAuthenticated, extendSession } = useAuthStore.getState();
+
+		if (isAuthenticated) {
+			clearTimeout(activityTimer);
+			activityTimer = setTimeout(() => {
+				extendSession();
+			}, 1000); // Debounce for 1 second
+		}
+	};
+
+	activityEvents.forEach((event) => {
+		document.addEventListener(event, handleActivity, true);
+	});
+
+	// Check session periodically
+	setInterval(() => {
+		const { isAuthenticated, checkSession } = useAuthStore.getState();
+		if (isAuthenticated) {
+			checkSession();
+		}
+	}, 60000); // Check every minute
 }
 
 // =============================================================================
@@ -344,15 +344,15 @@ if (typeof window !== 'undefined') {
 // =============================================================================
 
 export const useAuthGuard = (requireAuth: boolean = true) => {
-  const { isAuthenticated, isInitialized, user } = useAuthStore();
-  
-  return {
-    isAuthenticated,
-    isInitialized,
-    canAccess: requireAuth ? isAuthenticated : true,
-    user,
-    shouldRedirect: requireAuth && isInitialized && !isAuthenticated,
-  };
+	const { isAuthenticated, isInitialized, user } = useAuthStore();
+
+	return {
+		isAuthenticated,
+		isInitialized,
+		canAccess: requireAuth ? isAuthenticated : true,
+		user,
+		shouldRedirect: requireAuth && isInitialized && !isAuthenticated,
+	};
 };
 
 export default useAuthStore;

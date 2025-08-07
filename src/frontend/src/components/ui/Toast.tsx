@@ -17,12 +17,14 @@ export interface Toast {
 	id: string;
 	type: ToastType;
 	title: string;
-	message?: string;
-	duration?: number;
-	action?: {
-		label: string;
-		onClick: () => void;
-	};
+	message?: undefined | string;
+	duration?: undefined | number;
+	action:
+		| undefined
+		| {
+				label: string;
+				onClick: () => void;
+		  };
 }
 
 interface ToastComponentProps {

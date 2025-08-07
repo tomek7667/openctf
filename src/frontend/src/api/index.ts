@@ -6,10 +6,10 @@
  */
 
 // Import services
-import { authApi, AuthApiService } from './services/auth';
-import { teamsApi, TeamsApiService } from './services/teams';
-import { contestsApi, ContestsApiService } from './services/contests';
-import { apiClient, ApiClient } from './client';
+import { authApi, AuthApiService } from "./services/auth";
+import { teamsApi, TeamsApiService } from "./services/teams";
+import { contestsApi, ContestsApiService } from "./services/contests";
+import { apiClient, ApiClient } from "./client";
 
 // Re-export individual services
 export { authApi, AuthApiService };
@@ -21,28 +21,34 @@ export { apiClient, ApiClient };
 
 // Export error types
 export {
-  ApiClientError,
-  ValidationApiError,
-  NetworkError,
-  AuthenticationError,
-  AuthorizationError,
-} from './client';
+	ApiClientError,
+	ValidationApiError,
+	NetworkError,
+	AuthenticationError,
+	AuthorizationError,
+} from "./client";
 
 // Export types
-export type { ApiClientConfig, RequestConfig } from './client';
+export type { ApiClientConfig, RequestConfig } from "./client";
 
 // Create unified API object for easy access
 export const api = {
-  get auth() { return authApi; },
-  get teams() { return teamsApi; },
-  get contests() { return contestsApi; },
+	get auth() {
+		return authApi;
+	},
+	get teams() {
+		return teamsApi;
+	},
+	get contests() {
+		return contestsApi;
+	},
 
-  // Utility methods
-  isHealthy: () => apiClient.healthCheck(),
-  cancelAllRequests: () => apiClient.cancelAllRequests(),
-  clearCache: () => {
-    // Could implement cache clearing logic here
-  },
+	// Utility methods
+	isHealthy: () => apiClient.healthCheck(),
+	cancelAllRequests: () => apiClient.cancelAllRequests(),
+	clearCache: () => {
+		// Could implement cache clearing logic here
+	},
 } as const;
 
 // Default export
@@ -50,17 +56,17 @@ export default api;
 
 /**
  * API Usage Examples:
- * 
+ *
  * // Using individual services
  * import { authApi, teamsApi } from '@/api';
  * const user = await authApi.getCurrentUser();
  * const teams = await teamsApi.getTeams();
- * 
+ *
  * // Using unified API object
  * import api from '@/api';
  * const user = await api.auth.getCurrentUser();
  * const teams = await api.teams.getTeams();
- * 
+ *
  * // Error handling
  * try {
  *   const teams = await api.teams.getTeams();
