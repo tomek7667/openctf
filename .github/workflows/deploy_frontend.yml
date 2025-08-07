@@ -1,0 +1,70 @@
+name: Deploy Frontend
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - "src/frontend/**"
+      - ".github/workflows/deploy_frontend.yml"
+  workflow_dispatch:
+
+jobs:
+  build-and-upload:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+          cache: "yarn"
+          cache-dependency-path: src/frontend/yarn.lock
+
+      - name: Cache .next build directory
+        uses: actions/cache@v4
+        with:
+          path: |
+            src/frontend/.next
+            src/frontend/node_modules
+          key: ${{ runner.os }}-nextjs-${{ hashFiles('src/frontend/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-nextjs-
+
+      - name: Install dependencies
+        run: |
+          cd frontend
+          yarn install
+
+      - name: Build frontend
+        run: |
+          set -e
+          cd frontend
+          yarn build
+          yarn add-static
+
+      - name: Upload build and necessary files to server - standalone
+        if: success()
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          port: ${{ secrets.SSH_PORT }}
+          key: ${{ secrets.SSH_KEY }}
+          strip_components: 5
+          source: |
+            ./src/src/frontend/.next/standalone
+          target: ${{ secrets.SSH_FRONTEND_DEST }}
+  deploy:
+    runs-on: self-hosted
+    needs: build-and-upload
+
+    steps:
+      - name: Install dependencies and restart frontend
+        run: |
+          cd ${{ secrets.SSH_FRONTEND_DEST }}
+          yarn install --production
+          PORT="${{ secrets.FE_PORT }}" pm2 restart "${{ secrets.FE_APP_NAME }}"" --update-env
