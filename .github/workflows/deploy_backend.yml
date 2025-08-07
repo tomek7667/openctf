@@ -50,7 +50,7 @@ jobs:
         working-directory: ./src/backend
         if: success()
         run: |
-          GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -o ./openctf ./cmd/server
+          GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -o ./openctfapi ./cmd/server
 
       - name: "Upload binary to server"
         if: success()
@@ -60,7 +60,8 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           port: ${{ secrets.SSH_PORT }}
           key: ${{ secrets.SSH_KEY }}
-          source: ./openctf
+          source: ./src/backend/openctfapi
+          strip_components: 2
           target: ${{ secrets.SSH_DIST_DEST }}
 
   deploy:
