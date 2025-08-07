@@ -61,7 +61,7 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           key: ${{ secrets.SSH_KEY }}
           source: ./src/backend/openctfapi
-          strip_components: 2
+          strip_components: 3
           target: ${{ secrets.SSH_DIST_DEST }}
 
   deploy:
