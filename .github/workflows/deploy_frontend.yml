@@ -35,14 +35,14 @@ jobs:
             ${{ runner.os }}-nextjs-
 
       - name: Install dependencies
+        working-directory: ./src/frontend
         run: |
-          cd frontend
           yarn install
 
       - name: Build frontend
+        working-directory: ./src/frontend
         run: |
           set -e
-          cd frontend
           yarn build
           yarn add-static
 
@@ -56,7 +56,7 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           strip_components: 5
           source: |
-            ./src/src/frontend/.next/standalone
+            ./src/frontend/.next/standalone
           target: ${{ secrets.SSH_FRONTEND_DEST }}
   deploy:
     runs-on: self-hosted
