@@ -12,23 +12,26 @@ import (
 
 	"entgo.io/ent/entc"
 	"entgo.io/ent/entc/gen"
+	"github.com/joho/godotenv"
 )
 
 var serviceClient *service.Client
 
 func getCreds() string {
 	return fmt.Sprintf(
-		"host=%s port=%s user=%s dbname=%s password=%s sslmode=%s",
+		"host=%s port=%s user=%s dbname=%s password=%s sslmode=%s search_path=%s",
 		utils.Getenv("POSTGRES_HOST", "127.0.0.1"),
 		utils.Getenv("POSTGRES_PORT", "30001"),
 		utils.Getenv("POSTGRES_USER", "localuser"),
 		utils.Getenv("POSTGRES_DB", "postgres"),
 		utils.Getenv("POSTGRES_PASSWORD", "localpassword"),
 		utils.Getenv("SSL_MODE", "disable"),
+		"openctf",
 	)
 }
 
 func init() {
+	godotenv.Load(".env.prod")
 	logger.SetLogLevel()
 }
 

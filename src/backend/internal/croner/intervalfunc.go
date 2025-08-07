@@ -13,6 +13,7 @@ func getMonthBeforeTimestamp(current time.Time) time.Time {
 }
 
 func (h *Handler) IntervalFunc() error {
+	ctx := context.Background()
 	ec := h.ServiceClient.GetEnt()
 	now := time.Now().AddDate(0, 0, 10)
 	before := getMonthBeforeTimestamp(now)
@@ -28,7 +29,7 @@ func (h *Handler) IntervalFunc() error {
 			aggregatedcontestsdifficulties.EndGTE(before),
 			aggregatedcontestsdifficulties.EndLTE(now),
 		),
-	).CountX(context.Background())
+	).CountX(ctx)
 	slog.Debug("today is the day for the points assignments", "today", now.Format(time.RFC1123), "month before", before.Format(time.RFC1123), "contest found between before and now", aggCount)
 	if aggCount == 0 {
 		slog.Info("no contests found that should have the weight assigned")
@@ -41,7 +42,7 @@ func (h *Handler) IntervalFunc() error {
 			aggregatedcontestsdifficulties.EndGT(before),
 			aggregatedcontestsdifficulties.EndLT(now),
 		),
-	).AllX(context.TODO())
+	).AllX(ctx)
 	slog.Debug("the stuff to be weighted found", "number of records found", len(records), "end greater than", before, "end less than or equal now", now, "example first record", records[0])
 
 	// 3. normalize the difficulties with Math.floor to 0 decimal points wrt. the whole pool 100;

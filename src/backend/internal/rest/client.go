@@ -2,10 +2,13 @@ package rest
 
 import (
 	"log/slog"
+	"strings"
 	"time"
 
 	"openctfbackend/docs"
+	"openctfbackend/internal/utils"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	swaggerfiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
@@ -44,6 +47,15 @@ func (c *Client) Serve() {
 			return ""
 		}),
 	)
+
+	c.Router.Use(cors.New(cors.Config{
+		AllowOrigins:     strings.Split(utils.Getenv("ALLOWED_ORIGINS", "http://rce.wtf:3000,http://127.0.0.1:3000"), ","),
+		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowHeaders:     []string{"Origin", "Accept", "Authorization", "Content-Type", "X-CSRF-Token"},
+		ExposeHeaders:    []string{"Content-Length", "Link"},
+		AllowCredentials: true,
+		MaxAge:           300,
+	}))
 
 	// Automatic swagger docs based on comments
 	docs.SwaggerInfo.BasePath = "/api"

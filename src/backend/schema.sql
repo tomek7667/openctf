@@ -1,3 +1,7 @@
+-- Create openctf schema
+CREATE SCHEMA IF NOT EXISTS openctf;
+SET search_path TO openctf;
+
 -- Create "aggregated_contests_difficulties" view
 CREATE OR REPLACE VIEW "aggregated_contests_difficulties" ("contest_id", "contest_name", "end", "organizers_id", "avg_difficulty", "participants") AS
 SELECT

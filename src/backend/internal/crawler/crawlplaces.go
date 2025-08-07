@@ -11,9 +11,10 @@ import (
 )
 
 func (h *Handler) CrawlPlaces() error {
+	ctx := context.Background()
 	slog.Info("running the places crawler")
 
-	contests, err := h.ServiceClient.GetContestsToBeUpdatedByPlacesCrawler(context.TODO())
+	contests, err := h.ServiceClient.GetContestsToBeUpdatedByPlacesCrawler(ctx)
 	if err != nil {
 		return errors.Join(
 			fmt.Errorf("crawl places failed getting existing contests from the database"),
@@ -44,14 +45,14 @@ func (h *Handler) CrawlPlaces() error {
 			var associatedDbTeamID *int
 			// get db team for potential edge
 			dbTeam, err := h.ServiceClient.GetCtftimeTeam(
-				context.TODO(), score.CtftimeTeamID,
+				ctx, score.CtftimeTeamID,
 			)
 			if err == nil && dbTeam.ID != 0 {
 				associatedDbTeamID = &dbTeam.ID
 			}
 
 			// create place in the db
-			createdPlaceQuery := h.ServiceClient.CreateCtftimePlace(context.TODO(), &service.CreateCtftimePlaceDto{
+			createdPlaceQuery := h.ServiceClient.CreateCtftimePlace(ctx, &service.CreateCtftimePlaceDto{
 				ContestID:        c.ID,
 				TeamName:         score.CtftimeTeamName,
 				Place:            score.Place,
@@ -65,7 +66,7 @@ func (h *Handler) CrawlPlaces() error {
 		createdPlaces, err := h.ServiceClient.GetEnt().
 			Place.
 			CreateBulk(createQueries...).
-			Save(context.TODO())
+			Save(ctx)
 		if err != nil {
 			slog.Error(
 				"saving ctftime places in the database failed",
@@ -78,7 +79,7 @@ func (h *Handler) CrawlPlaces() error {
 		}
 
 		// updating the contest places
-		_, err = h.ServiceClient.GetEnt().Contest.UpdateOne(c).AddPlaces(createdPlaces...).Save(context.TODO())
+		_, err = h.ServiceClient.GetEnt().Contest.UpdateOne(c).AddPlaces(createdPlaces...).Save(ctx)
 		if err != nil {
 			slog.Error(
 				"failed updating the contest with new places",

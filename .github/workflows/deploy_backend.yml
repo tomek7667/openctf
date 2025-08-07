@@ -1,0 +1,76 @@
+name: Deploy Backend
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - "src/backend/**"
+      - ".github/workflows/deploy_backend.yml"
+  workflow_dispatch:
+
+jobs:
+  test-and-build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Add SSH Go Module Private Key
+        env:
+          SSH_AUTH_SOCK: /tmp/ssh_agent.sock
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan github.com >> ~/.ssh/known_hosts
+          ssh-agent -a $SSH_AUTH_SOCK > /dev/null
+          ssh-add - <<< "${{ secrets.GO_MODULE_PRIVATE_KEY }}"
+          echo "SSH_AUTH_SOCK=$SSH_AUTH_SOCK" >> $GITHUB_ENV
+
+      - name: Setup access for private go modules
+        run: |
+          git config --global url."ssh://git@github.com/".insteadOf https://github.com/
+
+      - name: "Checkout code"
+        uses: actions/checkout@v4
+
+      - name: "Set up Go"
+        uses: actions/setup-go@v5
+        with:
+          go-version: "1.23"
+          cache-dependency-path: ./src/backend/go.sum
+
+      # Currently disabled due to its inability to not remove crucial features.
+      #   - name: "Generate go code"
+      #     working-directory: ./src/backend
+      #     run: go generate ./...
+
+      - name: "Run tests"
+        working-directory: ./src/backend
+        run: go test ./...
+
+      - name: "Build for Linux"
+        working-directory: ./src/backend
+        if: success()
+        run: |
+          GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -o ./openctf ./cmd/server
+
+      - name: "Upload binary to server"
+        if: success()
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          port: ${{ secrets.SSH_PORT }}
+          key: ${{ secrets.SSH_KEY }}
+          source: ./openctf
+          target: ${{ secrets.SSH_DIST_DEST }}
+
+  deploy:
+    runs-on: self-hosted
+
+    needs: test-and-build
+
+    steps:
+      - name: "Restart the daemon with the new binary and env variables"
+        run: |
+          cd ${{ secrets.SSH_DIST_DEST }}
+          ls -al
+          POSTGRES_HOST="${{ secrets.POSTGRES_HOST }}" POSTGRES_PORT="${{ secrets.POSTGRES_PORT }}" POSTGRES_USER="${{ secrets.POSTGRES_USER }}" POSTGRES_DB="${{ secrets.POSTGRES_DB }}" POSTGRES_PASSWORD="${{ secrets.POSTGRES_PASSWORD }}" ADMIN_SERVICE_PASSWORD="${{ secrets.ADMIN_SERVICE_PASSWORD }}" JWT_SECRET="${{ secrets.JWT_SECRET }}" GIN_MODE="${{ secrets.GIN_MODE }}" APP_NAME="${{ secrets.APP_NAME }}" LOKI_ENDPOINT="${{ secrets.LOKI_ENDPOINT }}" LOKI_USERNAME="${{ secrets.LOKI_USERNAME }}" LOKI_PASSWORD="${{ secrets.LOKI_PASSWORD }}" SSH_DIST_DEST="${{ secrets.SSH_DIST_DEST }}" NGINX_DIST="${{ secrets.NGINX_DIST }}" APP_PORT="${{ secrets.APP_PORT }}" ALLOWED_ORIGINS="${{ secrets.ALLOWED_ORIGINS }}" LOG_LEVEL="${{ vars.LOG_LEVEL }} pm2 restart "${{ secrets.APP_NAME }}" --update-env

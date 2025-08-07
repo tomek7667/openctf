@@ -12,11 +12,12 @@ import (
 )
 
 func (h *Handler) CrawlContests(interval time.Duration) error {
+	ctx := context.Background()
 	slog.Info("running the contests crawler")
 
 	start := time.Now().Add(-interval)
 	finish := start.Add(interval)
-	ctftimeEvents, err := h.CtftimeClient.GetEventsBetween(context.Background(), start, finish)
+	ctftimeEvents, err := h.CtftimeClient.GetEventsBetween(ctx, start, finish)
 	if err != nil {
 		return errors.Join(fmt.Errorf("getting ctf teams failed"), err)
 	}
@@ -26,7 +27,7 @@ func (h *Handler) CrawlContests(interval time.Duration) error {
 	added := 0
 	for _, ctftimeEvent := range ctftimeEvents {
 		dbContest, err := h.ServiceClient.GetContestByCtftimeID(
-			context.TODO(), ctftimeEvent.ID,
+			ctx, ctftimeEvent.ID,
 		)
 		evExistsInDb := dbContest != nil && err == nil
 		if err != nil && strings.Contains(err.Error(), "contest not found") {
@@ -50,9 +51,9 @@ func (h *Handler) CrawlContests(interval time.Duration) error {
 		// TODO: Rethink if someone that is already on openctf if they wouldn't prefer to just add the contest on the platform here.
 		// TODO: ^regarding this some might argue that importing is good if the event doesn't exist yet (based on name e.g.),
 		// TODO: ^as the team can manage the ctftime imported contest as they are the organizers in openctf already.
-		organizers, _ := h.ServiceClient.GetCtftimeTeam(context.TODO(), ctftimeEvent.Organizers[0].ID)
+		organizers, _ := h.ServiceClient.GetCtftimeTeam(ctx, ctftimeEvent.Organizers[0].ID)
 		_, err = h.ServiceClient.CreateContest(
-			context.TODO(),
+			ctx,
 			organizers,
 			&service.CreateContestDto{
 				Name:        ctftimeEvent.Title,
