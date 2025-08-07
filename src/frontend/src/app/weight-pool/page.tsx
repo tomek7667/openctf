@@ -183,7 +183,7 @@ export default function WeightPoolPage() {
 
         // Set default selected month to the first one
         if (monthlyDistributions.length > 0) {
-          setSelectedMonth(monthlyDistributions[0])
+          setSelectedMonth(monthlyDistributions[0] ?? null)
         }
       } catch (error) {
         console.error('Error fetching weight pool data:', error)
@@ -319,7 +319,7 @@ export default function WeightPoolPage() {
                 color="text-blue-400"
                 items={[
                   "Top 15 team captains OR top 5% of participants vote (whichever is smaller)",
-                  "Difficulty rated from 0 (easiest) to 100 (hardest they've played in 2 years)",
+                  "Difficulty rated from 0 (easiest) to 100 (hardest they&apos;ve played in 2 years)",
                   "Guessy challenges are excluded (guessy = 0 points)",
                   "Votes are weighted by team performance and relevance"
                 ]}
@@ -346,10 +346,10 @@ export default function WeightPoolPage() {
                       Weight Points = (Difficulty Score / Total Difficulty) × Available Pool
                     </div>
                     <div className="space-y-2 text-sm text-muted-foreground">
-                      <div>• Difficulty Score: Average of qualified voters' ratings (0-100)</div>
-                      <div>• Total Difficulty: Sum of all eligible contests' difficulty scores</div>
+                      <div>• Difficulty Score: Average of qualified voters&apos; ratings (0-100)</div>
+                      <div>• Total Difficulty: Sum of all eligible contests&apos; difficulty scores</div>
                       <div>• Available Pool: 100 points per month</div>
-                      <div>• Unused points roll over to next month's special distributions</div>
+                      <div>• Unused points roll over to next month&apos;s special distributions</div>
                     </div>
                   </div>
                 </CardContent>
