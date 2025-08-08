@@ -44,9 +44,9 @@ const statusColors = {
 
 const statusIcons = {
   upcoming: Clock,
-  'registration-open': UserPlus,
-  'registration-closed': UserMinus,
-  live: Play,
+  'registration-open': Users,
+  'registration-closed': Users,
+  live: Trophy,
   finished: CheckCircle,
   cancelled: AlertCircle
 };
