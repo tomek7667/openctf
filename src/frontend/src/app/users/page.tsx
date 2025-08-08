@@ -406,7 +406,7 @@ const UserTableRow = ({ user }: { user: UserWithStats }) => (
 							{user.username}
 						</span>
 						{user.permission_level === "administrator" && (
-							<Crown className="h-3 w-3 text-yellow-400" />
+							<Star className="h-3 w-3 text-yellow-400" />
 						)}
 						{user.permission_level === "moderator" && (
 							<Shield className="h-3 w-3 text-blue-400" />
