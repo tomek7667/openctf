@@ -355,6 +355,7 @@ function CommentCard({ comment, onReply }: {
 export default function WriteupDetailPage() {
   const params = useParams();
   const router = useRouter();
+  const { user, isAuthenticated } = useAuthStore();
   const [writeup, setWriteup] = useState<Writeup | null>(null);
   const [comments, setComments] = useState<WriteupComment[]>([]);
   const [loading, setLoading] = useState(true);
