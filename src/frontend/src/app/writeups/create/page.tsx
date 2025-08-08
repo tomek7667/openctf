@@ -228,6 +228,7 @@ function MarkdownGuide() {
 
 export default function CreateWriteupPage() {
   const router = useRouter();
+  const { user, isAuthenticated } = useAuthStore();
   const [isPreview, setIsPreview] = useState(false);
   const [loading, setLoading] = useState(false);
   
