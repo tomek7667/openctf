@@ -530,7 +530,7 @@ export default function ContestsPage() {
               className="mb-12"
             >
               <h2 className="text-2xl font-bold font-mono text-red-400 mb-6 flex items-center">
-                <Play className="h-6 w-6 mr-2 animate-pulse" />
+                <Trophy className="h-6 w-6 mr-2 animate-pulse" />
                 LIVE NOW
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
