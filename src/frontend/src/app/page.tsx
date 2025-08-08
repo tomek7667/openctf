@@ -90,7 +90,7 @@ const StatCard = ({
 	<motion.div
 		initial={{ opacity: 0, y: 20 }}
 		animate={{ opacity: 1, y: 0 }}
-		className="text-center p-6 bg-card/50 backdrop-blur-sm rounded-none hacker-border"
+		className="text-center p-6 bg-card/50 backdrop-blur-sm rounded-none hacker-border mt-2"
 	>
 		<div className="flex justify-center mb-3">
 			<div className="p-3 bg-primary/10 rounded-full">
