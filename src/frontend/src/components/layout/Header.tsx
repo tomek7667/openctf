@@ -3,7 +3,10 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Menu, X, Trophy, Shield, Users, User, MessageSquare } from "@/components/ui/icons";
+import { Menu, X, Trophy, Shield, Users, User, MessageSquare, LogIn } from "@/components/ui/icons";
+import { useAuthStore } from "@/store/authStore";
+import { AuthModal } from "@/components/auth/AuthModal";
+import { UserMenu } from "@/components/auth/UserMenu";
 
 const navigation = [
 	{
@@ -41,6 +44,8 @@ const navigation = [
 export function Header() {
 	const pathname = usePathname();
 	const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+	const [authModalOpen, setAuthModalOpen] = useState(false);
+	const { isAuthenticated } = useAuthStore();
 
 	const isActive = (href: string) => {
 		if (href === "/") return pathname === "/";
@@ -64,25 +69,39 @@ export function Header() {
 						</span>
 					</Link>
 
-					<nav className="hidden md:flex items-center space-x-6">
-						{navigation.map((item) => {
-							const Icon = item.icon;
-							return (
-								<Link
-									key={item.id}
-									href={item.href}
-									className={`flex items-center space-x-2 px-3 py-2 rounded-none text-sm font-bold font-mono transition-colors ${
-										isActive(item.href)
-											? "bg-primary text-black glow-text"
-											: "text-muted-foreground hover:text-primary hover:bg-accent/50"
-									}`}
-								>
-									<Icon className="h-4 w-4" />
-									<span>[{item.label.toUpperCase()}]</span>
-								</Link>
-							);
-						})}
-					</nav>
+					<div className="hidden md:flex items-center space-x-6">
+						<nav className="flex items-center space-x-6">
+							{navigation.map((item) => {
+								const Icon = item.icon;
+								return (
+									<Link
+										key={item.id}
+										href={item.href}
+										className={`flex items-center space-x-2 px-3 py-2 rounded-none text-sm font-bold font-mono transition-colors ${
+											isActive(item.href)
+												? "bg-primary text-black glow-text"
+												: "text-muted-foreground hover:text-primary hover:bg-accent/50"
+										}`}
+									>
+										<Icon className="h-4 w-4" />
+										<span>[{item.label.toUpperCase()}]</span>
+									</Link>
+								);
+							})}
+						</nav>
+						
+						{isAuthenticated ? (
+							<UserMenu />
+						) : (
+							<button
+								onClick={() => setAuthModalOpen(true)}
+								className="flex items-center space-x-2 px-3 py-2 rounded-none text-sm font-bold font-mono transition-colors text-muted-foreground hover:text-primary hover:bg-accent/50"
+							>
+								<LogIn className="h-4 w-4" />
+								<span>[LOGIN]</span>
+							</button>
+						)}
+					</div>
 
 					<button
 						onClick={toggleMobileMenu}
@@ -117,9 +136,27 @@ export function Header() {
 									</Link>
 								);
 							})}
+							
+							{!isAuthenticated && (
+								<button
+									onClick={() => {
+										setAuthModalOpen(true);
+										setIsMobileMenuOpen(false);
+									}}
+									className="flex items-center space-x-2 px-3 py-2 rounded-none text-sm font-bold font-mono transition-colors text-muted-foreground hover:text-primary hover:bg-accent/50"
+								>
+									<LogIn className="h-4 w-4" />
+									<span>[LOGIN]</span>
+								</button>
+							)}
 						</nav>
 					</div>
 				)}
+				
+				<AuthModal
+					isOpen={authModalOpen}
+					onClose={() => setAuthModalOpen(false)}
+				/>
 			</div>
 		</header>
 	);

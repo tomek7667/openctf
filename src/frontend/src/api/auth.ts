@@ -50,3 +50,21 @@ export const logout = async (): Promise<void> => {
 	await sleep(1000);
 	// TODO: implement logout
 };
+
+export const forgotPassword = async (_email: string): Promise<{ success: boolean; message: string }> => {
+	await sleep(1000);
+	// TODO: implement forgotPassword
+	return {
+		success: true,
+		message: "Password reset instructions sent to your email"
+	};
+};
+
+export const resetPassword = async (_token: string, _newPassword: string): Promise<{ success: boolean; message: string }> => {
+	await sleep(1000);
+	// TODO: implement resetPassword
+	return {
+		success: true,
+		message: "Password reset successfully"
+	};
+};
