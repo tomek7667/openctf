@@ -59,7 +59,7 @@ export interface Team {
   id: string;
   name: string;
   description: string;
-  logoUrl?: string | undefined;
+  logoUrl?: string;
   bannerUrl?: string;
   privacy: 'public' | 'invite-only' | 'private';
   captainId: string;
