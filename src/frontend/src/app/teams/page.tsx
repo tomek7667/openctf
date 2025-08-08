@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import {
 	Search,
 	Filter,
@@ -11,6 +11,12 @@ import {
 	Star,
 	Shield,
 	Flag,
+	ChevronLeft,
+	ChevronRight,
+	Crown,
+	Zap,
+	Award,
+	Globe,
 } from "@/components/ui/icons";
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
@@ -19,6 +25,7 @@ import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 import { MainLayout } from "@/components/layout/MainLayout";
 import { TeamCard } from "@/components/teams/TeamCard";
 import { getTeams, TeamWithRanking } from "@/api/teams";
+import { COUNTRIES, getCountryByCode, getPopularCountries } from "@/lib/countries";
 import { clsx } from "clsx";
 
 const rankingTiers = [
@@ -28,25 +35,19 @@ const rankingTiers = [
 	{ min: 51, max: 100, label: "Top 100", color: "text-green-400" },
 ];
 
-const countryOptions = [
-	{ code: "US", name: "United States", flag: "🇺🇸" },
-	{ code: "CN", name: "China", flag: "🇨🇳" },
-	{ code: "DE", name: "Germany", flag: "🇩🇪" },
-	{ code: "JP", name: "Japan", flag: "🇯🇵" },
-	{ code: "KR", name: "South Korea", flag: "🇰🇷" },
-	{ code: "TW", name: "Taiwan", flag: "🇹🇼" },
-	{ code: "PL", name: "Poland", flag: "🇵🇱" },
-	{ code: "FR", name: "France", flag: "🇫🇷" },
-	{ code: "DK", name: "Denmark", flag: "🇩🇰" },
-	{ code: "CA", name: "Canada", flag: "🇨🇦" },
-];
-
 interface TeamFilters {
 	search: string;
 	countries: string[];
 	rankingTier?: { min: number; max: number };
 	minRating?: number;
 	verified?: boolean;
+}
+
+interface PaginationState {
+	currentPage: number;
+	pageSize: number;
+	totalPages: number;
+	total: number;
 }
 
 const CompactStatCard = ({
@@ -72,6 +73,212 @@ const CompactStatCard = ({
 		</div>
 	</div>
 );
+
+// Legendary Top 5 Display Component
+const LegendaryTop5 = ({ teams }: { teams: TeamWithRanking[] }) => {
+	const topTeams = teams.slice(0, 5);
+	
+	if (topTeams.length === 0) return null;
+
+	const champion = topTeams[0];
+	const runners = topTeams.slice(1, 5);
+
+	return (
+		<div className="mb-8">
+			<motion.div 
+				className="text-center mb-6"
+				initial={{ opacity: 0, y: -20 }}
+				animate={{ opacity: 1, y: 0 }}
+				transition={{ duration: 0.6 }}
+			>
+				<div className="flex items-center justify-center gap-3 mb-2">
+					<Crown className="h-6 w-6 text-yellow-400 animate-pulse" />
+					<h2 className="text-2xl font-bold font-mono text-transparent bg-gradient-to-r from-yellow-400 via-orange-400 to-red-400 bg-clip-text">
+						HALL OF LEGENDS
+					</h2>
+					<Crown className="h-6 w-6 text-yellow-400 animate-pulse" />
+				</div>
+				<p className="text-sm text-muted-foreground font-mono">The elite champions of competitive cybersecurity</p>
+			</motion.div>
+
+			{/* Champion Display */}
+			<motion.div
+				className="relative mb-6"
+				initial={{ opacity: 0, scale: 0.8 }}
+				animate={{ opacity: 1, scale: 1 }}
+				transition={{ duration: 0.8, delay: 0.2 }}
+			>
+				<div className="relative bg-gradient-to-br from-yellow-500/20 via-orange-500/10 to-red-500/20 p-6 rounded-lg border-2 border-yellow-400/50 shadow-2xl backdrop-blur-sm">
+					{/* Champion Crown */}
+					<div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
+						<div className="bg-yellow-400 rounded-full p-2 shadow-lg">
+							<Crown className="h-6 w-6 text-black" />
+						</div>
+					</div>
+					
+					{/* Glowing border effect */}
+					<div className="absolute inset-0 rounded-lg bg-gradient-to-r from-yellow-400/20 via-orange-400/20 to-red-400/20 animate-pulse"></div>
+					
+					<div className="relative z-10 text-center">
+						<div className="flex items-center justify-center gap-3 mb-3">
+							<span className="text-4xl">{getCountryByCode(champion.country_code)?.flag || "🌍"}</span>
+							<div>
+								<h3 className="text-2xl font-bold font-mono text-yellow-400">
+									👑 {champion.name.toUpperCase()} 👑
+								</h3>
+								<p className="text-sm text-muted-foreground mb-2">{champion.description}</p>
+							</div>
+						</div>
+						
+						<div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
+							<div className="text-center">
+								<div className="text-xl font-bold font-mono text-yellow-400">{champion.ratingPoints.toLocaleString()}</div>
+								<div className="text-xs text-muted-foreground">RATING</div>
+							</div>
+							<div className="text-center">
+								<div className="text-xl font-bold font-mono text-orange-400">{champion.contestsCount}</div>
+								<div className="text-xs text-muted-foreground">BATTLES</div>
+							</div>
+							<div className="text-center">
+								<div className="text-xl font-bold font-mono text-red-400">{champion.avgPlace.toFixed(1)}</div>
+								<div className="text-xs text-muted-foreground">AVG PLACE</div>
+							</div>
+							<div className="text-center">
+								<div className="text-xl font-bold font-mono text-blue-400">{champion.memberCount}</div>
+								<div className="text-xs text-muted-foreground">WARRIORS</div>
+							</div>
+						</div>
+						
+						{champion.verified_at && (
+							<div className="mt-3 flex items-center justify-center gap-2">
+								<Shield className="h-4 w-4 text-green-400" />
+								<span className="text-xs font-mono text-green-400">VERIFIED LEGEND</span>
+							</div>
+						)}
+					</div>
+				</div>
+			</motion.div>
+
+			{/* Runners-up Display */}
+			<motion.div 
+				className="grid grid-cols-2 md:grid-cols-4 gap-4"
+				initial={{ opacity: 0, y: 20 }}
+				animate={{ opacity: 1, y: 0 }}
+				transition={{ duration: 0.6, delay: 0.5 }}
+			>
+				{runners.map((team, index) => (
+					<motion.div
+						key={team.id}
+						className={clsx(
+							"relative p-4 rounded-lg border backdrop-blur-sm transition-all duration-300 hover:scale-105",
+							team.ranking === 2 
+								? "bg-gradient-to-br from-gray-300/20 to-gray-500/10 border-gray-400/50 shadow-xl"
+								: team.ranking === 3
+								? "bg-gradient-to-br from-amber-600/20 to-yellow-700/10 border-amber-600/50 shadow-lg"
+								: "bg-gradient-to-br from-blue-500/20 to-purple-500/10 border-blue-400/50 shadow-md"
+						)}
+						initial={{ opacity: 0, x: -20 }}
+						animate={{ opacity: 1, x: 0 }}
+						transition={{ duration: 0.4, delay: 0.6 + index * 0.1 }}
+						whileHover={{ y: -2 }}
+					>
+						{/* Ranking badge */}
+						<div className="absolute -top-2 -right-2">
+							<div className={clsx(
+								"w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold font-mono border-2",
+								team.ranking === 2 
+									? "bg-gray-200 text-gray-800 border-gray-400"
+									: team.ranking === 3
+									? "bg-amber-600 text-white border-amber-400"
+									: "bg-blue-500 text-white border-blue-400"
+							)}>
+								#{team.ranking}
+							</div>
+						</div>
+
+						<div className="text-center">
+							<div className="text-2xl mb-2">{getCountryByCode(team.country_code)?.flag || "🌍"}</div>
+							<h4 className="font-bold text-sm font-mono text-foreground mb-1 truncate">
+								{team.name.toUpperCase()}
+							</h4>
+							<p className="text-xs text-muted-foreground mb-3 line-clamp-2">{team.description}</p>
+							
+							<div className="space-y-1">
+								<div className="flex justify-between text-xs">
+									<span className="text-muted-foreground">Rating:</span>
+									<span className="font-bold font-mono text-primary">{team.ratingPoints.toLocaleString()}</span>
+								</div>
+								<div className="flex justify-between text-xs">
+									<span className="text-muted-foreground">Contests:</span>
+									<span className="font-mono">{team.contestsCount}</span>
+								</div>
+							</div>
+							
+							{team.verified_at && (
+								<div className="mt-2 flex items-center justify-center">
+									<Shield className="h-3 w-3 text-green-400" />
+								</div>
+							)}
+						</div>
+					</motion.div>
+				))}
+			</motion.div>
+		</div>
+	);
+};
+
+// Country Filter Component
+const CountryFilter = ({ 
+	selectedCountries, 
+	onToggle, 
+	showAll, 
+	onToggleShowAll 
+}: { 
+	selectedCountries: string[], 
+	onToggle: (code: string) => void,
+	showAll: boolean,
+	onToggleShowAll: () => void
+}) => {
+	const popularCountries = getPopularCountries();
+	const displayCountries = showAll ? COUNTRIES : popularCountries;
+
+	return (
+		<div className="space-y-3">
+			<div className="flex items-center justify-between">
+				<span className="text-xs font-mono text-muted-foreground">Countries ({selectedCountries.length} selected)</span>
+				<Button
+					variant="ghost"
+					size="sm"
+					onClick={onToggleShowAll}
+					className="text-xs font-mono h-6 px-2"
+				>
+					{showAll ? "Popular" : `All ${COUNTRIES.length}`}
+				</Button>
+			</div>
+			
+			<div className="max-h-48 overflow-y-auto">
+				<div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-1">
+					{displayCountries.map((country) => (
+						<button
+							key={country.code}
+							onClick={() => onToggle(country.code)}
+							className={clsx(
+								"p-1 rounded text-xs font-mono border transition-all hover:scale-105",
+								selectedCountries.includes(country.code)
+									? "bg-primary text-primary-foreground border-primary"
+									: "bg-muted/50 border-border/50 hover:bg-muted"
+							)}
+							title={country.name}
+						>
+							<div className="text-sm">{country.flag}</div>
+							<div className="text-xs truncate">{country.code}</div>
+						</button>
+					))}
+				</div>
+			</div>
+		</div>
+	);
+};
 
 const TeamTableRow = ({ team }: { team: TeamWithRanking }) => (
 	<tr className="border-b border-border/50 hover:bg-muted/20 transition-colors">
@@ -101,7 +308,7 @@ const TeamTableRow = ({ team }: { team: TeamWithRanking }) => (
 		</td>
 		<td className="p-3">
 			<div className="flex items-center gap-2">
-				<span className="text-base">{countryOptions.find(c => c.code === team.country_code)?.flag || "🌍"}</span>
+				<span className="text-base">{getCountryByCode(team.country_code)?.flag || "🌍"}</span>
 				<span className="font-mono text-xs">{team.country_code}</span>
 			</div>
 		</td>
@@ -158,75 +365,151 @@ const TeamTableRow = ({ team }: { team: TeamWithRanking }) => (
 	</tr>
 );
 
+const Pagination = ({ 
+	pagination, 
+	onPageChange,
+	isLoading 
+}: { 
+	pagination: PaginationState, 
+	onPageChange: (page: number) => void,
+	isLoading: boolean 
+}) => {
+	const { currentPage, totalPages } = pagination;
+	
+	const generatePageNumbers = () => {
+		const pages = [];
+		const maxVisible = 7;
+		
+		if (totalPages <= maxVisible) {
+			for (let i = 1; i <= totalPages; i++) {
+				pages.push(i);
+			}
+		} else {
+			if (currentPage <= 4) {
+				for (let i = 1; i <= 5; i++) pages.push(i);
+				pages.push("...");
+				pages.push(totalPages);
+			} else if (currentPage >= totalPages - 3) {
+				pages.push(1);
+				pages.push("...");
+				for (let i = totalPages - 4; i <= totalPages; i++) pages.push(i);
+			} else {
+				pages.push(1);
+				pages.push("...");
+				for (let i = currentPage - 1; i <= currentPage + 1; i++) pages.push(i);
+				pages.push("...");
+				pages.push(totalPages);
+			}
+		}
+		
+		return pages;
+	};
+
+	return (
+		<div className="flex items-center justify-between py-4">
+			<div className="text-xs text-muted-foreground font-mono">
+				Page {currentPage} of {totalPages} ({pagination.total} teams)
+			</div>
+			
+			<div className="flex items-center gap-1">
+				<Button
+					variant="outline"
+					size="sm"
+					onClick={() => onPageChange(currentPage - 1)}
+					disabled={currentPage === 1 || isLoading}
+					className="font-mono text-xs h-8 px-2"
+				>
+					<ChevronLeft className="h-3 w-3" />
+				</Button>
+				
+				{generatePageNumbers().map((page, index) => (
+					<React.Fragment key={index}>
+						{page === "..." ? (
+							<span className="px-2 text-xs text-muted-foreground">...</span>
+						) : (
+							<Button
+								variant={currentPage === page ? "default" : "ghost"}
+								size="sm"
+								onClick={() => onPageChange(page as number)}
+								disabled={isLoading}
+								className="font-mono text-xs h-8 w-8 p-0"
+							>
+								{page}
+							</Button>
+						)}
+					</React.Fragment>
+				))}
+				
+				<Button
+					variant="outline"
+					size="sm"
+					onClick={() => onPageChange(currentPage + 1)}
+					disabled={currentPage === totalPages || isLoading}
+					className="font-mono text-xs h-8 px-2"
+				>
+					<ChevronRight className="h-3 w-3" />
+				</Button>
+			</div>
+		</div>
+	);
+};
+
 export default function TeamsPage() {
 	const [teams, setTeams] = useState<TeamWithRanking[]>([]);
-	const [filteredTeams, setFilteredTeams] = useState<TeamWithRanking[]>([]);
 	const [isLoading, setIsLoading] = useState(true);
+	const [showCountryFilter, setShowCountryFilter] = useState(false);
+	const [showAllCountries, setShowAllCountries] = useState(false);
 	const [filters, setFilters] = useState<TeamFilters>({
 		search: "",
 		countries: [],
 	});
+	const [pagination, setPagination] = useState<PaginationState>({
+		currentPage: 1,
+		pageSize: 20,
+		totalPages: 1,
+		total: 0,
+	});
 
-	// Fetch teams on mount
+	// Fetch teams with pagination
+	const fetchTeams = async (page: number = 1, resetFilters = false) => {
+		try {
+			setIsLoading(true);
+			const offset = (page - 1) * pagination.pageSize;
+			
+			const params = {
+				offset,
+				limit: pagination.pageSize,
+				...(filters.countries.length > 0 && !resetFilters ? { countryCodes: filters.countries } : {}),
+			};
+			
+			const response = await getTeams(params);
+			setTeams(response.items);
+			setPagination({
+				currentPage: page,
+				pageSize: pagination.pageSize,
+				totalPages: response.pagination.totalPages,
+				total: response.pagination.total,
+			});
+		} catch (error) {
+			console.error("Error fetching teams:", error);
+		} finally {
+			setIsLoading(false);
+		}
+	};
+
+	// Initial load
 	useEffect(() => {
-		const fetchTeams = async () => {
-			try {
-				setIsLoading(true);
-				const response = await getTeams({ limit: 50 });
-				setTeams(response.items);
-				setFilteredTeams(response.items);
-			} catch (error) {
-				console.error("Error fetching teams:", error);
-			} finally {
-				setIsLoading(false);
-			}
-		};
-
-		fetchTeams();
+		fetchTeams(1);
 	}, []);
 
-	// Apply filters whenever filters or teams change
+	// Handle filter changes
 	useEffect(() => {
-		let filtered = [...teams];
-
-		// Search filter
-		if (filters.search) {
-			const searchLower = filters.search.toLowerCase();
-			filtered = filtered.filter(
-				(team) =>
-					team.name.toLowerCase().includes(searchLower) ||
-					team.description?.toLowerCase().includes(searchLower)
-			);
+		if (pagination.currentPage === 1) {
+			fetchTeams(1);
+		} else {
+			fetchTeams(1); // Reset to first page when filters change
 		}
-
-		// Country filter
-		if (filters.countries.length > 0) {
-			filtered = filtered.filter((team) =>
-				filters.countries.includes(team.country_code)
-			);
-		}
-
-		// Ranking tier filter
-		if (filters.rankingTier) {
-			filtered = filtered.filter(
-				(team) =>
-					team.ranking >= filters.rankingTier!.min &&
-					team.ranking <= filters.rankingTier!.max
-			);
-		}
-
-		// Minimum rating filter
-		if (filters.minRating) {
-			filtered = filtered.filter((team) => team.ratingPoints >= filters.minRating!);
-		}
-
-		// Verified filter
-		if (filters.verified) {
-			filtered = filtered.filter((team) => team.verified_at);
-		}
-
-		setFilteredTeams(filtered);
-	}, [teams, filters]);
+	}, [filters.countries]);
 
 	const updateFilter = (key: keyof TeamFilters, value: any) => {
 		setFilters((prev) => ({ ...prev, [key]: value }));
@@ -246,14 +529,26 @@ export default function TeamsPage() {
 			search: "",
 			countries: [],
 		});
+		fetchTeams(1, true);
 	};
 
-	// Group teams by ranking tiers for display
-	const topTeams = filteredTeams.filter((t) => t.ranking <= 5);
+	const handlePageChange = (page: number) => {
+		fetchTeams(page);
+	};
+
+	// Apply client-side search filter
+	const filteredTeams = teams.filter((team) => {
+		if (!filters.search) return true;
+		const searchLower = filters.search.toLowerCase();
+		return (
+			team.name.toLowerCase().includes(searchLower) ||
+			team.description?.toLowerCase().includes(searchLower)
+		);
+	});
 
 	// Stats
 	const stats = {
-		total: teams.length,
+		total: pagination.total,
 		verified: teams.filter((t) => t.verified_at).length,
 		active: teams.filter((t) => {
 			const lastActive = new Date(t.lastActive);
@@ -315,161 +610,123 @@ export default function TeamsPage() {
 				{/* Compact Filters */}
 				<section className="py-3 px-4 bg-muted/20">
 					<div className="max-w-7xl mx-auto">
-						<div className="flex flex-col md:flex-row gap-3">
-							{/* Search */}
-							<div className="flex-1 relative">
-								<Search className="absolute left-2 top-1/2 transform -translate-y-1/2 h-3 w-3 text-muted-foreground" />
-								<Input
-									placeholder="Search teams..."
-									value={filters.search}
-									onChange={(e) => updateFilter("search", e.target.value)}
-									className="pl-7 py-1 text-sm font-mono h-8"
-								/>
-							</div>
+						<div className="flex flex-col gap-3">
+							{/* Top row - Search and quick filters */}
+							<div className="flex flex-col md:flex-row gap-3">
+								{/* Search */}
+								<div className="flex-1 relative">
+									<Search className="absolute left-2 top-1/2 transform -translate-y-1/2 h-3 w-3 text-muted-foreground" />
+									<Input
+										placeholder="Search teams..."
+										value={filters.search}
+										onChange={(e) => updateFilter("search", e.target.value)}
+										className="pl-7 py-1 text-sm font-mono h-8"
+									/>
+								</div>
 
-							{/* Quick Filters */}
-							<div className="flex flex-wrap gap-1">
-								{rankingTiers.slice(0, 2).map((tier) => (
+								{/* Quick Filters */}
+								<div className="flex flex-wrap gap-1">
+									{rankingTiers.slice(0, 2).map((tier) => (
+										<Badge
+											key={`${tier.min}-${tier.max}`}
+											variant={
+												filters.rankingTier?.min === tier.min ? "default" : "outline"
+											}
+											className="cursor-pointer text-xs font-mono h-8 px-2"
+											onClick={() =>
+												updateFilter("rankingTier", { min: tier.min, max: tier.max })
+											}
+										>
+											{tier.label}
+										</Badge>
+									))}
 									<Badge
-										key={`${tier.min}-${tier.max}`}
-										variant={
-											filters.rankingTier?.min === tier.min ? "default" : "outline"
-										}
+										variant={filters.verified ? "default" : "outline"}
+										className="cursor-pointer text-xs font-mono h-8 px-2"
+										onClick={() => updateFilter("verified", !filters.verified)}
+									>
+										<Shield className="h-3 w-3 mr-1" />
+										Verified
+									</Badge>
+									<Badge
+										variant={filters.minRating ? "default" : "outline"}
 										className="cursor-pointer text-xs font-mono h-8 px-2"
 										onClick={() =>
-											updateFilter("rankingTier", { min: tier.min, max: tier.max })
+											updateFilter("minRating", filters.minRating ? undefined : 2000)
 										}
 									>
-										{tier.label}
+										<Star className="h-3 w-3 mr-1" />
+										2K+
 									</Badge>
-								))}
-								<Badge
-									variant={filters.verified ? "default" : "outline"}
-									className="cursor-pointer text-xs font-mono h-8 px-2"
-									onClick={() => updateFilter("verified", !filters.verified)}
-								>
-									<Shield className="h-3 w-3 mr-1" />
-									Verified
-								</Badge>
-								<Badge
-									variant={filters.minRating ? "default" : "outline"}
-									className="cursor-pointer text-xs font-mono h-8 px-2"
-									onClick={() =>
-										updateFilter("minRating", filters.minRating ? undefined : 2000)
-									}
-								>
-									<Star className="h-3 w-3 mr-1" />
-									2K+
-								</Badge>
-							</div>
+								</div>
 
-							{/* Country Filter */}
-							<div className="flex flex-wrap gap-1">
-								{countryOptions.slice(0, 5).map((country) => (
-									<Badge
-										key={country.code}
-										variant={
-											filters.countries.includes(country.code) ? "default" : "outline"
-										}
-										className="cursor-pointer text-xs font-mono h-8 px-2"
-										onClick={() => toggleCountryFilter(country.code)}
-									>
-										{country.flag}
-									</Badge>
-								))}
-							</div>
-
-							{hasActiveFilters && (
+								{/* Country Filter Toggle */}
 								<Button
-									variant="outline"
+									variant={showCountryFilter ? "default" : "outline"}
 									size="sm"
-									onClick={clearFilters}
+									onClick={() => setShowCountryFilter(!showCountryFilter)}
 									className="font-mono text-xs h-8 px-2"
 								>
-									Clear
+									<Globe className="h-3 w-3 mr-1" />
+									Countries {filters.countries.length > 0 && `(${filters.countries.length})`}
 								</Button>
+
+								{hasActiveFilters && (
+									<Button
+										variant="outline"
+										size="sm"
+										onClick={clearFilters}
+										className="font-mono text-xs h-8 px-2"
+									>
+										Clear
+									</Button>
+								)}
+							</div>
+
+							{/* Country Filter Panel */}
+							<AnimatePresence>
+								{showCountryFilter && (
+									<motion.div
+										initial={{ opacity: 0, height: 0 }}
+										animate={{ opacity: 1, height: "auto" }}
+										exit={{ opacity: 0, height: 0 }}
+										transition={{ duration: 0.3 }}
+										className="overflow-hidden"
+									>
+										<div className="p-3 bg-card/50 rounded border border-border/50">
+											<CountryFilter
+												selectedCountries={filters.countries}
+												onToggle={toggleCountryFilter}
+												showAll={showAllCountries}
+												onToggleShowAll={() => setShowAllCountries(!showAllCountries)}
+											/>
+										</div>
+									</motion.div>
+								)}
+							</AnimatePresence>
+
+							{hasActiveFilters && (
+								<div className="text-xs text-muted-foreground font-mono">
+									{filteredTeams.length} of {teams.length} teams shown
+								</div>
 							)}
 						</div>
-
-						{hasActiveFilters && (
-							<div className="mt-2 text-xs text-muted-foreground font-mono">
-								{filteredTeams.length} of {teams.length} teams
-							</div>
-						)}
 					</div>
 				</section>
 
 				{/* Content */}
 				<section className="py-4 px-4">
 					<div className="max-w-7xl mx-auto">
-						{isLoading ? (
+						{isLoading && teams.length === 0 ? (
 							<div className="flex justify-center py-8">
 								<LoadingSpinner size="md" />
 							</div>
 						) : (
 							<>
-								{/* Top Teams - Compact Cards */}
-								{topTeams.length > 0 && (
-									<div className="mb-6">
-										<div className="flex items-center gap-2 mb-3">
-											<Trophy className="h-4 w-4 text-yellow-400" />
-											<h2 className="text-sm font-bold font-mono text-yellow-400">
-												TOP 5 TEAMS
-											</h2>
-										</div>
-										<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
-											{topTeams.map((team, index) => (
-												<div
-													key={team.id}
-													className="p-3 bg-card/50 backdrop-blur-sm rounded-none hacker-border hover:border-primary/60 transition-colors"
-												>
-													<div className="flex items-center gap-2 mb-2">
-														<div
-															className={clsx(
-																"w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold font-mono",
-																team.ranking <= 3
-																	? "bg-yellow-400/20 text-yellow-400"
-																	: "bg-orange-400/20 text-orange-400"
-															)}
-														>
-															{team.ranking}
-														</div>
-														<span className="text-lg">
-															{countryOptions.find(c => c.code === team.country_code)?.flag || "🌍"}
-														</span>
-														{team.verified_at && (
-															<Shield className="h-3 w-3 text-green-400" />
-														)}
-													</div>
-													<div className="font-bold text-sm font-mono text-foreground mb-1">
-														{team.name.toUpperCase()}
-													</div>
-													<div className="text-xs text-muted-foreground mb-2 truncate">
-														{team.description}
-													</div>
-													<div className="space-y-1">
-														<div className="flex justify-between text-xs">
-															<span className="text-muted-foreground">Rating:</span>
-															<span className="font-bold font-mono text-primary">
-																{team.ratingPoints.toLocaleString()}
-															</span>
-														</div>
-														<div className="flex justify-between text-xs">
-															<span className="text-muted-foreground">Contests:</span>
-															<span className="font-mono">{team.contestsCount}</span>
-														</div>
-														<div className="flex justify-between text-xs">
-															<span className="text-muted-foreground">Avg:</span>
-															<span className="font-mono">{team.avgPlace.toFixed(1)}</span>
-														</div>
-													</div>
-												</div>
-											))}
-										</div>
-									</div>
-								)}
+								{/* Legendary Top 5 */}
+								<LegendaryTop5 teams={filteredTeams} />
 
-								{/* All Teams Table - More Compact */}
+								{/* All Teams Table */}
 								<div className="bg-card/30 rounded-none hacker-border overflow-hidden">
 									<div className="p-3 bg-muted/50 border-b border-border">
 										<div className="flex items-center gap-2">
@@ -493,24 +750,25 @@ export default function TeamsPage() {
 												</tr>
 											</thead>
 											<tbody>
-												{filteredTeams.slice(0, 50).map((team) => (
+												{filteredTeams.map((team) => (
 													<TeamTableRow key={team.id} team={team} />
 												))}
 											</tbody>
 										</table>
 									</div>
 
-									{filteredTeams.length > 50 && (
-										<div className="p-3 bg-muted/20 border-t border-border">
-											<p className="text-xs text-muted-foreground font-mono text-center">
-												Showing first 50 of {filteredTeams.length} teams
-											</p>
-										</div>
-									)}
+									{/* Pagination */}
+									<div className="p-3 bg-muted/20 border-t border-border">
+										<Pagination
+											pagination={pagination}
+											onPageChange={handlePageChange}
+											isLoading={isLoading}
+										/>
+									</div>
 								</div>
 
 								{/* No Results */}
-								{filteredTeams.length === 0 && (
+								{filteredTeams.length === 0 && !isLoading && (
 									<div className="text-center py-8">
 										<div className="text-muted-foreground font-mono text-sm">
 											No teams found. <button
