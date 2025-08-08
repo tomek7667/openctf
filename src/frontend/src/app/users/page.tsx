@@ -754,12 +754,12 @@ export default function UsersPage() {
 										variant={filters.permissionLevel === "administrator" ? "default" : "outline"}
 										className="cursor-pointer text-xs font-mono h-8 px-2"
 										onClick={() =>
-											updateFilter("permissionLevel", 
+											updateFilter("permissionLevel",
 												filters.permissionLevel === "administrator" ? undefined : "administrator"
 											)
 										}
 									>
-										<Crown className="h-3 w-3 mr-1" />
+										<Star className="h-3 w-3 mr-1" />
 										Admins
 									</Badge>
 									<Badge
