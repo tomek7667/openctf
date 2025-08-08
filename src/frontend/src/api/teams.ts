@@ -712,7 +712,7 @@ export async function inviteToTeam(
     invitedByUserId,
     invitedByUsername: 'CurrentUser',
     status: 'pending',
-    message,
+    ...(message && { message }),
     createdAt: new Date().toISOString(),
     expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString() // 30 days
   };
