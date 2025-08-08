@@ -527,7 +527,7 @@ export async function createTeam(teamData: Partial<Team>, userId: string): Promi
     }],
     memberCount: 1,
     maxMembers: teamData.maxMembers || 5,
-    country: teamData.country,
+    ...(teamData.country && { country: teamData.country }),
     founded: new Date().toISOString(),
     lastActive: new Date().toISOString(),
     status: 'active',
