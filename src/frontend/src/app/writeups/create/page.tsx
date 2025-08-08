@@ -270,7 +270,7 @@ export default function CreateWriteupPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!title.trim() || !description.trim() || !content.trim()) {
+    if (!title.trim() || !description.trim() || !content.trim() || !isAuthenticated) {
       return;
     }
 
@@ -287,7 +287,7 @@ export default function CreateWriteupPage() {
         challengeName: challengeName || undefined,
       };
 
-      const response = await createWriteup(writeupData);
+      const response = await createWriteup(writeupData, user?.id?.toString());
       if (response.success && response.data) {
         router.push(`/writeups/${response.data.id}`);
       }
