@@ -639,6 +639,13 @@ export async function deleteTeam(id: string, userId: string): Promise<ApiRespons
   }
 
   const team = mockTeams[teamIndex];
+  if (!team) {
+    return {
+      success: false,
+      error: 'Team not found'
+    };
+  }
+
   if (team.captainId !== userId) {
     return {
       success: false,
