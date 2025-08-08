@@ -102,7 +102,7 @@ const availableSpecializations = [
 
 export default function EditProfilePage() {
   const router = useRouter();
-  const { user, isAuthenticated } = useAuthStore();
+  const { isAuthenticated } = useAuthStore();
   
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
