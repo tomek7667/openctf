@@ -276,7 +276,7 @@ function GlowingHeader() {
           transition={{ delay: 0.3, duration: 0.6 }}
           className="text-lg text-gray-300 font-mono max-w-3xl mx-auto"
         >
-          Join the world's most skilled cybersecurity teams. Compete in CTFs, share knowledge, and advance your career.
+          Join the world&apos;s most skilled cybersecurity teams. Compete in CTFs, share knowledge, and advance your career.
         </motion.p>
       </div>
     </div>
