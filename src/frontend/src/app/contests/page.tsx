@@ -671,11 +671,10 @@ export default function ContestsPage() {
                         className="w-full bg-gray-800/50 border border-green-500/30 rounded-lg px-3 py-2 font-mono text-white text-sm"
                       >
                         <option value="">All Countries</option>
-                        {getPopularCountries().map(code => {
-                          const country = getCountryByCode(code);
+                        {getPopularCountries().map(country => {
                           return (
-                            <option key={code} value={code}>
-                              {getCountryFlag(code)} {country?.name}
+                            <option key={country.code} value={country.code}>
+                              {country.flag} {country.name}
                             </option>
                           );
                         })}
