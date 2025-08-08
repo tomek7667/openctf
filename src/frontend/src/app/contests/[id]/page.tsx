@@ -226,13 +226,15 @@ export default function ContestDetailsPage() {
 			try {
 				setIsLoading(true);
 				// Get contest details
-				const contestData = await getContest(contestId);
-				setContest(contestData);
+				const contestResponse = await getContest(contestId);
+				if (contestResponse.success && contestResponse.data) {
+					setContest(contestResponse.data);
 
-				// Get places for finished contests
-				if (contestData.status === "finished") {
-					const placesData = getMockPlaces(contestId);
-					setPlaces(placesData);
+					// Get places for finished contests
+					if (contestResponse.data.status === "finished") {
+						const placesData = getMockPlaces(contestId);
+						setPlaces(placesData);
+					}
 				}
 			} catch (error) {
 				console.error("Error fetching contest details:", error);
