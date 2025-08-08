@@ -7,29 +7,13 @@ export interface PlatformStats {
 	pastEvents: number;
 }
 
-export const statsApi = {
-	/**
-	 * Get platform statistics
-	 */
-	getPlatformStats: async (): Promise<PlatformStats> => {
-		// TODO: add backend logic here
-		await sleep(1000); // Simulate network delay
-
-		// Simulate potential API failure
-		// const random = Math.random()
-		// if (random < 0.05) {
-		//   throw new Error('Network timeout while fetching statistics. Please check your connection.')
-		// } else if (random < 0.1) {
-		//   throw new Error('Statistics service temporarily unavailable. Please try again in a moment.')
-		// }
-
-		return {
-			rankedTeams: 142,
-			teamMembers: 1247,
-			activeContests: 23,
-			pastEvents: 15,
-		};
-	},
+export const getPlatformStats = async (): Promise<PlatformStats> => {
+	await sleep(1000);
+	// TODO: implement getPlatformStats
+	return {
+		rankedTeams: 2847,
+		teamMembers: 18934,
+		activeContests: 12,
+		pastEvents: 156,
+	};
 };
-
-export default statsApi;

@@ -19,7 +19,7 @@ import { Badge } from "@/components/ui/Badge";
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 import { MainLayout } from "@/components/layout/MainLayout";
 import { ContestCard } from "@/components/contests/ContestCard";
-import { contestsApi } from "@/api/services/contests";
+import { getContests } from "@/api/contests";
 import { Contest, ContestStatus, ContestStatusType } from "@/types/api";
 import { clsx } from "clsx";
 
@@ -126,16 +126,16 @@ const ContestTableRow = ({ contest }: { contest: Contest }) => (
 				<span
 					className={clsx(
 						"font-bold",
-						contest.assignedWeightPoints >= 80
+						(contest.assignedWeightPoints || contest.assigned_weight_points) >= 80
 							? "text-red-400"
-							: contest.assignedWeightPoints >= 50
+							: (contest.assignedWeightPoints || contest.assigned_weight_points) >= 50
 								? "text-yellow-400"
-								: contest.assignedWeightPoints >= 20
+								: (contest.assignedWeightPoints || contest.assigned_weight_points) >= 20
 									? "text-blue-400"
 									: "text-green-400"
 					)}
 				>
-					{contest.assignedWeightPoints}
+					{contest.assignedWeightPoints || contest.assigned_weight_points}
 				</span>
 			</div>
 		</td>
@@ -220,7 +220,7 @@ export default function ContestsPage() {
 		const fetchContests = async () => {
 			try {
 				setIsLoading(true);
-				const response = await contestsApi.getContests({ limit: 50 });
+				const response = await getContests({ limit: 50 });
 				setContests(response.items);
 				setFilteredContests(response.items);
 			} catch (error) {
@@ -265,9 +265,10 @@ export default function ContestsPage() {
 		// Weight filter
 		if (filters.minWeight !== undefined && filters.maxWeight !== undefined) {
 			filtered = filtered.filter(
-				(contest) =>
-					contest.assignedWeightPoints >= filters.minWeight! &&
-					contest.assignedWeightPoints <= filters.maxWeight!
+				(contest) => {
+					const weight = contest.assignedWeightPoints || contest.assigned_weight_points;
+					return weight >= filters.minWeight! && weight <= filters.maxWeight!;
+				}
 			);
 		}
 

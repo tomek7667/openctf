@@ -25,7 +25,7 @@ import {
 import { Badge } from "@/components/ui/Badge";
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 import { MainLayout } from "@/components/layout/MainLayout";
-import { contestsApi } from "@/api/services/contests";
+import { getContest } from "@/api/contests";
 import { Contest, Place } from "@/types/api";
 import { clsx } from "clsx";
 
@@ -81,27 +81,23 @@ const getMockPlaces = (contestId: number): Place[] => {
 		return [
 			{
 				id: 1,
-				teamName: "perfect blue",
+				team_name: "perfect blue",
 				place: 1,
-				ctftimeTeamId: 12345,
-				contestPoints: 5000,
-				openctfPoints: 85,
-				associatedContestId: contestId,
-				assignedWeightPoints: 85,
-				createdAt: "2024-05-20T06:30:00Z",
-				updatedAt: "2024-05-20T06:30:00Z",
+				ctftime_team_id: 12345,
+				contest_points: 5000,
+				openctf_points: 85,
+				associated_contest_id: contestId,
+				assigned_weight_points: 85,
 			},
 			{
 				id: 2,
-				teamName: "team rocket",
+				team_name: "team rocket",
 				place: 2,
-				ctftimeTeamId: 67890,
-				contestPoints: 4750,
-				openctfPoints: 80,
-				associatedContestId: contestId,
-				assignedWeightPoints: 80,
-				createdAt: "2024-05-20T06:30:00Z",
-				updatedAt: "2024-05-20T06:30:00Z",
+				ctftime_team_id: 67890,
+				contest_points: 4750,
+				openctf_points: 80,
+				associated_contest_id: contestId,
+				assigned_weight_points: 80,
 			},
 			{
 				id: 3,
@@ -139,7 +135,7 @@ const getMockPlaces = (contestId: number): Place[] => {
 				createdAt: "2024-05-20T06:30:00Z",
 				updatedAt: "2024-05-20T06:30:00Z",
 			},
-		];
+		] as Place[];
 	}
 	return [];
 };
@@ -197,20 +193,20 @@ const PlaceRow = ({ place, index }: { place: Place; index: number }) => {
 			</td>
 			<td className="p-4">
 				<div className="font-mono font-bold text-foreground">
-					{place.teamName}
+					{place.team_name}
 				</div>
-				{place.ctftimeTeamId && (
+				{place.ctftime_team_id && (
 					<div className="text-xs text-muted-foreground">
-						CTFtime ID: {place.ctftimeTeamId}
+						CTFtime ID: {place.ctftime_team_id}
 					</div>
 				)}
 			</td>
 			<td className="p-4 font-mono text-right">
-				{place.contestPoints?.toFixed(0) || 0}
+				{place.contest_points?.toFixed(0) || 0}
 			</td>
 			<td className="p-4 font-mono text-right">
 				<span className="text-primary font-bold">
-					{place.openctfPoints?.toFixed(1) || 0}
+					{place.openctf_points?.toFixed(1) || 0}
 				</span>
 			</td>
 		</motion.tr>
@@ -230,7 +226,7 @@ export default function ContestDetailsPage() {
 			try {
 				setIsLoading(true);
 				// Get contest details
-				const contestData = await contestsApi.getContest(contestId);
+				const contestData = await getContest(contestId);
 				setContest(contestData);
 
 				// Get places for finished contests
@@ -353,7 +349,7 @@ export default function ContestDetailsPage() {
 										<div
 											className={clsx(
 												"px-3 py-1 rounded border text-sm font-mono font-bold flex items-center gap-2",
-												getStatusColor(contest.status)
+												getStatusColor(contest.status || "unknown")
 											)}
 										>
 											{contest.status === "ongoing" && (
@@ -365,9 +361,9 @@ export default function ContestDetailsPage() {
 											{contest.status === "finished" && (
 												<Trophy className="h-4 w-4" />
 											)}
-											{contest.status.toUpperCase()}
+											{(contest.status || "unknown").toUpperCase()}
 										</div>
-										{contest.ctftimeId && (
+										{contest.ctftime_id && (
 											<Badge variant="outline" className="font-mono">
 												<Flag className="h-3 w-3 mr-1" />
 												CTFtime
@@ -463,10 +459,10 @@ export default function ContestDetailsPage() {
 											<div
 												className={clsx(
 													"font-mono font-bold",
-													getWeightColor(contest.assignedWeightPoints)
+													getWeightColor(contest.assignedWeightPoints || contest.assigned_weight_points)
 												)}
 											>
-												{contest.assignedWeightPoints} pts
+												{contest.assignedWeightPoints || contest.assigned_weight_points} pts
 											</div>
 										</div>
 

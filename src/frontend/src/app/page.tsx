@@ -21,7 +21,7 @@ import {
 	BarChart,
 } from "@/components/ui/icons";
 import { TeamLeaderboard } from "@/components/leaderboard/TeamLeaderboard";
-import { statsApi, PlatformStats } from "@/api/stats";
+import { getPlatformStats, PlatformStats } from "@/api/stats";
 
 interface FeatureCardProps {
 	icon: React.ComponentType<{ className?: undefined | string }>;
@@ -138,7 +138,7 @@ export default function HomePage() {
 				console.log("⏳ Setting loading true");
 				setIsLoading(true);
 				console.log("🌐 Calling statsApi.getPlatformStats()");
-				const data = await statsApi.getPlatformStats();
+				const data = await getPlatformStats();
 				if (!mounted) {
 					console.log("❌ Component unmounted after API call");
 					return;

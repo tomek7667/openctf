@@ -24,7 +24,7 @@ interface ContestCardProps {
 	index?: undefined | number;
 }
 
-const getStatusColor = (status: ContestStatus) => {
+const getStatusColor = (status?: ContestStatus) => {
 	switch (status) {
 		case "upcoming":
 			return "bg-blue-500/20 text-blue-400 border-blue-400/50";
@@ -39,7 +39,7 @@ const getStatusColor = (status: ContestStatus) => {
 	}
 };
 
-const getStatusIcon = (status: ContestStatus) => {
+const getStatusIcon = (status?: ContestStatus) => {
 	switch (status) {
 		case "upcoming":
 			return <Calendar className="h-4 w-4" />;
@@ -59,7 +59,7 @@ const formatContestDate = (dateString: string) => {
 	return format(date, "MMM dd, yyyy HH:mm");
 };
 
-const getTimeInfo = (start: string, end: string, status: ContestStatus) => {
+const getTimeInfo = (start: string, end: string, status?: ContestStatus) => {
 	const startDate = parseISO(start);
 	const endDate = parseISO(end);
 
@@ -154,7 +154,7 @@ export function ContestCard({ contest, index = 0 }: ContestCardProps) {
 							)}
 						>
 							{getStatusIcon(contest.status)}
-							{contest.status.toUpperCase()}
+							{(contest.status || "unknown").toUpperCase()}
 						</div>
 					</div>
 				</CardHeader>
@@ -201,10 +201,10 @@ export function ContestCard({ contest, index = 0 }: ContestCardProps) {
 							<div
 								className={clsx(
 									"font-mono font-bold",
-									getWeightColor(contest.assignedWeightPoints)
+									getWeightColor(contest.assignedWeightPoints || contest.assigned_weight_points)
 								)}
 							>
-								{contest.assignedWeightPoints} pts
+								{contest.assignedWeightPoints || contest.assigned_weight_points} pts
 							</div>
 						</div>
 
@@ -230,7 +230,7 @@ export function ContestCard({ contest, index = 0 }: ContestCardProps) {
 								<Users className="h-4 w-4" />
 								<span>{contest.participantCount || 0}</span>
 							</div>
-							{contest.ctftimeId && (
+							{contest.ctftime_id && (
 								<div className="flex items-center gap-1">
 									<Flag className="h-4 w-4" />
 									<span className="text-xs">CTFtime</span>

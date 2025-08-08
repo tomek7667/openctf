@@ -11,23 +11,10 @@ export interface LeaderboardTeam {
 	members: number;
 }
 
-export const leaderboardApi = {
-	/**
-	 * Get top teams leaderboard
-	 */
-	getTopTeams: async (limit: number = 10): Promise<LeaderboardTeam[]> => {
-		// TODO: add backend logic here
-		await sleep(1000); // Simulate network delay
-
-		// Simulate potential API failure
-		// const random = Math.random()
-		// if (random < 0.05) {
-		//   throw new Error('Leaderboard database is currently being updated. Please try again shortly.')
-		// } else if (random < 0.1) {
-		//   throw new Error('Failed to load team rankings. The leaderboard service is experiencing high load.')
-		// }
-
-		const mockTeamData: LeaderboardTeam[] = [
+export const getTopTeams = async (limit: number = 10): Promise<LeaderboardTeam[]> => {
+	await sleep(1000);
+	// TODO: implement getTopTeams
+	return [
 			{
 				place: 1,
 				name: "r3kapig",
@@ -178,10 +165,55 @@ export const leaderboardApi = {
 				isVerified: false,
 				members: 5,
 			},
-		];
-
-		return mockTeamData.slice(0, limit);
-	},
+			{
+				place: 16,
+				name: "RPISEC",
+				country: "US",
+				totalPoints: 587.456,
+				contestsWon: 2,
+				monthlyPoints: 48.3,
+				isVerified: true,
+				members: 6,
+			},
+			{
+				place: 17,
+				name: "Balsn",
+				country: "TW",
+				totalPoints: 564.789,
+				contestsWon: 1,
+				monthlyPoints: 42.7,
+				isVerified: true,
+				members: 4,
+			},
+			{
+				place: 18,
+				name: "FAUST",
+				country: "DE",
+				totalPoints: 541.234,
+				contestsWon: 0,
+				monthlyPoints: 38.9,
+				isVerified: false,
+				members: 7,
+			},
+			{
+				place: 19,
+				name: "Maple Bacon",
+				country: "CA",
+				totalPoints: 518.567,
+				contestsWon: 1,
+				monthlyPoints: 35.2,
+				isVerified: true,
+				members: 5,
+			},
+			{
+				place: 20,
+				name: "Samurai",
+				country: "JP",
+				totalPoints: 495.890,
+				contestsWon: 0,
+				monthlyPoints: 31.8,
+				isVerified: true,
+				members: 8,
+			},
+	].slice(0, limit);
 };
-
-export default leaderboardApi;

@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Trophy, Users, Flag, Star } from "@/components/ui/icons";
-import { leaderboardApi, LeaderboardTeam } from "@/api/leaderboard";
+import { getTopTeams, LeaderboardTeam } from "@/api/leaderboard";
 
 interface TeamData {
 	place: number;
@@ -236,7 +236,7 @@ export function TeamLeaderboard() {
 		const fetchTeams = async () => {
 			try {
 				setIsLoading(true);
-				const data = await leaderboardApi.getTopTeams(10);
+				const data = await getTopTeams(10);
 				setTeams(data);
 			} catch (error) {
 				console.error("Error fetching leaderboard:", error);
