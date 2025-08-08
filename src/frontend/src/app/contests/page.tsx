@@ -241,14 +241,14 @@ function ContestCard({ contest, isRegistered, onRegister, onUnregister, loading 
           </div>
 
           {/* Prizes */}
-          {contest.prizes.length > 0 && contest.prizes[0].value && contest.prizes[0].value > 0 && (
+          {contest.prizes.length > 0 && contest.prizes[0]?.value && contest.prizes[0].value > 0 && (
             <div className="mb-4">
               <div className="flex items-center space-x-2 mb-2">
                 <Trophy className="h-4 w-4 text-yellow-400" />
                 <span className="text-sm font-mono text-yellow-400">PRIZES</span>
               </div>
               <div className="text-lg font-bold font-mono text-green-400">
-                ${contest.prizes[0].value?.toLocaleString()} {contest.prizes[0].currency}
+                ${contest.prizes[0]?.value?.toLocaleString()} {contest.prizes[0]?.currency}
               </div>
               {contest.prizes.length > 1 && (
                 <div className="text-xs font-mono text-gray-400">
