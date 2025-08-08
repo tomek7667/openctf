@@ -15,7 +15,6 @@ import {
   Trophy,
   Clock,
   Users,
-  Target,
   Star,
   Shield,
   Eye,
