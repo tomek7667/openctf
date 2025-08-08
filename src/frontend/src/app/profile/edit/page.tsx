@@ -81,7 +81,7 @@ const connectExternalAccount = async (provider: string): Promise<{ success: bool
   return { success: true, data: {} };
 };
 
-const disconnectExternalAccount = async (provider: string): Promise<{ success: boolean; error?: string }> => {
+const disconnectExternalAccount = async (_provider: string): Promise<{ success: boolean; error?: string }> => {
   await new Promise(resolve => setTimeout(resolve, 1000));
   return { success: true };
 };
