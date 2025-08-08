@@ -397,11 +397,9 @@ export default function ContestsPage() {
   const [userRegistrations, setUserRegistrations] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState<string | null>(null);
-  const [filters, setFilters] = useState<ContestFilters>({});
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [showFilters, setShowFilters] = useState(false);
-  const [activeView, setActiveView] = useState<'all' | 'upcoming' | 'live' | 'calendar'>('all');
   
   // Filter state
   const [searchQuery, setSearchQuery] = useState("");
