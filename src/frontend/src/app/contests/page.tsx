@@ -296,7 +296,7 @@ function ContestCard({ contest, isRegistered, onRegister, onUnregister, loading 
                   disabled={loading || hasStarted}
                   className="w-full font-mono border-red-500/50 text-red-400 text-xs"
                 >
-                  <UserMinus className="h-3 w-3 mr-1" />
+                  <Users className="h-3 w-3 mr-1" />
                   UNREGISTER
                 </Button>
               </div>
