@@ -13,7 +13,6 @@ import {
 	ChevronLeft,
 	ChevronRight,
 	Globe,
-	Crown,
 	Mail,
 } from "@/components/ui/icons";
 import { Input } from "@/components/ui/Input";
