@@ -900,9 +900,9 @@ export async function createWriteup(writeupData: Partial<Writeup>, userId?: stri
     readTime: Math.ceil((writeupData.content || '').length / 200), // Rough estimate
     featured: false,
     verified: false,
-    contestId: writeupData.contestId,
-    contestName: writeupData.contestName,
-    challengeName: writeupData.challengeName
+    ...(writeupData.contestId && { contestId: writeupData.contestId }),
+    ...(writeupData.contestName && { contestName: writeupData.contestName }),
+    ...(writeupData.challengeName && { challengeName: writeupData.challengeName })
   };
 
   mockWriteups.unshift(newWriteup);
