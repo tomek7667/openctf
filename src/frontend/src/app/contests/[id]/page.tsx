@@ -75,8 +75,8 @@ const renderStars = (rating?: undefined | number) => {
 };
 
 // Mock places data - in real app this would come from API
-const getMockPlaces = (contestId: number): Place[] => {
-	if (contestId === 3 || contestId === 4) {
+const getMockPlaces = (contestId: string): Place[] => {
+	if (contestId === "contest-003" || contestId === "contest-004") {
 		// Only finished contests have places
 		return [
 			{
