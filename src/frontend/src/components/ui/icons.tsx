@@ -726,6 +726,20 @@ export const Icons = {
 	Home,
 	Globe,
 	MapPin,
+
+	// Content & Writing
+	BookOpen,
+	Edit,
+	Save,
+	Terminal,
+	Code,
+	Zap,
+	Cpu,
+	Award,
+	PlusCircle,
+	ThumbsUp,
+	Send,
+	HelpCircle,
 } as const;
 
 export default Icons;
