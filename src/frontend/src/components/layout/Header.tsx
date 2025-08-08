@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Menu, X, Trophy, Shield, Users, User, MessageSquare, LogIn } from "@/components/ui/icons";
+import { Menu, X, Trophy, Shield, Users, User, BookOpen, LogIn } from "@/components/ui/icons";
 import { useAuthStore } from "@/store/authStore";
 import { AuthModal } from "@/components/auth/AuthModal";
 import { UserMenu } from "@/components/auth/UserMenu";
