@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
 	Search,
@@ -13,9 +13,6 @@ import {
 	Flag,
 	ChevronLeft,
 	ChevronRight,
-	Crown,
-	Zap,
-	Award,
 	Globe,
 } from "@/components/ui/icons";
 import { Input } from "@/components/ui/Input";
@@ -23,7 +20,6 @@ import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 import { MainLayout } from "@/components/layout/MainLayout";
-import { TeamCard } from "@/components/teams/TeamCard";
 import { getTeams, TeamWithRanking } from "@/api/teams";
 import { COUNTRIES, getCountryByCode, getPopularCountries } from "@/lib/countries";
 import { clsx } from "clsx";
@@ -92,11 +88,11 @@ const LegendaryTop5 = ({ teams }: { teams: TeamWithRanking[] }) => {
 				transition={{ duration: 0.6 }}
 			>
 				<div className="flex items-center justify-center gap-3 mb-2">
-					<Crown className="h-6 w-6 text-yellow-400 animate-pulse" />
+					<Trophy className="h-6 w-6 text-yellow-400 animate-pulse" />
 					<h2 className="text-2xl font-bold font-mono text-transparent bg-gradient-to-r from-yellow-400 via-orange-400 to-red-400 bg-clip-text">
 						HALL OF LEGENDS
 					</h2>
-					<Crown className="h-6 w-6 text-yellow-400 animate-pulse" />
+					<Trophy className="h-6 w-6 text-yellow-400 animate-pulse" />
 				</div>
 				<p className="text-sm text-muted-foreground font-mono">The elite champions of competitive cybersecurity</p>
 			</motion.div>
@@ -112,7 +108,7 @@ const LegendaryTop5 = ({ teams }: { teams: TeamWithRanking[] }) => {
 					{/* Champion Crown */}
 					<div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
 						<div className="bg-yellow-400 rounded-full p-2 shadow-lg">
-							<Crown className="h-6 w-6 text-black" />
+							<Trophy className="h-6 w-6 text-black" />
 						</div>
 					</div>
 					
@@ -471,7 +467,7 @@ export default function TeamsPage() {
 	});
 
 	// Fetch teams with pagination
-	const fetchTeams = async (page: number = 1, resetFilters = false) => {
+	const fetchTeams = useCallback(async (page: number = 1, resetFilters = false) => {
 		try {
 			setIsLoading(true);
 			const offset = (page - 1) * pagination.pageSize;
@@ -495,21 +491,12 @@ export default function TeamsPage() {
 		} finally {
 			setIsLoading(false);
 		}
-	};
+	}, [pagination.pageSize, filters.countries]);
 
 	// Initial load
 	useEffect(() => {
 		fetchTeams(1);
-	}, []);
-
-	// Handle filter changes
-	useEffect(() => {
-		if (pagination.currentPage === 1) {
-			fetchTeams(1);
-		} else {
-			fetchTeams(1); // Reset to first page when filters change
-		}
-	}, [filters.countries]);
+	}, [fetchTeams]);
 
 	const updateFilter = (key: keyof TeamFilters, value: any) => {
 		setFilters((prev) => ({ ...prev, [key]: value }));
@@ -568,7 +555,7 @@ export default function TeamsPage() {
 	return (
 		<MainLayout>
 			<div className="min-h-screen">
-				{/* Compact Header */}
+				{/* Header */}
 				<section className="py-4 px-4 border-b border-border/50">
 					<div className="max-w-7xl mx-auto">
 						<div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -582,7 +569,7 @@ export default function TeamsPage() {
 								</span>
 							</div>
 							
-							{/* Compact Stats */}
+							{/* Stats */}
 							<div className="flex flex-wrap gap-2">
 								<CompactStatCard
 									icon={Shield}
@@ -607,11 +594,10 @@ export default function TeamsPage() {
 					</div>
 				</section>
 
-				{/* Compact Filters */}
+				{/* Filters */}
 				<section className="py-3 px-4 bg-muted/20">
 					<div className="max-w-7xl mx-auto">
 						<div className="flex flex-col gap-3">
-							{/* Top row - Search and quick filters */}
 							<div className="flex flex-col md:flex-row gap-3">
 								{/* Search */}
 								<div className="flex-1 relative">
@@ -647,16 +633,6 @@ export default function TeamsPage() {
 									>
 										<Shield className="h-3 w-3 mr-1" />
 										Verified
-									</Badge>
-									<Badge
-										variant={filters.minRating ? "default" : "outline"}
-										className="cursor-pointer text-xs font-mono h-8 px-2"
-										onClick={() =>
-											updateFilter("minRating", filters.minRating ? undefined : 2000)
-										}
-									>
-										<Star className="h-3 w-3 mr-1" />
-										2K+
 									</Badge>
 								</div>
 
