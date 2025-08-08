@@ -25,8 +25,8 @@ import {
 import { Badge } from "@/components/ui/Badge";
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 import { MainLayout } from "@/components/layout/MainLayout";
-import { getContest } from "@/api/contests";
-import { Contest, Place } from "@/types/api";
+import { getContest, Contest } from "@/api/contests";
+import { Place } from "@/types/api";
 import { clsx } from "clsx";
 
 const getStatusColor = (status: string) => {
