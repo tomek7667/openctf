@@ -416,13 +416,13 @@ export default function ContestsPage() {
     try {
       // Load main contests
       const currentFilters: ContestFilters = {
-        search: searchQuery || undefined,
-        format: selectedFormat || undefined,
-        difficulty: selectedDifficulty || undefined,
-        status: selectedStatus || undefined,
-        country: selectedCountry || undefined,
-        freeEntry: onlyFree || undefined,
-        hasPrizes: onlyWithPrizes || undefined,
+        ...(searchQuery && { search: searchQuery }),
+        ...(selectedFormat && { format: selectedFormat }),
+        ...(selectedDifficulty && { difficulty: selectedDifficulty }),
+        ...(selectedStatus && { status: selectedStatus }),
+        ...(selectedCountry && { country: selectedCountry }),
+        ...(onlyFree && { freeEntry: onlyFree }),
+        ...(onlyWithPrizes && { hasPrizes: onlyWithPrizes }),
         sortBy: selectedSort as any,
       };
 
