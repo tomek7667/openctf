@@ -527,7 +527,7 @@ const Pagination = ({
 							<span className="px-2 text-xs text-muted-foreground">...</span>
 						) : (
 							<Button
-								variant={currentPage === page ? "default" : "ghost"}
+								variant={currentPage === page ? "primary" : "outline"}
 								size="sm"
 								onClick={() => onPageChange(page as number)}
 								disabled={isLoading}
