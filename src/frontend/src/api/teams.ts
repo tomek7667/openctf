@@ -547,7 +547,7 @@ export const getTeams = async (params?: ListTeamsDto): Promise<PaginatedResponse
 			description: "Multi-national remote collaboration specialists",
 			country_code: "XX",
 			ctftime_id: 85273,
-			verified_at: undefined,
+
 			ranking: 38,
 			ratingPoints: 1391,
 			contestsCount: 65,
@@ -603,7 +603,7 @@ export const getTeams = async (params?: ListTeamsDto): Promise<PaginatedResponse
 			description: "International bug bounty hunters collective",
 			country_code: "XX",
 			ctftime_id: 67459,
-			verified_at: undefined,
+
 			ranking: 42,
 			ratingPoints: 1301,
 			contestsCount: 72,
@@ -857,7 +857,7 @@ export const getTeams = async (params?: ListTeamsDto): Promise<PaginatedResponse
 			description: "White hat collective from various countries",
 			country_code: "XX",
 			ctftime_id: 64371,
-			verified_at: undefined,
+
 			ranking: 60,
 			ratingPoints: 1029,
 			contestsCount: 65,
@@ -1099,7 +1099,7 @@ export const getTeams = async (params?: ListTeamsDto): Promise<PaginatedResponse
 			description: "Traveling cybersecurity experts",
 			country_code: "XX",
 			ctftime_id: 59837,
-			verified_at: undefined,
+
 			ranking: 77,
 			ratingPoints: 887,
 			contestsCount: 58,
@@ -1197,7 +1197,7 @@ export const getTeams = async (params?: ListTeamsDto): Promise<PaginatedResponse
 			description: "Meditative approach to cybersecurity",
 			country_code: "XX",
 			ctftime_id: 72893,
-			verified_at: undefined,
+
 			ranking: 84,
 			ratingPoints: 851,
 			contestsCount: 35,
@@ -1281,7 +1281,7 @@ export const getTeams = async (params?: ListTeamsDto): Promise<PaginatedResponse
 			description: "Visionary team with global membership",
 			country_code: "XX",
 			ctftime_id: 56742,
-			verified_at: undefined,
+
 			ranking: 90,
 			ratingPoints: 831,
 			contestsCount: 34,
@@ -1295,7 +1295,7 @@ export const getTeams = async (params?: ListTeamsDto): Promise<PaginatedResponse
 			description: "Adventure-seeking cybersecurity enthusiasts",
 			country_code: "XX",
 			ctftime_id: 69834,
-			verified_at: undefined,
+
 			ranking: 91,
 			ratingPoints: 829,
 			contestsCount: 27,
@@ -1309,7 +1309,7 @@ export const getTeams = async (params?: ListTeamsDto): Promise<PaginatedResponse
 			description: "Rising newcomers learning fast",
 			country_code: "XX",
 			ctftime_id: 82947,
-			verified_at: undefined,
+
 			ranking: 92,
 			ratingPoints: 826,
 			contestsCount: 25,
@@ -1337,7 +1337,7 @@ export const getTeams = async (params?: ListTeamsDto): Promise<PaginatedResponse
 			description: "Learning-focused international collective",
 			country_code: "XX",
 			ctftime_id: 94573,
-			verified_at: undefined,
+
 			ranking: 94,
 			ratingPoints: 822,
 			contestsCount: 23,
@@ -1351,7 +1351,7 @@ export const getTeams = async (params?: ListTeamsDto): Promise<PaginatedResponse
 			description: "Entry-level team with high aspirations",
 			country_code: "XX",
 			ctftime_id: 67428,
-			verified_at: undefined,
+
 			ranking: 95,
 			ratingPoints: 820,
 			contestsCount: 21,
@@ -1365,7 +1365,7 @@ export const getTeams = async (params?: ListTeamsDto): Promise<PaginatedResponse
 			description: "Growing team with potential",
 			country_code: "XX",
 			ctftime_id: 88256,
-			verified_at: undefined,
+
 			ranking: 96,
 			ratingPoints: 818,
 			contestsCount: 19,
@@ -1379,7 +1379,7 @@ export const getTeams = async (params?: ListTeamsDto): Promise<PaginatedResponse
 			description: "Young team ready to grow",
 			country_code: "XX",
 			ctftime_id: 73695,
-			verified_at: undefined,
+
 			ranking: 97,
 			ratingPoints: 816,
 			contestsCount: 18,
@@ -1393,7 +1393,7 @@ export const getTeams = async (params?: ListTeamsDto): Promise<PaginatedResponse
 			description: "Fresh team just getting started",
 			country_code: "XX",
 			ctftime_id: 91847,
-			verified_at: undefined,
+
 			ranking: 98,
 			ratingPoints: 815,
 			contestsCount: 16,
@@ -1407,7 +1407,7 @@ export const getTeams = async (params?: ListTeamsDto): Promise<PaginatedResponse
 			description: "Friendship-based cybersecurity team",
 			country_code: "XX",
 			ctftime_id: 65827,
-			verified_at: undefined,
+
 			ranking: 99,
 			ratingPoints: 814,
 			contestsCount: 15,
@@ -1421,7 +1421,7 @@ export const getTeams = async (params?: ListTeamsDto): Promise<PaginatedResponse
 			description: "Brand new team with big dreams",
 			country_code: "XX",
 			ctftime_id: 79453,
-			verified_at: undefined,
+
 			ranking: 100,
 			ratingPoints: 813,
 			contestsCount: 14,
