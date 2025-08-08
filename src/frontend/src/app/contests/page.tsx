@@ -382,7 +382,7 @@ function GlowingHeader() {
           transition={{ delay: 0.3, duration: 0.6 }}
           className="text-lg text-gray-300 font-mono max-w-3xl mx-auto"
         >
-          Compete in the world's most challenging cybersecurity competitions. Test your skills against elite hackers.
+          Compete in the world&apos;s most challenging cybersecurity competitions. Test your skills against elite hackers.
         </motion.p>
       </div>
     </div>
