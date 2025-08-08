@@ -217,7 +217,7 @@ function MarkdownGuide() {
         <div>
           <div className="text-green-400 mb-1">Quotes:</div>
           <div className="bg-gray-900/50 p-2 rounded">
-            > Important note
+            &gt; Important note
           </div>
         </div>
       </div>
