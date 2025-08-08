@@ -33,7 +33,7 @@ func (h *Handler) TeamsList(ctx *gin.Context) {
 		return
 	}
 
-	teams, err := h.ServiceClient.ListTeams(ctx, &dto)
+	paginatedResponse, err := h.ServiceClient.ListTeams(ctx, &dto)
 	if err != nil {
 		ctx.JSON(500, gin.H{
 			"success": false,
@@ -44,6 +44,7 @@ func (h *Handler) TeamsList(ctx *gin.Context) {
 	}
 
 	rest.FailOrReturn(ctx, gin.H{
-		"teams": teams,
+		"items":      paginatedResponse.Items,
+		"pagination": paginatedResponse.Pagination,
 	}, nil)
 }
