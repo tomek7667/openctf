@@ -7,6 +7,7 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 	variant?: undefined | "primary" | "secondary" | "outline" | "destructive";
 	size?: undefined | "sm" | "md" | "lg";
 	children: React.ReactNode;
+	asChild?: boolean;
 }
 
 export function Button({
