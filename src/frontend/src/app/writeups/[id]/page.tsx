@@ -46,6 +46,7 @@ import {
   Writeup, 
   WriteupComment 
 } from "@/api/writeups";
+import { useAuthStore } from "@/store/authStore";
 
 // Import highlight.js themes
 import "highlight.js/styles/tokyo-night-dark.css";
