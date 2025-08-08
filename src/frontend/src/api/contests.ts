@@ -765,11 +765,14 @@ export async function unregisterFromContest(
   // Update contest participant count
   const contestIndex = mockContests.findIndex(c => c.id === contestId);
   if (contestIndex !== -1) {
-    mockContests[contestIndex].participantCount--;
-    if (registration.participantType === 'team') {
-      mockContests[contestIndex].teamCount--;
-    } else {
-      mockContests[contestIndex].individualCount--;
+    const targetContest = mockContests[contestIndex];
+    if (targetContest && registration) {
+      targetContest.participantCount--;
+      if (registration.participantType === 'team') {
+        targetContest.teamCount--;
+      } else {
+        targetContest.individualCount--;
+      }
     }
   }
 
