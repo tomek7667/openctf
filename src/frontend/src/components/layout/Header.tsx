@@ -28,10 +28,10 @@ const navigation = [
 		icon: Trophy,
 	},
 	{
-		id: "forum",
-		label: "Forum",
-		href: "/forum",
-		icon: MessageSquare,
+		id: "writeups",
+		label: "Writeups",
+		href: "/writeups",
+		icon: BookOpen,
 	},
 	{
 		id: "weight-pool",
