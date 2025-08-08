@@ -825,7 +825,7 @@ export async function addWriteupComment(
     writeupId,
     content,
     createdAt: new Date().toISOString(),
-    parentId,
+    ...(parentId && { parentId }),
     level: parentId ? 1 : 0,
     likes: 0
   };
