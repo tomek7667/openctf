@@ -119,44 +119,32 @@ const StatCard = ({
 );
 
 export default function HomePage() {
-	console.log("🏠 HomePage render");
 
 	const [stats, setStats] = useState<PlatformStats | null>(null);
 	const [isLoading, setIsLoading] = useState(true);
 
 	useEffect(() => {
-		console.log("📊 useEffect triggered");
 		let mounted = true;
 
 		const fetchStats = async () => {
-			console.log("🔄 fetchStats started");
 			try {
 				if (!mounted) {
-					console.log("❌ Component unmounted, aborting");
 					return;
 				}
-				console.log("⏳ Setting loading true");
 				setIsLoading(true);
-				console.log("🌐 Calling statsApi.getPlatformStats()");
 				const data = await getPlatformStats();
 				if (!mounted) {
-					console.log("❌ Component unmounted after API call");
 					return;
 				}
-				console.log("✅ Stats received:", data);
 				setStats(data);
 			} catch (error) {
 				if (!mounted) {
-					console.log("❌ Component unmounted in catch");
 					return;
 				}
-				console.error("💥 Error fetching platform stats:", error);
 			} finally {
 				if (mounted) {
-					console.log("🏁 Setting loading false");
 					setIsLoading(false);
 				} else {
-					console.log("❌ Component unmounted in finally");
 				}
 			}
 		};
@@ -164,7 +152,6 @@ export default function HomePage() {
 		fetchStats();
 
 		return () => {
-			console.log("🧹 useEffect cleanup");
 			mounted = false;
 		};
 	}, []);
