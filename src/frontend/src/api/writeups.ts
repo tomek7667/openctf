@@ -871,16 +871,23 @@ export async function rateWriteup(writeupId: string, rating: number): Promise<Ap
   };
 }
 
-export async function createWriteup(writeupData: Partial<Writeup>): Promise<ApiResponse<Writeup>> {
+export async function createWriteup(writeupData: Partial<Writeup>, userId?: string): Promise<ApiResponse<Writeup>> {
   await new Promise(resolve => setTimeout(resolve, 500));
+
+  if (!userId) {
+    return {
+      success: false,
+      error: 'Authentication required'
+    };
+  }
 
   const newWriteup: Writeup = {
     id: `wu-${Date.now()}`,
     title: writeupData.title || '',
     description: writeupData.description || '',
     content: writeupData.content || '',
-    authorId: 'current-user',
-    authorName: 'CurrentUser',
+    authorId: userId,
+    authorName: 'CurrentUser', // In real app, this would come from user data
     category: writeupData.category || 'misc',
     difficulty: writeupData.difficulty || 'Easy',
     tags: writeupData.tags || [],
@@ -903,5 +910,133 @@ export async function createWriteup(writeupData: Partial<Writeup>): Promise<ApiR
   return {
     success: true,
     data: newWriteup
+  };
+}
+
+export async function updateWriteup(
+  id: string,
+  writeupData: Partial<Writeup>,
+  userId?: string
+): Promise<ApiResponse<Writeup>> {
+  await new Promise(resolve => setTimeout(resolve, 500));
+
+  if (!userId) {
+    return {
+      success: false,
+      error: 'Authentication required'
+    };
+  }
+
+  const writeupIndex = mockWriteups.findIndex(w => w.id === id);
+  if (writeupIndex === -1) {
+    return {
+      success: false,
+      error: 'Writeup not found'
+    };
+  }
+
+  const writeup = mockWriteups[writeupIndex];
+  if (writeup.authorId !== userId) {
+    return {
+      success: false,
+      error: 'Permission denied'
+    };
+  }
+
+  const updatedWriteup: Writeup = {
+    ...writeup,
+    ...writeupData,
+    id: writeup.id, // Ensure ID cannot be changed
+    authorId: writeup.authorId, // Ensure author cannot be changed
+    createdAt: writeup.createdAt, // Ensure creation date cannot be changed
+    updatedAt: new Date().toISOString(),
+    readTime: Math.ceil((writeupData.content || writeup.content).length / 200),
+  };
+
+  mockWriteups[writeupIndex] = updatedWriteup;
+
+  return {
+    success: true,
+    data: updatedWriteup
+  };
+}
+
+export async function deleteWriteup(id: string, userId?: string): Promise<ApiResponse<void>> {
+  await new Promise(resolve => setTimeout(resolve, 300));
+
+  if (!userId) {
+    return {
+      success: false,
+      error: 'Authentication required'
+    };
+  }
+
+  const writeupIndex = mockWriteups.findIndex(w => w.id === id);
+  if (writeupIndex === -1) {
+    return {
+      success: false,
+      error: 'Writeup not found'
+    };
+  }
+
+  const writeup = mockWriteups[writeupIndex];
+  if (writeup.authorId !== userId) {
+    return {
+      success: false,
+      error: 'Permission denied'
+    };
+  }
+
+  mockWriteups.splice(writeupIndex, 1);
+
+  // Also remove associated comments and ratings
+  const commentIndicesToRemove = mockComments
+    .map((comment, index) => comment.writeupId === id ? index : -1)
+    .filter(index => index !== -1)
+    .reverse(); // Remove from end to avoid index shifting
+
+  commentIndicesToRemove.forEach(index => {
+    mockComments.splice(index, 1);
+  });
+
+  const ratingIndicesToRemove = mockRatings
+    .map((rating, index) => rating.writeupId === id ? index : -1)
+    .filter(index => index !== -1)
+    .reverse();
+
+  ratingIndicesToRemove.forEach(index => {
+    mockRatings.splice(index, 1);
+  });
+
+  return {
+    success: true,
+    data: undefined
+  };
+}
+
+export async function getUserWriteups(userId: string, page = 1, limit = 12): Promise<ApiResponse<WriteupListResponse>> {
+  await new Promise(resolve => setTimeout(resolve, 200));
+
+  const userWriteups = mockWriteups.filter(writeup => writeup.authorId === userId);
+
+  // Sort by creation date (newest first)
+  userWriteups.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+
+  // Pagination
+  const total = userWriteups.length;
+  const totalPages = Math.ceil(total / limit);
+  const startIndex = (page - 1) * limit;
+  const endIndex = startIndex + limit;
+  const paginatedWriteups = userWriteups.slice(startIndex, endIndex);
+
+  return {
+    success: true,
+    data: {
+      writeups: paginatedWriteups,
+      total,
+      page,
+      limit,
+      totalPages
+    }
   };
 }
