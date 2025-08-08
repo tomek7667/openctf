@@ -488,7 +488,7 @@ export default function TeamsPage() {
 										<Badge
 											key={`${tier.min}-${tier.max}`}
 											variant={
-												filters.rankingTier?.min === tier.min ? "default" : "outline"
+												filters.rankingTier?.min === tier.min ? "primary" : "outline"
 											}
 											className="cursor-pointer text-xs font-mono h-8 px-2"
 											onClick={() =>
