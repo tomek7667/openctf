@@ -34,7 +34,9 @@ import {
   Zap,
   Cpu,
   Lock,
-  Search
+  Search,
+  Edit,
+  MoreHorizontal
 } from "@/components/ui/icons";
 import { 
   getWriteup, 
