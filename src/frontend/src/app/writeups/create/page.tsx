@@ -243,6 +243,13 @@ export default function CreateWriteupPage() {
   const [contestName, setContestName] = useState("");
   const [challengeName, setChallengeName] = useState("");
 
+  // Redirect if not authenticated
+  React.useEffect(() => {
+    if (!isAuthenticated) {
+      router.push('/writeups');
+    }
+  }, [isAuthenticated, router]);
+
   const addTag = () => {
     if (newTag.trim() && !tags.includes(newTag.trim())) {
       setTags([...tags, newTag.trim()]);
