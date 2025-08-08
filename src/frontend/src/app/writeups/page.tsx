@@ -8,13 +8,13 @@ import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 import { Badge } from "@/components/ui/Badge";
-import { 
-  Search, 
-  Filter, 
-  Star, 
-  Eye, 
-  Heart, 
-  Clock, 
+import {
+  Search,
+  Filter,
+  Star,
+  Eye,
+  Heart,
+  Clock,
   Calendar,
   BookOpen,
   PlusCircle,
@@ -27,7 +27,8 @@ import {
   Zap,
   Cpu,
   Lock,
-  Users
+  Users,
+  Trophy
 } from "@/components/ui/icons";
 import { getWriteups, Writeup, WriteupFilters } from "@/api/writeups";
 
