@@ -122,6 +122,54 @@ function HackerMarkdown({ content }: { content: string }) {
               &gt;&gt; {children}
             </motion.h3>
           ),
+          img: ({ src, alt, title }) => (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="relative group my-6"
+            >
+              <div className="absolute inset-0 bg-gradient-to-r from-green-500/20 to-blue-500/20 rounded-lg blur-xl group-hover:blur-2xl transition-all duration-500 opacity-0 group-hover:opacity-100" />
+              <div className="relative bg-gray-900/90 backdrop-blur border border-green-500/30 rounded-lg overflow-hidden p-4">
+                <img
+                  src={src}
+                  alt={alt}
+                  title={title}
+                  className="w-full h-auto rounded-lg border border-green-500/20"
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement;
+                    target.style.display = 'none';
+                    const fallback = document.createElement('div');
+                    fallback.className = 'w-full h-32 bg-gray-800 border border-red-500/30 rounded-lg flex items-center justify-center text-red-400 font-mono text-sm';
+                    fallback.innerHTML = `<span>❌ Image failed to load: ${alt || 'Unknown'}</span>`;
+                    target.parentNode?.insertBefore(fallback, target);
+                  }}
+                />
+                {alt && (
+                  <div className="mt-2 text-center text-sm text-gray-400 font-mono">
+                    &gt; {alt}
+                  </div>
+                )}
+                {title && (
+                  <div className="mt-1 text-center text-xs text-gray-500 font-mono">
+                    {title}
+                  </div>
+                )}
+              </div>
+            </motion.div>
+          ),
+          a: ({ href, children }) => (
+            <a
+              href={href}
+              target={href?.startsWith('http') ? '_blank' : undefined}
+              rel={href?.startsWith('http') ? 'noopener noreferrer' : undefined}
+              className="text-blue-400 hover:text-blue-300 underline decoration-blue-400/50 hover:decoration-blue-300 transition-colors font-mono"
+            >
+              {children}
+              {href?.startsWith('http') && (
+                <span className="inline-block ml-1 text-xs">↗</span>
+              )}
+            </a>
+          ),
           code: ({ inline, className, children, ...props }) => {
             if (inline) {
               return (
