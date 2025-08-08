@@ -21,10 +21,10 @@ import {
   X,
   Shield,
   Link as LinkIcon,
-  Check,
+  CheckCircle as Check,
   Terminal,
-  Bell,
-  BellOff
+  Eye as Bell,
+  EyeOff as BellOff
 } from "@/components/ui/icons";
 import { useAuthStore } from "@/store/authStore";
 
