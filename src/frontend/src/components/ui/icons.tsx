@@ -531,6 +531,108 @@ export const MapPin = createIcon(
 	</>
 );
 
+// New icons for writeups
+export const BookOpen = createIcon(
+	"BookOpen",
+	<>
+		<path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
+		<path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
+	</>
+);
+
+export const Edit = createIcon(
+	"Edit",
+	<>
+		<path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+		<path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4Z" />
+	</>
+);
+
+export const Save = createIcon(
+	"Save",
+	<>
+		<path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
+		<polyline points="17,21 17,13 7,13 7,21" />
+		<polyline points="7,3 7,8 15,8" />
+	</>
+);
+
+export const Terminal = createIcon(
+	"Terminal",
+	<>
+		<polyline points="4,17 10,11 4,5" />
+		<line x1="12" x2="20" y1="19" y2="19" />
+	</>
+);
+
+export const Code = createIcon(
+	"Code",
+	<>
+		<polyline points="16,18 22,12 16,6" />
+		<polyline points="8,6 2,12 8,18" />
+	</>
+);
+
+export const Zap = createIcon(
+	"Zap",
+	<polygon points="13,2 3,14 12,14 11,22 21,10 12,10" />
+);
+
+export const Cpu = createIcon(
+	"Cpu",
+	<>
+		<rect x="4" y="4" width="16" height="16" rx="2" />
+		<rect x="9" y="9" width="6" height="6" />
+		<path d="M9 1v3" />
+		<path d="M15 1v3" />
+		<path d="M9 20v3" />
+		<path d="M15 20v3" />
+		<path d="M20 9h3" />
+		<path d="M20 14h3" />
+		<path d="M1 9h3" />
+		<path d="M1 14h3" />
+	</>
+);
+
+export const Award = createIcon(
+	"Award",
+	<>
+		<circle cx="12" cy="8" r="6" />
+		<path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11" />
+	</>
+);
+
+export const PlusCircle = createIcon(
+	"PlusCircle",
+	<>
+		<circle cx="12" cy="12" r="10" />
+		<path d="M8 12h8" />
+		<path d="M12 8v8" />
+	</>
+);
+
+export const ThumbsUp = createIcon(
+	"ThumbsUp",
+	<>
+		<path d="M7 10v12" />
+		<path d="M15 5.88 14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h2.76a2 2 0 0 0 1.79-1.11L12 2h0a3.13 3.13 0 0 1 3 3.88Z" />
+	</>
+);
+
+export const Send = createIcon(
+	"Send",
+	<path d="M9.912 11.025 21 2l-8.975 12.088a1 1 0 0 1-.755.427H8a1 1 0 0 1-1-1V9.73a1 1 0 0 1 .438-.83Z" />
+);
+
+export const HelpCircle = createIcon(
+	"HelpCircle",
+	<>
+		<circle cx="12" cy="12" r="10" />
+		<path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+		<path d="M12 17h.01" />
+	</>
+);
+
 // Create compound icons for specific use cases
 export const LoadingSpinner = createIcon(
 	"LoadingSpinner",
