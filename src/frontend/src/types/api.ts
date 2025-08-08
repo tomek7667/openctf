@@ -94,6 +94,7 @@ export type ContestStatusType = ContestStatus.UPCOMING | ContestStatus.ONGOING |
 export interface ApiResponse<T = unknown> {
 	success: boolean;
 	message?: string;
+	error?: string;
 	data?: T;
 }
 
