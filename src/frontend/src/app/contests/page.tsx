@@ -15,23 +15,10 @@ import {
   Trophy,
   Clock,
   Users,
-  Star,
-  Shield,
-  Eye,
-  UserPlus,
-  UserMinus,
   ExternalLink,
-  MapPin,
-  DollarSign,
-  Award,
-  TrendingUp,
   CheckCircle,
   AlertCircle,
-  Play,
-  Pause,
-  RotateCcw,
-  Globe,
-  Zap
+  Globe
 } from "@/components/ui/icons";
 import { 
   getContests, 
