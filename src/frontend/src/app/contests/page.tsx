@@ -307,7 +307,7 @@ function ContestCard({ contest, isRegistered, onRegister, onUnregister, loading 
                 disabled={loading}
                 className="w-full font-mono bg-green-500 hover:bg-green-600 text-black font-bold"
               >
-                <UserPlus className="h-4 w-4 mr-2" />
+                <Users className="h-4 w-4 mr-2" />
                 {loading ? 'REGISTERING...' : 'REGISTER'}
               </Button>
             ) : (
