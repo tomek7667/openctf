@@ -987,6 +987,13 @@ export async function deleteWriteup(id: string, userId?: string): Promise<ApiRes
   }
 
   const writeup = mockWriteups[writeupIndex];
+  if (!writeup) {
+    return {
+      success: false,
+      error: 'Writeup not found'
+    };
+  }
+
   if (writeup.authorId !== userId) {
     return {
       success: false,
