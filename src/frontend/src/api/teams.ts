@@ -1433,7 +1433,6 @@ export const getTeams = async (params?: ListTeamsDto): Promise<PaginatedResponse
 
 	const offset = params?.offset || 0;
 	const limit = params?.limit || 30;
-	const total = mockTeams.length;
 
 	// Filter by country codes if provided
 	let filteredTeams = mockTeams;
