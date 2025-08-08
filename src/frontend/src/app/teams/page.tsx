@@ -56,11 +56,11 @@ const StatCard = ({
 	description,
 	isLoading = false,
 }: {
-	icon: React.ComponentType<{ className?: string }>;
+	icon: React.ComponentType<{ className?: undefined | string }>;
 	label: string;
 	value: string | number;
-	description?: string;
-	isLoading?: boolean;
+	description?: undefined | string;
+	isLoading?: undefined | boolean;
 }) => (
 	<motion.div
 		initial={{ opacity: 0, y: 20 }}
