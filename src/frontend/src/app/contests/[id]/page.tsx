@@ -215,7 +215,7 @@ const PlaceRow = ({ place, index }: { place: Place; index: number }) => {
 
 export default function ContestDetailsPage() {
 	const params = useParams();
-	const contestId = parseInt(params.id as string);
+	const contestId = params.id as string;
 
 	const [contest, setContest] = useState<Contest | null>(null);
 	const [places, setPlaces] = useState<Place[]>([]);
