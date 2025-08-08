@@ -767,6 +767,9 @@ export const Icons = {
 	ThumbsUp,
 	Send,
 	HelpCircle,
+	Trash2,
+	Github,
+	Linkedin,
 } as const;
 
 export default Icons;
