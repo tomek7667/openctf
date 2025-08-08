@@ -589,6 +589,13 @@ export async function updateTeam(
   }
 
   const team = mockTeams[teamIndex];
+  if (!team) {
+    return {
+      success: false,
+      error: 'Team not found'
+    };
+  }
+
   if (team.captainId !== userId) {
     return {
       success: false,
