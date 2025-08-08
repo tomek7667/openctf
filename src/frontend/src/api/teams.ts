@@ -511,8 +511,8 @@ export async function createTeam(teamData: Partial<Team>, userId: string): Promi
     id: `team-${Date.now()}`,
     name: teamData.name || '',
     description: teamData.description || '',
-    logoUrl: teamData.logoUrl,
-    bannerUrl: teamData.bannerUrl,
+    logoUrl: teamData.logoUrl || undefined,
+    bannerUrl: teamData.bannerUrl || undefined,
     privacy: teamData.privacy || 'public',
     captainId: userId,
     members: [{
