@@ -507,6 +507,15 @@ export default function WriteupDetailPage() {
                 </div>
 
                 <div className="flex items-center space-x-4">
+                  {isAuthenticated && user?.id?.toString() === writeup.authorId && (
+                    <Button
+                      onClick={() => router.push(`/writeups/${writeup.id}/edit`)}
+                      className="font-mono bg-blue-500 hover:bg-blue-600 text-white"
+                    >
+                      <Edit className="h-4 w-4 mr-2" />
+                      EDIT
+                    </Button>
+                  )}
                   <Button variant="outline" className="font-mono border-gray-500 text-gray-400">
                     <Share className="h-4 w-4 mr-2" />
                     SHARE
