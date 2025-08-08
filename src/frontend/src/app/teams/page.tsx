@@ -49,54 +49,37 @@ interface TeamFilters {
 	verified?: boolean;
 }
 
-const StatCard = ({
+const CompactStatCard = ({
 	icon: Icon,
 	label,
 	value,
-	description,
 	isLoading = false,
 }: {
 	icon: React.ComponentType<{ className?: undefined | string }>;
 	label: string;
 	value: string | number;
-	description?: undefined | string;
-	isLoading?: undefined | boolean;
+	isLoading?: boolean;
 }) => (
-	<motion.div
-		initial={{ opacity: 0, y: 20 }}
-		animate={{ opacity: 1, y: 0 }}
-		className="p-6 bg-card/50 backdrop-blur-sm rounded-none hacker-border"
-	>
-		<div className="flex items-center gap-3 mb-3">
-			<div className="p-2 bg-primary/10 rounded">
-				<Icon className="h-5 w-5 text-primary" />
-			</div>
-			<h3 className="font-mono font-bold text-foreground">{label}</h3>
+	<div className="flex items-center gap-2 p-2 bg-muted/30 rounded border border-border/50">
+		<Icon className="h-4 w-4 text-primary" />
+		<div className="flex items-center gap-2">
+			<span className="text-xs font-mono text-muted-foreground">{label}:</span>
+			{isLoading ? (
+				<span className="text-sm font-bold font-mono text-primary animate-pulse">--</span>
+			) : (
+				<span className="text-sm font-bold font-mono text-primary">{value}</span>
+			)}
 		</div>
-
-		{isLoading ? (
-			<div className="text-2xl font-bold text-primary mb-1 font-mono animate-pulse">
-				---
-			</div>
-		) : (
-			<div className="text-2xl font-bold text-primary mb-1 font-mono glow-text">
-				{value}
-			</div>
-		)}
-
-		{description && (
-			<p className="text-xs text-muted-foreground font-mono">{description}</p>
-		)}
-	</motion.div>
+	</div>
 );
 
 const TeamTableRow = ({ team }: { team: TeamWithRanking }) => (
 	<tr className="border-b border-border/50 hover:bg-muted/20 transition-colors">
-		<td className="p-4">
+		<td className="p-3">
 			<div className="flex items-center gap-3">
 				<div
 					className={clsx(
-						"w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold font-mono",
+						"w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold font-mono",
 						team.ranking <= 3
 							? "bg-yellow-400/20 text-yellow-400"
 							: team.ranking <= 10
@@ -107,50 +90,50 @@ const TeamTableRow = ({ team }: { team: TeamWithRanking }) => (
 					{team.ranking}
 				</div>
 				<div>
-					<div className="font-bold text-foreground font-mono">
+					<div className="font-bold text-foreground font-mono text-sm">
 						{team.name.toUpperCase()}
 					</div>
-					<div className="text-sm text-muted-foreground truncate max-w-xs">
+					<div className="text-xs text-muted-foreground truncate max-w-xs">
 						{team.description}
 					</div>
 				</div>
 			</div>
 		</td>
-		<td className="p-4">
+		<td className="p-3">
 			<div className="flex items-center gap-2">
-				<span className="text-lg">{countryOptions.find(c => c.code === team.country_code)?.flag || "🌍"}</span>
-				<span className="font-mono text-sm">{team.country_code}</span>
+				<span className="text-base">{countryOptions.find(c => c.code === team.country_code)?.flag || "🌍"}</span>
+				<span className="font-mono text-xs">{team.country_code}</span>
 			</div>
 		</td>
-		<td className="p-4 font-mono text-sm font-bold text-primary">
+		<td className="p-3 font-mono text-xs font-bold text-primary">
 			{team.ratingPoints.toLocaleString()}
 		</td>
-		<td className="p-4 font-mono text-sm">
+		<td className="p-3 font-mono text-xs">
 			{team.contestsCount}
 		</td>
-		<td className="p-4 font-mono text-sm">
+		<td className="p-3 font-mono text-xs">
 			{team.avgPlace.toFixed(1)}
 		</td>
-		<td className="p-4 font-mono text-sm">
+		<td className="p-3 font-mono text-xs">
 			<div className="flex items-center gap-1">
-				<Users className="h-4 w-4 text-muted-foreground" />
+				<Users className="h-3 w-3 text-muted-foreground" />
 				{team.memberCount}
 			</div>
 		</td>
-		<td className="p-4">
-			<div className="flex items-center gap-2">
+		<td className="p-3">
+			<div className="flex items-center gap-1">
 				{team.verified_at && (
-					<Shield className="h-4 w-4 text-green-400" />
+					<Shield className="h-3 w-3 text-green-400" />
 				)}
 				{team.ctftime_id && (
 					<a
 						href={`https://ctftime.org/team/${team.ctftime_id}`}
 						target="_blank"
 						rel="noopener noreferrer"
-						className="p-1.5 rounded transition-colors hover:bg-primary/10 text-muted-foreground hover:text-primary"
+						className="p-1 rounded transition-colors hover:bg-primary/10 text-muted-foreground hover:text-primary"
 					>
 						<svg
-							className="h-4 w-4"
+							className="h-3 w-3"
 							fill="none"
 							stroke="currentColor"
 							viewBox="0 0 24 24"
@@ -166,9 +149,9 @@ const TeamTableRow = ({ team }: { team: TeamWithRanking }) => (
 				)}
 				<a
 					href={`/teams/${team.id}`}
-					className="btn-terminal px-2 py-1 text-xs font-mono font-bold"
+					className="btn-terminal px-1.5 py-0.5 text-xs font-mono font-bold"
 				>
-					PROFILE
+					VIEW
 				</a>
 			</div>
 		</td>
@@ -266,8 +249,7 @@ export default function TeamsPage() {
 	};
 
 	// Group teams by ranking tiers for display
-	const topTeams = filteredTeams.filter((t) => t.ranking <= 10);
-	const otherTeams = filteredTeams.filter((t) => t.ranking > 10);
+	const topTeams = filteredTeams.filter((t) => t.ranking <= 5);
 
 	// Stats
 	const stats = {
@@ -291,318 +273,254 @@ export default function TeamsPage() {
 	return (
 		<MainLayout>
 			<div className="min-h-screen">
-				{/* Hero Section */}
-				<section className="py-16 px-4 relative overflow-hidden">
-					<div className="absolute inset-0 matrix-bg opacity-20" />
-					<div className="relative max-w-7xl mx-auto">
-						<motion.div
-							initial={{ opacity: 0, y: 30 }}
-							animate={{ opacity: 1, y: 0 }}
-							className="text-center mb-12"
-						>
-							<h1 className="text-4xl md:text-6xl font-bold mb-6 font-mono">
-								<span className="terminal-prompt">$ </span>
-								<span className="hacker-gradient-text glow-text">
-									CTF_TEAMS
+				{/* Compact Header */}
+				<section className="py-4 px-4 border-b border-border/50">
+					<div className="max-w-7xl mx-auto">
+						<div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+							<div className="flex items-center gap-3">
+								<Trophy className="h-5 w-5 text-primary" />
+								<h1 className="text-xl font-bold font-mono text-foreground">
+									TEAM_RANKINGS
+								</h1>
+								<span className="text-sm text-muted-foreground font-mono">
+									{stats.total} teams indexed
 								</span>
-								<span className="animate-pulse text-primary">_</span>
-							</h1>
-
-							<div className="terminal glass-terminal p-6 max-w-3xl mx-auto text-left">
-								<div className="text-primary mb-2">
-									root@openctf:~# cat teams.txt
-								</div>
-								<p className="text-green-400 leading-relaxed">
-									{"// Global rankings of Capture The Flag teams"}
-									<br />
-									{"// Real-time leaderboard with team statistics and performance"}
-									<br />
-									<span className="text-yellow-400">
-										{"// Live tracking and contest participation | Total teams: " +
-											stats.total}
-									</span>
-								</p>
 							</div>
-						</motion.div>
-
-						{/* Stats Grid */}
-						<div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-12">
-							<StatCard
-								icon={Trophy}
-								label="Total Teams"
-								value={stats.total}
-								description="Ranked globally"
-								isLoading={isLoading}
-							/>
-							<StatCard
-								icon={Shield}
-								label="Verified Teams"
-								value={stats.verified}
-								description="CTFtime verified"
-								isLoading={isLoading}
-							/>
-							<StatCard
-								icon={Target}
-								label="Active Teams"
-								value={stats.active}
-								description="Last 30 days"
-								isLoading={isLoading}
-							/>
-							<StatCard
-								icon={Flag}
-								label="Countries"
-								value={stats.countries}
-								description="Represented"
-								isLoading={isLoading}
-							/>
+							
+							{/* Compact Stats */}
+							<div className="flex flex-wrap gap-2">
+								<CompactStatCard
+									icon={Shield}
+									label="Verified"
+									value={stats.verified}
+									isLoading={isLoading}
+								/>
+								<CompactStatCard
+									icon={Target}
+									label="Active"
+									value={stats.active}
+									isLoading={isLoading}
+								/>
+								<CompactStatCard
+									icon={Flag}
+									label="Countries"
+									value={stats.countries}
+									isLoading={isLoading}
+								/>
+							</div>
 						</div>
 					</div>
 				</section>
 
-				{/* Filters Section */}
-				<section className="py-8 px-4 bg-muted/30">
+				{/* Compact Filters */}
+				<section className="py-3 px-4 bg-muted/20">
 					<div className="max-w-7xl mx-auto">
-						<motion.div
-							initial={{ opacity: 0, y: 20 }}
-							animate={{ opacity: 1, y: 0 }}
-							className="space-y-6"
-						>
+						<div className="flex flex-col md:flex-row gap-3">
 							{/* Search */}
-							<div className="flex flex-col md:flex-row gap-4">
-								<div className="flex-1 relative">
-									<Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-									<Input
-										placeholder="Search teams..."
-										value={filters.search}
-										onChange={(e) => updateFilter("search", e.target.value)}
-										className="pl-10 font-mono"
-									/>
-								</div>
+							<div className="flex-1 relative">
+								<Search className="absolute left-2 top-1/2 transform -translate-y-1/2 h-3 w-3 text-muted-foreground" />
+								<Input
+									placeholder="Search teams..."
+									value={filters.search}
+									onChange={(e) => updateFilter("search", e.target.value)}
+									className="pl-7 py-1 text-sm font-mono h-8"
+								/>
 							</div>
 
-							{/* Advanced Filters */}
-							<div className="space-y-4">
-								<div className="flex items-center gap-2">
-									<Filter className="h-4 w-4 text-muted-foreground" />
-									<span className="text-sm font-mono text-muted-foreground">
-										Filters:
-									</span>
-								</div>
-
-								<div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-									{/* Ranking Tier Filter */}
-									<div className="space-y-2">
-										<label className="text-sm font-mono text-muted-foreground">
-											Ranking Tier:
-										</label>
-										<div className="flex flex-wrap gap-1">
-											{rankingTiers.map((tier) => (
-												<Badge
-													key={`${tier.min}-${tier.max}`}
-													variant={
-														filters.rankingTier?.min === tier.min
-															? "default"
-															: "outline"
-													}
-													className="cursor-pointer transition-colors font-mono"
-													onClick={() =>
-														updateFilter("rankingTier", {
-															min: tier.min,
-															max: tier.max,
-														})
-													}
-												>
-													{tier.label}
-												</Badge>
-											))}
-										</div>
-									</div>
-
-									{/* Country Filter */}
-									<div className="space-y-2">
-										<label className="text-sm font-mono text-muted-foreground">
-											Countries:
-										</label>
-										<div className="flex flex-wrap gap-1 max-h-20 overflow-y-auto">
-											{countryOptions.map((country) => (
-												<Badge
-													key={country.code}
-													variant={
-														filters.countries.includes(country.code)
-															? "default"
-															: "outline"
-													}
-													className="cursor-pointer transition-colors font-mono"
-													onClick={() => toggleCountryFilter(country.code)}
-												>
-													{country.flag} {country.code}
-												</Badge>
-											))}
-										</div>
-									</div>
-
-									{/* Options Filter */}
-									<div className="space-y-2">
-										<label className="text-sm font-mono text-muted-foreground">
-											Options:
-										</label>
-										<div className="flex flex-wrap gap-1">
-											<Badge
-												variant={filters.verified ? "default" : "outline"}
-												className="cursor-pointer transition-colors font-mono"
-												onClick={() => updateFilter("verified", !filters.verified)}
-											>
-												<Shield className="h-3 w-3 mr-1" />
-												Verified Only
-											</Badge>
-											<Badge
-												variant={filters.minRating ? "default" : "outline"}
-												className="cursor-pointer transition-colors font-mono"
-												onClick={() =>
-													updateFilter("minRating", filters.minRating ? undefined : 2000)
-												}
-											>
-												<Star className="h-3 w-3 mr-1" />
-												2000+ Rating
-											</Badge>
-										</div>
-									</div>
-								</div>
-							</div>
-
-							{/* Clear Filters */}
-							{hasActiveFilters && (
-								<div className="flex justify-between items-center">
-									<span className="text-sm text-muted-foreground font-mono">
-										Showing {filteredTeams.length} of {teams.length} teams
-									</span>
-									<Button
-										variant="outline"
-										size="sm"
-										onClick={clearFilters}
-										className="font-mono"
+							{/* Quick Filters */}
+							<div className="flex flex-wrap gap-1">
+								{rankingTiers.slice(0, 2).map((tier) => (
+									<Badge
+										key={`${tier.min}-${tier.max}`}
+										variant={
+											filters.rankingTier?.min === tier.min ? "default" : "outline"
+										}
+										className="cursor-pointer text-xs font-mono h-8 px-2"
+										onClick={() =>
+											updateFilter("rankingTier", { min: tier.min, max: tier.max })
+										}
 									>
-										Clear Filters
-									</Button>
-								</div>
+										{tier.label}
+									</Badge>
+								))}
+								<Badge
+									variant={filters.verified ? "default" : "outline"}
+									className="cursor-pointer text-xs font-mono h-8 px-2"
+									onClick={() => updateFilter("verified", !filters.verified)}
+								>
+									<Shield className="h-3 w-3 mr-1" />
+									Verified
+								</Badge>
+								<Badge
+									variant={filters.minRating ? "default" : "outline"}
+									className="cursor-pointer text-xs font-mono h-8 px-2"
+									onClick={() =>
+										updateFilter("minRating", filters.minRating ? undefined : 2000)
+									}
+								>
+									<Star className="h-3 w-3 mr-1" />
+									2K+
+								</Badge>
+							</div>
+
+							{/* Country Filter */}
+							<div className="flex flex-wrap gap-1">
+								{countryOptions.slice(0, 5).map((country) => (
+									<Badge
+										key={country.code}
+										variant={
+											filters.countries.includes(country.code) ? "default" : "outline"
+										}
+										className="cursor-pointer text-xs font-mono h-8 px-2"
+										onClick={() => toggleCountryFilter(country.code)}
+									>
+										{country.flag}
+									</Badge>
+								))}
+							</div>
+
+							{hasActiveFilters && (
+								<Button
+									variant="outline"
+									size="sm"
+									onClick={clearFilters}
+									className="font-mono text-xs h-8 px-2"
+								>
+									Clear
+								</Button>
 							)}
-						</motion.div>
+						</div>
+
+						{hasActiveFilters && (
+							<div className="mt-2 text-xs text-muted-foreground font-mono">
+								{filteredTeams.length} of {teams.length} teams
+							</div>
+						)}
 					</div>
 				</section>
 
-				{/* Teams Section */}
-				<section className="py-12 px-4">
-					<div className="max-w-7xl mx-auto space-y-16">
+				{/* Content */}
+				<section className="py-4 px-4">
+					<div className="max-w-7xl mx-auto">
 						{isLoading ? (
-							<div className="flex justify-center py-12">
-								<LoadingSpinner size="lg" />
+							<div className="flex justify-center py-8">
+								<LoadingSpinner size="md" />
 							</div>
 						) : (
 							<>
-								{/* Top Teams Cards */}
+								{/* Top Teams - Compact Cards */}
 								{topTeams.length > 0 && (
-									<motion.div
-										initial={{ opacity: 0, y: 20 }}
-										animate={{ opacity: 1, y: 0 }}
-										className="space-y-6"
-									>
-										<div className="flex items-center gap-3">
-											<Trophy className="h-6 w-6 text-yellow-400" />
-											<h2 className="text-2xl font-bold font-mono text-yellow-400 glow-text">
-												&gt; TOP_TEAMS ({topTeams.length})
+									<div className="mb-6">
+										<div className="flex items-center gap-2 mb-3">
+											<Trophy className="h-4 w-4 text-yellow-400" />
+											<h2 className="text-sm font-bold font-mono text-yellow-400">
+												TOP 5 TEAMS
 											</h2>
 										</div>
-										<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+										<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
 											{topTeams.map((team, index) => (
-												<TeamCard key={team.id} team={team} index={index} />
+												<div
+													key={team.id}
+													className="p-3 bg-card/50 backdrop-blur-sm rounded-none hacker-border hover:border-primary/60 transition-colors"
+												>
+													<div className="flex items-center gap-2 mb-2">
+														<div
+															className={clsx(
+																"w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold font-mono",
+																team.ranking <= 3
+																	? "bg-yellow-400/20 text-yellow-400"
+																	: "bg-orange-400/20 text-orange-400"
+															)}
+														>
+															{team.ranking}
+														</div>
+														<span className="text-lg">
+															{countryOptions.find(c => c.code === team.country_code)?.flag || "🌍"}
+														</span>
+														{team.verified_at && (
+															<Shield className="h-3 w-3 text-green-400" />
+														)}
+													</div>
+													<div className="font-bold text-sm font-mono text-foreground mb-1">
+														{team.name.toUpperCase()}
+													</div>
+													<div className="text-xs text-muted-foreground mb-2 truncate">
+														{team.description}
+													</div>
+													<div className="space-y-1">
+														<div className="flex justify-between text-xs">
+															<span className="text-muted-foreground">Rating:</span>
+															<span className="font-bold font-mono text-primary">
+																{team.ratingPoints.toLocaleString()}
+															</span>
+														</div>
+														<div className="flex justify-between text-xs">
+															<span className="text-muted-foreground">Contests:</span>
+															<span className="font-mono">{team.contestsCount}</span>
+														</div>
+														<div className="flex justify-between text-xs">
+															<span className="text-muted-foreground">Avg:</span>
+															<span className="font-mono">{team.avgPlace.toFixed(1)}</span>
+														</div>
+													</div>
+												</div>
 											))}
 										</div>
-									</motion.div>
+									</div>
 								)}
 
-								{/* Other Teams Table */}
-								{otherTeams.length > 0 && (
-									<motion.div
-										initial={{ opacity: 0, y: 20 }}
-										animate={{ opacity: 1, y: 0 }}
-										transition={{ delay: 0.1 }}
-										className="space-y-6"
-									>
-										<div className="flex items-center gap-3">
-											<Users className="h-6 w-6 text-blue-400" />
-											<h2 className="text-2xl font-bold font-mono text-blue-400">
-												&gt; ALL_TEAMS ({otherTeams.length})
+								{/* All Teams Table - More Compact */}
+								<div className="bg-card/30 rounded-none hacker-border overflow-hidden">
+									<div className="p-3 bg-muted/50 border-b border-border">
+										<div className="flex items-center gap-2">
+											<Users className="h-4 w-4 text-blue-400" />
+											<h2 className="text-sm font-bold font-mono text-blue-400">
+												ALL TEAMS ({filteredTeams.length})
 											</h2>
 										</div>
+									</div>
+									<div className="overflow-x-auto">
+										<table className="w-full">
+											<thead className="bg-muted/30">
+												<tr className="border-b border-border/50">
+													<th className="p-3 text-left font-mono text-xs font-bold">Team</th>
+													<th className="p-3 text-left font-mono text-xs font-bold">Country</th>
+													<th className="p-3 text-left font-mono text-xs font-bold">Rating</th>
+													<th className="p-3 text-left font-mono text-xs font-bold">Contests</th>
+													<th className="p-3 text-left font-mono text-xs font-bold">Avg</th>
+													<th className="p-3 text-left font-mono text-xs font-bold">Members</th>
+													<th className="p-3 text-left font-mono text-xs font-bold">Links</th>
+												</tr>
+											</thead>
+											<tbody>
+												{filteredTeams.slice(0, 50).map((team) => (
+													<TeamTableRow key={team.id} team={team} />
+												))}
+											</tbody>
+										</table>
+									</div>
 
-										<div className="bg-card/30 rounded-none hacker-border overflow-hidden">
-											<div className="overflow-x-auto">
-												<table className="w-full">
-													<thead className="bg-muted/50">
-														<tr className="border-b border-border">
-															<th className="p-4 text-left font-mono text-sm font-bold">
-																Team
-															</th>
-															<th className="p-4 text-left font-mono text-sm font-bold">
-																Country
-															</th>
-															<th className="p-4 text-left font-mono text-sm font-bold">
-																Rating
-															</th>
-															<th className="p-4 text-left font-mono text-sm font-bold">
-																Contests
-															</th>
-															<th className="p-4 text-left font-mono text-sm font-bold">
-																Avg Place
-															</th>
-															<th className="p-4 text-left font-mono text-sm font-bold">
-																Members
-															</th>
-															<th className="p-4 text-left font-mono text-sm font-bold">
-																Links
-															</th>
-														</tr>
-													</thead>
-													<tbody>
-														{filteredTeams.slice(0, 30).map((team) => (
-															<TeamTableRow key={team.id} team={team} />
-														))}
-													</tbody>
-												</table>
-											</div>
-
-											{filteredTeams.length > 30 && (
-												<div className="p-4 bg-muted/20 border-t border-border">
-													<p className="text-sm text-muted-foreground font-mono text-center">
-														Showing first 30 of {filteredTeams.length} teams
-													</p>
-												</div>
-											)}
+									{filteredTeams.length > 50 && (
+										<div className="p-3 bg-muted/20 border-t border-border">
+											<p className="text-xs text-muted-foreground font-mono text-center">
+												Showing first 50 of {filteredTeams.length} teams
+											</p>
 										</div>
-									</motion.div>
-								)}
+									)}
+								</div>
 
 								{/* No Results */}
-								{filteredTeams.length === 0 && !isLoading && (
-									<motion.div
-										initial={{ opacity: 0, y: 20 }}
-										animate={{ opacity: 1, y: 0 }}
-										className="text-center py-16"
-									>
-										<div className="terminal glass-terminal p-8 max-w-lg mx-auto">
-											<div className="text-primary mb-2">
-												root@openctf:~# find teams
-											</div>
-											<p className="text-yellow-400 mb-4">
-												{"// No teams found matching your criteria"}
-												<br />
-												{"// Try adjusting your filters or search terms"}
-											</p>
-											<Button onClick={clearFilters} className="font-mono">
-												&gt; CLEAR_FILTERS
-											</Button>
+								{filteredTeams.length === 0 && (
+									<div className="text-center py-8">
+										<div className="text-muted-foreground font-mono text-sm">
+											No teams found. <button
+												onClick={clearFilters}
+												className="text-primary hover:underline"
+											>
+												Clear filters
+											</button>
 										</div>
-									</motion.div>
+									</div>
 								)}
 							</>
 						)}
