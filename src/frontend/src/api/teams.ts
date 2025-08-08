@@ -1,1478 +1,883 @@
-import { sleep } from "@/lib/utils";
-import type { Team, ListTeamsDto, CreateTeamDto, PaginatedResponse } from "@/types/api";
+import { ApiResponse } from '@/types/api';
 
-// Extended Team interface for rankings display
-export interface TeamWithRanking extends Team {
-	ranking: number;
-	ratingPoints: number;
-	contestsCount: number;
-	avgPlace: number;
-	lastActive: string;
-	memberCount: number;
+export interface TeamMember {
+  id: string;
+  userId: string;
+  username: string;
+  email: string;
+  avatarUrl?: string;
+  role: 'captain' | 'member' | 'substitute';
+  joinedAt: string;
+  skills: string[];
+  isActive: boolean;
 }
 
-export const getTeams = async (params?: ListTeamsDto): Promise<PaginatedResponse<TeamWithRanking>> => {
-	await sleep(800);
-	
-	// Comprehensive teams dataset (100 teams) inspired by CTFtime.org rankings
-	const mockTeams: TeamWithRanking[] = [
-		// Top Legendary Teams (1-5) - The Elite Champions
-		{
-			id: 1,
-			name: "zer0pts",
-			description: "Japanese CTF legends - absolute dominance in exploitation",
-			country_code: "JP",
-			ctftime_id: 22319,
-			verified_at: new Date().toString(),
-			ranking: 1,
-			ratingPoints: 3247,
-			contestsCount: 187,
-			avgPlace: 1.8,
-			lastActive: "2024-01-15T10:30:00Z",
-			memberCount: 14,
-		},
-		{
-			id: 2,
-			name: "perfect blue",
-			description: "Elite hacker collective pushing boundaries of cybersecurity",
-			country_code: "US",
-			ctftime_id: 53370,
-			verified_at: new Date().toString(),
-			ranking: 2,
-			ratingPoints: 3189,
-			contestsCount: 134,
-			avgPlace: 2.1,
-			lastActive: "2024-01-14T14:22:00Z",
-			memberCount: 11,
-		},
-		{
-			id: 3,
-			name: "r3kapig",
-			description: "Chinese masters of binary exploitation and reverse engineering",
-			country_code: "CN",
-			ctftime_id: 45672,
-			verified_at: new Date().toString(),
-			ranking: 3,
-			ratingPoints: 3098,
-			contestsCount: 198,
-			avgPlace: 2.4,
-			lastActive: "2024-01-13T09:15:00Z",
-			memberCount: 16,
-		},
-		{
-			id: 4,
-			name: "Kalmarunionen",
-			description: "Nordic cybersecurity alliance with unmatched teamwork",
-			country_code: "DK",
-			ctftime_id: 38914,
-			verified_at: new Date().toString(),
-			ranking: 4,
-			ratingPoints: 2967,
-			contestsCount: 143,
-			avgPlace: 2.9,
-			lastActive: "2024-01-15T16:45:00Z",
-			memberCount: 12,
-		},
-		{
-			id: 5,
-			name: "Dragon Sector",
-			description: "Polish powerhouse redefining competitive hacking",
-			country_code: "PL",
-			ctftime_id: 3329,
-			verified_at: new Date().toString(),
-			ranking: 5,
-			ratingPoints: 2834,
-			contestsCount: 167,
-			avgPlace: 3.2,
-			lastActive: "2024-01-12T11:30:00Z",
-			memberCount: 13,
-		},
-		
-		// Strong Contenders (6-15)
-		{
-			id: 6,
-			name: "HITCON",
-			description: "Taiwanese security pioneers and contest organizers",
-			country_code: "TW",
-			ctftime_id: 8299,
-			verified_at: new Date().toString(),
-			ranking: 6,
-			ratingPoints: 2756,
-			contestsCount: 134,
-			avgPlace: 4.1,
-			lastActive: "2024-01-14T08:20:00Z",
-			memberCount: 18,
-		},
-		{
-			id: 7,
-			name: "Shellphish",
-			description: "Academic legends from UC Santa Barbara",
-			country_code: "US",
-			ctftime_id: 285,
-			verified_at: new Date().toString(),
-			ranking: 7,
-			ratingPoints: 2689,
-			contestsCount: 203,
-			avgPlace: 4.8,
-			lastActive: "2024-01-13T19:10:00Z",
-			memberCount: 22,
-		},
-		{
-			id: 8,
-			name: "TSJ",
-			description: "Japanese cryptography and forensics specialists",
-			country_code: "JP",
-			ctftime_id: 12611,
-			verified_at: new Date().toString(),
-			ranking: 8,
-			ratingPoints: 2634,
-			contestsCount: 89,
-			avgPlace: 5.2,
-			lastActive: "2024-01-11T13:45:00Z",
-			memberCount: 9,
-		},
-		{
-			id: 9,
-			name: "p4",
-			description: "Elite Polish team focusing on advanced exploitation",
-			country_code: "PL",
-			ctftime_id: 28394,
-			verified_at: new Date().toString(),
-			ranking: 9,
-			ratingPoints: 2578,
-			contestsCount: 112,
-			avgPlace: 5.9,
-			lastActive: "2024-01-15T07:30:00Z",
-			memberCount: 8,
-		},
-		{
-			id: 10,
-			name: "organizers",
-			description: "Korean CTF community leaders and innovators",
-			country_code: "KR",
-			ctftime_id: 4419,
-			verified_at: new Date().toString(),
-			ranking: 10,
-			ratingPoints: 2523,
-			contestsCount: 145,
-			avgPlace: 6.3,
-			lastActive: "2024-01-10T20:15:00Z",
-			memberCount: 16,
-		},
-		{
-			id: 11,
-			name: "Balsn",
-			description: "Creative Taiwanese hackers with innovative approaches",
-			country_code: "TW",
-			ctftime_id: 67890,
-			verified_at: new Date().toString(),
-			ranking: 11,
-			ratingPoints: 2467,
-			contestsCount: 98,
-			avgPlace: 6.8,
-			lastActive: "2024-01-14T12:00:00Z",
-			memberCount: 11,
-		},
-		{
-			id: 12,
-			name: "LCBC",
-			description: "French cybersecurity experts with diverse backgrounds",
-			country_code: "FR",
-			ctftime_id: 54321,
-			verified_at: new Date().toString(),
-			ranking: 12,
-			ratingPoints: 2398,
-			contestsCount: 134,
-			avgPlace: 7.1,
-			lastActive: "2024-01-13T15:30:00Z",
-			memberCount: 15,
-		},
-		{
-			id: 13,
-			name: "ENOFLAG",
-			description: "German attack-defense specialists",
-			country_code: "DE",
-			ctftime_id: 98765,
-			verified_at: new Date().toString(),
-			ranking: 13,
-			ratingPoints: 2342,
-			contestsCount: 106,
-			avgPlace: 7.6,
-			lastActive: "2024-01-12T09:45:00Z",
-			memberCount: 12,
-		},
-		{
-			id: 14,
-			name: "TokyoWesterns",
-			description: "University-based research-driven CTF team",
-			country_code: "JP",
-			ctftime_id: 13579,
-			verified_at: new Date().toString(),
-			ranking: 14,
-			ratingPoints: 2289,
-			contestsCount: 127,
-			avgPlace: 8.2,
-			lastActive: "2024-01-15T11:20:00Z",
-			memberCount: 19,
-		},
-		{
-			id: 15,
-			name: "Tea Deliverers",
-			description: "Canadian maple syrup powered hacking collective",
-			country_code: "CA",
-			ctftime_id: 12345,
-			verified_at: new Date().toString(),
-			ranking: 15,
-			ratingPoints: 2234,
-			contestsCount: 89,
-			avgPlace: 8.7,
-			lastActive: "2024-01-11T16:10:00Z",
-			memberCount: 10,
-		},
+export interface TeamInvitation {
+  id: string;
+  teamId: string;
+  teamName: string;
+  invitedUserId: string;
+  invitedUsername: string;
+  invitedEmail: string;
+  invitedByUserId: string;
+  invitedByUsername: string;
+  status: 'pending' | 'accepted' | 'declined' | 'expired';
+  message?: string;
+  createdAt: string;
+  expiresAt: string;
+  respondedAt?: string;
+}
 
-		// Rising Stars (16-30)
-		{
-			id: 16,
-			name: "Plaid Parliament of Pwning",
-			description: "Carnegie Mellon academic powerhouse",
-			country_code: "US",
-			ctftime_id: 24691,
-			verified_at: new Date().toString(),
-			ranking: 16,
-			ratingPoints: 2178,
-			contestsCount: 156,
-			avgPlace: 9.1,
-			lastActive: "2024-01-14T08:15:00Z",
-			memberCount: 21,
-		},
-		{
-			id: 17,
-			name: "Hack.lu",
-			description: "Luxembourg-based European CTF veterans",
-			country_code: "LU",
-			ctftime_id: 57834,
-			verified_at: new Date().toString(),
-			ranking: 17,
-			ratingPoints: 2134,
-			contestsCount: 143,
-			avgPlace: 9.5,
-			lastActive: "2024-01-13T12:30:00Z",
-			memberCount: 14,
-		},
-		{
-			id: 18,
-			name: "RPISEC",
-			description: "Rensselaer Polytechnic Institute security researchers",
-			country_code: "US",
-			ctftime_id: 46891,
-			verified_at: new Date().toString(),
-			ranking: 18,
-			ratingPoints: 2089,
-			contestsCount: 98,
-			avgPlace: 10.2,
-			lastActive: "2024-01-15T14:45:00Z",
-			memberCount: 17,
-		},
-		{
-			id: 19,
-			name: "CyKor",
-			description: "Korean university consortium cybersecurity team",
-			country_code: "KR",
-			ctftime_id: 35467,
-			verified_at: new Date().toString(),
-			ranking: 19,
-			ratingPoints: 2045,
-			contestsCount: 134,
-			avgPlace: 10.8,
-			lastActive: "2024-01-12T19:20:00Z",
-			memberCount: 23,
-		},
-		{
-			id: 20,
-			name: "WreckTheLine",
-			description: "Indian cybersecurity collective breaking barriers",
-			country_code: "IN",
-			ctftime_id: 78923,
-			verified_at: new Date().toString(),
-			ranking: 20,
-			ratingPoints: 1998,
-			contestsCount: 87,
-			avgPlace: 11.3,
-			lastActive: "2024-01-14T11:10:00Z",
-			memberCount: 12,
-		},
-		{
-			id: 21,
-			name: "FluxFingers",
-			description: "German university team with strong research focus",
-			country_code: "DE",
-			ctftime_id: 41256,
-			verified_at: new Date().toString(),
-			ranking: 21,
-			ratingPoints: 1954,
-			contestsCount: 112,
-			avgPlace: 11.9,
-			lastActive: "2024-01-13T16:35:00Z",
-			memberCount: 16,
-		},
-		{
-			id: 22,
-			name: "StarBugs",
-			description: "Taiwanese bug hunters and exploit developers",
-			country_code: "TW",
-			ctftime_id: 69874,
-			verified_at: new Date().toString(),
-			ranking: 22,
-			ratingPoints: 1912,
-			contestsCount: 76,
-			avgPlace: 12.4,
-			lastActive: "2024-01-15T09:25:00Z",
-			memberCount: 9,
-		},
-		{
-			id: 23,
-			name: "Samurai",
-			description: "Japanese security warriors with honor code",
-			country_code: "JP",
-			ctftime_id: 52341,
-			verified_at: new Date().toString(),
-			ranking: 23,
-			ratingPoints: 1876,
-			contestsCount: 103,
-			avgPlace: 12.8,
-			lastActive: "2024-01-12T14:50:00Z",
-			memberCount: 14,
-		},
-		{
-			id: 24,
-			name: "dcua",
-			description: "Ukrainian defenders of cyberspace",
-			country_code: "UA",
-			ctftime_id: 63892,
-			verified_at: new Date().toString(),
-			ranking: 24,
-			ratingPoints: 1834,
-			contestsCount: 94,
-			avgPlace: 13.5,
-			lastActive: "2024-01-14T17:12:00Z",
-			memberCount: 11,
-		},
-		{
-			id: 25,
-			name: "WeSeeYou",
-			description: "Israeli intelligence-grade hacking team",
-			country_code: "IL",
-			ctftime_id: 74615,
-			verified_at: new Date().toString(),
-			ranking: 25,
-			ratingPoints: 1792,
-			contestsCount: 81,
-			avgPlace: 14.1,
-			lastActive: "2024-01-13T13:28:00Z",
-			memberCount: 8,
-		},
-		{
-			id: 26,
-			name: "HackingForSoju",
-			description: "Korean team powered by traditional beverages",
-			country_code: "KR",
-			ctftime_id: 86432,
-			verified_at: new Date().toString(),
-			ranking: 26,
-			ratingPoints: 1753,
-			contestsCount: 118,
-			avgPlace: 14.7,
-			lastActive: "2024-01-15T21:45:00Z",
-			memberCount: 13,
-		},
-		{
-			id: 27,
-			name: "VoidMercy",
-			description: "Canadian team showing no mercy in competitions",
-			country_code: "CA",
-			ctftime_id: 39851,
-			verified_at: new Date().toString(),
-			ranking: 27,
-			ratingPoints: 1718,
-			contestsCount: 67,
-			avgPlace: 15.2,
-			lastActive: "2024-01-12T10:33:00Z",
-			memberCount: 7,
-		},
-		{
-			id: 28,
-			name: "UCSB iCTF",
-			description: "UC Santa Barbara international CTF organizers",
-			country_code: "US",
-			ctftime_id: 92847,
-			verified_at: new Date().toString(),
-			ranking: 28,
-			ratingPoints: 1684,
-			contestsCount: 145,
-			avgPlace: 15.8,
-			lastActive: "2024-01-14T15:17:00Z",
-			memberCount: 26,
-		},
-		{
-			id: 29,
-			name: "Emu Exploit",
-			description: "Australian team bringing unique perspectives",
-			country_code: "AU",
-			ctftime_id: 75298,
-			verified_at: new Date().toString(),
-			ranking: 29,
-			ratingPoints: 1651,
-			contestsCount: 59,
-			avgPlace: 16.4,
-			lastActive: "2024-01-13T07:22:00Z",
-			memberCount: 6,
-		},
-		{
-			id: 30,
-			name: "HackerDom",
-			description: "Russian federation of elite cybersecurity experts",
-			country_code: "RU",
-			ctftime_id: 48763,
-			verified_at: new Date().toString(),
-			ranking: 30,
-			ratingPoints: 1619,
-			contestsCount: 132,
-			avgPlace: 16.9,
-			lastActive: "2024-01-15T18:56:00Z",
-			memberCount: 19,
-		},
+export interface TeamApplication {
+  id: string;
+  teamId: string;
+  userId: string;
+  username: string;
+  email: string;
+  message: string;
+  skills: string[];
+  status: 'pending' | 'accepted' | 'rejected';
+  createdAt: string;
+  reviewedAt?: string;
+  reviewedByUserId?: string;
+  rejectionReason?: string;
+}
 
-		// Solid Competitors (31-60)
-		{
-			id: 31,
-			name: "Insomni'hack",
-			description: "Swiss precision in cybersecurity competitions",
-			country_code: "CH",
-			ctftime_id: 61847,
-			verified_at: new Date().toString(),
-			ranking: 31,
-			ratingPoints: 1587,
-			contestsCount: 89,
-			avgPlace: 17.5,
-			lastActive: "2024-01-12T16:41:00Z",
-			memberCount: 12,
-		},
-		{
-			id: 32,
-			name: "NorthWave",
-			description: "Dutch cybersecurity consulting team",
-			country_code: "NL",
-			ctftime_id: 87324,
-			verified_at: new Date().toString(),
-			ranking: 32,
-			ratingPoints: 1556,
-			contestsCount: 73,
-			avgPlace: 18.1,
-			lastActive: "2024-01-14T12:15:00Z",
-			memberCount: 10,
-		},
-		{
-			id: 33,
-			name: "b1n4r1s",
-			description: "Binary analysis specialists from Romania",
-			country_code: "RO",
-			ctftime_id: 93652,
-			verified_at: new Date().toString(),
-			ranking: 33,
-			ratingPoints: 1526,
-			contestsCount: 96,
-			avgPlace: 18.7,
-			lastActive: "2024-01-13T20:33:00Z",
-			memberCount: 11,
-		},
-		{
-			id: 34,
-			name: "Nordic Storm",
-			description: "Scandinavian alliance of security researchers",
-			country_code: "SE",
-			ctftime_id: 56471,
-			verified_at: new Date().toString(),
-			ranking: 34,
-			ratingPoints: 1497,
-			contestsCount: 108,
-			avgPlace: 19.3,
-			lastActive: "2024-01-15T08:47:00Z",
-			memberCount: 15,
-		},
-		{
-			id: 35,
-			name: "RedRocket",
-			description: "High-velocity exploitation team from Czech Republic",
-			country_code: "CZ",
-			ctftime_id: 74829,
-			verified_at: new Date().toString(),
-			ranking: 35,
-			ratingPoints: 1469,
-			contestsCount: 82,
-			avgPlace: 19.8,
-			lastActive: "2024-01-12T11:52:00Z",
-			memberCount: 9,
-		},
-		{
-			id: 36,
-			name: "Gallopsled",
-			description: "British team with equestrian-themed exploits",
-			country_code: "GB",
-			ctftime_id: 42687,
-			verified_at: new Date().toString(),
-			ranking: 36,
-			ratingPoints: 1442,
-			contestsCount: 127,
-			avgPlace: 20.4,
-			lastActive: "2024-01-14T14:26:00Z",
-			memberCount: 17,
-		},
-		{
-			id: 37,
-			name: "DiceGang",
-			description: "University of California San Diego collective",
-			country_code: "US",
-			ctftime_id: 68345,
-			verified_at: new Date().toString(),
-			ranking: 37,
-			ratingPoints: 1416,
-			contestsCount: 91,
-			avgPlace: 21.0,
-			lastActive: "2024-01-13T09:38:00Z",
-			memberCount: 14,
-		},
-		{
-			id: 38,
-			name: "EpicTeam",
-			description: "Multi-national remote collaboration specialists",
-			country_code: "XX",
-			ctftime_id: 85273,
+export interface TeamRecruitment {
+  isRecruiting: boolean;
+  description?: string;
+  requiredSkills: string[];
+  preferredSkills: string[];
+  minExperience?: string;
+  timeCommitment?: string;
+  contactMethod: 'application' | 'invitation_only';
+  maxMembers: number;
+  applicationDeadline?: string;
+}
 
-			ranking: 38,
-			ratingPoints: 1391,
-			contestsCount: 65,
-			avgPlace: 21.6,
-			lastActive: "2024-01-15T16:19:00Z",
-			memberCount: 8,
-		},
-		{
-			id: 39,
-			name: "FireShell",
-			description: "Italian cybersecurity researchers and educators",
-			country_code: "IT",
-			ctftime_id: 59764,
-			verified_at: new Date().toString(),
-			ranking: 39,
-			ratingPoints: 1367,
-			contestsCount: 103,
-			avgPlace: 22.1,
-			lastActive: "2024-01-12T13:44:00Z",
-			memberCount: 12,
-		},
-		{
-			id: 40,
-			name: "BlackB6a",
-			description: "Belgian team with dark humor and bright exploits",
-			country_code: "BE",
-			ctftime_id: 71892,
-			verified_at: new Date().toString(),
-			ranking: 40,
-			ratingPoints: 1344,
-			contestsCount: 78,
-			avgPlace: 22.7,
-			lastActive: "2024-01-14T19:58:00Z",
-			memberCount: 7,
-		},
-		{
-			id: 41,
-			name: "PaperThinSecurity",
-			description: "Norwegian team finding holes in digital defenses",
-			country_code: "NO",
-			ctftime_id: 94381,
-			verified_at: new Date().toString(),
-			ranking: 41,
-			ratingPoints: 1322,
-			contestsCount: 87,
-			avgPlace: 23.3,
-			lastActive: "2024-01-13T15:12:00Z",
-			memberCount: 10,
-		},
-		{
-			id: 42,
-			name: "BugHunters United",
-			description: "International bug bounty hunters collective",
-			country_code: "XX",
-			ctftime_id: 67459,
+export interface Team {
+  id: string;
+  name: string;
+  description: string;
+  logoUrl?: string;
+  bannerUrl?: string;
+  privacy: 'public' | 'invite-only' | 'private';
+  captainId: string;
+  members: TeamMember[];
+  memberCount: number;
+  maxMembers: number;
+  country?: string;
+  founded: string;
+  lastActive: string;
+  status: 'active' | 'inactive' | 'disbanded';
+  
+  // Statistics
+  statistics: {
+    contestsParticipated: number;
+    contestsWon: number;
+    totalPoints: number;
+    averageRating: number;
+    bestRanking: number;
+    currentRating: number;
+    ratingHistory: Array<{
+      date: string;
+      rating: number;
+      contest: string;
+    }>;
+  };
 
-			ranking: 42,
-			ratingPoints: 1301,
-			contestsCount: 72,
-			avgPlace: 23.8,
-			lastActive: "2024-01-15T11:35:00Z",
-			memberCount: 16,
-		},
-		{
-			id: 43,
-			name: "Maple Bacon",
-			description: "Canadian team combining breakfast and hacking",
-			country_code: "CA",
-			ctftime_id: 83647,
-			verified_at: new Date().toString(),
-			ranking: 43,
-			ratingPoints: 1280,
-			contestsCount: 95,
-			avgPlace: 24.4,
-			lastActive: "2024-01-12T08:27:00Z",
-			memberCount: 13,
-		},
-		{
-			id: 44,
-			name: "Sakura Petals",
-			description: "Japanese team with aesthetic approach to security",
-			country_code: "JP",
-			ctftime_id: 76824,
-			verified_at: new Date().toString(),
-			ranking: 44,
-			ratingPoints: 1260,
-			contestsCount: 61,
-			avgPlace: 24.9,
-			lastActive: "2024-01-14T17:53:00Z",
-			memberCount: 8,
-		},
-		{
-			id: 45,
-			name: "AlphaOmega",
-			description: "Greek team representing beginning and end of exploits",
-			country_code: "GR",
-			ctftime_id: 58394,
-			verified_at: new Date().toString(),
-			ranking: 45,
-			ratingPoints: 1241,
-			contestsCount: 84,
-			avgPlace: 25.5,
-			lastActive: "2024-01-13T12:48:00Z",
-			memberCount: 11,
-		},
-		{
-			id: 46,
-			name: "PhoenixRising",
-			description: "Team that always comes back stronger",
-			country_code: "US",
-			ctftime_id: 91756,
-			verified_at: new Date().toString(),
-			ranking: 46,
-			ratingPoints: 1223,
-			contestsCount: 79,
-			avgPlace: 26.1,
-			lastActive: "2024-01-15T14:22:00Z",
-			memberCount: 9,
-		},
-		{
-			id: 47,
-			name: "DigitalViking",
-			description: "Finnish raiders of digital territories",
-			country_code: "FI",
-			ctftime_id: 45728,
-			verified_at: new Date().toString(),
-			ranking: 47,
-			ratingPoints: 1206,
-			contestsCount: 92,
-			avgPlace: 26.6,
-			lastActive: "2024-01-12T16:17:00Z",
-			memberCount: 12,
-		},
-		{
-			id: 48,
-			name: "CyberSamosa",
-			description: "Indian team serving spicy exploits",
-			country_code: "IN",
-			ctftime_id: 69435,
-			verified_at: new Date().toString(),
-			ranking: 48,
-			ratingPoints: 1189,
-			contestsCount: 68,
-			avgPlace: 27.2,
-			lastActive: "2024-01-14T10:59:00Z",
-			memberCount: 14,
-		},
-		{
-			id: 49,
-			name: "SiliconValleyElite",
-			description: "Tech industry professionals moonlighting as CTF players",
-			country_code: "US",
-			ctftime_id: 73892,
-			verified_at: new Date().toString(),
-			ranking: 49,
-			ratingPoints: 1173,
-			contestsCount: 56,
-			avgPlace: 27.7,
-			lastActive: "2024-01-13T18:41:00Z",
-			memberCount: 7,
-		},
-		{
-			id: 50,
-			name: "KiwiSec",
-			description: "New Zealand team with unique island perspective",
-			country_code: "NZ",
-			ctftime_id: 86294,
-			verified_at: new Date().toString(),
-			ranking: 50,
-			ratingPoints: 1158,
-			contestsCount: 74,
-			avgPlace: 28.3,
-			lastActive: "2024-01-15T06:34:00Z",
-			memberCount: 6,
-		},
+  // Recruitment
+  recruitment: TeamRecruitment;
 
-		// Teams 51-75
-		{
-			id: 51,
-			name: "ByteForce",
-			description: "Austrian precision engineering meets cybersecurity",
-			country_code: "AT",
-			ctftime_id: 54769,
-			verified_at: new Date().toString(),
-			ranking: 51,
-			ratingPoints: 1143,
-			contestsCount: 89,
-			avgPlace: 28.8,
-			lastActive: "2024-01-12T14:16:00Z",
-			memberCount: 10,
-		},
-		{
-			id: 52,
-			name: "RedTeamSix",
-			description: "Military-inspired penetration testing specialists",
-			country_code: "US",
-			ctftime_id: 78246,
-			verified_at: new Date().toString(),
-			ranking: 52,
-			ratingPoints: 1129,
-			contestsCount: 67,
-			avgPlace: 29.4,
-			lastActive: "2024-01-14T20:52:00Z",
-			memberCount: 6,
-		},
-		{
-			id: 53,
-			name: "CyberVikings",
-			description: "Danish team raiding digital kingdoms",
-			country_code: "DK",
-			ctftime_id: 62847,
-			verified_at: new Date().toString(),
-			ranking: 53,
-			ratingPoints: 1115,
-			contestsCount: 81,
-			avgPlace: 29.9,
-			lastActive: "2024-01-13T11:28:00Z",
-			memberCount: 9,
-		},
-		{
-			id: 54,
-			name: "TacoShell",
-			description: "Mexican team serving shell exploits with lime",
-			country_code: "MX",
-			ctftime_id: 95173,
-			verified_at: new Date().toString(),
-			ranking: 54,
-			ratingPoints: 1102,
-			contestsCount: 73,
-			avgPlace: 30.5,
-			lastActive: "2024-01-15T13:45:00Z",
-			memberCount: 11,
-		},
-		{
-			id: 55,
-			name: "CodeBreakers",
-			description: "Portuguese team specializing in cryptanalysis",
-			country_code: "PT",
-			ctftime_id: 47658,
-			verified_at: new Date().toString(),
-			ranking: 55,
-			ratingPoints: 1089,
-			contestsCount: 64,
-			avgPlace: 31.1,
-			lastActive: "2024-01-12T09:19:00Z",
-			memberCount: 8,
-		},
-		{
-			id: 56,
-			name: "BufferOverflowers",
-			description: "Stack smashing specialists from Hungary",
-			country_code: "HU",
-			ctftime_id: 71835,
-			verified_at: new Date().toString(),
-			ranking: 56,
-			ratingPoints: 1076,
-			contestsCount: 76,
-			avgPlace: 31.6,
-			lastActive: "2024-01-14T15:37:00Z",
-			memberCount: 7,
-		},
-		{
-			id: 57,
-			name: "PacketStorm",
-			description: "Network security experts from Slovenia",
-			country_code: "SI",
-			ctftime_id: 89264,
-			verified_at: new Date().toString(),
-			ranking: 57,
-			ratingPoints: 1064,
-			contestsCount: 58,
-			avgPlace: 32.2,
-			lastActive: "2024-01-13T17:23:00Z",
-			memberCount: 6,
-		},
-		{
-			id: 58,
-			name: "CyberNinja",
-			description: "Stealthy Japanese team operating in shadows",
-			country_code: "JP",
-			ctftime_id: 53947,
-			verified_at: new Date().toString(),
-			ranking: 58,
-			ratingPoints: 1052,
-			contestsCount: 69,
-			avgPlace: 32.7,
-			lastActive: "2024-01-15T19:11:00Z",
-			memberCount: 5,
-		},
-		{
-			id: 59,
-			name: "BinaryBeasts",
-			description: "Fierce competitors from Lithuania",
-			country_code: "LT",
-			ctftime_id: 76582,
-			verified_at: new Date().toString(),
-			ranking: 59,
-			ratingPoints: 1040,
-			contestsCount: 72,
-			avgPlace: 33.3,
-			lastActive: "2024-01-12T12:48:00Z",
-			memberCount: 8,
-		},
-		{
-			id: 60,
-			name: "EthicalHackers",
-			description: "White hat collective from various countries",
-			country_code: "XX",
-			ctftime_id: 64371,
+  // Settings
+  settings: {
+    allowApplications: boolean;
+    requireApproval: boolean;
+    autoAcceptFromRating: number;
+    visibilityLevel: 'public' | 'members_only' | 'captain_only';
+  };
 
-			ranking: 60,
-			ratingPoints: 1029,
-			contestsCount: 65,
-			avgPlace: 33.8,
-			lastActive: "2024-01-14T08:56:00Z",
-			memberCount: 12,
-		},
+  // Social links
+  socialLinks: {
+    website?: string;
+    discord?: string;
+    slack?: string;
+    github?: string;
+  };
 
-		// Teams 61-80
-		{
-			id: 61,
-			name: "CyberGuardians",
-			description: "Defensive-minded team from Estonia",
-			country_code: "EE",
-			ctftime_id: 82459,
-			verified_at: new Date().toString(),
-			ranking: 61,
-			ratingPoints: 1018,
-			contestsCount: 61,
-			avgPlace: 34.4,
-			lastActive: "2024-01-13T16:42:00Z",
-			memberCount: 7,
-		},
-		{
-			id: 62,
-			name: "DigitalCrusaders",
-			description: "Spanish team on a cybersecurity mission",
-			country_code: "ES",
-			ctftime_id: 57293,
-			verified_at: new Date().toString(),
-			ranking: 62,
-			ratingPoints: 1007,
-			contestsCount: 78,
-			avgPlace: 34.9,
-			lastActive: "2024-01-15T21:17:00Z",
-			memberCount: 10,
-		},
-		{
-			id: 63,
-			name: "ZeroDay",
-			description: "Vulnerability research team from Slovakia",
-			country_code: "SK",
-			ctftime_id: 93847,
-			verified_at: new Date().toString(),
-			ranking: 63,
-			ratingPoints: 997,
-			contestsCount: 54,
-			avgPlace: 35.5,
-			lastActive: "2024-01-12T07:33:00Z",
-			memberCount: 6,
-		},
-		{
-			id: 64,
-			name: "ByteBandits",
-			description: "Croatian team stealing flags with style",
-			country_code: "HR",
-			ctftime_id: 68574,
-			verified_at: new Date().toString(),
-			ranking: 64,
-			ratingPoints: 987,
-			contestsCount: 67,
-			avgPlace: 36.1,
-			lastActive: "2024-01-14T12:58:00Z",
-			memberCount: 9,
-		},
-		{
-			id: 65,
-			name: "CyberPirates",
-			description: "Digital buccaneers from Bulgaria",
-			country_code: "BG",
-			ctftime_id: 74926,
-			verified_at: new Date().toString(),
-			ranking: 65,
-			ratingPoints: 977,
-			contestsCount: 71,
-			avgPlace: 36.6,
-			lastActive: "2024-01-13T14:21:00Z",
-			memberCount: 8,
-		},
-		{
-			id: 66,
-			name: "QuantumLeap",
-			description: "Advanced research team from Israel",
-			country_code: "IL",
-			ctftime_id: 86395,
-			verified_at: new Date().toString(),
-			ranking: 66,
-			ratingPoints: 968,
-			contestsCount: 59,
-			avgPlace: 37.2,
-			lastActive: "2024-01-15T10:47:00Z",
-			memberCount: 7,
-		},
-		{
-			id: 67,
-			name: "CyberSpartans",
-			description: "Greek warriors in digital battlefields",
-			country_code: "GR",
-			ctftime_id: 52841,
-			verified_at: new Date().toString(),
-			ranking: 67,
-			ratingPoints: 959,
-			contestsCount: 63,
-			avgPlace: 37.7,
-			lastActive: "2024-01-12T18:34:00Z",
-			memberCount: 6,
-		},
-		{
-			id: 68,
-			name: "HashCrashers",
-			description: "Cryptography specialists from Latvia",
-			country_code: "LV",
-			ctftime_id: 79472,
-			verified_at: new Date().toString(),
-			ranking: 68,
-			ratingPoints: 951,
-			contestsCount: 56,
-			avgPlace: 38.3,
-			lastActive: "2024-01-14T16:19:00Z",
-			memberCount: 5,
-		},
-		{
-			id: 69,
-			name: "EliteCoders",
-			description: "Programming virtuosos from Serbia",
-			country_code: "RS",
-			ctftime_id: 65738,
-			verified_at: new Date().toString(),
-			ranking: 69,
-			ratingPoints: 943,
-			contestsCount: 68,
-			avgPlace: 38.8,
-			lastActive: "2024-01-13T09:52:00Z",
-			memberCount: 9,
-		},
-		{
-			id: 70,
-			name: "CyberPhoenix",
-			description: "Rising from digital ashes - Turkish team",
-			country_code: "TR",
-			ctftime_id: 91638,
-			verified_at: new Date().toString(),
-			ranking: 70,
-			ratingPoints: 935,
-			contestsCount: 61,
-			avgPlace: 39.4,
-			lastActive: "2024-01-15T13:26:00Z",
-			memberCount: 8,
-		},
-		{
-			id: 71,
-			name: "BinaryBears",
-			description: "Friendly but fierce team from Ireland",
-			country_code: "IE",
-			ctftime_id: 58394,
-			verified_at: new Date().toString(),
-			ranking: 71,
-			ratingPoints: 927,
-			contestsCount: 52,
-			avgPlace: 39.9,
-			lastActive: "2024-01-12T15:43:00Z",
-			memberCount: 6,
-		},
-		{
-			id: 72,
-			name: "CyberKnights",
-			description: "Honorable defenders from Malta",
-			country_code: "MT",
-			ctftime_id: 73856,
-			verified_at: new Date().toString(),
-			ranking: 72,
-			ratingPoints: 920,
-			contestsCount: 47,
-			avgPlace: 40.5,
-			lastActive: "2024-01-14T11:17:00Z",
-			memberCount: 4,
-		},
-		{
-			id: 73,
-			name: "DigitalDragons",
-			description: "Legendary team from Wales",
-			country_code: "GB",
-			ctftime_id: 84729,
-			verified_at: new Date().toString(),
-			ranking: 73,
-			ratingPoints: 913,
-			contestsCount: 64,
-			avgPlace: 41.1,
-			lastActive: "2024-01-13T20:08:00Z",
-			memberCount: 7,
-		},
-		{
-			id: 74,
-			name: "CyberMavericks",
-			description: "Independent thinkers from Cyprus",
-			country_code: "CY",
-			ctftime_id: 67294,
-			verified_at: new Date().toString(),
-			ranking: 74,
-			ratingPoints: 906,
-			contestsCount: 49,
-			avgPlace: 41.6,
-			lastActive: "2024-01-15T08:31:00Z",
-			memberCount: 5,
-		},
-		{
-			id: 75,
-			name: "ByteWarriors",
-			description: "Combat-ready cybersecurity team from Montenegro",
-			country_code: "ME",
-			ctftime_id: 92573,
-			verified_at: new Date().toString(),
-			ranking: 75,
-			ratingPoints: 899,
-			contestsCount: 55,
-			avgPlace: 42.2,
-			lastActive: "2024-01-12T19:24:00Z",
-			memberCount: 6,
-		},
+  // Timestamps
+  createdAt: string;
+  updatedAt: string;
+}
 
-		// Teams 76-100
-		{
-			id: 76,
-			name: "CyberStorm",
-			description: "Tempestuous team from Iceland",
-			country_code: "IS",
-			ctftime_id: 76481,
-			verified_at: new Date().toString(),
-			ranking: 76,
-			ratingPoints: 893,
-			contestsCount: 43,
-			avgPlace: 42.7,
-			lastActive: "2024-01-14T14:56:00Z",
-			memberCount: 4,
-		},
-		{
-			id: 77,
-			name: "DigitalNomads",
-			description: "Traveling cybersecurity experts",
-			country_code: "XX",
-			ctftime_id: 59837,
+export interface TeamFilters {
+  search?: string;
+  country?: string;
+  minRating?: number;
+  maxRating?: number;
+  isRecruiting?: boolean;
+  memberCount?: {
+    min?: number;
+    max?: number;
+  };
+  lastActive?: 'week' | 'month' | 'year';
+  contestsParticipated?: {
+    min?: number;
+    max?: number;
+  };
+  skills?: string[];
+  sortBy?: 'newest' | 'oldest' | 'rating' | 'members' | 'activity' | 'contests';
+}
 
-			ranking: 77,
-			ratingPoints: 887,
-			contestsCount: 58,
-			avgPlace: 43.3,
-			lastActive: "2024-01-13T12:14:00Z",
-			memberCount: 8,
-		},
-		{
-			id: 78,
-			name: "CyberHawks",
-			description: "Sharp-eyed security team from Albania",
-			country_code: "AL",
-			ctftime_id: 83629,
-			verified_at: new Date().toString(),
-			ranking: 78,
-			ratingPoints: 881,
-			contestsCount: 46,
-			avgPlace: 43.8,
-			lastActive: "2024-01-15T17:42:00Z",
-			memberCount: 5,
-		},
-		{
-			id: 79,
-			name: "BinaryBlaze",
-			description: "Fast-moving team from North Macedonia",
-			country_code: "MK",
-			ctftime_id: 71456,
-			verified_at: new Date().toString(),
-			ranking: 79,
-			ratingPoints: 875,
-			contestsCount: 51,
-			avgPlace: 44.4,
-			lastActive: "2024-01-12T08:59:00Z",
-			memberCount: 6,
-		},
-		{
-			id: 80,
-			name: "CyberWolves",
-			description: "Pack hunters from Moldova",
-			country_code: "MD",
-			ctftime_id: 94752,
-			verified_at: new Date().toString(),
-			ranking: 80,
-			ratingPoints: 870,
-			contestsCount: 39,
-			avgPlace: 44.9,
-			lastActive: "2024-01-14T21:36:00Z",
-			memberCount: 4,
-		},
-		{
-			id: 81,
-			name: "DigitalEagles",
-			description: "High-flying team from Bosnia and Herzegovina",
-			country_code: "BA",
-			ctftime_id: 68374,
-			verified_at: new Date().toString(),
-			ranking: 81,
-			ratingPoints: 865,
-			contestsCount: 44,
-			avgPlace: 45.5,
-			lastActive: "2024-01-13T15:28:00Z",
-			memberCount: 5,
-		},
-		{
-			id: 82,
-			name: "CyberTitans",
-			description: "Mighty team from Luxembourg",
-			country_code: "LU",
-			ctftime_id: 85697,
-			verified_at: new Date().toString(),
-			ranking: 82,
-			ratingPoints: 860,
-			contestsCount: 37,
-			avgPlace: 46.1,
-			lastActive: "2024-01-15T11:03:00Z",
-			memberCount: 3,
-		},
-		{
-			id: 83,
-			name: "ByteRebels",
-			description: "Revolutionary thinkers from Kosovo",
-			country_code: "XK",
-			ctftime_id: 79248,
-			verified_at: new Date().toString(),
-			ranking: 83,
-			ratingPoints: 855,
-			contestsCount: 42,
-			avgPlace: 46.6,
-			lastActive: "2024-01-12T17:47:00Z",
-			memberCount: 4,
-		},
-		{
-			id: 84,
-			name: "CyberMonks",
-			description: "Meditative approach to cybersecurity",
-			country_code: "XX",
-			ctftime_id: 72893,
+export interface TeamListResponse {
+  teams: Team[];
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+}
 
-			ranking: 84,
-			ratingPoints: 851,
-			contestsCount: 35,
-			avgPlace: 47.2,
-			lastActive: "2024-01-14T09:21:00Z",
-			memberCount: 3,
-		},
-		{
-			id: 85,
-			name: "DigitalSpartans",
-			description: "Disciplined warriors from San Marino",
-			country_code: "SM",
-			ctftime_id: 96374,
-			verified_at: new Date().toString(),
-			ranking: 85,
-			ratingPoints: 847,
-			contestsCount: 38,
-			avgPlace: 47.7,
-			lastActive: "2024-01-13T18:15:00Z",
-			memberCount: 2,
-		},
-		{
-			id: 86,
-			name: "CyberPioneers",
-			description: "Trail-blazing team from Monaco",
-			country_code: "MC",
-			ctftime_id: 63928,
-			verified_at: new Date().toString(),
-			ranking: 86,
-			ratingPoints: 843,
-			contestsCount: 33,
-			avgPlace: 48.3,
-			lastActive: "2024-01-15T14:52:00Z",
-			memberCount: 2,
-		},
-		{
-			id: 87,
-			name: "BinaryShield",
-			description: "Defensive specialists from Andorra",
-			country_code: "AD",
-			ctftime_id: 87459,
-			verified_at: new Date().toString(),
-			ranking: 87,
-			ratingPoints: 840,
-			contestsCount: 36,
-			avgPlace: 48.8,
-			lastActive: "2024-01-12T13:37:00Z",
-			memberCount: 3,
-		},
-		{
-			id: 88,
-			name: "CyberComets",
-			description: "Fast-moving team from Liechtenstein",
-			country_code: "LI",
-			ctftime_id: 74582,
-			verified_at: new Date().toString(),
-			ranking: 88,
-			ratingPoints: 837,
-			contestsCount: 31,
-			avgPlace: 49.4,
-			lastActive: "2024-01-14T16:29:00Z",
-			memberCount: 2,
-		},
-		{
-			id: 89,
-			name: "DigitalVanguard",
-			description: "Leading edge team from Vatican City",
-			country_code: "VA",
-			ctftime_id: 91876,
-			verified_at: new Date().toString(),
-			ranking: 89,
-			ratingPoints: 834,
-			contestsCount: 29,
-			avgPlace: 49.9,
-			lastActive: "2024-01-13T10:18:00Z",
-			memberCount: 1,
-		},
-		{
-			id: 90,
-			name: "CyberDreamers",
-			description: "Visionary team with global membership",
-			country_code: "XX",
-			ctftime_id: 56742,
+// Enhanced mock teams data with comprehensive information
+const mockTeams: Team[] = [
+  {
+    id: "team-001",
+    name: "CyberSamurai",
+    description: "Elite cybersecurity team specializing in advanced persistent threat hunting and zero-day research. We compete at the highest level of international CTF competitions.",
+    logoUrl: "https://images.unsplash.com/photo-1614064641938-3bbee52942c7?w=64&h=64&fit=crop&crop=center",
+    bannerUrl: "https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=800&h=200&fit=crop",
+    privacy: 'public',
+    captainId: "user-001",
+    members: [
+      {
+        id: "member-001",
+        userId: "user-001",
+        username: "CyberNinja",
+        email: "ninja@cybersamurai.team",
+        role: "captain",
+        joinedAt: "2022-01-15T00:00:00Z",
+        skills: ["Web Security", "Cryptography", "Reverse Engineering"],
+        isActive: true
+      },
+      {
+        id: "member-002", 
+        userId: "user-010",
+        username: "BinaryMaster",
+        email: "binary@cybersamurai.team",
+        role: "member",
+        joinedAt: "2022-02-20T00:00:00Z",
+        skills: ["Binary Exploitation", "Reverse Engineering", "Assembly"],
+        isActive: true
+      },
+      {
+        id: "member-003",
+        userId: "user-023",
+        username: "CryptoQueen",
+        email: "crypto@cybersamurai.team", 
+        role: "member",
+        joinedAt: "2022-03-10T00:00:00Z",
+        skills: ["Cryptography", "Number Theory", "Mathematics"],
+        isActive: true
+      }
+    ],
+    memberCount: 3,
+    maxMembers: 5,
+    country: "US",
+    founded: "2022-01-15T00:00:00Z",
+    lastActive: "2024-01-20T00:00:00Z",
+    status: "active",
+    statistics: {
+      contestsParticipated: 28,
+      contestsWon: 8,
+      totalPoints: 15420,
+      averageRating: 1892,
+      bestRanking: 1,
+      currentRating: 1943,
+      ratingHistory: [
+        { date: "2024-01-15", rating: 1943, contest: "picoCTF 2024" },
+        { date: "2023-12-10", rating: 1867, contest: "ASIS CTF Finals" },
+        { date: "2023-11-25", rating: 1823, contest: "HITCON CTF" }
+      ]
+    },
+    recruitment: {
+      isRecruiting: true,
+      description: "Looking for experienced players with strong crypto and pwn skills. Must have participated in at least 10 major CTFs.",
+      requiredSkills: ["Cryptography", "Binary Exploitation"],
+      preferredSkills: ["Reverse Engineering", "Web Security"],
+      minExperience: "2+ years",
+      timeCommitment: "15+ hours/week",
+      contactMethod: "application",
+      maxMembers: 5,
+      applicationDeadline: "2024-03-01T00:00:00Z"
+    },
+    settings: {
+      allowApplications: true,
+      requireApproval: true,
+      autoAcceptFromRating: 1800,
+      visibilityLevel: "public"
+    },
+    socialLinks: {
+      website: "https://cybersamurai.team",
+      discord: "https://discord.gg/cybersamurai",
+      github: "https://github.com/cybersamurai-team"
+    },
+    createdAt: "2022-01-15T00:00:00Z",
+    updatedAt: "2024-01-20T00:00:00Z"
+  },
 
-			ranking: 90,
-			ratingPoints: 831,
-			contestsCount: 34,
-			avgPlace: 50.5,
-			lastActive: "2024-01-15T07:44:00Z",
-			memberCount: 5,
-		},
-		{
-			id: 91,
-			name: "ByteExplorers",
-			description: "Adventure-seeking cybersecurity enthusiasts",
-			country_code: "XX",
-			ctftime_id: 69834,
+  {
+    id: "team-002", 
+    name: "Digital Ronin",
+    description: "International team of security researchers and penetration testers. We focus on real-world security challenges and advanced exploitation techniques.",
+    logoUrl: "https://images.unsplash.com/photo-1516472543999-e22c6fe7d43a?w=64&h=64&fit=crop&crop=center",
+    privacy: 'invite-only',
+    captainId: "user-045",
+    members: [
+      {
+        id: "member-010",
+        userId: "user-045", 
+        username: "ShadowHacker",
+        email: "shadow@digitalronin.org",
+        role: "captain",
+        joinedAt: "2021-06-01T00:00:00Z",
+        skills: ["Web Security", "Network Security", "Social Engineering"],
+        isActive: true
+      },
+      {
+        id: "member-011",
+        userId: "user-078",
+        username: "ForensicsExpert",
+        email: "forensics@digitalronin.org",
+        role: "member", 
+        joinedAt: "2021-08-15T00:00:00Z",
+        skills: ["Digital Forensics", "Malware Analysis", "OSINT"],
+        isActive: true
+      }
+    ],
+    memberCount: 2,
+    maxMembers: 4,
+    country: "DE",
+    founded: "2021-06-01T00:00:00Z",
+    lastActive: "2024-01-18T00:00:00Z",
+    status: "active",
+    statistics: {
+      contestsParticipated: 35,
+      contestsWon: 12,
+      totalPoints: 18750,
+      averageRating: 2034,
+      bestRanking: 3,
+      currentRating: 2156,
+      ratingHistory: [
+        { date: "2024-01-10", rating: 2156, contest: "InsomniHack CTF" },
+        { date: "2023-12-20", rating: 2089, contest: "35C3 CTF" }
+      ]
+    },
+    recruitment: {
+      isRecruiting: false,
+      description: "",
+      requiredSkills: [],
+      preferredSkills: [],
+      contactMethod: "invitation_only",
+      maxMembers: 4
+    },
+    settings: {
+      allowApplications: false,
+      requireApproval: true,
+      autoAcceptFromRating: 2000,
+      visibilityLevel: "public"
+    },
+    socialLinks: {
+      discord: "https://discord.gg/digitalronin"
+    },
+    createdAt: "2021-06-01T00:00:00Z",
+    updatedAt: "2024-01-18T00:00:00Z"
+  },
 
-			ranking: 91,
-			ratingPoints: 829,
-			contestsCount: 27,
-			avgPlace: 51.1,
-			lastActive: "2024-01-12T20:33:00Z",
-			memberCount: 4,
-		},
-		{
-			id: 92,
-			name: "CyberNovices",
-			description: "Rising newcomers learning fast",
-			country_code: "XX",
-			ctftime_id: 82947,
+  {
+    id: "team-003",
+    name: "NullPointer Academy",
+    description: "Student-led team from top universities focusing on learning and skill development. Perfect for beginners and intermediate players looking to grow.",
+    logoUrl: "https://images.unsplash.com/photo-1484417894907-623942c8ee29?w=64&h=64&fit=crop&crop=center",
+    privacy: 'public',
+    captainId: "user-156",
+    members: [
+      {
+        id: "member-020",
+        userId: "user-156",
+        username: "StudentHacker",
+        email: "student@nullpointer.academy",
+        role: "captain",
+        joinedAt: "2023-09-01T00:00:00Z",
+        skills: ["Python", "Web Security", "Linux"],
+        isActive: true
+      }
+    ],
+    memberCount: 8,
+    maxMembers: 10,
+    country: "CA",
+    founded: "2023-09-01T00:00:00Z",
+    lastActive: "2024-01-19T00:00:00Z",
+    status: "active",
+    statistics: {
+      contestsParticipated: 12,
+      contestsWon: 0,
+      totalPoints: 5420,
+      averageRating: 1245,
+      bestRanking: 45,
+      currentRating: 1267,
+      ratingHistory: [
+        { date: "2024-01-15", rating: 1267, contest: "NorthSec CTF" },
+        { date: "2023-12-01", rating: 1198, contest: "CSAW CTF" }
+      ]
+    },
+    recruitment: {
+      isRecruiting: true,
+      description: "Welcoming students and beginners! No prior CTF experience required. We provide mentorship and learning resources.",
+      requiredSkills: [],
+      preferredSkills: ["Programming", "Linux", "Networking"],
+      minExperience: "Beginner friendly",
+      timeCommitment: "5-10 hours/week",
+      contactMethod: "application",
+      maxMembers: 10
+    },
+    settings: {
+      allowApplications: true,
+      requireApproval: false,
+      autoAcceptFromRating: 0,
+      visibilityLevel: "public"
+    },
+    socialLinks: {
+      website: "https://nullpointer.academy",
+      discord: "https://discord.gg/nullpointer",
+      github: "https://github.com/nullpointer-academy"
+    },
+    createdAt: "2023-09-01T00:00:00Z",
+    updatedAt: "2024-01-19T00:00:00Z"
+  }
+];
 
-			ranking: 92,
-			ratingPoints: 826,
-			contestsCount: 25,
-			avgPlace: 51.6,
-			lastActive: "2024-01-14T12:27:00Z",
-			memberCount: 3,
-		},
-		{
-			id: 93,
-			name: "DigitalCadets",
-			description: "Military academy cybersecurity students",
-			country_code: "US",
-			ctftime_id: 75839,
-			verified_at: new Date().toString(),
-			ranking: 93,
-			ratingPoints: 824,
-			contestsCount: 32,
-			avgPlace: 52.2,
-			lastActive: "2024-01-13T16:55:00Z",
-			memberCount: 6,
-		},
-		{
-			id: 94,
-			name: "CyberApprentices",
-			description: "Learning-focused international collective",
-			country_code: "XX",
-			ctftime_id: 94573,
+const mockInvitations: TeamInvitation[] = [
+  {
+    id: "inv-001",
+    teamId: "team-001",
+    teamName: "CyberSamurai",
+    invitedUserId: "user-999",
+    invitedUsername: "NewHacker",
+    invitedEmail: "newhacker@example.com",
+    invitedByUserId: "user-001", 
+    invitedByUsername: "CyberNinja",
+    status: "pending",
+    message: "We'd love to have you join our team! Your crypto skills would be a great addition.",
+    createdAt: "2024-01-20T10:00:00Z",
+    expiresAt: "2024-02-20T10:00:00Z"
+  }
+];
 
-			ranking: 94,
-			ratingPoints: 822,
-			contestsCount: 23,
-			avgPlace: 52.7,
-			lastActive: "2024-01-15T19:48:00Z",
-			memberCount: 2,
-		},
-		{
-			id: 95,
-			name: "BinaryBeginners",
-			description: "Entry-level team with high aspirations",
-			country_code: "XX",
-			ctftime_id: 67428,
+const mockApplications: TeamApplication[] = [
+  {
+    id: "app-001",
+    teamId: "team-003",
+    userId: "user-888",
+    username: "AspiringHacker",
+    email: "aspiring@example.com",
+    message: "I'm a computer science student passionate about cybersecurity. I've been practicing on HackTheBox and would love to join a team to learn more!",
+    skills: ["Python", "Linux", "Web Development"],
+    status: "pending",
+    createdAt: "2024-01-19T15:30:00Z"
+  }
+];
 
-			ranking: 95,
-			ratingPoints: 820,
-			contestsCount: 21,
-			avgPlace: 53.3,
-			lastActive: "2024-01-12T11:42:00Z",
-			memberCount: 2,
-		},
-		{
-			id: 96,
-			name: "CyberSeedlings",
-			description: "Growing team with potential",
-			country_code: "XX",
-			ctftime_id: 88256,
+// API Functions
+export async function getTeams(
+  filters: TeamFilters = {},
+  page = 1,
+  limit = 12
+): Promise<ApiResponse<TeamListResponse>> {
+  await new Promise(resolve => setTimeout(resolve, 300));
 
-			ranking: 96,
-			ratingPoints: 818,
-			contestsCount: 19,
-			avgPlace: 53.8,
-			lastActive: "2024-01-14T08:37:00Z",
-			memberCount: 1,
-		},
-		{
-			id: 97,
-			name: "DigitalSaplings",
-			description: "Young team ready to grow",
-			country_code: "XX",
-			ctftime_id: 73695,
+  let filteredTeams = [...mockTeams];
 
-			ranking: 97,
-			ratingPoints: 816,
-			contestsCount: 18,
-			avgPlace: 54.4,
-			lastActive: "2024-01-13T14:23:00Z",
-			memberCount: 1,
-		},
-		{
-			id: 98,
-			name: "CyberSprouts",
-			description: "Fresh team just getting started",
-			country_code: "XX",
-			ctftime_id: 91847,
+  // Apply filters
+  if (filters.search) {
+    const search = filters.search.toLowerCase();
+    filteredTeams = filteredTeams.filter(team =>
+      team.name.toLowerCase().includes(search) ||
+      team.description.toLowerCase().includes(search) ||
+      team.members.some(member => member.username.toLowerCase().includes(search))
+    );
+  }
 
-			ranking: 98,
-			ratingPoints: 815,
-			contestsCount: 16,
-			avgPlace: 54.9,
-			lastActive: "2024-01-15T12:16:00Z",
-			memberCount: 1,
-		},
-		{
-			id: 99,
-			name: "BinaryBuds",
-			description: "Friendship-based cybersecurity team",
-			country_code: "XX",
-			ctftime_id: 65827,
+  if (filters.country) {
+    filteredTeams = filteredTeams.filter(team => team.country === filters.country);
+  }
 
-			ranking: 99,
-			ratingPoints: 814,
-			contestsCount: 15,
-			avgPlace: 55.5,
-			lastActive: "2024-01-12T09:58:00Z",
-			memberCount: 2,
-		},
-		{
-			id: 100,
-			name: "CyberStarters",
-			description: "Brand new team with big dreams",
-			country_code: "XX",
-			ctftime_id: 79453,
+  if (filters.isRecruiting !== undefined) {
+    filteredTeams = filteredTeams.filter(team => team.recruitment.isRecruiting === filters.isRecruiting);
+  }
 
-			ranking: 100,
-			ratingPoints: 813,
-			contestsCount: 14,
-			avgPlace: 56.1,
-			lastActive: "2024-01-14T17:31:00Z",
-			memberCount: 1,
-		}
-	];
+  if (filters.minRating) {
+    filteredTeams = filteredTeams.filter(team => team.statistics.currentRating >= filters.minRating!);
+  }
 
-	const offset = params?.offset || 0;
-	const limit = params?.limit || 30;
+  if (filters.maxRating) {
+    filteredTeams = filteredTeams.filter(team => team.statistics.currentRating <= filters.maxRating!);
+  }
 
-	// Filter by country codes if provided
-	let filteredTeams = mockTeams;
-	if (params?.countryCodes && params.countryCodes.length > 0) {
-		filteredTeams = mockTeams.filter(team => 
-			params.countryCodes!.includes(team.country_code)
-		);
-	}
+  if (filters.memberCount) {
+    filteredTeams = filteredTeams.filter(team => {
+      const count = team.memberCount;
+      return (!filters.memberCount!.min || count >= filters.memberCount!.min) &&
+             (!filters.memberCount!.max || count <= filters.memberCount!.max);
+    });
+  }
 
-	// Apply pagination to filtered results
-	const paginatedTeams = filteredTeams.slice(offset, offset + limit);
+  if (filters.skills && filters.skills.length > 0) {
+    filteredTeams = filteredTeams.filter(team =>
+      team.recruitment.requiredSkills.some(skill => filters.skills!.includes(skill)) ||
+      team.recruitment.preferredSkills.some(skill => filters.skills!.includes(skill))
+    );
+  }
 
-	return {
-		items: paginatedTeams,
-		pagination: {
-			offset,
-			limit,
-			total: filteredTeams.length,
-			hasNext: offset + limit < filteredTeams.length,
-			hasPrev: offset > 0,
-			totalPages: Math.ceil(filteredTeams.length / limit),
-			currentPage: Math.floor(offset / limit) + 1,
-		},
-	};
-};
+  // Apply sorting
+  switch (filters.sortBy) {
+    case 'oldest':
+      filteredTeams.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
+      break;
+    case 'rating':
+      filteredTeams.sort((a, b) => b.statistics.currentRating - a.statistics.currentRating);
+      break;
+    case 'members':
+      filteredTeams.sort((a, b) => b.memberCount - a.memberCount);
+      break;
+    case 'activity':
+      filteredTeams.sort((a, b) => new Date(b.lastActive).getTime() - new Date(a.lastActive).getTime());
+      break;
+    case 'contests':
+      filteredTeams.sort((a, b) => b.statistics.contestsParticipated - a.statistics.contestsParticipated);
+      break;
+    case 'newest':
+    default:
+      filteredTeams.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+      break;
+  }
 
-export const createTeam = async (teamData: CreateTeamDto): Promise<Team> => {
-	await sleep(1000);
-	return {
-		id: Math.floor(Math.random() * 1000) + 100,
-		name: teamData.name,
-		description: teamData.description,
-		country_code: "global",
-	};
-};
+  // Pagination
+  const total = filteredTeams.length;
+  const totalPages = Math.ceil(total / limit);
+  const startIndex = (page - 1) * limit;
+  const endIndex = startIndex + limit;
+  const paginatedTeams = filteredTeams.slice(startIndex, endIndex);
 
-export const searchTeams = async (query: string, limit: number = 10): Promise<TeamWithRanking[]> => {
-	await sleep(1000);
-	const teams = await getTeams({ limit: 100 });
-	return teams.items
-		.filter((team) => team.name.toLowerCase().includes(query.toLowerCase()))
-		.slice(0, limit);
-};
+  return {
+    success: true,
+    data: {
+      teams: paginatedTeams,
+      total,
+      page,
+      limit,
+      totalPages
+    }
+  };
+}
+
+export async function getTeam(id: string): Promise<ApiResponse<Team>> {
+  await new Promise(resolve => setTimeout(resolve, 200));
+
+  const team = mockTeams.find(t => t.id === id);
+
+  if (!team) {
+    return {
+      success: false,
+      error: 'Team not found'
+    };
+  }
+
+  return {
+    success: true,
+    data: team
+  };
+}
+
+export async function createTeam(teamData: Partial<Team>, userId: string): Promise<ApiResponse<Team>> {
+  await new Promise(resolve => setTimeout(resolve, 500));
+
+  if (!userId) {
+    return {
+      success: false,
+      error: 'Authentication required'
+    };
+  }
+
+  const newTeam: Team = {
+    id: `team-${Date.now()}`,
+    name: teamData.name || '',
+    description: teamData.description || '',
+    logoUrl: teamData.logoUrl,
+    bannerUrl: teamData.bannerUrl,
+    privacy: teamData.privacy || 'public',
+    captainId: userId,
+    members: [{
+      id: `member-${Date.now()}`,
+      userId,
+      username: 'CurrentUser', // In real app, this would come from user data
+      email: 'current@example.com',
+      role: 'captain',
+      joinedAt: new Date().toISOString(),
+      skills: [],
+      isActive: true
+    }],
+    memberCount: 1,
+    maxMembers: teamData.maxMembers || 5,
+    country: teamData.country,
+    founded: new Date().toISOString(),
+    lastActive: new Date().toISOString(),
+    status: 'active',
+    statistics: {
+      contestsParticipated: 0,
+      contestsWon: 0,
+      totalPoints: 0,
+      averageRating: 1000,
+      bestRanking: 0,
+      currentRating: 1000,
+      ratingHistory: []
+    },
+    recruitment: teamData.recruitment || {
+      isRecruiting: false,
+      requiredSkills: [],
+      preferredSkills: [],
+      contactMethod: 'application',
+      maxMembers: 5
+    },
+    settings: {
+      allowApplications: true,
+      requireApproval: true,
+      autoAcceptFromRating: 0,
+      visibilityLevel: 'public'
+    },
+    socialLinks: teamData.socialLinks || {},
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString()
+  };
+
+  mockTeams.unshift(newTeam);
+
+  return {
+    success: true,
+    data: newTeam
+  };
+}
+
+export async function updateTeam(
+  id: string,
+  teamData: Partial<Team>,
+  userId: string
+): Promise<ApiResponse<Team>> {
+  await new Promise(resolve => setTimeout(resolve, 500));
+
+  if (!userId) {
+    return {
+      success: false,
+      error: 'Authentication required'
+    };
+  }
+
+  const teamIndex = mockTeams.findIndex(t => t.id === id);
+  if (teamIndex === -1) {
+    return {
+      success: false,
+      error: 'Team not found'
+    };
+  }
+
+  const team = mockTeams[teamIndex];
+  if (team.captainId !== userId) {
+    return {
+      success: false,
+      error: 'Permission denied - only team captain can update team'
+    };
+  }
+
+  const updatedTeam: Team = {
+    ...team,
+    ...teamData,
+    id: team.id,
+    captainId: team.captainId,
+    createdAt: team.createdAt,
+    updatedAt: new Date().toISOString()
+  };
+
+  mockTeams[teamIndex] = updatedTeam;
+
+  return {
+    success: true,
+    data: updatedTeam
+  };
+}
+
+export async function deleteTeam(id: string, userId: string): Promise<ApiResponse<void>> {
+  await new Promise(resolve => setTimeout(resolve, 300));
+
+  if (!userId) {
+    return {
+      success: false,
+      error: 'Authentication required'
+    };
+  }
+
+  const teamIndex = mockTeams.findIndex(t => t.id === id);
+  if (teamIndex === -1) {
+    return {
+      success: false,
+      error: 'Team not found'
+    };
+  }
+
+  const team = mockTeams[teamIndex];
+  if (team.captainId !== userId) {
+    return {
+      success: false,
+      error: 'Permission denied - only team captain can delete team'
+    };
+  }
+
+  mockTeams.splice(teamIndex, 1);
+
+  // Clean up related data
+  const invitationIndicesToRemove = mockInvitations
+    .map((inv, index) => inv.teamId === id ? index : -1)
+    .filter(index => index !== -1)
+    .reverse();
+
+  invitationIndicesToRemove.forEach(index => {
+    mockInvitations.splice(index, 1);
+  });
+
+  return {
+    success: true,
+    data: undefined
+  };
+}
+
+export async function inviteToTeam(
+  teamId: string,
+  userIdOrEmail: string,
+  message?: string,
+  invitedByUserId?: string
+): Promise<ApiResponse<TeamInvitation>> {
+  await new Promise(resolve => setTimeout(resolve, 400));
+
+  if (!invitedByUserId) {
+    return {
+      success: false,
+      error: 'Authentication required'
+    };
+  }
+
+  const team = mockTeams.find(t => t.id === teamId);
+  if (!team) {
+    return {
+      success: false,
+      error: 'Team not found'
+    };
+  }
+
+  if (team.captainId !== invitedByUserId && 
+      !team.members.some(m => m.userId === invitedByUserId && m.role === 'captain')) {
+    return {
+      success: false,
+      error: 'Permission denied - only team captain can send invitations'
+    };
+  }
+
+  const newInvitation: TeamInvitation = {
+    id: `inv-${Date.now()}`,
+    teamId,
+    teamName: team.name,
+    invitedUserId: userIdOrEmail, // In real app, resolve email to userId
+    invitedUsername: 'InvitedUser',
+    invitedEmail: userIdOrEmail.includes('@') ? userIdOrEmail : 'user@example.com',
+    invitedByUserId,
+    invitedByUsername: 'CurrentUser',
+    status: 'pending',
+    message,
+    createdAt: new Date().toISOString(),
+    expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString() // 30 days
+  };
+
+  mockInvitations.push(newInvitation);
+
+  return {
+    success: true,
+    data: newInvitation
+  };
+}
+
+export async function respondToInvitation(
+  invitationId: string,
+  response: 'accept' | 'decline',
+  userId: string
+): Promise<ApiResponse<void>> {
+  await new Promise(resolve => setTimeout(resolve, 300));
+
+  if (!userId) {
+    return {
+      success: false,
+      error: 'Authentication required'
+    };
+  }
+
+  const invitation = mockInvitations.find(inv => inv.id === invitationId);
+  if (!invitation) {
+    return {
+      success: false,
+      error: 'Invitation not found'
+    };
+  }
+
+  if (invitation.invitedUserId !== userId) {
+    return {
+      success: false,
+      error: 'Permission denied'
+    };
+  }
+
+  if (invitation.status !== 'pending') {
+    return {
+      success: false,
+      error: 'Invitation already responded to'
+    };
+  }
+
+  invitation.status = response === 'accept' ? 'accepted' : 'declined';
+  invitation.respondedAt = new Date().toISOString();
+
+  if (response === 'accept') {
+    // Add user to team
+    const team = mockTeams.find(t => t.id === invitation.teamId);
+    if (team && team.memberCount < team.maxMembers) {
+      team.members.push({
+        id: `member-${Date.now()}`,
+        userId,
+        username: invitation.invitedUsername,
+        email: invitation.invitedEmail,
+        role: 'member',
+        joinedAt: new Date().toISOString(),
+        skills: [],
+        isActive: true
+      });
+      team.memberCount++;
+      team.updatedAt = new Date().toISOString();
+    }
+  }
+
+  return {
+    success: true,
+    data: undefined
+  };
+}
+
+export async function applyToTeam(
+  teamId: string,
+  message: string,
+  skills: string[],
+  userId: string
+): Promise<ApiResponse<TeamApplication>> {
+  await new Promise(resolve => setTimeout(resolve, 400));
+
+  if (!userId) {
+    return {
+      success: false,
+      error: 'Authentication required'
+    };
+  }
+
+  const team = mockTeams.find(t => t.id === teamId);
+  if (!team) {
+    return {
+      success: false,
+      error: 'Team not found'
+    };
+  }
+
+  if (!team.settings.allowApplications) {
+    return {
+      success: false,
+      error: 'Team is not accepting applications'
+    };
+  }
+
+  if (team.members.some(m => m.userId === userId)) {
+    return {
+      success: false,
+      error: 'You are already a member of this team'
+    };
+  }
+
+  const newApplication: TeamApplication = {
+    id: `app-${Date.now()}`,
+    teamId,
+    userId,
+    username: 'CurrentUser',
+    email: 'current@example.com',
+    message,
+    skills,
+    status: 'pending',
+    createdAt: new Date().toISOString()
+  };
+
+  mockApplications.push(newApplication);
+
+  return {
+    success: true,
+    data: newApplication
+  };
+}
+
+export async function getTeamInvitations(userId: string): Promise<ApiResponse<TeamInvitation[]>> {
+  await new Promise(resolve => setTimeout(resolve, 200));
+
+  const userInvitations = mockInvitations.filter(inv => inv.invitedUserId === userId);
+
+  return {
+    success: true,
+    data: userInvitations
+  };
+}
+
+export async function getTeamApplications(teamId: string, userId: string): Promise<ApiResponse<TeamApplication[]>> {
+  await new Promise(resolve => setTimeout(resolve, 200));
+
+  const team = mockTeams.find(t => t.id === teamId);
+  if (!team) {
+    return {
+      success: false,
+      error: 'Team not found'
+    };
+  }
+
+  if (team.captainId !== userId) {
+    return {
+      success: false,
+      error: 'Permission denied - only team captain can view applications'
+    };
+  }
+
+  const teamApplications = mockApplications.filter(app => app.teamId === teamId);
+
+  return {
+    success: true,
+    data: teamApplications
+  };
+}
+
+export async function getUserTeams(userId: string): Promise<ApiResponse<Team[]>> {
+  await new Promise(resolve => setTimeout(resolve, 200));
+
+  const userTeams = mockTeams.filter(team => 
+    team.members.some(member => member.userId === userId)
+  );
+
+  return {
+    success: true,
+    data: userTeams
+  };
+}
