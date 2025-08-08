@@ -351,7 +351,7 @@ const CountryFilter = ({
 			<div className="flex items-center justify-between">
 				<span className="text-xs font-mono text-muted-foreground">Countries ({selectedCountries.length} selected)</span>
 				<Button
-					variant="ghost"
+					variant="outline"
 					size="sm"
 					onClick={onToggleShowAll}
 					className="text-xs font-mono h-6 px-2"
