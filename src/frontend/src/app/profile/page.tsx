@@ -40,6 +40,14 @@ const mockUserProfile = {
     website: "https://cyberninja.dev"
   },
   skills: ["Web Security", "Cryptography", "Reverse Engineering", "Python", "JavaScript", "Binary Exploitation"],
+  skillLevels: {
+    "Web Security": 85,
+    "Cryptography": 75,
+    "Reverse Engineering": 90,
+    "Python": 80,
+    "JavaScript": 70,
+    "Binary Exploitation": 65
+  },
   statistics: {
     contestsParticipated: 42,
     writeupsAuthored: 28,
@@ -74,9 +82,9 @@ const rarityColors = {
   legendary: "text-yellow-400 border-yellow-400"
 };
 
-function SkillRadar({ skills }: { skills: string[] }) {
+function SkillRadar({ skills, skillLevels }: { skills: string[]; skillLevels: { [skill: string]: number } }) {
   const displaySkills = skills.slice(0, 6);
-  const skillLevels = [75, 65, 80, 60, 70, 55];
+  const levels = displaySkills.map(skill => skillLevels[skill] || 50);
   
   return (
     <div className="relative w-48 h-48 mx-auto">
@@ -88,7 +96,7 @@ function SkillRadar({ skills }: { skills: string[] }) {
         {displaySkills.map((_, i) => {
           const angle = (i * 60) - 90;
           const radians = (angle * Math.PI) / 180;
-          const level = skillLevels[i] || 50;
+          const level = levels[i] || 50;
           const x = 100 + level * Math.cos(radians);
           const y = 100 + level * Math.sin(radians);
           return <line key={i} x1="100" y1="100" x2={x} y2={y} stroke="rgb(34, 197, 94, 0.4)" strokeWidth="1" />;
@@ -98,7 +106,7 @@ function SkillRadar({ skills }: { skills: string[] }) {
           points={displaySkills.map((_, i) => {
             const angle = (i * 60) - 90;
             const radians = (angle * Math.PI) / 180;
-            const level = skillLevels[i] || 50;
+            const level = levels[i] || 50;
             const x = 100 + level * Math.cos(radians);
             const y = 100 + level * Math.sin(radians);
             return `${x},${y}`;
@@ -109,7 +117,7 @@ function SkillRadar({ skills }: { skills: string[] }) {
         {displaySkills.map((_, i) => {
           const angle = (i * 60) - 90;
           const radians = (angle * Math.PI) / 180;
-          const level = skillLevels[i] || 50;
+          const level = levels[i] || 50;
           const x = 100 + level * Math.cos(radians);
           const y = 100 + level * Math.sin(radians);
           return <circle key={i} cx={x} cy={y} r="3" fill="rgb(34, 197, 94)" />;
@@ -244,7 +252,8 @@ export default function ProfilePage() {
                     </div>
                     <Button
                       onClick={() => router.push('/profile/edit')}
-                      className="font-mono bg-blue-500 hover:bg-blue-600 text-white"
+                      variant="outline"
+                      className="font-mono border-green-500/50 text-green-400 hover:bg-green-500/10"
                     >
                       <Edit className="h-4 w-4 mr-2" />
                       EDIT PROFILE
@@ -399,7 +408,7 @@ export default function ProfilePage() {
                 {/* Skills Radar */}
                 <div className="bg-gray-800/30 backdrop-blur border border-green-500/30 rounded-lg p-6">
                   <h3 className="font-mono text-green-400 font-bold mb-6 text-center">SKILL RADAR</h3>
-                  <SkillRadar skills={profile.skills} />
+                  <SkillRadar skills={profile.skills} skillLevels={profile.skillLevels} />
                 </div>
 
                 {/* Recent Activity */}
