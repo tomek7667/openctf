@@ -51,7 +51,7 @@ export function UserMenu() {
 							exit={{ opacity: 0, y: -10, scale: 0.95 }}
 							className="absolute right-0 top-full mt-2 w-64 z-50"
 						>
-							<div className="terminal glass-terminal p-4 hacker-border">
+							<div className="bg-black/95 backdrop-blur-md border border-green-500/30 rounded-lg p-4 shadow-2xl">
 								<div className="text-primary font-mono text-sm mb-3">
 									$ whoami
 								</div>

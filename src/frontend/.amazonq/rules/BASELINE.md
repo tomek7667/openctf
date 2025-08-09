@@ -1,1 +1,1 @@
-run yarn build after any final changes, as you dont know if it will compile. If it compiles, you are good to go.
+run yarn build after any final changes, as you dont know if it will compile. If it compiles, you are good to go. Also, do not describe too much what you have done. Just straight to the point. Like max 10 words.

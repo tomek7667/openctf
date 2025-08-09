@@ -570,10 +570,10 @@ export default function TeamPage() {
 								</Button>
 								
 								<div className="flex items-center gap-3">
-									<span className="text-6xl">{getCountryByCode(team.country_code)?.flag || "🌍"}</span>
+									<span className="text-4xl opacity-40 grayscale">{getCountryByCode(team.country_code)?.flag || "🌍"}</span>
 									<div className="text-left">
 										<div className="flex items-center gap-3">
-											<h1 className="text-4xl font-bold font-mono bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+											<h1 className="text-5xl font-bold font-mono text-foreground drop-shadow-lg">
 												{team.name.toUpperCase()}
 											</h1>
 											{team.verified_at && (
