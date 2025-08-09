@@ -557,6 +557,23 @@ export const Save = createIcon(
 	</>
 );
 
+export const Key = createIcon(
+	"Key",
+	<>
+		<circle cx="7.5" cy="15.5" r="5.5" />
+		<path d="m21 2-9.6 9.6" />
+		<path d="m15.5 7.5 3 3L22 7l-3-3" />
+	</>
+);
+
+export const Bell = createIcon(
+	"Bell",
+	<>
+		<path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" />
+		<path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
+	</>
+);
+
 export const Terminal = createIcon(
 	"Terminal",
 	<>
@@ -676,6 +693,11 @@ export const Linkedin = createIcon(
 	</>
 );
 
+export const Twitter = createIcon(
+	"Twitter",
+	<path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z" />
+);
+
 // Create compound icons for specific use cases
 export const LoadingSpinner = createIcon(
 	"LoadingSpinner",
@@ -774,6 +796,8 @@ export const Icons = {
 	BookOpen,
 	Edit,
 	Save,
+	Key,
+	Bell,
 	Terminal,
 	Code,
 	Zap,
@@ -788,6 +812,7 @@ export const Icons = {
 	Trash2,
 	Github,
 	Linkedin,
+	Twitter,
 } as const;
 
 export default Icons;

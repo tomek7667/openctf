@@ -386,18 +386,6 @@ const UserTableRow = ({ user }: { user: UserWithStats }) => (
 	<tr className="border-b border-border/50 hover:bg-muted/20 transition-colors cursor-pointer" onClick={() => window.location.href = `/users/${user.id}`}>
 		<td className="p-3">
 			<div className="flex items-center gap-3">
-				<div
-					className={clsx(
-						"w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold font-mono",
-						user.ranking <= 10
-							? "bg-yellow-400/20 text-yellow-400"
-							: user.ranking <= 50
-								? "bg-orange-400/20 text-orange-400"
-								: "bg-primary/20 text-primary"
-					)}
-				>
-					{user.ranking}
-				</div>
 				<div>
 					<div className="flex items-center gap-2">
 						<span className="font-bold text-foreground font-mono text-sm">
@@ -425,21 +413,15 @@ const UserTableRow = ({ user }: { user: UserWithStats }) => (
 				<span className="font-mono text-xs">{user.country_code}</span>
 			</div>
 		</td>
-		<td className="p-3 font-mono text-xs font-bold text-primary">
-			{user.rating.toLocaleString()}
-		</td>
-		<td className="p-3 font-mono text-xs">
-			{user.contestsParticipated}
-		</td>
-		<td className="p-3 font-mono text-xs">
-			{user.averagePlace.toFixed(1)}
-		</td>
 		<td className="p-3 font-mono text-xs">
 			{user.teamName ? (
 				<span className="text-primary">{user.teamName}</span>
 			) : (
-				<span className="text-muted-foreground">Solo</span>
+				<span className="text-muted-foreground">No team</span>
 			)}
+		</td>
+		<td className="p-3 font-mono text-xs">
+			{user.teamName ? user.averagePlace.toFixed(1) : '-'}
 		</td>
 	</tr>
 );
@@ -611,7 +593,7 @@ export default function UsersPage() {
 		fetchUsers(page);
 	};
 
-	// Apply client-side filters
+	// Apply client-side filters and sort by team average place
 	const filteredUsers = users.filter((user) => {
 		// Search filter
 		if (filters.search) {
@@ -630,10 +612,7 @@ export default function UsersPage() {
 			return false;
 		}
 
-		// Rating filter
-		if (filters.minRating && user.rating < filters.minRating) {
-			return false;
-		}
+
 
 		// Verified filter
 		if (filters.verified !== undefined && user.verified !== filters.verified) {
@@ -649,10 +628,9 @@ export default function UsersPage() {
 		}
 
 		return true;
-	});
+	}).sort((a, b) => a.averagePlace - b.averagePlace);
 
-	// Get top 5 users
-	const topUsers = filteredUsers.slice(0, 5);
+
 
 	// Stats
 	const stats = {
@@ -666,7 +644,7 @@ export default function UsersPage() {
 		filters.search ||
 		filters.countries.length > 0 ||
 		filters.permissionLevel ||
-		filters.minRating ||
+
 		filters.verified !== undefined ||
 		filters.hasTeam !== undefined;
 
@@ -680,7 +658,7 @@ export default function UsersPage() {
 							<div className="flex items-center gap-3">
 								<Users className="h-5 w-5 text-primary" />
 								<h1 className="text-xl font-bold font-mono text-foreground">
-									USER_RANKINGS
+									USER_LIST
 								</h1>
 								<span className="text-sm text-muted-foreground font-mono">
 									{stats.total} users registered
@@ -770,16 +748,7 @@ export default function UsersPage() {
 										<Trophy className="h-3 w-3 mr-1" />
 										In Team
 									</Badge>
-									<Badge
-										variant={filters.minRating ? "default" : "outline"}
-										className="cursor-pointer text-xs font-mono h-8 px-2"
-										onClick={() =>
-											updateFilter("minRating", filters.minRating ? undefined : 2000)
-										}
-									>
-										<Star className="h-3 w-3 mr-1" />
-										2K+
-									</Badge>
+
 								</div>
 
 								{/* Country Filter Toggle */}
@@ -793,16 +762,16 @@ export default function UsersPage() {
 									Countries {filters.countries.length > 0 && `(${filters.countries.length})`}
 								</Button>
 
-								{hasActiveFilters && (
-									<Button
-										variant="outline"
-										size="sm"
-										onClick={clearFilters}
-										className="font-mono text-xs h-8 px-2"
-									>
-										Clear
-									</Button>
-								)}
+								{/* Clear button - always present to prevent layout shift */}
+								<Button
+									variant="outline"
+									size="sm"
+									onClick={clearFilters}
+									disabled={!hasActiveFilters}
+									className={`font-mono text-xs h-8 px-2 ${!hasActiveFilters ? 'opacity-50' : ''}`}
+								>
+									Clear
+								</Button>
 							</div>
 
 							{/* Country Filter Panel */}
@@ -845,65 +814,7 @@ export default function UsersPage() {
 							</div>
 						) : (
 							<>
-								{/* Top 5 Users */}
-								{topUsers.length > 0 && (
-									<div className="mb-8">
-										<h2 className="text-xl font-bold font-mono mb-4 text-yellow-400">
-											🏆 TOP 5 HACKERS
-										</h2>
-										<div className="grid grid-cols-1 md:grid-cols-5 gap-4">
-											{topUsers.map((user, index) => (
-												<div
-													key={user.id}
-													onClick={() => window.location.href = `/users/${user.id}`}
-													className={`p-4 rounded-lg border transition-all hover:scale-105 cursor-pointer ${
-														index === 0
-															? "bg-gradient-to-br from-yellow-500/20 to-orange-500/20 border-yellow-400"
-															: index === 1
-															? "bg-gradient-to-br from-gray-300/20 to-gray-500/20 border-gray-400"
-															: index === 2
-															? "bg-gradient-to-br from-amber-600/20 to-yellow-700/20 border-amber-600"
-															: "bg-gradient-to-br from-blue-500/20 to-purple-500/20 border-blue-400"
-													}`}
-												>
-													<div className="text-center">
-														<div className="text-2xl mb-2">
-															{getCountryByCode(user.country_code)?.flag || "🌍"}
-														</div>
-														<div className="text-lg font-bold mb-1">
-															#{user.ranking}
-														</div>
-														<h3 className="font-bold text-sm mb-2 flex items-center justify-center gap-1">
-															{user.username}
-															{user.permission_level === "administrator" && (
-																<Star className="h-3 w-3 text-yellow-400" />
-															)}
-															{user.permission_level === "moderator" && (
-																<Shield className="h-3 w-3 text-blue-400" />
-															)}
-														</h3>
-														<p className="text-xs text-muted-foreground mb-2">
-															{user.description}
-														</p>
-														<div className="text-xs space-y-1">
-															<div>Rating: {user.rating.toLocaleString()}</div>
-															<div>Contests: {user.contestsParticipated}</div>
-															<div>Avg: {user.averagePlace.toFixed(1)}</div>
-														</div>
-														{user.teamName && (
-															<div className="mt-2 text-xs text-primary">
-																{user.teamName}
-															</div>
-														)}
-														{user.verified && (
-															<Shield className="h-4 w-4 text-green-400 mx-auto mt-2" />
-														)}
-													</div>
-												</div>
-											))}
-										</div>
-									</div>
-								)}
+
 
 								{/* All Users Table */}
 								<div className="bg-card/30 rounded-none hacker-border overflow-hidden">
@@ -921,10 +832,8 @@ export default function UsersPage() {
 												<tr className="border-b border-border/50">
 													<th className="p-3 text-left font-mono text-xs font-bold">User</th>
 													<th className="p-3 text-left font-mono text-xs font-bold">Country</th>
-													<th className="p-3 text-left font-mono text-xs font-bold">Rating</th>
-													<th className="p-3 text-left font-mono text-xs font-bold">Contests</th>
-													<th className="p-3 text-left font-mono text-xs font-bold">Avg</th>
 													<th className="p-3 text-left font-mono text-xs font-bold">Team</th>
+													<th className="p-3 text-left font-mono text-xs font-bold">Team Avg Place</th>
 												</tr>
 											</thead>
 											<tbody>

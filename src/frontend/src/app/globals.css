@@ -198,6 +198,12 @@
 		text-shadow: 0 0 5px currentColor;
 	}
 
+	.sharp-text {
+		text-shadow: none;
+		-webkit-font-smoothing: antialiased;
+		-moz-osx-font-smoothing: grayscale;
+	}
+
 	.matrix-bg {
 		background-image:
 			linear-gradient(rgba(0, 255, 255, 0.03) 1px, transparent 1px),

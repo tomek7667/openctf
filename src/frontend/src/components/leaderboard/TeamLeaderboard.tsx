@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import Link from "next/link";
 import { motion } from "framer-motion";
 import { Trophy, Users, Flag, Star } from "@/components/ui/icons";
 import { getTopTeams, LeaderboardTeam } from "@/api/leaderboard";
@@ -22,13 +23,13 @@ const getPlaceIcon = (place: number) => {
 			return <Trophy className="h-6 w-6 text-yellow-400" />;
 		case 2:
 			return (
-				<div className="w-6 h-6 rounded-full bg-gray-300 flex items-center justify-center text-black font-bold text-sm">
+				<div className="w-6 h-6 rounded-full bg-primary flex items-center justify-center text-black font-bold text-sm">
 					2
 				</div>
 			);
 		case 3:
 			return (
-				<div className="w-6 h-6 rounded-full bg-amber-600 flex items-center justify-center text-black font-bold text-sm">
+				<div className="w-6 h-6 rounded-full bg-green-400 flex items-center justify-center text-black font-bold text-sm">
 					3
 				</div>
 			);
@@ -42,9 +43,9 @@ const getPlaceStyle = (place: number) => {
 		case 1:
 			return "bg-gradient-to-r from-yellow-500/20 to-yellow-600/20 border-yellow-400/50 shadow-lg shadow-yellow-400/20";
 		case 2:
-			return "bg-gradient-to-r from-gray-400/20 to-gray-500/20 border-gray-400/50 shadow-lg shadow-gray-400/20";
+			return "bg-gradient-to-r from-primary/20 to-primary/30 border-primary/50 shadow-lg shadow-primary/20";
 		case 3:
-			return "bg-gradient-to-r from-amber-600/20 to-amber-700/20 border-amber-600/50 shadow-lg shadow-amber-600/20";
+			return "bg-gradient-to-r from-green-400/20 to-green-400/30 border-green-400/50 shadow-lg shadow-green-400/20";
 		default:
 			return "bg-card/50 border-primary/20 hover:border-primary/40";
 	}
@@ -76,18 +77,18 @@ const TopThreePodium = ({ teams }: { teams: TeamData[] }) => {
 				className="text-center"
 			>
 				<div
-					className={`${getPodiumHeight(2)} w-24 bg-gradient-to-t from-gray-500/30 to-gray-400/20 border-t-4 border-gray-400 rounded-t-lg relative terminal mb-2`}
+					className={`${getPodiumHeight(2)} w-24 bg-gradient-to-t from-primary/20 to-primary/10 border-t-4 border-primary rounded-t-lg relative terminal mb-2`}
 				>
 					<div className="absolute -top-8 left-1/2 transform -translate-x-1/2">
-						<div className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center text-black font-bold glow-text">
+						<div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-black font-bold">
 							2
 						</div>
 					</div>
-					<div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 text-gray-300 font-bold text-xl">
+					<div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 text-primary font-bold text-xl">
 						2
 					</div>
 				</div>
-				<div className="font-mono text-sm text-gray-300 font-bold">
+				<div className="font-mono text-sm text-primary font-bold">
 					{topThree[1]?.name}
 				</div>
 				<div className="text-xs text-primary">
@@ -128,18 +129,18 @@ const TopThreePodium = ({ teams }: { teams: TeamData[] }) => {
 				className="text-center"
 			>
 				<div
-					className={`${getPodiumHeight(3)} w-20 bg-gradient-to-t from-amber-700/30 to-amber-600/20 border-t-4 border-amber-600 rounded-t-lg relative terminal mb-2`}
+					className={`${getPodiumHeight(3)} w-20 bg-gradient-to-t from-green-400/20 to-green-400/10 border-t-4 border-green-400 rounded-t-lg relative terminal mb-2`}
 				>
 					<div className="absolute -top-8 left-1/2 transform -translate-x-1/2">
-						<div className="w-8 h-8 rounded-full bg-amber-600 flex items-center justify-center text-black font-bold glow-text">
+						<div className="w-8 h-8 rounded-full bg-green-400 flex items-center justify-center text-black font-bold">
 							3
 						</div>
 					</div>
-					<div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 text-amber-600 font-bold text-xl">
+					<div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 text-green-400 font-bold text-xl">
 						3
 					</div>
 				</div>
-				<div className="font-mono text-sm text-amber-600 font-bold">
+				<div className="font-mono text-sm text-green-400 font-bold">
 					{topThree[2]?.name}
 				</div>
 				<div className="text-xs text-primary">
@@ -176,54 +177,53 @@ const TeamRowSkeleton = ({ index }: { index: number }) => (
 );
 
 const TeamRow = ({ team, index }: { team: TeamData; index: number }) => (
-	<motion.div
-		initial={{ opacity: 0, x: -20 }}
-		animate={{ opacity: 1, x: 0 }}
-		transition={{ delay: index * 0.1 }}
-		onClick={() => {
-			window.location.href = `/teams/${team.name.toLowerCase().replace(/\s+/g, '-')}`;
-		}}
-		className={`p-4 mb-2 rounded-none border transition-all duration-300 hover:scale-[1.01] cursor-pointer font-mono ${getPlaceStyle(team.place)}`}
-	>
-		<div className="flex items-center justify-between">
-			<div className="flex items-center space-x-4">
-				<div className="flex items-center justify-center w-10 h-10">
-					{getPlaceIcon(team.place)}
+	<Link href={`/teams/${team.name.toLowerCase().replace(/\s+/g, '-')}`}>
+		<motion.div
+			initial={{ opacity: 0, x: -20 }}
+			animate={{ opacity: 1, x: 0 }}
+			transition={{ delay: index * 0.1 }}
+			className={`p-4 mb-2 rounded-none border transition-all duration-300 hover:scale-[1.01] hover:shadow-lg hover:shadow-primary/10 cursor-pointer font-mono ${getPlaceStyle(team.place)}`}
+		>
+			<div className="flex items-center justify-between">
+				<div className="flex items-center space-x-4">
+					<div className="flex items-center justify-center w-10 h-10">
+						{getPlaceIcon(team.place)}
+					</div>
+
+					<div className="flex flex-col">
+						<div className="flex items-center space-x-2">
+							<span className="font-bold text-lg text-foreground">
+								{team.name}
+							</span>
+							{team.isVerified && <Star className="h-4 w-4 text-primary" />}
+							<span className="text-xs text-muted-foreground font-mono">
+								[{team.country}]
+							</span>
+						</div>
+						<div className="flex items-center space-x-4 text-xs text-muted-foreground">
+							<span className="flex items-center space-x-1">
+								<Users className="h-3 w-3" />
+								<span>{team.members} members</span>
+							</span>
+							<span className="flex items-center space-x-1">
+								<Flag className="h-3 w-3" />
+								<span>{team.contestsWon} wins</span>
+							</span>
+						</div>
+					</div>
 				</div>
 
-				<div className="flex flex-col">
-					<div className="flex items-center space-x-2">
-						<span className="font-bold text-lg text-foreground">
-							{team.name}
-						</span>
-						{team.isVerified && <Star className="h-4 w-4 text-primary" />}
-						<span className="text-xs text-muted-foreground font-mono">
-							[{team.country}]
-						</span>
+				<div className="text-right">
+					<div className="text-2xl font-bold text-primary glow-text">
+						{team.totalPoints.toFixed(1)}
 					</div>
-					<div className="flex items-center space-x-4 text-xs text-muted-foreground">
-						<span className="flex items-center space-x-1">
-							<Users className="h-3 w-3" />
-							<span>{team.members} members</span>
-						</span>
-						<span className="flex items-center space-x-1">
-							<Flag className="h-3 w-3" />
-							<span>{team.contestsWon} wins</span>
-						</span>
+					<div className="text-xs text-muted-foreground">
+						+{team.monthlyPoints.toFixed(1)} this month
 					</div>
 				</div>
 			</div>
-
-			<div className="text-right">
-				<div className="text-2xl font-bold text-primary glow-text">
-					{team.totalPoints.toFixed(1)}
-				</div>
-				<div className="text-xs text-muted-foreground">
-					+{team.monthlyPoints.toFixed(1)} this month
-				</div>
-			</div>
-		</div>
-	</motion.div>
+		</motion.div>
+	</Link>
 );
 
 export function TeamLeaderboard() {
@@ -273,7 +273,7 @@ export function TeamLeaderboard() {
 				>
 					<h2 className="text-4xl md:text-5xl font-bold mb-4 font-mono">
 						<span className="terminal-prompt">$ </span>
-						<span className="hacker-gradient-text glow-text">TOP_TEAMS</span>
+						<span className="hacker-gradient-text sharp-text">TOP_TEAMS</span>
 					</h2>
 					<div className="terminal glass-terminal p-4 max-w-2xl mx-auto text-left">
 						<div className="text-primary mb-2">

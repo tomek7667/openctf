@@ -3,10 +3,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
-import rehypeHighlight from "rehype-highlight";
-import rehypeRaw from "rehype-raw";
 import { MainLayout } from "@/components/layout/MainLayout";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
@@ -47,6 +43,7 @@ import {
   WriteupComment 
 } from "@/api/writeups";
 import { useAuthStore } from "@/store/authStore";
+import { HackerMarkdown } from "@/components/ui/HackerMarkdown";
 
 // Import highlight.js themes
 import "highlight.js/styles/tokyo-night-dark.css";
@@ -62,188 +59,7 @@ const categories = {
 
 
 
-function HackerMarkdown({ content }: { content: string }) {
-  return (
-    <div className="prose prose-invert prose-green max-w-none">
-      <ReactMarkdown
-        remarkPlugins={[remarkGfm]}
-        rehypePlugins={[rehypeHighlight, rehypeRaw]}
-        components={{
-          h1: ({ children }) => (
-            <motion.h1
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              className="text-4xl font-bold font-mono text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-blue-400 mb-6 border-l-4 border-green-400 pl-4"
-            >
-              &gt; {children}
-            </motion.h1>
-          ),
-          h2: ({ children }) => (
-            <motion.h2
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              className="text-2xl font-bold font-mono text-green-400 mt-8 mb-4 border-l-2 border-green-400 pl-3"
-            >
-              [[ {children} ]]
-            </motion.h2>
-          ),
-          h3: ({ children }) => (
-            <motion.h3
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              className="text-xl font-bold font-mono text-blue-400 mt-6 mb-3"
-            >
-              &gt;&gt; {children}
-            </motion.h3>
-          ),
-          img: ({ src, alt, title }) => (
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              className="relative group my-6"
-            >
-              <div className="absolute inset-0 bg-gradient-to-r from-green-500/20 to-blue-500/20 rounded-lg blur-xl group-hover:blur-2xl transition-all duration-500 opacity-0 group-hover:opacity-100" />
-              <div className="relative bg-gray-900/90 backdrop-blur border border-green-500/30 rounded-lg overflow-hidden p-4">
-                <img
-                  src={src}
-                  alt={alt}
-                  title={title}
-                  className="w-full h-auto rounded-lg border border-green-500/20"
-                  onError={(e) => {
-                    const target = e.target as HTMLImageElement;
-                    target.style.display = 'none';
-                    const fallback = document.createElement('div');
-                    fallback.className = 'w-full h-32 bg-gray-800 border border-red-500/30 rounded-lg flex items-center justify-center text-red-400 font-mono text-sm';
-                    fallback.innerHTML = `<span>❌ Image failed to load: ${alt || 'Unknown'}</span>`;
-                    target.parentNode?.insertBefore(fallback, target);
-                  }}
-                />
-                {alt && (
-                  <div className="mt-2 text-center text-sm text-gray-400 font-mono">
-                    &gt; {alt}
-                  </div>
-                )}
-                {title && (
-                  <div className="mt-1 text-center text-xs text-gray-500 font-mono">
-                    {title}
-                  </div>
-                )}
-              </div>
-            </motion.div>
-          ),
-          a: ({ href, children }) => (
-            <a
-              href={href}
-              target={href?.startsWith('http') ? '_blank' : undefined}
-              rel={href?.startsWith('http') ? 'noopener noreferrer' : undefined}
-              className="text-blue-400 hover:text-blue-300 underline decoration-blue-400/50 hover:decoration-blue-300 transition-colors font-mono"
-            >
-              {children}
-              {href?.startsWith('http') && (
-                <span className="inline-block ml-1 text-xs">↗</span>
-              )}
-            </a>
-          ),
-          code: ({ className, children, ...props }: any) => {
-            const inline = props.inline;
-            if (inline) {
-              return (
-                <code className="bg-gray-800 text-green-400 px-2 py-1 rounded font-mono text-sm border border-green-500/30" {...props}>
-                  {children}
-                </code>
-              );
-            }
-            return (
-              <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                className="relative group"
-              >
-                <div className="absolute inset-0 bg-gradient-to-r from-green-500/20 to-blue-500/20 rounded-lg blur-xl group-hover:blur-2xl transition-all duration-500" />
-                <div className="relative bg-gray-900/90 backdrop-blur border border-green-500/30 rounded-lg overflow-hidden">
-                  <div className="flex items-center justify-between bg-gray-800/50 px-4 py-2 border-b border-green-500/30">
-                    <div className="flex items-center space-x-2">
-                      <div className="w-3 h-3 rounded-full bg-red-500"></div>
-                      <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
-                      <div className="w-3 h-3 rounded-full bg-green-500"></div>
-                    </div>
-                    <span className="font-mono text-xs text-gray-400">{className?.replace('language-', '') || 'code'}</span>
-                  </div>
-                  <pre className="p-4 overflow-x-auto">
-                    <code className={className} {...props}>
-                      {children}
-                    </code>
-                  </pre>
-                </div>
-              </motion.div>
-            );
-          },
-          blockquote: ({ children }) => (
-            <motion.blockquote
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              className="border-l-4 border-blue-400 bg-blue-900/20 pl-4 py-3 my-4 italic text-blue-300 font-mono"
-            >
-              💡 {children}
-            </motion.blockquote>
-          ),
-          p: ({ children }) => (
-            <motion.p
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="text-gray-300 leading-relaxed mb-4 font-mono"
-            >
-              {children}
-            </motion.p>
-          ),
-          ul: ({ children }) => (
-            <ul className="list-none space-y-2 mb-4">
-              {children}
-            </ul>
-          ),
-          li: ({ children }) => (
-            <motion.li
-              initial={{ opacity: 0, x: -10 }}
-              animate={{ opacity: 1, x: 0 }}
-              className="flex items-start space-x-2 text-gray-300 font-mono"
-            >
-              <span className="text-green-400 mt-1">&gt;</span>
-              <span>{children}</span>
-            </motion.li>
-          ),
-          ol: ({ children }) => (
-            <ol className="list-none space-y-2 mb-4 counter-reset-step">
-              {children}
-            </ol>
-          ),
-          table: ({ children }) => (
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              className="overflow-x-auto mb-6"
-            >
-              <table className="w-full bg-gray-800/50 border border-green-500/30 rounded-lg overflow-hidden">
-                {children}
-              </table>
-            </motion.div>
-          ),
-          th: ({ children }) => (
-            <th className="bg-green-900/30 text-green-400 font-mono font-bold px-4 py-3 text-left border-b border-green-500/30">
-              {children}
-            </th>
-          ),
-          td: ({ children }) => (
-            <td className="text-gray-300 font-mono px-4 py-3 border-b border-gray-700">
-              {children}
-            </td>
-          ),
-        }}
-      >
-        {content}
-      </ReactMarkdown>
-    </div>
-  );
-}
+
 
 function StarRating({ rating, onRate, size = "md" }: { 
   rating: number; 
@@ -338,6 +154,8 @@ export default function WriteupDetailPage() {
   const [loading, setLoading] = useState(true);
   const [userRating, setUserRating] = useState(0);
   const [newComment, setNewComment] = useState("");
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState("");
 
   useEffect(() => {
     const loadWriteup = async () => {
@@ -494,7 +312,7 @@ export default function WriteupDetailPage() {
 
   return (
     <MainLayout>
-      <div className="min-h-screen bg-background relative">
+      <div className="min-h-screen relative">
         
         <div className="container mx-auto px-4 py-8 relative z-10">
           {/* Header */}
@@ -560,7 +378,8 @@ export default function WriteupDetailPage() {
                   {isAuthenticated && user?.id?.toString() === writeup.authorId && (
                     <Button
                       onClick={() => router.push(`/writeups/${writeup.id}/edit`)}
-                      className="font-mono bg-blue-500 hover:bg-blue-600 text-white"
+                      variant="outline"
+                      className="font-mono border-green-500/50 text-green-400 hover:bg-green-500/10"
                     >
                       <Edit className="h-4 w-4 mr-2" />
                       EDIT
@@ -611,7 +430,7 @@ export default function WriteupDetailPage() {
                           <Trophy className="h-4 w-4 text-gray-400" />
                           <button 
                             onClick={handleContestClick}
-                            className="font-mono text-gray-400 text-sm hover:text-green-400 transition-colors cursor-pointer"
+                            className="font-mono text-lime-400 underline text-sm hover:text-lime-300 transition-colors cursor-pointer"
                           >
                             {writeup.contestName}
                           </button>
@@ -661,7 +480,11 @@ export default function WriteupDetailPage() {
               className="lg:col-span-3"
             >
               <div className="bg-card/20 border border-border rounded-lg p-8">
-                <HackerMarkdown content={writeup.content} />
+                <HackerMarkdown 
+                  content={writeup.content} 
+                  setToastMessage={setToastMessage}
+                  setShowToast={setShowToast}
+                />
               </div>
             </motion.div>
 
@@ -775,6 +598,20 @@ export default function WriteupDetailPage() {
             </div>
           </motion.div>
         </div>
+
+        {/* Toast Notification */}
+        {showToast && (
+          <div className="fixed bottom-4 right-4 z-50">
+            <div className="bg-gray-900/95 backdrop-blur border border-green-500/50 rounded-lg px-4 py-3 shadow-2xl">
+              <div className="flex items-center space-x-2">
+                <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                <span className="font-mono text-sm text-green-400">
+                  {toastMessage}
+                </span>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </MainLayout>
   );

@@ -40,12 +40,12 @@ const FeatureCard = ({
 	gradient,
 }: FeatureCardProps) => (
 	<motion.div
-		whileHover={{ y: -4, scale: 1.02 }}
+		whileHover={{ scale: 1.02 }}
 		whileTap={{ scale: 0.98 }}
-		className="group relative overflow-hidden"
+		className="group relative h-full"
 	>
 		<Link href={href}>
-			<div className="relative p-8 h-full bg-card hacker-border rounded-none card-hover transition-all duration-300 group-hover:border-primary">
+			<div className="relative p-8 h-full bg-card hacker-border rounded-none card-hover transition-all duration-300 group-hover:border-primary min-h-[280px] flex flex-col">
 				<div
 					className={`absolute inset-0 opacity-0 group-hover:opacity-5 transition-opacity duration-300 ${gradient}`}
 				/>
@@ -61,11 +61,11 @@ const FeatureCard = ({
 						&gt; {title.toUpperCase().replace(" ", "_")}
 					</h3>
 
-					<p className="text-muted-foreground mb-4 leading-relaxed">
+					<p className="text-muted-foreground mb-4 leading-relaxed flex-grow">
 						{description}
 					</p>
 
-					<div className="flex items-center text-primary font-bold group-hover:translate-x-1 transition-transform duration-300 font-mono">
+					<div className="flex items-center text-primary font-bold group-hover:translate-x-1 transition-transform duration-300 font-mono mt-auto">
 						<span>[EXPLORE]</span>
 						<ArrowRight className="ml-2 h-4 w-4" />
 					</div>
@@ -210,7 +210,7 @@ export default function HomePage() {
 					>
 						<h1 className="text-5xl md:text-7xl font-bold tracking-tight mb-8 font-mono">
 							<span className="terminal-prompt">$ </span>
-							<span className="hacker-gradient-text glow-text">OpenCTF</span>
+							<span className="hacker-gradient-text sharp-text">OpenCTF</span>
 							<br />
 							<span className="text-foreground">&gt; Rankings</span>
 							<span className="animate-pulse text-primary">_</span>
@@ -335,7 +335,7 @@ export default function HomePage() {
 						</p>
 					</motion.div>
 
-					<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 py-4">
+					<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 pt-12 pb-12">
 						{features.map((feature, index) => (
 							<motion.div
 								key={feature.title}

@@ -3,10 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
-import rehypeHighlight from "rehype-highlight";
-import rehypeRaw from "rehype-raw";
+
 import { MainLayout } from "@/components/layout/MainLayout";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
@@ -36,6 +33,7 @@ import {
 	Writeup,
 } from "@/api/writeups";
 import { useAuthStore } from "@/store/authStore";
+import { HackerMarkdown } from "@/components/ui/HackerMarkdown";
 
 // Import highlight.js themes
 import "highlight.js/styles/tokyo-night-dark.css";
@@ -80,113 +78,33 @@ const categories = [
 ];
 
 const difficulties = [
-	{ id: "Easy", label: "Easy", color: "text-green-400" },
-	{ id: "Medium", label: "Medium", color: "text-yellow-400" },
-	{ id: "Hard", label: "Hard", color: "text-orange-400" },
-	{ id: "Insane", label: "Insane", color: "text-red-400" },
+	{
+		id: "Easy",
+		label: "Easy",
+		color: "text-green-400",
+		bgColor: "bg-green-500/20 border-green-500/50",
+	},
+	{
+		id: "Medium",
+		label: "Medium",
+		color: "text-yellow-400",
+		bgColor: "bg-yellow-500/20 border-yellow-500/50",
+	},
+	{
+		id: "Hard",
+		label: "Hard",
+		color: "text-red-400",
+		bgColor: "bg-red-500/20 border-red-500/50",
+	},
+	{
+		id: "Insane",
+		label: "Insane",
+		color: "text-purple-400",
+		bgColor: "bg-purple-500/20 border-purple-500/50",
+	},
 ];
 
-function HackerMarkdown({ content }: { content: string }) {
-	return (
-		<div className="prose prose-invert prose-green max-w-none">
-			<ReactMarkdown
-				remarkPlugins={[remarkGfm]}
-				rehypePlugins={[rehypeHighlight, rehypeRaw]}
-				components={{
-					h1: ({ children }) => (
-						<h1 className="text-3xl font-bold font-mono text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-blue-400 mb-4 border-l-4 border-green-400 pl-4">
-							&gt; {children}
-						</h1>
-					),
-					h2: ({ children }) => (
-						<h2 className="text-xl font-bold font-mono text-green-400 mt-6 mb-3 border-l-2 border-green-400 pl-3">
-							[[ {children} ]]
-						</h2>
-					),
-					h3: ({ children }) => (
-						<h3 className="text-lg font-bold font-mono text-blue-400 mt-4 mb-2">
-							&gt;&gt; {children}
-						</h3>
-					),
-					img: ({ src, alt, title }) => (
-						<div className="relative group my-6">
-							<div className="absolute inset-0 bg-gradient-to-r from-green-500/20 to-blue-500/20 rounded-lg blur-xl group-hover:blur-2xl transition-all duration-500 opacity-0 group-hover:opacity-100" />
-							<div className="relative bg-gray-900/90 backdrop-blur border border-green-500/30 rounded-lg overflow-hidden p-4">
-								<img
-									src={src}
-									alt={alt}
-									title={title}
-									className="w-full h-auto rounded-lg border border-green-500/20"
-								/>
-								{alt && (
-									<div className="mt-2 text-center text-sm text-gray-400 font-mono">
-										&gt; {alt}
-									</div>
-								)}
-							</div>
-						</div>
-					),
-					code: ({ className, children, ...props }: any) => {
-						const inline = props.inline;
-						if (inline) {
-							return (
-								<code
-									className="bg-gray-800 text-green-400 px-2 py-1 rounded font-mono text-sm border border-green-500/30"
-									{...props}
-								>
-									{children}
-								</code>
-							);
-						}
-						return (
-							<div className="relative group">
-								<div className="absolute inset-0 bg-gradient-to-r from-green-500/20 to-blue-500/20 rounded-lg blur-xl group-hover:blur-2xl transition-all duration-500" />
-								<div className="relative bg-gray-900/90 backdrop-blur border border-green-500/30 rounded-lg overflow-hidden">
-									<div className="flex items-center justify-between bg-gray-800/50 px-4 py-2 border-b border-green-500/30">
-										<div className="flex items-center space-x-2">
-											<div className="w-3 h-3 rounded-full bg-red-500"></div>
-											<div className="w-3 h-3 rounded-full bg-yellow-500"></div>
-											<div className="w-3 h-3 rounded-full bg-green-500"></div>
-										</div>
-										<span className="font-mono text-xs text-gray-400">
-											{className?.replace("language-", "") || "code"}
-										</span>
-									</div>
-									<pre className="p-4 overflow-x-auto">
-										<code className={className} {...props}>
-											{children}
-										</code>
-									</pre>
-								</div>
-							</div>
-						);
-					},
-					blockquote: ({ children }) => (
-						<blockquote className="border-l-4 border-blue-400 bg-blue-900/20 pl-4 py-3 my-4 italic text-blue-300 font-mono">
-							💡 {children}
-						</blockquote>
-					),
-					p: ({ children }) => (
-						<p className="text-gray-300 leading-relaxed mb-4 font-mono">
-							{children}
-						</p>
-					),
-					ul: ({ children }) => (
-						<ul className="list-none space-y-2 mb-4">{children}</ul>
-					),
-					li: ({ children }) => (
-						<li className="flex items-start space-x-2 text-gray-300 font-mono">
-							<span className="text-green-400 mt-1">&gt;</span>
-							<span>{children}</span>
-						</li>
-					),
-				}}
-			>
-				{content}
-			</ReactMarkdown>
-		</div>
-	);
-}
+
 
 export default function EditWriteupPage() {
 	const params = useParams();
@@ -210,6 +128,11 @@ export default function EditWriteupPage() {
 	const [newTag, setNewTag] = useState("");
 	const [contestName, setContestName] = useState("");
 	const [challengeName, setChallengeName] = useState("");
+	const [solveCount, setSolveCount] = useState("");
+	const [contestSuggestions, setContestSuggestions] = useState<string[]>([]);
+	const [showContestSuggestions, setShowContestSuggestions] = useState(false);
+	const [showToast, setShowToast] = useState(false);
+	const [toastMessage, setToastMessage] = useState("");
 
 	useEffect(() => {
 		if (!isAuthenticated) {
@@ -238,6 +161,7 @@ export default function EditWriteupPage() {
 					setTags(w.tags);
 					setContestName(w.contestName || "");
 					setChallengeName(w.challengeName || "");
+					setSolveCount("");
 				} else {
 					router.push("/writeups");
 				}
@@ -261,6 +185,34 @@ export default function EditWriteupPage() {
 
 	const removeTag = (tagToRemove: string) => {
 		setTags(tags.filter((tag) => tag !== tagToRemove));
+	};
+
+	const handleContestSearch = (value: string) => {
+		setContestName(value);
+		if (value.length >= 2) {
+			const mockContests = [
+				"picoCTF 2024",
+				"HackTheBox Cyber Apocalypse",
+				"DEF CON CTF",
+				"Google CTF 2024",
+				"PlaidCTF 2024",
+				"CSAW CTF",
+				"BSides SF CTF",
+				"NorthSec 2024",
+			];
+			const filtered = mockContests.filter((contest) =>
+				contest.toLowerCase().includes(value.toLowerCase())
+			);
+			setContestSuggestions(filtered);
+			setShowContestSuggestions(true);
+		} else {
+			setShowContestSuggestions(false);
+		}
+	};
+
+	const selectContest = (contest: string) => {
+		setContestName(contest);
+		setShowContestSuggestions(false);
 	};
 
 	const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -348,7 +300,7 @@ export default function EditWriteupPage() {
 
 	return (
 		<MainLayout>
-			<div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black">
+			<div className="min-h-screen">
 				<div className="container mx-auto px-4 py-8">
 					{/* Header */}
 					<motion.div
@@ -366,16 +318,12 @@ export default function EditWriteupPage() {
 						</Button>
 
 						<div className="text-center mb-8">
-							<h1 className="text-5xl font-bold font-mono text-transparent bg-clip-text bg-gradient-to-r from-green-400 via-blue-400 to-purple-400 mb-4">
-								[EDIT WRITEUP]
+							<h1 className="text-2xl font-bold font-mono text-foreground mb-2">
+								EDIT_WRITEUP
 							</h1>
-							<div className="flex items-center justify-center space-x-2 text-green-400">
-								<Terminal className="h-5 w-5" />
-								<span className="text-lg font-mono">
-									&gt; Editing: {writeup.title}
-								</span>
-								<div className="w-2 h-5 bg-green-400 animate-pulse" />
-							</div>
+							<p className="text-sm text-muted-foreground font-mono">
+								Update your writeup content
+							</p>
 						</div>
 					</motion.div>
 
@@ -423,27 +371,57 @@ export default function EditWriteupPage() {
 											/>
 										</div>
 
-										<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-											<div>
+										<div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+											<div className="relative">
 												<label className="block text-sm font-mono text-green-400 mb-2">
-													CONTEST (Optional)
+													CONTEST *
 												</label>
 												<Input
 													value={contestName}
-													onChange={(e) => setContestName(e.target.value)}
-													placeholder="e.g. picoCTF 2024"
+													onChange={(e) => handleContestSearch(e.target.value)}
+													placeholder="Type contest name..."
 													className="font-mono bg-gray-800/50 border-green-500/30 text-white placeholder-gray-400"
+													required
 												/>
+												{showContestSuggestions &&
+													contestSuggestions.length > 0 && (
+														<div className="absolute z-10 w-full mt-1 bg-gray-800 border border-green-500/30 rounded-lg shadow-lg max-h-40 overflow-y-auto">
+															{contestSuggestions.map((contest, index) => (
+																<button
+																	key={index}
+																	type="button"
+																	onClick={() => selectContest(contest)}
+																	className="w-full text-left px-3 py-2 hover:bg-green-500/20 font-mono text-sm text-white first:rounded-t-lg last:rounded-b-lg"
+																>
+																	{contest}
+																</button>
+															))}
+														</div>
+													)}
 											</div>
 											<div>
 												<label className="block text-sm font-mono text-green-400 mb-2">
-													CHALLENGE (Optional)
+													CHALLENGE *
 												</label>
 												<Input
 													value={challengeName}
 													onChange={(e) => setChallengeName(e.target.value)}
 													placeholder="e.g. Web Gauntlet"
 													className="font-mono bg-gray-800/50 border-green-500/30 text-white placeholder-gray-400"
+													required
+												/>
+											</div>
+											<div>
+												<label className="block text-sm font-mono text-green-400 mb-2">
+													SOLVES (Optional)
+												</label>
+												<Input
+													type="number"
+													value={solveCount}
+													onChange={(e) => setSolveCount(e.target.value)}
+													placeholder="e.g. 42"
+													className="font-mono bg-gray-800/50 border-green-500/30 text-white placeholder-gray-400"
+													min="0"
 												/>
 											</div>
 										</div>
@@ -492,16 +470,16 @@ export default function EditWriteupPage() {
 											<label className="block text-sm font-mono text-green-400 mb-3">
 												DIFFICULTY
 											</label>
-											<div className="space-y-2">
+											<div className="grid grid-cols-2 gap-2">
 												{difficulties.map((diff) => (
 													<button
 														key={diff.id}
 														type="button"
 														onClick={() => setDifficulty(diff.id)}
-														className={`w-full text-left p-3 rounded-lg font-mono text-sm transition-all ${
+														className={`text-left p-3 rounded-lg font-mono text-sm transition-all border ${
 															difficulty === diff.id
-																? "bg-green-500/20 text-green-400 border border-green-500/50"
-																: "bg-gray-700/50 text-gray-300 hover:bg-gray-600/50"
+																? `${diff.bgColor} ${diff.color} border-current`
+																: "bg-gray-700/50 text-gray-300 hover:bg-gray-600/50 border-gray-600"
 														}`}
 													>
 														[{diff.label.toUpperCase()}]
@@ -617,7 +595,11 @@ export default function EditWriteupPage() {
 													exit={{ opacity: 0 }}
 													className="min-h-96 bg-gray-900/50 border border-green-500/30 rounded-lg p-4"
 												>
-													<HackerMarkdown content={content} />
+													<HackerMarkdown
+														content={content}
+														setToastMessage={setToastMessage}
+														setShowToast={setShowToast}
+													/>
 												</motion.div>
 											)}
 										</AnimatePresence>
@@ -630,7 +612,7 @@ export default function EditWriteupPage() {
 								initial={{ opacity: 0, x: 20 }}
 								animate={{ opacity: 1, x: 0 }}
 								transition={{ delay: 0.2 }}
-								className="space-y-6"
+								className="space-y-6 lg:sticky lg:top-20 lg:self-start"
 							>
 								{/* Actions */}
 								<div className="bg-gray-800/30 backdrop-blur border border-green-500/30 rounded-lg p-6">
@@ -644,12 +626,14 @@ export default function EditWriteupPage() {
 												saving ||
 												!title.trim() ||
 												!description.trim() ||
-												!content.trim()
+												!content.trim() ||
+												!contestName.trim() ||
+												!challengeName.trim()
 											}
 											className="w-full font-mono bg-gradient-to-r from-green-500 to-blue-500 hover:from-green-600 hover:to-blue-600 text-black font-bold"
 										>
 											<Save className="h-4 w-4 mr-2" />
-											{saving ? "SAVING..." : "SAVE CHANGES"}
+											{saving ? "UPDATING..." : "UPDATE WRITEUP"}
 										</Button>
 										<Button
 											type="button"
@@ -694,6 +678,27 @@ export default function EditWriteupPage() {
 							</motion.div>
 						</div>
 					</form>
+
+					{/* Toast Notification */}
+					<AnimatePresence>
+						{showToast && (
+							<motion.div
+								initial={{ opacity: 0, y: 50, scale: 0.9 }}
+								animate={{ opacity: 1, y: 0, scale: 1 }}
+								exit={{ opacity: 0, y: 50, scale: 0.9 }}
+								className="fixed bottom-4 right-4 z-50"
+							>
+								<div className="bg-gray-900/95 backdrop-blur border border-green-500/50 rounded-lg px-4 py-3 shadow-2xl">
+									<div className="flex items-center space-x-2">
+										<div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+										<span className="font-mono text-sm text-green-400">
+											{toastMessage}
+										</span>
+									</div>
+								</div>
+							</motion.div>
+						)}
+					</AnimatePresence>
 
 					{/* Delete Confirmation Modal */}
 					<AnimatePresence>

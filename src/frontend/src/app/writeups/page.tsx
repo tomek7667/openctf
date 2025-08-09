@@ -67,7 +67,7 @@ function WriteupCard({ writeup }: { writeup: Writeup }) {
     >
       <div className="absolute inset-0 bg-gradient-to-r from-green-500/20 to-blue-500/20 rounded-lg blur-xl group-hover:blur-2xl transition-all duration-500 opacity-0 group-hover:opacity-100" />
       
-      <div className="relative bg-card/50 backdrop-blur-sm border border-green-500/30 rounded-lg p-6 h-full hover:border-green-400/50 transition-all duration-300 group-hover:shadow-lg group-hover:shadow-green-500/20">
+      <div className="relative bg-card/50 backdrop-blur-sm border border-green-500/30 rounded-lg p-6 h-full hover:border-green-400/50 transition-all duration-300 group-hover:shadow-lg group-hover:shadow-green-500/20 flex flex-col">
         {/* Header */}
         <div className="flex items-start justify-between mb-4">
           <div className="flex items-center space-x-3">
@@ -123,45 +123,53 @@ function WriteupCard({ writeup }: { writeup: Writeup }) {
           )}
         </div>
 
-        {/* Author and Contest */}
-        <div className="flex items-center space-x-4 mb-4 text-sm">
-          <div className="flex items-center space-x-2">
-            {writeup.authorAvatar && (
-              <img 
-                src={writeup.authorAvatar} 
-                alt={writeup.authorName}
-                className="w-6 h-6 rounded-full border border-green-500/50"
-              />
-            )}
-            <span className="text-gray-300 font-mono">@{writeup.authorName}</span>
-          </div>
-          {writeup.contestName && (
-            <div className="flex items-center space-x-1 text-gray-400">
-              <Trophy className="h-4 w-4" />
-              <span className="font-mono">{writeup.contestName}</span>
-            </div>
-          )}
-        </div>
+        {/* Spacer */}
+        <div className="flex-grow"></div>
 
-        {/* Stats */}
-        <div className="flex items-center justify-between text-sm text-gray-400">
-          <div className="flex items-center space-x-4">
-            <div className="flex items-center space-x-1">
-              <Star className="h-4 w-4 text-yellow-400 fill-current" />
-              <span className="font-mono">{writeup.averageRating.toFixed(1)}</span>
-              <span className="text-xs">({writeup.totalRatings})</span>
+        {/* Bottom section - Author, Contest, Stats */}
+        <div>
+          {/* Author and Contest */}
+          <div className="flex items-center space-x-4 mb-4 text-sm">
+            <div className="flex items-center space-x-2">
+              {writeup.authorAvatar && (
+                <img 
+                  src={writeup.authorAvatar} 
+                  alt={writeup.authorName}
+                  className="w-6 h-6 rounded-full border border-green-500/50"
+                />
+              )}
+              <span className="text-gray-300 font-mono">@{writeup.authorName}</span>
             </div>
-            <div className="flex items-center space-x-1">
-              <Eye className="h-4 w-4" />
-              <span className="font-mono">{writeup.views.toLocaleString()}</span>
-            </div>
-            <div className="flex items-center space-x-1">
-              <Heart className="h-4 w-4" />
-              <span className="font-mono">{writeup.likes}</span>
-            </div>
+            {writeup.contestName && (
+              <div className="flex items-center space-x-1 text-gray-400">
+                <Trophy className="h-4 w-4" />
+                <Link href={`/contests/${writeup.contestId || '#'}`} className="font-mono text-lime-400 underline hover:text-lime-300 transition-colors">
+                  {writeup.contestName}
+                </Link>
+              </div>
+            )}
           </div>
-          <div className="text-xs text-gray-500 font-mono">
-            {new Date(writeup.createdAt).toLocaleDateString()}
+
+          {/* Stats */}
+          <div className="flex items-center justify-between text-sm text-gray-400">
+            <div className="flex items-center space-x-4">
+              <div className="flex items-center space-x-1">
+                <Star className="h-4 w-4 text-yellow-400 fill-current" />
+                <span className="font-mono">{writeup.averageRating.toFixed(1)}</span>
+                <span className="text-xs">({writeup.totalRatings})</span>
+              </div>
+              <div className="flex items-center space-x-1">
+                <Eye className="h-4 w-4" />
+                <span className="font-mono">{writeup.views.toLocaleString()}</span>
+              </div>
+              <div className="flex items-center space-x-1">
+                <Heart className="h-4 w-4" />
+                <span className="font-mono">{writeup.likes}</span>
+              </div>
+            </div>
+            <div className="text-xs text-gray-500 font-mono">
+              {new Date(writeup.createdAt).toLocaleDateString()}
+            </div>
           </div>
         </div>
       </div>

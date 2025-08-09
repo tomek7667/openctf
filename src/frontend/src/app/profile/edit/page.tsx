@@ -27,6 +27,8 @@ import {
   EyeOff as BellOff
 } from "@/components/ui/icons";
 import { useAuthStore } from "@/store/authStore";
+import { Select } from "@/components/ui/Select";
+import "./slider.css";
 
 // Enhanced user profile interface
 interface UserProfile {
@@ -46,6 +48,7 @@ interface UserProfile {
     discord?: string;
   };
   skills: string[];
+  skillLevels: { [skill: string]: number };
   specializations: string[];
   certifications: string[];
   preferences: {
@@ -118,6 +121,7 @@ export default function EditProfilePage() {
     joinedDate: "2019-03-15",
     socialLinks: {},
     skills: [],
+    skillLevels: {},
     specializations: [],
     certifications: [],
     preferences: {
@@ -139,6 +143,10 @@ export default function EditProfilePage() {
   const [newSkill, setNewSkill] = useState("");
   const [newSpecialization, setNewSpecialization] = useState("");
   const [newCertification, setNewCertification] = useState("");
+  const [showSkillsDropdown, setShowSkillsDropdown] = useState(false);
+  const [showSpecializationsDropdown, setShowSpecializationsDropdown] = useState(false);
+  const [highlightedSkillIndex, setHighlightedSkillIndex] = useState(0);
+  const [highlightedSpecializationIndex, setHighlightedSpecializationIndex] = useState(0);
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -154,6 +162,19 @@ export default function EditProfilePage() {
 
     loadProfile();
   }, [isAuthenticated, router]);
+
+  useEffect(() => {
+    const handleClickOutside = () => {
+      if (showSkillsDropdown) {
+        setShowSkillsDropdown(false);
+      }
+      if (showSpecializationsDropdown) {
+        setShowSpecializationsDropdown(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [showSkillsDropdown, showSpecializationsDropdown]);
 
   const handleSave = async () => {
     setSaving(true);
@@ -209,32 +230,28 @@ export default function EditProfilePage() {
     }
   };
 
-  const addSkill = () => {
-    if (newSkill.trim() && !profile.skills.includes(newSkill.trim())) {
-      setProfile(prev => ({
-        ...prev,
-        skills: [...prev.skills, newSkill.trim()]
-      }));
-      setNewSkill("");
-    }
-  };
+
 
   const removeSkill = (skill: string) => {
+    setProfile(prev => {
+      const newSkillLevels = { ...prev.skillLevels };
+      delete newSkillLevels[skill];
+      return {
+        ...prev,
+        skills: prev.skills.filter(s => s !== skill),
+        skillLevels: newSkillLevels
+      };
+    });
+  };
+
+  const updateSkillLevel = (skill: string, level: number) => {
     setProfile(prev => ({
       ...prev,
-      skills: prev.skills.filter(s => s !== skill)
+      skillLevels: { ...prev.skillLevels, [skill]: level }
     }));
   };
 
-  const addSpecialization = () => {
-    if (newSpecialization.trim() && !profile.specializations.includes(newSpecialization.trim())) {
-      setProfile(prev => ({
-        ...prev,
-        specializations: [...prev.specializations, newSpecialization.trim()]
-      }));
-      setNewSpecialization("");
-    }
-  };
+
 
   const removeSpecialization = (spec: string) => {
     setProfile(prev => ({
@@ -276,7 +293,7 @@ export default function EditProfilePage() {
 
   return (
     <MainLayout>
-      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black">
+      <div className="min-h-screen">
         <div className="container mx-auto px-4 py-8">
           {/* Header */}
           <motion.div
@@ -415,42 +432,117 @@ export default function EditProfilePage() {
               >
                 <h2 className="font-mono text-green-400 font-bold mb-6">SKILLS & EXPERTISE</h2>
 
-                {/* Skills */}
+                {/* Skills with Levels */}
                 <div className="mb-6">
-                  <label className="block text-sm font-mono text-green-400 mb-3">TECHNICAL SKILLS</label>
-                  <div className="flex space-x-2 mb-3">
+                  <label className="block text-sm font-mono text-green-400 mb-3">TECHNICAL SKILLS & LEVELS</label>
+                  <div className="relative mb-3">
                     <Input
                       value={newSkill}
-                      onChange={(e) => setNewSkill(e.target.value)}
-                      placeholder="Add a skill..."
-                      className="flex-1 font-mono bg-gray-800/50 border-green-500/30 text-white placeholder-gray-400"
-                      list="skills-list"
+                      onChange={(e) => {
+                        setNewSkill(e.target.value);
+                        setShowSkillsDropdown(true);
+                        setHighlightedSkillIndex(0);
+                      }}
+                      onFocus={() => setShowSkillsDropdown(true)}
+                      onKeyDown={(e) => {
+                        const filtered = availableSkills.filter(skill => 
+                          skill.toLowerCase().includes(newSkill.toLowerCase()) &&
+                          !profile.skills.includes(skill)
+                        );
+                        
+                        if (e.key === 'ArrowDown') {
+                          e.preventDefault();
+                          setHighlightedSkillIndex(prev => 
+                            prev < filtered.length - 1 ? prev + 1 : 0
+                          );
+                        } else if (e.key === 'ArrowUp') {
+                          e.preventDefault();
+                          setHighlightedSkillIndex(prev => 
+                            prev > 0 ? prev - 1 : filtered.length - 1
+                          );
+                        } else if (e.key === 'Enter') {
+                          e.preventDefault();
+                          if (filtered.length > 0 && filtered[highlightedSkillIndex]) {
+                            const skill = filtered[highlightedSkillIndex];
+                            setProfile(prev => ({
+                              ...prev,
+                              skills: [...prev.skills, skill],
+                              skillLevels: { ...prev.skillLevels, [skill]: 50 }
+                            }));
+                            setNewSkill("");
+                            setShowSkillsDropdown(false);
+                            setHighlightedSkillIndex(0);
+                          }
+                        }
+                      }}
+                      placeholder="Search and add skill..."
+                      className="font-mono bg-gray-800/50 border-green-500/30 text-white placeholder-gray-400"
                     />
-                    <datalist id="skills-list">
-                      {availableSkills.map(skill => (
-                        <option key={skill} value={skill} />
-                      ))}
-                    </datalist>
-                    <Button
-                      type="button"
-                      onClick={addSkill}
-                      variant="outline"
-                      className="font-mono border-green-500/50 text-green-400"
-                    >
-                      <Plus className="h-4 w-4" />
-                    </Button>
+                    {showSkillsDropdown && (
+                      <div className="absolute z-[200] w-full mt-1 bg-gray-800 border border-green-500/30 rounded-lg max-h-48 overflow-y-auto shadow-2xl">
+                        {availableSkills
+                          .filter(skill => 
+                            skill.toLowerCase().includes(newSkill.toLowerCase()) &&
+                            !profile.skills.includes(skill)
+                          )
+                          .map((skill, index) => (
+                            <button
+                              key={skill}
+                              type="button"
+                              onMouseDown={(e) => {
+                                e.preventDefault();
+                                setProfile(prev => ({
+                                  ...prev,
+                                  skills: [...prev.skills, skill],
+                                  skillLevels: { ...prev.skillLevels, [skill]: 50 }
+                                }));
+                                setNewSkill("");
+                                setShowSkillsDropdown(false);
+                                setHighlightedSkillIndex(0);
+                              }}
+                              onMouseEnter={() => setHighlightedSkillIndex(index)}
+                              className={`w-full text-left px-3 py-2 font-mono text-white first:rounded-t-lg last:rounded-b-lg ${
+                                index === highlightedSkillIndex 
+                                  ? 'bg-green-500/30' 
+                                  : 'hover:bg-green-500/20'
+                              }`}
+                            >
+                              {skill}
+                            </button>
+                          ))
+                        }
+                      </div>
+                    )}
                   </div>
-                  <div className="flex flex-wrap gap-2">
+                  <div className="space-y-3">
                     {profile.skills.map(skill => (
-                      <Badge
-                        key={skill}
-                        variant="outline"
-                        className="font-mono text-green-400 border-green-500/50 cursor-pointer group"
-                        onClick={() => removeSkill(skill)}
-                      >
-                        {skill}
-                        <X className="h-3 w-3 ml-1 group-hover:text-red-400" />
-                      </Badge>
+                      <div key={skill} className="bg-gray-900/50 border border-gray-700 rounded-lg p-4">
+                        <div className="flex items-center justify-between mb-2">
+                          <span className="font-mono text-green-400 font-bold">{skill}</span>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => removeSkill(skill)}
+                            className="font-mono border-red-500/50 text-red-400 hover:bg-red-500/10"
+                          >
+                            <X className="h-3 w-3" />
+                          </Button>
+                        </div>
+                        <div className="flex items-center space-x-3">
+                          <span className="font-mono text-gray-400 text-sm min-w-[60px]">Level:</span>
+                          <input
+                            type="range"
+                            min="0"
+                            max="100"
+                            value={profile.skillLevels[skill] || 50}
+                            onChange={(e) => updateSkillLevel(skill, parseInt(e.target.value))}
+                            className="flex-1 h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer slider"
+                          />
+                          <span className="font-mono text-green-400 font-bold min-w-[40px] text-right">
+                            {profile.skillLevels[skill] || 50}%
+                          </span>
+                        </div>
+                      </div>
                     ))}
                   </div>
                 </div>
@@ -458,27 +550,82 @@ export default function EditProfilePage() {
                 {/* Specializations */}
                 <div className="mb-6">
                   <label className="block text-sm font-mono text-green-400 mb-3">SPECIALIZATIONS</label>
-                  <div className="flex space-x-2 mb-3">
+                  <div className="relative mb-3">
                     <Input
                       value={newSpecialization}
-                      onChange={(e) => setNewSpecialization(e.target.value)}
-                      placeholder="Add specialization..."
-                      className="flex-1 font-mono bg-gray-800/50 border-green-500/30 text-white placeholder-gray-400"
-                      list="specializations-list"
+                      onChange={(e) => {
+                        setNewSpecialization(e.target.value);
+                        setShowSpecializationsDropdown(true);
+                        setHighlightedSpecializationIndex(0);
+                      }}
+                      onFocus={() => setShowSpecializationsDropdown(true)}
+                      onKeyDown={(e) => {
+                        const filtered = availableSpecializations.filter(spec => 
+                          spec.toLowerCase().includes(newSpecialization.toLowerCase()) &&
+                          !profile.specializations.includes(spec)
+                        );
+                        
+                        if (e.key === 'ArrowDown') {
+                          e.preventDefault();
+                          setHighlightedSpecializationIndex(prev => 
+                            prev < filtered.length - 1 ? prev + 1 : 0
+                          );
+                        } else if (e.key === 'ArrowUp') {
+                          e.preventDefault();
+                          setHighlightedSpecializationIndex(prev => 
+                            prev > 0 ? prev - 1 : filtered.length - 1
+                          );
+                        } else if (e.key === 'Enter') {
+                          e.preventDefault();
+                          if (filtered.length > 0 && filtered[highlightedSpecializationIndex]) {
+                            const spec = filtered[highlightedSpecializationIndex];
+                            setProfile(prev => ({
+                              ...prev,
+                              specializations: [...prev.specializations, spec]
+                            }));
+                            setNewSpecialization("");
+                            setShowSpecializationsDropdown(false);
+                            setHighlightedSpecializationIndex(0);
+                          }
+                        }
+                      }}
+                      placeholder="Search and add specialization..."
+                      className="font-mono bg-gray-800/50 border-green-500/30 text-white placeholder-gray-400"
                     />
-                    <datalist id="specializations-list">
-                      {availableSpecializations.map(spec => (
-                        <option key={spec} value={spec} />
-                      ))}
-                    </datalist>
-                    <Button
-                      type="button"
-                      onClick={addSpecialization}
-                      variant="outline"
-                      className="font-mono border-green-500/50 text-green-400"
-                    >
-                      <Plus className="h-4 w-4" />
-                    </Button>
+                    {showSpecializationsDropdown && (
+                      <div className="absolute z-[200] w-full mt-1 bg-gray-800 border border-green-500/30 rounded-lg max-h-48 overflow-y-auto shadow-2xl">
+                        {availableSpecializations
+                          .filter(spec => 
+                            spec.toLowerCase().includes(newSpecialization.toLowerCase()) &&
+                            !profile.specializations.includes(spec)
+                          )
+                          .map((spec, index) => (
+                            <button
+                              key={spec}
+                              type="button"
+                              onMouseDown={(e) => {
+                                e.preventDefault();
+                                setProfile(prev => ({
+                                  ...prev,
+                                  specializations: [...prev.specializations, spec]
+                                }));
+                                setNewSpecialization("");
+                                setShowSpecializationsDropdown(false);
+                                setHighlightedSpecializationIndex(0);
+                              }}
+                              onMouseEnter={() => setHighlightedSpecializationIndex(index)}
+                              className={`w-full text-left px-3 py-2 font-mono text-white first:rounded-t-lg last:rounded-b-lg ${
+                                index === highlightedSpecializationIndex 
+                                  ? 'bg-green-500/30' 
+                                  : 'hover:bg-green-500/20'
+                              }`}
+                            >
+                              {spec}
+                            </button>
+                          ))
+                        }
+                      </div>
+                    )}
                   </div>
                   <div className="flex flex-wrap gap-2">
                     {profile.specializations.map(spec => (
@@ -635,23 +782,18 @@ export default function EditProfilePage() {
                           )}
                         </Button>
                       ) : (
-                        <select
+                        <Select
+                          options={options?.map(option => ({ value: option, label: option.toUpperCase() })) || []}
                           value={profile.preferences[key as keyof typeof profile.preferences] as string}
-                          onChange={(e) => setProfile(prev => ({
+                          onChange={(value) => setProfile(prev => ({
                             ...prev,
                             preferences: {
                               ...prev.preferences,
-                              [key]: e.target.value
+                              [key]: value
                             }
                           }))}
-                          className="bg-gray-800 border border-green-500/30 rounded px-2 py-1 font-mono text-xs text-white"
-                        >
-                          {options?.map(option => (
-                            <option key={option} value={option}>
-                              {option.toUpperCase()}
-                            </option>
-                          ))}
-                        </select>
+                          className="text-xs"
+                        />
                       )}
                     </div>
                   ))}

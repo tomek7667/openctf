@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { User, LogOut, Settings, Shield, ChevronDown } from "@/components/ui/icons";
+import { User, LogOut, Shield, ChevronDown } from "@/components/ui/icons";
 import { useAuthStore } from "@/store/authStore";
 import { logout } from "@/api/auth";
 
@@ -51,7 +51,7 @@ export function UserMenu() {
 							exit={{ opacity: 0, y: -10, scale: 0.95 }}
 							className="absolute right-0 top-full mt-2 w-64 z-50"
 						>
-							<div className="terminal glass-terminal p-4 hacker-border">
+							<div className="bg-black/95 backdrop-blur-md border border-green-500/30 rounded-lg p-4 shadow-2xl">
 								<div className="text-primary font-mono text-sm mb-3">
 									$ whoami
 								</div>
@@ -84,11 +84,6 @@ export function UserMenu() {
 										<User className="h-4 w-4 text-muted-foreground" />
 										<span className="text-muted-foreground">&gt; Profile</span>
 									</a>
-
-									<button className="w-full flex items-center gap-3 p-2 rounded transition-colors hover:bg-primary/10 text-left font-mono text-sm">
-										<Settings className="h-4 w-4 text-muted-foreground" />
-										<span className="text-muted-foreground">&gt; Settings</span>
-									</button>
 									
 									<button
 										onClick={handleLogout}
