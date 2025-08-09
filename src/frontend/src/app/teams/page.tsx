@@ -3,642 +3,694 @@
 import React, { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { MainLayout } from "@/components/layout/MainLayout";
-import { Button } from "@/components/ui/Button";
-import { Input } from "@/components/ui/Input";
-import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
-import { Badge } from "@/components/ui/Badge";
 import {
-  Search,
-  Filter,
-  Star,
-  Eye,
-  Users,
-  Trophy,
-  Calendar,
-  MapPin,
-  Plus,
-  Users as UserPlus,
-  Shield,
-  Trophy as Crown,
-  CheckCircle,
-  Clock,
-  Target,
-  TrendingUp,
-  Award,
-  Globe,
-  Lock,
-  EyeOff,
-  Send,
-  ExternalLink
+	Search,
+	Users,
+	Shield,
+	Star,
+	Trophy,
+
+	ChevronLeft,
+	ChevronRight,
+	Globe,
+	Lock,
+	EyeOff,
+	Plus,
 } from "@/components/ui/icons";
-import { getTeams, Team, TeamFilters, getUserTeams, applyToTeam } from "@/api/teams";
+import { Input } from "@/components/ui/Input";
+import { Button } from "@/components/ui/Button";
+import { Badge } from "@/components/ui/Badge";
+import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
+import { MainLayout } from "@/components/layout/MainLayout";
+import { getCountryByCode, getPopularCountries, COUNTRIES } from "@/lib/countries";
+import { getTeams, Team, TeamFilters, getUserTeams } from "@/api/teams";
 import { useAuthStore } from "@/store/authStore";
-import { getCountryByCode, getCountryFlag, getPopularCountries } from "@/lib/countries";
+import { clsx } from "clsx";
+
+interface TeamWithStats extends Team {
+	ranking: number;
+}
+
+interface PaginationState {
+	currentPage: number;
+	pageSize: number;
+	totalPages: number;
+	total: number;
+}
+
+interface TeamFiltersState {
+	search: string;
+	countries: string[];
+	privacy?: string;
+	minRating?: number;
+	isRecruiting?: boolean;
+	hasOpenSlots?: boolean;
+}
 
 const privacyIcons = {
-  public: Globe,
-  'invite-only': Lock,
-  private: EyeOff
+	public: Globe,
+	"invite-only": Lock,
+	private: EyeOff,
 };
 
 const privacyColors = {
-  public: 'text-green-400',
-  'invite-only': 'text-yellow-400',
-  private: 'text-red-400'
+	public: "text-green-400",
+	"invite-only": "text-yellow-400",
+	private: "text-red-400",
 };
 
-function TeamCard({ team, onApply }: { team: Team; onApply: (teamId: string) => void }) {
-  const { user, isAuthenticated } = useAuthStore();
-  const PrivacyIcon = privacyIcons[team.privacy];
-  const isUserMember = team.members.some(member => member.userId === user?.id?.toString());
-  const isCaptain = team.captainId === user?.id?.toString();
-  
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3 }}
-      className="group relative"
-    >
-      <div className="absolute inset-0 bg-gradient-to-r from-green-500/20 to-blue-500/20 rounded-lg blur-xl group-hover:blur-2xl transition-all duration-500 opacity-0 group-hover:opacity-100" />
-      
-      <div className="relative bg-card/50 backdrop-blur-sm border border-green-500/30 rounded-lg overflow-hidden h-full hover:border-green-400/50 transition-all duration-300 group-hover:shadow-lg group-hover:shadow-green-500/20">
-        {/* Banner */}
-        {team.bannerUrl && (
-          <div className="h-20 bg-gradient-to-r from-green-500/20 to-blue-500/20 relative overflow-hidden">
-            <img 
-              src={team.bannerUrl} 
-              alt={`${team.name} banner`}
-              className="w-full h-full object-cover opacity-60"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
-          </div>
-        )}
+const CompactStatCard = ({
+	icon: Icon,
+	label,
+	value,
+	isLoading = false,
+}: {
+	icon: React.ComponentType<{ className?: string | undefined }>;
+	label: string;
+	value: string | number;
+	isLoading?: boolean;
+}) => (
+	<div className="flex items-center gap-2 p-2 bg-muted/30 rounded border border-border/50">
+		<Icon className="h-4 w-4 text-primary" />
+		<div className="flex items-center gap-2">
+			<span className="text-xs font-mono text-muted-foreground">{label}:</span>
+			{isLoading ? (
+				<span className="text-sm font-bold font-mono text-primary animate-pulse">--</span>
+			) : (
+				<span className="text-sm font-bold font-mono text-primary">{value}</span>
+			)}
+		</div>
+	</div>
+);
 
-        <div className="p-6">
-          {/* Header */}
-          <div className="flex items-start justify-between mb-4">
-            <div className="flex items-center space-x-3">
-              {team.logoUrl ? (
-                <img 
-                  src={team.logoUrl} 
-                  alt={team.name}
-                  className="w-12 h-12 rounded-lg border border-green-500/50"
-                />
-              ) : (
-                <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-blue-500 rounded-lg flex items-center justify-center text-lg font-bold font-mono text-black">
-                  {team.name.slice(0, 2).toUpperCase()}
-                </div>
-              )}
-              <div>
-                <h3 className="font-mono text-lg font-bold text-white group-hover:text-green-400 transition-colors">
-                  <Link href={`/teams/${team.id}`}>
-                    {team.name}
-                  </Link>
-                </h3>
-                <div className="flex items-center space-x-2 mt-1">
-                  <PrivacyIcon className={`h-4 w-4 ${privacyColors[team.privacy]}`} />
-                  <span className={`text-xs font-mono ${privacyColors[team.privacy]}`}>
-                    {team.privacy.replace('-', ' ').toUpperCase()}
-                  </span>
-                  {team.country && (
-                    <div className="flex items-center space-x-1">
-                      <span className="text-sm">{getCountryFlag(team.country)}</span>
-                      <span className="text-xs font-mono text-gray-400">
-                        {getCountryByCode(team.country)?.name}
-                      </span>
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
-            
-            <div className="flex flex-col items-end space-y-1">
-              {team.recruitment.isRecruiting && (
-                <Badge variant="outline" className="text-xs font-mono text-green-400 border-green-400">
-                  RECRUITING
-                </Badge>
-              )}
-              {team.status === 'active' && (
-                <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
-              )}
-            </div>
-          </div>
+const CountryFilter = ({
+	selectedCountries,
+	onToggle,
+	showAll,
+	onToggleShowAll,
+}: {
+	selectedCountries: string[];
+	onToggle: (code: string) => void;
+	showAll: boolean;
+	onToggleShowAll: () => void;
+}) => {
+	const popularCountries = getPopularCountries();
+	const displayCountries = showAll ? COUNTRIES : popularCountries;
 
-          {/* Description */}
-          <p className="text-gray-300 text-sm mb-4 line-clamp-2 font-mono">
-            {team.description}
-          </p>
+	return (
+		<div className="space-y-3">
+			<div className="flex items-center justify-between">
+				<span className="text-xs font-mono text-muted-foreground">
+					Countries ({selectedCountries.length} selected)
+				</span>
+				<Button
+					variant="outline"
+					size="sm"
+					onClick={onToggleShowAll}
+					className="text-xs font-mono h-6 px-2"
+				>
+					{showAll ? "Popular" : `All ${COUNTRIES.length}`}
+				</Button>
+			</div>
 
-          {/* Members Preview */}
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center space-x-2">
-              <Users className="h-4 w-4 text-blue-400" />
-              <span className="font-mono text-blue-400 text-sm">
-                {team.memberCount}/{team.maxMembers} members
-              </span>
-            </div>
-            
-            <div className="flex -space-x-2">
-              {team.members.slice(0, 3).map((member, index) => (
-                <div 
-                  key={member.id}
-                  className="w-8 h-8 bg-gradient-to-r from-green-500 to-blue-500 rounded-full border-2 border-gray-900 flex items-center justify-center text-xs font-bold font-mono text-black relative"
-                  style={{ zIndex: 10 - index }}
-                >
-                  {member.username.slice(0, 2).toUpperCase()}
-                  {member.role === 'captain' && (
-                    <Crown className="absolute -top-1 -right-1 h-3 w-3 text-yellow-400 bg-gray-900 rounded-full p-0.5" />
-                  )}
-                </div>
-              ))}
-              {team.memberCount > 3 && (
-                <div className="w-8 h-8 bg-gray-700 rounded-full border-2 border-gray-900 flex items-center justify-center text-xs font-mono text-gray-300">
-                  +{team.memberCount - 3}
-                </div>
-              )}
-            </div>
-          </div>
+			<div className="max-h-48 overflow-y-auto">
+				<div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-1">
+					{displayCountries.map((country) => (
+						<button
+							key={country.code}
+							onClick={() => onToggle(country.code)}
+							className={clsx(
+								"p-1 rounded text-xs font-mono border transition-all hover:scale-105",
+								selectedCountries.includes(country.code)
+									? "bg-primary text-primary-foreground border-primary"
+									: "bg-muted/50 border-border/50 hover:bg-muted"
+							)}
+							title={country.name}
+						>
+							<div className="text-sm">{country.flag}</div>
+							<div className="text-xs truncate">{country.code}</div>
+						</button>
+					))}
+				</div>
+			</div>
+		</div>
+	);
+};
 
-          {/* Stats */}
-          <div className="flex items-center justify-between text-sm text-gray-400 mb-4">
-            <div className="flex items-center space-x-4">
-              <div className="flex items-center space-x-1">
-                <Star className="h-4 w-4 text-yellow-400" />
-                <span className="font-mono">{team.statistics.currentRating}</span>
-              </div>
-              <div className="flex items-center space-x-1">
-                <Trophy className="h-4 w-4 text-green-400" />
-                <span className="font-mono">{team.statistics.contestsWon}</span>
-              </div>
-              <div className="flex items-center space-x-1">
-                <Target className="h-4 w-4 text-purple-400" />
-                <span className="font-mono">{team.statistics.contestsParticipated}</span>
-              </div>
-            </div>
-            
-            <div className="flex items-center space-x-1 text-xs">
-              <Clock className="h-3 w-3" />
-              <span className="font-mono">
-                {new Date(team.lastActive).toLocaleDateString()}
-              </span>
-            </div>
-          </div>
+const TeamTableRow = ({ team }: { team: TeamWithStats }) => {
+	const PrivacyIcon = privacyIcons[team.privacy];
 
-          {/* Skills */}
-          {team.recruitment.isRecruiting && team.recruitment.requiredSkills.length > 0 && (
-            <div className="mb-4">
-              <div className="text-xs font-mono text-green-400 mb-2">LOOKING FOR:</div>
-              <div className="flex flex-wrap gap-1">
-                {team.recruitment.requiredSkills.slice(0, 3).map((skill) => (
-                  <Badge key={skill} variant="outline" className="text-xs font-mono text-gray-400 border-gray-600">
-                    {skill}
-                  </Badge>
-                ))}
-                {team.recruitment.requiredSkills.length > 3 && (
-                  <Badge variant="outline" className="text-xs font-mono text-gray-400 border-gray-600">
-                    +{team.recruitment.requiredSkills.length - 3}
-                  </Badge>
-                )}
-              </div>
-            </div>
-          )}
+	return (
+		<tr className="border-b border-border/50 hover:bg-muted/20 transition-colors cursor-pointer" onClick={() => window.location.href = `/teams/${team.id}`}>
+			<td className="p-3">
+				<div className="flex items-center gap-3">
+					<div
+						className={clsx(
+							"w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold font-mono",
+							team.ranking <= 10
+								? "bg-yellow-400/20 text-yellow-400"
+								: team.ranking <= 50
+									? "bg-orange-400/20 text-orange-400"
+									: "bg-primary/20 text-primary"
+						)}
+					>
+						{team.ranking}
+					</div>
+					<div>
+						<div className="flex items-center gap-2">
+							<span className="font-bold text-foreground font-mono text-sm">
+								{team.name}
+							</span>
+							<PrivacyIcon className={`h-3 w-3 ${privacyColors[team.privacy]}`} />
+							{team.recruitment.isRecruiting && (
+								<Badge variant="outline" className="text-xs font-mono text-green-400 border-green-400">
+									RECRUITING
+								</Badge>
+							)}
+						</div>
+						<div className="text-xs text-muted-foreground truncate max-w-xs">
+							{team.description}
+						</div>
+					</div>
+				</div>
+			</td>
+			<td className="p-3">
+				<div className="flex items-center gap-2">
+					<span className="text-base">{getCountryByCode(team.country_code || "US")?.flag || "🌍"}</span>
+					<span className="font-mono text-xs">{team.country_code || "US"}</span>
+				</div>
+			</td>
+			<td className="p-3 font-mono text-xs font-bold text-primary">
+				{team.statistics.currentRating.toLocaleString()}
+			</td>
+			<td className="p-3 font-mono text-xs">
+				{team.memberCount}
+			</td>
+			<td className="p-3 font-mono text-xs">{team.statistics.contestsParticipated}</td>
+			<td className="p-3 font-mono text-xs">{team.statistics.contestsWon}</td>
+		</tr>
+	);
+};
 
-          {/* Action Button */}
-          <div className="pt-4 border-t border-gray-700">
-            {!isAuthenticated ? (
-              <Button
-                size="sm"
-                variant="outline"
-                className="w-full font-mono border-gray-500 text-gray-400"
-                disabled
-              >
-                LOGIN TO APPLY
-              </Button>
-            ) : isUserMember ? (
-              <div className="flex items-center justify-center space-x-2 text-green-400">
-                <CheckCircle className="h-4 w-4" />
-                <span className="font-mono text-sm">
-                  {isCaptain ? 'TEAM CAPTAIN' : 'MEMBER'}
-                </span>
-              </div>
-            ) : team.recruitment.isRecruiting && team.settings.allowApplications ? (
-              <Button
-                size="sm"
-                onClick={() => onApply(team.id)}
-                className="w-full font-mono bg-green-500 hover:bg-green-600 text-black font-bold"
-              >
-                <UserPlus className="h-4 w-4 mr-2" />
-                APPLY TO JOIN
-              </Button>
-            ) : (
-              <Button
-                size="sm"
-                variant="outline"
-                className="w-full font-mono border-gray-500 text-gray-400"
-                disabled
-              >
-                {team.privacy === 'private' ? 'PRIVATE TEAM' : 'NOT RECRUITING'}
-              </Button>
-            )}
-          </div>
-        </div>
-      </div>
-    </motion.div>
-  );
-}
+const Pagination = ({
+	pagination,
+	onPageChange,
+	isLoading,
+}: {
+	pagination: PaginationState;
+	onPageChange: (page: number) => void;
+	isLoading: boolean;
+}) => {
+	const { currentPage, totalPages } = pagination;
 
-function GlowingHeader() {
-  return (
-    <div className="relative mb-12 text-center">
-      <div className="absolute inset-0 bg-gradient-to-r from-green-500/20 via-blue-500/20 to-purple-500/20 blur-3xl animate-pulse" />
-      <div className="relative">
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="mb-6"
-        >
-          <h1 className="text-6xl font-bold font-mono text-transparent bg-clip-text bg-gradient-to-r from-green-400 via-blue-400 to-purple-400 mb-4">
-            [TEAMS]
-          </h1>
-          <div className="flex items-center justify-center space-x-2 text-green-400">
-            <Users className="h-6 w-6" />
-            <span className="text-xl font-mono">&gt; Elite cyber squads assembled</span>
-            <div className="w-2 h-6 bg-green-400 animate-pulse" />
-          </div>
-        </motion.div>
-        
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.3, duration: 0.6 }}
-          className="text-lg text-gray-300 font-mono max-w-3xl mx-auto"
-        >
-          Join the world&apos;s most skilled cybersecurity teams. Compete in CTFs, share knowledge, and advance your career.
-        </motion.p>
-      </div>
-    </div>
-  );
-}
+	const generatePageNumbers = () => {
+		const pages = [];
+		const maxVisible = 7;
+
+		if (totalPages <= maxVisible) {
+			for (let i = 1; i <= totalPages; i++) {
+				pages.push(i);
+			}
+		} else {
+			if (currentPage <= 4) {
+				for (let i = 1; i <= 5; i++) pages.push(i);
+				pages.push("...");
+				pages.push(totalPages);
+			} else if (currentPage >= totalPages - 3) {
+				pages.push(1);
+				pages.push("...");
+				for (let i = totalPages - 4; i <= totalPages; i++) pages.push(i);
+			} else {
+				pages.push(1);
+				pages.push("...");
+				for (let i = currentPage - 1; i <= currentPage + 1; i++) pages.push(i);
+				pages.push("...");
+				pages.push(totalPages);
+			}
+		}
+
+		return pages;
+	};
+
+	return (
+		<div className="flex items-center justify-between py-4">
+			<div className="text-xs text-muted-foreground font-mono">
+				Page {currentPage} of {totalPages} ({pagination.total} teams)
+			</div>
+
+			<div className="flex items-center gap-1">
+				<Button
+					variant="outline"
+					size="sm"
+					onClick={() => onPageChange(currentPage - 1)}
+					disabled={currentPage === 1 || isLoading}
+					className="font-mono text-xs h-8 px-2"
+				>
+					<ChevronLeft className="h-3 w-3" />
+				</Button>
+
+				{generatePageNumbers().map((page, index) => (
+					<React.Fragment key={index}>
+						{page === "..." ? (
+							<span className="px-2 text-xs text-muted-foreground">...</span>
+						) : (
+							<Button
+								variant={currentPage === page ? "primary" : "outline"}
+								size="sm"
+								onClick={() => onPageChange(page as number)}
+								disabled={isLoading}
+								className="font-mono text-xs h-8 w-8 p-0"
+							>
+								{page}
+							</Button>
+						)}
+					</React.Fragment>
+				))}
+
+				<Button
+					variant="outline"
+					size="sm"
+					onClick={() => onPageChange(currentPage + 1)}
+					disabled={currentPage === totalPages || isLoading}
+					className="font-mono text-xs h-8 px-2"
+				>
+					<ChevronRight className="h-3 w-3" />
+				</Button>
+			</div>
+		</div>
+	);
+};
 
 export default function TeamsPage() {
-  const { user, isAuthenticated } = useAuthStore();
-  const [teams, setTeams] = useState<Team[]>([]);
-  const [userTeams, setUserTeams] = useState<Team[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [applying, setApplying] = useState<string | null>(null);
-  const [filters, setFilters] = useState<TeamFilters>({});
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
-  const [showFilters, setShowFilters] = useState(false);
-  
-  // Filter state
-  const [searchQuery, setSearchQuery] = useState("");
-  const [selectedCountry, setSelectedCountry] = useState("");
-  const [minRating, setMinRating] = useState("");
-  const [maxRating, setMaxRating] = useState("");
-  const [isRecruiting, setIsRecruiting] = useState<boolean | undefined>(undefined);
-  const [minMembers, setMinMembers] = useState("");
-  const [maxMembers, setMaxMembers] = useState("");
-  const [selectedSort, setSelectedSort] = useState("newest");
+	const { user, isAuthenticated } = useAuthStore();
+	const [teams, setTeams] = useState<TeamWithStats[]>([]);
+	const [, setUserTeams] = useState<Team[]>([]);
+	const [isLoading, setIsLoading] = useState(true);
+	const [showCountryFilter, setShowCountryFilter] = useState(false);
+	const [showAllCountries, setShowAllCountries] = useState(false);
+	const [filters, setFilters] = useState<TeamFiltersState>({
+		search: "",
+		countries: [],
+	});
+	const [pagination, setPagination] = useState<PaginationState>({
+		currentPage: 1,
+		pageSize: 25,
+		totalPages: 1,
+		total: 0,
+	});
 
-  const loadTeams = useCallback(async () => {
-    setLoading(true);
-    try {
-      const currentFilters: TeamFilters = {
-        search: searchQuery || undefined,
-        country: selectedCountry || undefined,
-        minRating: minRating ? parseInt(minRating) : undefined,
-        maxRating: maxRating ? parseInt(maxRating) : undefined,
-        isRecruiting: isRecruiting,
-        memberCount: {
-          min: minMembers ? parseInt(minMembers) : undefined,
-          max: maxMembers ? parseInt(maxMembers) : undefined,
-        },
-        sortBy: selectedSort as any,
-      };
+	// Fetch teams with pagination and filters
+	const fetchTeams = useCallback(
+		async (page: number = 1, resetFilters = false) => {
+			try {
+				setIsLoading(true);
 
-      const response = await getTeams(currentFilters, currentPage, 12);
-      if (response.success && response.data) {
-        setTeams(response.data.teams);
-        setTotalPages(response.data.totalPages);
-      }
+				const teamFilters: TeamFilters = {};
+				if (filters.search) teamFilters.search = filters.search;
+				if (filters.countries.length > 0 && !resetFilters && filters.countries[0]) teamFilters.country = filters.countries[0];
+				if (filters.minRating) teamFilters.minRating = filters.minRating;
+				if (filters.isRecruiting !== undefined) teamFilters.isRecruiting = filters.isRecruiting;
+				teamFilters.sortBy = "rating";
 
-      // Load user's teams if authenticated
-      if (isAuthenticated && user?.id) {
-        const userTeamsResponse = await getUserTeams(user.id.toString());
-        if (userTeamsResponse.success && userTeamsResponse.data) {
-          setUserTeams(userTeamsResponse.data);
-        }
-      }
-    } catch (error) {
-      console.error('Error loading teams:', error);
-    } finally {
-      setLoading(false);
-    }
-  }, [searchQuery, selectedCountry, minRating, maxRating, isRecruiting, minMembers, maxMembers, selectedSort, currentPage, isAuthenticated, user?.id]);
+				const response = await getTeams(teamFilters, page, pagination.pageSize);
+				if (response.success && response.data) {
+					// Add ranking to teams based on rating
+					const teamsWithRanking: TeamWithStats[] = response.data.teams.map((team, index) => ({
+						...team,
+						ranking: (page - 1) * pagination.pageSize + index + 1,
+					}));
 
-  useEffect(() => {
-    loadTeams();
-  }, [loadTeams]);
+					setTeams(teamsWithRanking);
+					setPagination({
+						currentPage: page,
+						pageSize: pagination.pageSize,
+						totalPages: response.data.totalPages,
+						total: response.data.total,
+					});
+				}
 
-  const handleApply = async (teamId: string) => {
-    if (!isAuthenticated || !user?.id) return;
-    
-    setApplying(teamId);
-    try {
-      const response = await applyToTeam(
-        teamId,
-        "I'm interested in joining your team and contributing to your success in CTF competitions.",
-        ["Web Security", "Python"], // Mock skills
-        user.id.toString()
-      );
-      
-      if (response.success) {
-        // Show success message or update UI
-        console.log('Application submitted successfully');
-      }
-    } catch (error) {
-      console.error('Error applying to team:', error);
-    } finally {
-      setApplying(null);
-    }
-  };
+				// Load user's teams if authenticated
+				if (isAuthenticated && user?.id) {
+					const userTeamsResponse = await getUserTeams(user.id.toString());
+					if (userTeamsResponse.success && userTeamsResponse.data) {
+						setUserTeams(userTeamsResponse.data);
+					}
+				}
+			} catch (error) {
+				console.error("Error fetching teams:", error);
+			} finally {
+				setIsLoading(false);
+			}
+		},
+		[pagination.pageSize, filters.countries, filters.search, filters.minRating, filters.isRecruiting, isAuthenticated, user?.id]
+	);
 
-  const resetFilters = () => {
-    setSearchQuery("");
-    setSelectedCountry("");
-    setMinRating("");
-    setMaxRating("");
-    setIsRecruiting(undefined);
-    setMinMembers("");
-    setMaxMembers("");
-    setSelectedSort("newest");
-    setCurrentPage(1);
-  };
+	// Initial load
+	useEffect(() => {
+		fetchTeams(1);
+	}, [fetchTeams]);
 
-  return (
-    <MainLayout>
-      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black">
-        <div className="container mx-auto px-4 py-8">
-          <GlowingHeader />
+	// Handle filter changes
+	useEffect(() => {
+		fetchTeams(1); // Reset to first page when filters change
+	}, [filters.countries, filters.search, filters.minRating, filters.isRecruiting, fetchTeams]);
 
-          {/* User's Teams */}
-          {isAuthenticated && userTeams.length > 0 && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="mb-12"
-            >
-              <h2 className="text-2xl font-bold font-mono text-green-400 mb-6">YOUR TEAMS</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mb-8">
-                {userTeams.map((team) => (
-                  <TeamCard key={team.id} team={team} onApply={handleApply} />
-                ))}
-              </div>
-            </motion.div>
-          )}
+	const updateFilter = (key: keyof TeamFiltersState, value: any) => {
+		setFilters((prev) => ({ ...prev, [key]: value }));
+	};
 
-          {/* Controls */}
-          <div className="mb-8">
-            <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between mb-6">
-              {/* Search */}
-              <div className="flex-1 max-w-md">
-                <div className="relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-                  <Input
-                    type="text"
-                    placeholder="Search teams..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="pl-10 font-mono bg-gray-800/50 border-green-500/30 text-white placeholder-gray-400 focus:border-green-400"
-                  />
-                </div>
-              </div>
+	const toggleCountryFilter = (countryCode: string) => {
+		setFilters((prev) => ({
+			...prev,
+			countries: prev.countries.includes(countryCode)
+				? prev.countries.filter((c) => c !== countryCode)
+				: [...prev.countries, countryCode],
+		}));
+	};
 
-              {/* Actions */}
-              <div className="flex items-center space-x-4">
-                <Button
-                  variant="outline"
-                  onClick={() => setShowFilters(!showFilters)}
-                  className="font-mono border-green-500/50 text-green-400 hover:bg-green-500/10"
-                >
-                  <Filter className="h-4 w-4 mr-2" />
-                  FILTERS
-                </Button>
-                
-                {isAuthenticated && (
-                  <Link href="/teams/create">
-                    <Button className="font-mono bg-gradient-to-r from-green-500 to-blue-500 hover:from-green-600 hover:to-blue-600 text-black font-bold">
-                      <Plus className="h-4 w-4 mr-2" />
-                      CREATE TEAM
-                    </Button>
-                  </Link>
-                )}
-              </div>
-            </div>
+	const clearFilters = () => {
+		setFilters({
+			search: "",
+			countries: [],
+		});
+		fetchTeams(1, true);
+	};
 
-            {/* Advanced Filters */}
-            <AnimatePresence>
-              {showFilters && (
-                <motion.div
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: "auto" }}
-                  exit={{ opacity: 0, height: 0 }}
-                  className="bg-gray-800/30 border border-green-500/30 rounded-lg p-6 mb-6"
-                >
-                  <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                    {/* Country */}
-                    <div>
-                      <label className="block text-sm font-mono text-green-400 mb-2">COUNTRY</label>
-                      <select
-                        value={selectedCountry}
-                        onChange={(e) => setSelectedCountry(e.target.value)}
-                        className="w-full bg-gray-800/50 border border-green-500/30 rounded-lg px-3 py-2 font-mono text-white text-sm"
-                      >
-                        <option value="">All Countries</option>
-                        {getPopularCountries().map(code => {
-                          const country = getCountryByCode(code);
-                          return (
-                            <option key={code} value={code}>
-                              {getCountryFlag(code)} {country?.name}
-                            </option>
-                          );
-                        })}
-                      </select>
-                    </div>
+	const handlePageChange = (page: number) => {
+		fetchTeams(page);
+	};
 
-                    {/* Rating Range */}
-                    <div>
-                      <label className="block text-sm font-mono text-green-400 mb-2">MIN RATING</label>
-                      <Input
-                        type="number"
-                        value={minRating}
-                        onChange={(e) => setMinRating(e.target.value)}
-                        placeholder="1000"
-                        className="font-mono bg-gray-800/50 border-green-500/30 text-white text-sm"
-                      />
-                    </div>
+	// Apply client-side filters
+	const filteredTeams = teams.filter((team) => {
+		// Privacy filter
+		if (filters.privacy && team.privacy !== filters.privacy) {
+			return false;
+		}
 
-                    <div>
-                      <label className="block text-sm font-mono text-green-400 mb-2">MAX RATING</label>
-                      <Input
-                        type="number"
-                        value={maxRating}
-                        onChange={(e) => setMaxRating(e.target.value)}
-                        placeholder="3000"
-                        className="font-mono bg-gray-800/50 border-green-500/30 text-white text-sm"
-                      />
-                    </div>
+		// Has open slots filter (assuming teams can always accept more members)
+		if (filters.hasOpenSlots !== undefined) {
+			const hasOpenSlots = team.recruitment.isRecruiting;
+			if (hasOpenSlots !== filters.hasOpenSlots) {
+				return false;
+			}
+		}
 
-                    {/* Member Count */}
-                    <div>
-                      <label className="block text-sm font-mono text-green-400 mb-2">MEMBERS</label>
-                      <div className="flex space-x-2">
-                        <Input
-                          type="number"
-                          value={minMembers}
-                          onChange={(e) => setMinMembers(e.target.value)}
-                          placeholder="Min"
-                          className="flex-1 font-mono bg-gray-800/50 border-green-500/30 text-white text-sm"
-                        />
-                        <Input
-                          type="number"
-                          value={maxMembers}
-                          onChange={(e) => setMaxMembers(e.target.value)}
-                          placeholder="Max"
-                          className="flex-1 font-mono bg-gray-800/50 border-green-500/30 text-white text-sm"
-                        />
-                      </div>
-                    </div>
+		return true;
+	});
 
-                    {/* Recruiting Status */}
-                    <div>
-                      <label className="block text-sm font-mono text-green-400 mb-2">STATUS</label>
-                      <select
-                        value={isRecruiting === undefined ? "" : isRecruiting.toString()}
-                        onChange={(e) => setIsRecruiting(e.target.value === "" ? undefined : e.target.value === "true")}
-                        className="w-full bg-gray-800/50 border border-green-500/30 rounded-lg px-3 py-2 font-mono text-white text-sm"
-                      >
-                        <option value="">All Teams</option>
-                        <option value="true">Recruiting</option>
-                        <option value="false">Not Recruiting</option>
-                      </select>
-                    </div>
+	// Get top 5 teams
+	const topTeams = filteredTeams.slice(0, 5);
 
-                    {/* Sort By */}
-                    <div>
-                      <label className="block text-sm font-mono text-green-400 mb-2">SORT BY</label>
-                      <select
-                        value={selectedSort}
-                        onChange={(e) => setSelectedSort(e.target.value)}
-                        className="w-full bg-gray-800/50 border border-green-500/30 rounded-lg px-3 py-2 font-mono text-white text-sm"
-                      >
-                        <option value="newest">Newest</option>
-                        <option value="oldest">Oldest</option>
-                        <option value="rating">Rating</option>
-                        <option value="members">Members</option>
-                        <option value="activity">Activity</option>
-                        <option value="contests">Contests</option>
-                      </select>
-                    </div>
-                  </div>
+	// Stats
+	const stats = {
+		total: pagination.total,
+		recruiting: teams.filter((t) => t.recruitment.isRecruiting).length,
+		withOpenSlots: teams.filter((t) => t.recruitment.isRecruiting).length,
+		countries: new Set(teams.map((t) => t.country_code).filter(Boolean)).size,
+	};
 
-                  <div className="mt-6 flex justify-end">
-                    <Button
-                      variant="outline"
-                      onClick={resetFilters}
-                      className="font-mono border-gray-500 text-gray-400 hover:bg-gray-700/50"
-                    >
-                      RESET FILTERS
-                    </Button>
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
+	const hasActiveFilters =
+		filters.search ||
+		filters.countries.length > 0 ||
+		filters.privacy ||
+		filters.minRating ||
+		filters.isRecruiting !== undefined ||
+		filters.hasOpenSlots !== undefined;
 
-          {/* Loading */}
-          {loading && (
-            <div className="flex justify-center py-12">
-              <LoadingSpinner />
-            </div>
-          )}
+	return (
+		<MainLayout>
+			<div className="min-h-screen">
+				{/* Header */}
+				<section className="py-4 px-4 border-b border-border/50">
+					<div className="max-w-7xl mx-auto">
+						<div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+							<div className="flex items-center gap-3">
+								<Users className="h-5 w-5 text-primary" />
+								<h1 className="text-xl font-bold font-mono text-foreground">TEAM_RANKINGS</h1>
+								<span className="text-sm text-muted-foreground font-mono">
+									{stats.total} teams registered
+								</span>
+							</div>
 
-          {/* Teams Grid */}
-          {!loading && (
-            <>
-              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mb-8">
-                <AnimatePresence>
-                  {teams.map((team) => (
-                    <TeamCard key={team.id} team={team} onApply={handleApply} />
-                  ))}
-                </AnimatePresence>
-              </div>
+							{/* Stats */}
+							<div className="flex flex-wrap gap-2">
+								<CompactStatCard
+									icon={Shield}
+									label="Recruiting"
+									value={stats.recruiting}
+									isLoading={isLoading}
+								/>
+								<CompactStatCard
+									icon={Trophy}
+									label="Open Slots"
+									value={stats.withOpenSlots}
+									isLoading={isLoading}
+								/>
+								<CompactStatCard
+									icon={Globe}
+									label="Countries"
+									value={stats.countries}
+									isLoading={isLoading}
+								/>
+							</div>
+						</div>
+					</div>
+				</section>
 
-              {/* No Results */}
-              {teams.length === 0 && (
-                <div className="text-center py-12">
-                  <Users className="h-16 w-16 text-gray-600 mx-auto mb-4" />
-                  <h3 className="text-xl font-mono text-gray-400 mb-2">No teams found</h3>
-                  <p className="text-gray-500 font-mono mb-4">Try adjusting your search criteria or create a new team</p>
-                  {isAuthenticated && (
-                    <Link href="/teams/create">
-                      <Button className="font-mono bg-green-500 hover:bg-green-600 text-black font-bold">
-                        CREATE YOUR TEAM
-                      </Button>
-                    </Link>
-                  )}
-                </div>
-              )}
+				{/* Filters */}
+				<section className="py-3 px-4 bg-muted/20">
+					<div className="max-w-7xl mx-auto">
+						<div className="flex flex-col gap-3">
+							<div className="flex flex-col md:flex-row gap-3">
+								{/* Search */}
+								<div className="flex-1 relative">
+									<Search className="absolute left-2 top-1/2 transform -translate-y-1/2 h-3 w-3 text-muted-foreground" />
+									<Input
+										placeholder="Search teams..."
+										value={filters.search}
+										onChange={(e) => updateFilter("search", e.target.value)}
+										className="pl-7 py-1 text-sm font-mono h-8"
+									/>
+								</div>
 
-              {/* Pagination */}
-              {totalPages > 1 && (
-                <div className="flex justify-center items-center space-x-4 mt-8">
-                  <Button
-                    variant="outline"
-                    disabled={currentPage === 1}
-                    onClick={() => setCurrentPage(currentPage - 1)}
-                    className="font-mono border-green-500/50 text-green-400 disabled:opacity-50"
-                  >
-                    PREV
-                  </Button>
-                  
-                  <div className="flex items-center space-x-2">
-                    {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
-                      const pageNum = Math.max(1, Math.min(totalPages - 4, currentPage - 2)) + i;
-                      return (
-                        <button
-                          key={pageNum}
-                          onClick={() => setCurrentPage(pageNum)}
-                          className={`w-10 h-10 rounded-lg font-mono text-sm transition-all ${
-                            currentPage === pageNum
-                              ? 'bg-green-500 text-black font-bold'
-                              : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
-                          }`}
-                        >
-                          {pageNum}
-                        </button>
-                      );
-                    })}
-                  </div>
-                  
-                  <Button
-                    variant="outline"
-                    disabled={currentPage === totalPages}
-                    onClick={() => setCurrentPage(currentPage + 1)}
-                    className="font-mono border-green-500/50 text-green-400 disabled:opacity-50"
-                  >
-                    NEXT
-                  </Button>
-                </div>
-              )}
-            </>
-          )}
-        </div>
-      </div>
-    </MainLayout>
-  );
+								{/* Quick Filters */}
+								<div className="flex flex-wrap gap-1">
+									<Badge
+										variant={filters.privacy === "public" ? "default" : "outline"}
+										className="cursor-pointer text-xs font-mono h-8 px-2"
+										onClick={() =>
+											updateFilter("privacy", filters.privacy === "public" ? undefined : "public")
+										}
+									>
+										<Globe className="h-3 w-3 mr-1" />
+										Public
+									</Badge>
+									<Badge
+										variant={filters.isRecruiting === true ? "default" : "outline"}
+										className="cursor-pointer text-xs font-mono h-8 px-2"
+										onClick={() =>
+											updateFilter("isRecruiting", filters.isRecruiting === true ? undefined : true)
+										}
+									>
+										<Shield className="h-3 w-3 mr-1" />
+										Recruiting
+									</Badge>
+									<Badge
+										variant={filters.hasOpenSlots === true ? "default" : "outline"}
+										className="cursor-pointer text-xs font-mono h-8 px-2"
+										onClick={() =>
+											updateFilter("hasOpenSlots", filters.hasOpenSlots === true ? undefined : true)
+										}
+									>
+										<Users className="h-3 w-3 mr-1" />
+										Open Slots
+									</Badge>
+									<Badge
+										variant={filters.minRating ? "default" : "outline"}
+										className="cursor-pointer text-xs font-mono h-8 px-2"
+										onClick={() => updateFilter("minRating", filters.minRating ? undefined : 2000)}
+									>
+										<Star className="h-3 w-3 mr-1" />
+										2K+
+									</Badge>
+								</div>
+
+								{/* Country Filter Toggle */}
+								<Button
+									variant={showCountryFilter ? "primary" : "outline"}
+									size="sm"
+									onClick={() => setShowCountryFilter(!showCountryFilter)}
+									className="font-mono text-xs h-8 px-2"
+								>
+									<Globe className="h-3 w-3 mr-1" />
+									Countries {filters.countries.length > 0 && `(${filters.countries.length})`}
+								</Button>
+
+								{/* Create Team Button */}
+								{isAuthenticated && (
+									<Link href="/teams/create">
+										<Button className="font-mono text-xs h-8 px-2">
+											<Plus className="h-3 w-3 mr-1" />
+											CREATE
+										</Button>
+									</Link>
+								)}
+
+								{hasActiveFilters && (
+									<Button
+										variant="outline"
+										size="sm"
+										onClick={clearFilters}
+										className="font-mono text-xs h-8 px-2"
+									>
+										Clear
+									</Button>
+								)}
+							</div>
+
+							{/* Country Filter Panel */}
+							<AnimatePresence>
+								{showCountryFilter && (
+									<motion.div
+										initial={{ opacity: 0, height: 0 }}
+										animate={{ opacity: 1, height: "auto" }}
+										exit={{ opacity: 0, height: 0 }}
+										transition={{ duration: 0.3 }}
+										className="overflow-hidden"
+									>
+										<div className="p-3 bg-card/50 rounded border border-border/50">
+											<CountryFilter
+												selectedCountries={filters.countries}
+												onToggle={toggleCountryFilter}
+												showAll={showAllCountries}
+												onToggleShowAll={() => setShowAllCountries(!showAllCountries)}
+											/>
+										</div>
+									</motion.div>
+								)}
+							</AnimatePresence>
+
+							{hasActiveFilters && (
+								<div className="text-xs text-muted-foreground font-mono">
+									{filteredTeams.length} of {teams.length} teams shown
+								</div>
+							)}
+						</div>
+					</div>
+				</section>
+
+				{/* Content */}
+				<section className="py-4 px-4">
+					<div className="max-w-7xl mx-auto">
+						{isLoading && teams.length === 0 ? (
+							<div className="flex justify-center py-8">
+								<LoadingSpinner size="md" />
+							</div>
+						) : (
+							<>
+								{/* Top 5 Teams */}
+								{topTeams.length > 0 && (
+									<div className="mb-8">
+										<h2 className="text-xl font-bold font-mono mb-4 text-yellow-400">
+											🏆 TOP 5 TEAMS
+										</h2>
+										<div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+											{topTeams.map((team, index) => (
+												<div
+													key={team.id}
+													onClick={() => window.location.href = `/teams/${team.id}`}
+													className={`p-4 rounded-lg border transition-all hover:scale-105 cursor-pointer ${
+														index === 0
+															? "bg-gradient-to-br from-yellow-500/20 to-orange-500/20 border-yellow-400"
+															: index === 1
+																? "bg-gradient-to-br from-gray-300/20 to-gray-500/20 border-gray-400"
+																: index === 2
+																	? "bg-gradient-to-br from-amber-600/20 to-yellow-700/20 border-amber-600"
+																	: "bg-gradient-to-br from-blue-500/20 to-purple-500/20 border-blue-400"
+													}`}
+												>
+													<div className="text-center">
+														<div className="text-2xl mb-2">
+															{getCountryByCode(team.country_code || "US")?.flag || "🌍"}
+														</div>
+														<div className="text-lg font-bold mb-1">#{team.ranking}</div>
+														<h3 className="font-bold text-sm mb-2 flex items-center justify-center gap-1">
+															{team.name}
+															{team.recruitment.isRecruiting && (
+																<Shield className="h-3 w-3 text-green-400" />
+															)}
+														</h3>
+														<p className="text-xs text-muted-foreground mb-2">
+															{team.description}
+														</p>
+														<div className="text-xs space-y-1">
+															<div>Rating: {team.statistics.currentRating.toLocaleString()}</div>
+															<div>Members: {team.memberCount}</div>
+															<div>Contests: {team.statistics.contestsParticipated}</div>
+														</div>
+													</div>
+												</div>
+											))}
+										</div>
+									</div>
+								)}
+
+								{/* All Teams Table */}
+								<div className="bg-card/30 rounded-none hacker-border overflow-hidden">
+									<div className="p-3 bg-muted/50 border-b border-border">
+										<div className="flex items-center gap-2">
+											<Users className="h-4 w-4 text-blue-400" />
+											<h2 className="text-sm font-bold font-mono text-blue-400">
+												ALL TEAMS ({filteredTeams.length})
+											</h2>
+										</div>
+									</div>
+									<div className="overflow-x-auto">
+										<table className="w-full">
+											<thead className="bg-muted/30">
+												<tr className="border-b border-border/50">
+													<th className="p-3 text-left font-mono text-xs font-bold">Team</th>
+													<th className="p-3 text-left font-mono text-xs font-bold">Country</th>
+													<th className="p-3 text-left font-mono text-xs font-bold">Rating</th>
+													<th className="p-3 text-left font-mono text-xs font-bold">Members</th>
+													<th className="p-3 text-left font-mono text-xs font-bold">Contests</th>
+													<th className="p-3 text-left font-mono text-xs font-bold">Wins</th>
+												</tr>
+											</thead>
+											<tbody>
+												{filteredTeams.map((team) => (
+													<TeamTableRow key={team.id} team={team} />
+												))}
+											</tbody>
+										</table>
+									</div>
+
+									{/* Pagination */}
+									<div className="p-3 bg-muted/20 border-t border-border">
+										<Pagination
+											pagination={pagination}
+											onPageChange={handlePageChange}
+											isLoading={isLoading}
+										/>
+									</div>
+								</div>
+
+								{/* No Results */}
+								{filteredTeams.length === 0 && !isLoading && (
+									<div className="text-center py-8">
+										<div className="text-muted-foreground font-mono text-sm">
+											No teams found.{" "}
+											<button onClick={clearFilters} className="text-primary hover:underline">
+												Clear filters
+											</button>
+										</div>
+									</div>
+								)}
+							</>
+						)}
+					</div>
+				</section>
+			</div>
+		</MainLayout>
+	);
 }

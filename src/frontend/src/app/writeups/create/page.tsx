@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import ReactMarkdown from "react-markdown";
@@ -124,7 +124,8 @@ function HackerMarkdown({ content }: { content: string }) {
               &gt;&gt; {children}
             </h3>
           ),
-          code: ({ inline, className, children, ...props }) => {
+          code: ({ className, children, ...props }: any) => {
+            const inline = props.inline;
             if (inline) {
               return (
                 <code className="bg-gray-800 text-green-400 px-2 py-1 rounded font-mono text-sm border border-green-500/30" {...props}>
@@ -204,7 +205,7 @@ function MarkdownGuide() {
             `inline code`<br/>
             ```python<br/>
             # code block<br/>
-            print("hello")<br/>
+            print(&quot;hello&quot;)<br/>
             ```
           </div>
         </div>
@@ -283,8 +284,8 @@ export default function CreateWriteupPage() {
         category: category as any,
         difficulty: difficulty as any,
         tags,
-        contestName: contestName || undefined,
-        challengeName: challengeName || undefined,
+        ...(contestName && { contestName }),
+        ...(challengeName && { challengeName }),
       };
 
       const response = await createWriteup(writeupData, user?.id?.toString());
@@ -300,7 +301,7 @@ export default function CreateWriteupPage() {
 
   return (
     <MainLayout>
-      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black">
+      <div className="min-h-screen">
         <div className="container mx-auto px-4 py-8">
           {/* Header */}
           <motion.div
@@ -318,14 +319,12 @@ export default function CreateWriteupPage() {
             </Button>
 
             <div className="text-center mb-8">
-              <h1 className="text-5xl font-bold font-mono text-transparent bg-clip-text bg-gradient-to-r from-green-400 via-blue-400 to-purple-400 mb-4">
-                [CREATE WRITEUP]
+              <h1 className="text-2xl font-bold font-mono text-foreground mb-2">
+                CREATE_WRITEUP
               </h1>
-              <div className="flex items-center justify-center space-x-2 text-green-400">
-                <Terminal className="h-5 w-5" />
-                <span className="text-lg font-mono">&gt; Share your knowledge with the community</span>
-                <div className="w-2 h-5 bg-green-400 animate-pulse" />
-              </div>
+              <p className="text-sm text-muted-foreground font-mono">
+                Share your knowledge with the community
+              </p>
             </div>
           </motion.div>
 
@@ -360,7 +359,7 @@ export default function CreateWriteupPage() {
                       <label className="block text-sm font-mono text-green-400 mb-2">DESCRIPTION</label>
                       <Input
                         value={description}
-                        onChange={(e) => setDescription(e.target.value)}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setDescription(e.target.value)}
                         placeholder="Brief description of the writeup..."
                         className="font-mono bg-gray-800/50 border-green-500/30 text-white placeholder-gray-400"
                         multiline
@@ -507,7 +506,7 @@ export default function CreateWriteupPage() {
                     <div className="flex items-center space-x-2">
                       <Button
                         type="button"
-                        variant={!isPreview ? "default" : "outline"}
+                        variant={!isPreview ? "primary" : "outline"}
                         onClick={() => setIsPreview(false)}
                         className="font-mono text-sm"
                       >
@@ -516,7 +515,7 @@ export default function CreateWriteupPage() {
                       </Button>
                       <Button
                         type="button"
-                        variant={isPreview ? "default" : "outline"}
+                        variant={isPreview ? "primary" : "outline"}
                         onClick={() => setIsPreview(true)}
                         className="font-mono text-sm"
                       >

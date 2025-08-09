@@ -9,11 +9,9 @@ import {
 	Shield,
 	Star,
 	Trophy,
-	Target,
 	ChevronLeft,
 	ChevronRight,
 	Globe,
-	Mail,
 } from "@/components/ui/icons";
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
@@ -385,7 +383,7 @@ const CountryFilter = ({
 };
 
 const UserTableRow = ({ user }: { user: UserWithStats }) => (
-	<tr className="border-b border-border/50 hover:bg-muted/20 transition-colors">
+	<tr className="border-b border-border/50 hover:bg-muted/20 transition-colors cursor-pointer" onClick={() => window.location.href = `/users/${user.id}`}>
 		<td className="p-3">
 			<div className="flex items-center gap-3">
 				<div
@@ -438,28 +436,10 @@ const UserTableRow = ({ user }: { user: UserWithStats }) => (
 		</td>
 		<td className="p-3 font-mono text-xs">
 			{user.teamName ? (
-				<a href={`/teams/${user.teamId}`} className="text-primary hover:underline">
-					{user.teamName}
-				</a>
+				<span className="text-primary">{user.teamName}</span>
 			) : (
 				<span className="text-muted-foreground">Solo</span>
 			)}
-		</td>
-		<td className="p-3">
-			<div className="flex items-center gap-1">
-				<a
-					href={`mailto:${user.email}`}
-					className="p-1 rounded transition-colors hover:bg-primary/10 text-muted-foreground hover:text-primary"
-				>
-					<Mail className="h-3 w-3" />
-				</a>
-				<a
-					href={`/users/${user.id}`}
-					className="btn-terminal px-1.5 py-0.5 text-xs font-mono font-bold"
-				>
-					VIEW
-				</a>
-			</div>
 		</td>
 	</tr>
 );
@@ -564,7 +544,7 @@ export default function UsersPage() {
 	});
 	const [pagination, setPagination] = useState<PaginationState>({
 		currentPage: 1,
-		pageSize: 20,
+		pageSize: 25,
 		totalPages: 1,
 		total: 0,
 	});
@@ -804,7 +784,7 @@ export default function UsersPage() {
 
 								{/* Country Filter Toggle */}
 								<Button
-									variant={showCountryFilter ? "default" : "outline"}
+									variant={showCountryFilter ? "primary" : "outline"}
 									size="sm"
 									onClick={() => setShowCountryFilter(!showCountryFilter)}
 									className="font-mono text-xs h-8 px-2"
@@ -875,7 +855,8 @@ export default function UsersPage() {
 											{topUsers.map((user, index) => (
 												<div
 													key={user.id}
-													className={`p-4 rounded-lg border transition-all hover:scale-105 ${
+													onClick={() => window.location.href = `/users/${user.id}`}
+													className={`p-4 rounded-lg border transition-all hover:scale-105 cursor-pointer ${
 														index === 0
 															? "bg-gradient-to-br from-yellow-500/20 to-orange-500/20 border-yellow-400"
 															: index === 1
@@ -944,7 +925,6 @@ export default function UsersPage() {
 													<th className="p-3 text-left font-mono text-xs font-bold">Contests</th>
 													<th className="p-3 text-left font-mono text-xs font-bold">Avg</th>
 													<th className="p-3 text-left font-mono text-xs font-bold">Team</th>
-													<th className="p-3 text-left font-mono text-xs font-bold">Actions</th>
 												</tr>
 											</thead>
 											<tbody>

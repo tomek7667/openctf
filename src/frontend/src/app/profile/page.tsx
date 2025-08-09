@@ -75,63 +75,47 @@ const rarityColors = {
 };
 
 function SkillRadar({ skills }: { skills: string[] }) {
-  const maxSkills = 6;
-  const displaySkills = skills.slice(0, maxSkills);
+  const displaySkills = skills.slice(0, 6);
+  const skillLevels = [75, 65, 80, 60, 70, 55];
   
   return (
     <div className="relative w-48 h-48 mx-auto">
-      {/* Radar background */}
       <svg className="absolute inset-0 w-full h-full" viewBox="0 0 200 200">
-        {/* Concentric circles */}
         {[20, 40, 60, 80].map((radius) => (
-          <circle
-            key={radius}
-            cx="100"
-            cy="100"
-            r={radius}
-            fill="none"
-            stroke="rgb(34, 197, 94, 0.2)"
-            strokeWidth="1"
-          />
+          <circle key={radius} cx="100" cy="100" r={radius} fill="none" stroke="rgb(34, 197, 94, 0.2)" strokeWidth="1" />
         ))}
         
-        {/* Radar lines */}
-        {Array.from({ length: 6 }, (_, i) => {
-          const angle = (i * 60) - 90; // Start from top
+        {displaySkills.map((_, i) => {
+          const angle = (i * 60) - 90;
           const radians = (angle * Math.PI) / 180;
-          const x = 100 + 80 * Math.cos(radians);
-          const y = 100 + 80 * Math.sin(radians);
-          
-          return (
-            <line
-              key={i}
-              x1="100"
-              y1="100"
-              x2={x}
-              y2={y}
-              stroke="rgb(34, 197, 94, 0.2)"
-              strokeWidth="1"
-            />
-          );
+          const level = skillLevels[i] || 50;
+          const x = 100 + level * Math.cos(radians);
+          const y = 100 + level * Math.sin(radians);
+          return <line key={i} x1="100" y1="100" x2={x} y2={y} stroke="rgb(34, 197, 94, 0.4)" strokeWidth="1" />;
         })}
         
-        {/* Skill points */}
         <polygon
           points={displaySkills.map((_, i) => {
             const angle = (i * 60) - 90;
             const radians = (angle * Math.PI) / 180;
-            const level = Math.random() * 60 + 20; // Mock skill level
+            const level = skillLevels[i] || 50;
             const x = 100 + level * Math.cos(radians);
             const y = 100 + level * Math.sin(radians);
             return `${x},${y}`;
           }).join(' ')}
-          fill="rgba(34, 197, 94, 0.2)"
-          stroke="rgb(34, 197, 94)"
-          strokeWidth="2"
+          fill="rgba(34, 197, 94, 0.2)" stroke="rgb(34, 197, 94)" strokeWidth="2"
         />
+        
+        {displaySkills.map((_, i) => {
+          const angle = (i * 60) - 90;
+          const radians = (angle * Math.PI) / 180;
+          const level = skillLevels[i] || 50;
+          const x = 100 + level * Math.cos(radians);
+          const y = 100 + level * Math.sin(radians);
+          return <circle key={i} cx={x} cy={y} r="3" fill="rgb(34, 197, 94)" />;
+        })}
       </svg>
       
-      {/* Skill labels */}
       {displaySkills.map((skill, i) => {
         const angle = (i * 60) - 90;
         const radians = (angle * Math.PI) / 180;
@@ -141,11 +125,8 @@ function SkillRadar({ skills }: { skills: string[] }) {
         return (
           <div
             key={skill}
-            className="absolute text-xs font-mono text-green-400 transform -translate-x-1/2 -translate-y-1/2"
-            style={{
-              left: `${(x / 200) * 100}%`,
-              top: `${(y / 200) * 100}%`,
-            }}
+            className="absolute text-xs font-mono text-green-400 transform -translate-x-1/2 -translate-y-1/2 whitespace-nowrap"
+            style={{ left: `${(x / 200) * 100}%`, top: `${(y / 200) * 100}%` }}
           >
             {skill}
           </div>
@@ -173,7 +154,7 @@ export default function ProfilePage() {
         // Load user's writeups
         const writeupsResponse = await getUserWriteups(user?.id?.toString() || "1", 1, 6);
         if (writeupsResponse.success) {
-          setUserWriteups(writeupsResponse.data);
+          setUserWriteups(writeupsResponse.data || null);
         }
       } catch (error) {
         console.error('Error loading user data:', error);
@@ -203,7 +184,7 @@ export default function ProfilePage() {
 
   return (
     <MainLayout>
-      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black">
+      <div className="min-h-screen">
         <div className="container mx-auto px-4 py-8">
           {/* Header */}
           <motion.div
@@ -215,10 +196,27 @@ export default function ProfilePage() {
               <div className="flex flex-col lg:flex-row items-start gap-8">
                 {/* Avatar and Basic Info */}
                 <div className="flex flex-col items-center text-center lg:text-left">
-                  <div className="w-32 h-32 bg-gradient-to-r from-green-500 to-blue-500 rounded-full flex items-center justify-center text-4xl font-bold font-mono text-black mb-4">
+                  <motion.div 
+                    className="w-32 h-32 bg-gradient-to-r from-green-500 to-blue-500 rounded-full flex items-center justify-center text-4xl font-bold font-mono text-black mb-4 cursor-pointer"
+                    style={{ transformStyle: "preserve-3d" }}
+                    onMouseMove={(e) => {
+                      const rect = e.currentTarget.getBoundingClientRect();
+                      const x = (e.clientX - rect.left - rect.width / 2) / 8;
+                      const y = (e.clientY - rect.top - rect.height / 2) / 8;
+                      e.currentTarget.style.transform = `perspective(1000px) rotateY(${x}deg) rotateX(${-y}deg)`;
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.transform = 'perspective(1000px) rotateY(0deg) rotateX(0deg)';
+                    }}
+                    whileHover={{ scale: 1.05 }}
+                    transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                  >
                     {profile.username.slice(0, 2).toUpperCase()}
-                  </div>
-                  <h1 className="text-3xl font-bold font-mono text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-blue-400 mb-2">
+                  </motion.div>
+                  <h1 
+                    className="text-3xl font-bold font-mono text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-blue-400 mb-2 cursor-pointer hover:scale-105 transition-transform"
+                    onClick={() => router.push('/teams')}
+                  >
                     {profile.username}
                   </h1>
                   <div className="flex items-center space-x-2 text-gray-400 font-mono text-sm mb-4">
@@ -264,7 +262,11 @@ export default function ProfilePage() {
                         href={profile.socialLinks.github}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center space-x-2 px-3 py-2 bg-gray-700/50 rounded-lg hover:bg-gray-600/50 transition-colors"
+                        className="flex items-center space-x-2 px-3 py-2 bg-gray-700/50 rounded-lg hover:bg-gray-600/50 transition-colors cursor-pointer"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          window.open(profile.socialLinks.github, '_blank');
+                        }}
                       >
                         <Github className="h-4 w-4 text-gray-300" />
                         <span className="font-mono text-sm text-gray-300">GitHub</span>
@@ -275,7 +277,11 @@ export default function ProfilePage() {
                         href={profile.socialLinks.linkedin}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center space-x-2 px-3 py-2 bg-gray-700/50 rounded-lg hover:bg-gray-600/50 transition-colors"
+                        className="flex items-center space-x-2 px-3 py-2 bg-gray-700/50 rounded-lg hover:bg-gray-600/50 transition-colors cursor-pointer"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          window.open(profile.socialLinks.linkedin, '_blank');
+                        }}
                       >
                         <Linkedin className="h-4 w-4 text-blue-400" />
                         <span className="font-mono text-sm text-gray-300">LinkedIn</span>
@@ -286,7 +292,11 @@ export default function ProfilePage() {
                         href={profile.socialLinks.website}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center space-x-2 px-3 py-2 bg-gray-700/50 rounded-lg hover:bg-gray-600/50 transition-colors"
+                        className="flex items-center space-x-2 px-3 py-2 bg-gray-700/50 rounded-lg hover:bg-gray-600/50 transition-colors cursor-pointer"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          window.open(profile.socialLinks.website, '_blank');
+                        }}
                       >
                         <Globe className="h-4 w-4 text-green-400" />
                         <span className="font-mono text-sm text-gray-300">Website</span>
@@ -432,27 +442,40 @@ export default function ProfilePage() {
                 </div>
                 
                 {userWriteups && userWriteups.writeups.length > 0 ? (
-                  <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-                    {userWriteups.writeups.map((writeup) => (
-                      <div
-                        key={writeup.id}
-                        className="bg-gray-900/50 border border-gray-700 rounded-lg p-4 hover:border-green-500/30 transition-colors cursor-pointer"
-                        onClick={() => router.push(`/writeups/${writeup.id}`)}
-                      >
-                        <h4 className="font-mono text-white font-bold mb-2 line-clamp-2">{writeup.title}</h4>
-                        <p className="text-gray-400 font-mono text-sm mb-3 line-clamp-2">{writeup.description}</p>
-                        <div className="flex items-center justify-between text-sm">
-                          <Badge variant="outline" className="font-mono text-gray-400 border-gray-600">
-                            {writeup.category.toUpperCase()}
-                          </Badge>
-                          <div className="flex items-center space-x-2 text-gray-400">
-                            <Eye className="h-4 w-4" />
-                            <span className="font-mono">{writeup.views}</span>
+                  <>
+                    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                      {userWriteups.writeups.slice(0, 6).map((writeup) => (
+                        <div
+                          key={writeup.id}
+                          className="bg-gray-900/50 border border-gray-700 rounded-lg p-4 hover:border-green-500/30 transition-colors cursor-pointer"
+                          onClick={() => router.push(`/writeups/${writeup.id}`)}
+                        >
+                          <h4 className="font-mono text-white font-bold mb-2 line-clamp-2">{writeup.title}</h4>
+                          <p className="text-gray-400 font-mono text-sm mb-3 line-clamp-2">{writeup.description}</p>
+                          <div className="flex items-center justify-between text-sm">
+                            <Badge variant="outline" className="font-mono text-gray-400 border-gray-600">
+                              {writeup.category.toUpperCase()}
+                            </Badge>
+                            <div className="flex items-center space-x-2 text-gray-400">
+                              <Eye className="h-4 w-4" />
+                              <span className="font-mono">{writeup.views}</span>
+                            </div>
                           </div>
                         </div>
+                      ))}
+                    </div>
+                    {userWriteups.writeups.length > 6 && (
+                      <div className="text-center mt-6">
+                        <Button
+                          onClick={() => router.push('/writeups')}
+                          variant="outline"
+                          className="font-mono border-green-500/50 text-green-400 hover:bg-green-500/10"
+                        >
+                          VIEW ALL WRITEUPS ({userWriteups.writeups.length})
+                        </Button>
                       </div>
-                    ))}
-                  </div>
+                    )}
+                  </>
                 ) : (
                   <div className="text-center py-12">
                     <BookOpen className="h-16 w-16 text-gray-600 mx-auto mb-4" />
@@ -476,7 +499,7 @@ export default function ProfilePage() {
                   {profile.achievements.map((achievement) => (
                     <div
                       key={achievement.id}
-                      className={`bg-gray-900/50 border rounded-lg p-6 text-center ${rarityColors[achievement.rarity]}`}
+                      className={`bg-gray-900/50 border rounded-lg p-6 text-center ${rarityColors[achievement.rarity as keyof typeof rarityColors]}`}
                     >
                       <Award className="h-12 w-12 mx-auto mb-4" />
                       <h4 className="font-mono font-bold mb-2">{achievement.name}</h4>

@@ -346,7 +346,7 @@ export default function EditProfilePage() {
                     <label className="block text-sm font-mono text-green-400 mb-2">BIO</label>
                     <Input
                       value={profile.bio}
-                      onChange={(e) => setProfile(prev => ({ ...prev, bio: e.target.value }))}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => setProfile(prev => ({ ...prev, bio: e.target.value }))}
                       placeholder="Tell the community about yourself..."
                       className="font-mono bg-gray-800/50 border-green-500/30 text-white placeholder-gray-400"
                       multiline
@@ -386,7 +386,7 @@ export default function EditProfilePage() {
                     { key: 'twitter', label: 'Twitter', icon: LinkIcon, placeholder: 'https://twitter.com/username' },
                     { key: 'ctftime', label: 'CTFtime', icon: Shield, placeholder: 'https://ctftime.org/user/12345' },
                     { key: 'discord', label: 'Discord', icon: LinkIcon, placeholder: 'username#1234' }
-                  ].map(({ key, label, icon: Icon, placeholder }) => (
+                  ].map(({ key, label, icon: _Icon, placeholder }) => (
                     <div key={key}>
                       <label className="block text-sm font-mono text-green-400 mb-2">{label.toUpperCase()}</label>
                       <Input
@@ -555,7 +555,7 @@ export default function EditProfilePage() {
                             <div className="font-mono text-white text-sm">{label}</div>
                             {account.connected && (
                               <div className="font-mono text-xs text-gray-400">
-                                Connected {account.username && `as ${account.username}`}
+                                Connected {(account as any).username && `as ${(account as any).username}`}
                               </div>
                             )}
                           </div>

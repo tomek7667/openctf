@@ -11,12 +11,12 @@ import {
 	Calendar,
 	ExternalLink,
 	Flag,
-	Star,
 	Target,
 	Shield,
 } from "@/components/ui/icons";
 import { Card, CardContent, CardHeader } from "@/components/ui/Card";
-import { Contest, ContestStatus } from "@/types/api";
+import { Contest } from "@/api/contests";
+import { ContestStatus } from "@/types/api";
 import { clsx } from "clsx";
 
 interface ContestCardProps {
@@ -93,46 +93,25 @@ const getWeightColor = (weight: number) => {
 	return "text-green-400";
 };
 
-const renderStars = (rating?: undefined | number) => {
-	if (!rating) return null;
-	return (
-		<div className="flex items-center gap-1">
-			{Array.from({ length: 5 }).map((_, i) => (
-				<Star
-					key={i}
-					className={clsx(
-						"h-3 w-3",
-						i < Math.floor(rating)
-							? "text-yellow-400 fill-current"
-							: "text-gray-600"
-					)}
-				/>
-			))}
-			<span className="text-xs text-muted-foreground ml-1">
-				({rating.toFixed(1)})
-			</span>
-		</div>
-	);
-};
-
 export function ContestCard({ contest, index = 0 }: ContestCardProps) {
-	const timeInfo = getTimeInfo(contest.start, contest.end, contest.status);
-	const duration = getDuration(contest.start, contest.end);
+	const timeInfo = getTimeInfo(contest.startTime, contest.endTime, contest.status as ContestStatus);
+	const duration = getDuration(contest.startTime, contest.endTime);
 
 	return (
-		<motion.div
-			initial={{ opacity: 0, y: 20 }}
-			animate={{ opacity: 1, y: 0 }}
-			transition={{ delay: index * 0.1 }}
-			whileHover={{ y: -4, scale: 1.02 }}
-			className="group"
-		>
-			<Card
+		<Link href={`/contests/${contest.id}`}>
+			<motion.div
+				initial={{ opacity: 0, y: 20 }}
+				animate={{ opacity: 1, y: 0 }}
+				transition={{ delay: index * 0.1 }}
+				whileHover={{ y: -4, scale: 1.02 }}
+				className="group block"
+			>
+				<Card
 				className={clsx(
 					"h-full transition-all duration-300 hacker-border rounded-none",
 					"bg-card/50 backdrop-blur-sm",
 					"hover:border-primary/60 hover:shadow-lg hover:shadow-primary/20",
-					contest.status === "ongoing" &&
+					contest.status === "live" &&
 						"border-green-400/60 shadow-lg shadow-green-400/20"
 				)}
 			>
@@ -150,10 +129,10 @@ export function ContestCard({ contest, index = 0 }: ContestCardProps) {
 						<div
 							className={clsx(
 								"px-2 py-1 rounded border text-xs font-mono font-bold flex items-center gap-1 shrink-0",
-								getStatusColor(contest.status)
+								getStatusColor(contest.status as ContestStatus)
 							)}
 						>
-							{getStatusIcon(contest.status)}
+							{getStatusIcon(contest.status as ContestStatus)}
 							{(contest.status || "unknown").toUpperCase()}
 						</div>
 					</div>
@@ -168,7 +147,7 @@ export function ContestCard({ contest, index = 0 }: ContestCardProps) {
 								<span>Start</span>
 							</div>
 							<div className="font-mono text-foreground text-xs">
-								{formatContestDate(contest.start)}
+								{formatContestDate(contest.startTime)}
 							</div>
 						</div>
 
@@ -191,7 +170,7 @@ export function ContestCard({ contest, index = 0 }: ContestCardProps) {
 						</div>
 					)}
 
-					{/* Weight and Rating */}
+					{/* Weight */}
 					<div className="space-y-3">
 						<div className="flex items-center justify-between">
 							<div className="flex items-center gap-2">
@@ -201,65 +180,36 @@ export function ContestCard({ contest, index = 0 }: ContestCardProps) {
 							<div
 								className={clsx(
 									"font-mono font-bold",
-									getWeightColor(contest.assignedWeightPoints || contest.assigned_weight_points)
+									getWeightColor(contest.weight || 0)
 								)}
 							>
-								{contest.assignedWeightPoints || contest.assigned_weight_points} pts
+								{contest.weight || 0} pts
 							</div>
 						</div>
-
-						{contest.averageRating &&
-							contest.totalRatings &&
-							contest.totalRatings > 0 && (
-								<div className="flex items-center justify-between">
-									<div className="flex items-center gap-2">
-										<Star className="h-4 w-4 text-muted-foreground" />
-										<span className="text-sm text-muted-foreground">
-											Quality
-										</span>
-									</div>
-									{renderStars(contest.averageRating)}
-								</div>
-							)}
 					</div>
 
-					{/* Stats & Actions */}
-					<div className="flex items-center justify-between pt-2 border-t border-border/50">
-						<div className="flex items-center gap-4 text-sm text-muted-foreground">
-							<div className="flex items-center gap-1">
-								<Users className="h-4 w-4" />
-								<span>{contest.participantCount || 0}</span>
-							</div>
-							{contest.ctftime_id && (
-								<div className="flex items-center gap-1">
-									<Flag className="h-4 w-4" />
-									<span className="text-xs">CTFtime</span>
-								</div>
-							)}
-						</div>
-
+					{/* Stats */}
+					<div className="flex items-center gap-4 text-sm text-muted-foreground pt-2 border-t border-border/50">
 						<div className="flex items-center gap-1">
-							{contest.url && (
-								<Link
-									href={contest.url}
-									target="_blank"
-									rel="noopener noreferrer"
-									className="p-1.5 rounded transition-colors hover:bg-primary/10 text-muted-foreground hover:text-primary"
-								>
-									<ExternalLink className="h-4 w-4" />
-								</Link>
-							)}
-
-							<Link
-								href={`/contests/${contest.id}`}
-								className="btn-terminal px-2 py-1 text-xs font-mono font-bold whitespace-nowrap"
-							>
-								DETAILS
-							</Link>
+							<Users className="h-4 w-4" />
+							<span>{contest.participantCount || 0}</span>
 						</div>
+						{contest.ctftimeId && (
+							<div className="flex items-center gap-1">
+								<Flag className="h-4 w-4" />
+								<span className="text-xs">CTFtime</span>
+							</div>
+						)}
+						{contest.website && (
+							<div className="flex items-center gap-1">
+								<ExternalLink className="h-4 w-4" />
+								<span className="text-xs">Website</span>
+							</div>
+						)}
 					</div>
 				</CardContent>
 			</Card>
-		</motion.div>
+			</motion.div>
+		</Link>
 	);
 }

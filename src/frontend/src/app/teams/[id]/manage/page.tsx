@@ -26,9 +26,7 @@ import {
   Send,
   AlertTriangle,
   Star,
-  Trophy,
-  Calendar,
-  Target
+  Trophy
 } from "@/components/ui/icons";
 import { useAuthStore } from "@/store/authStore";
 import { 
@@ -36,8 +34,7 @@ import {
   getTeamApplications, 
   inviteToTeam, 
   Team, 
-  TeamApplication, 
-  TeamMember 
+  TeamApplication 
 } from "@/api/teams";
 
 interface TeamStats {
@@ -90,7 +87,7 @@ export default function ManageTeamPage() {
           setTeam(teamData);
 
           // Load applications
-          const appsResponse = await getTeamApplications(teamData.id, user.id.toString());
+          const appsResponse = await getTeamApplications(teamData.id, user?.id?.toString());
           if (appsResponse.success && appsResponse.data) {
             setApplications(appsResponse.data);
           }
@@ -114,10 +111,8 @@ export default function ManageTeamPage() {
     setActionLoading('invite');
     try {
       const response = await inviteToTeam(
-        team.id, 
-        inviteEmail, 
-        inviteMessage || undefined, 
-        user?.id?.toString()
+        team.id.toString(), 
+        inviteEmail
       );
       if (response.success) {
         setInviteEmail("");
@@ -149,15 +144,13 @@ export default function ManageTeamPage() {
         if (application) {
           setTeam(prev => prev ? {
             ...prev,
-            members: [...prev.members, {
-              id: `member-${Date.now()}`,
-              userId: application.userId,
+            members: [...(prev.members || []), {
+              id: parseInt(`${Date.now()}`),
               username: application.username,
               email: application.email,
-              role: 'member',
-              joinedAt: new Date().toISOString(),
-              skills: application.skills,
-              isActive: true
+              permission_level: 'player' as const,
+              password: 'hashed',
+              created_at: new Date().toISOString()
             }],
             memberCount: prev.memberCount + 1
           } : null);
@@ -180,7 +173,7 @@ export default function ManageTeamPage() {
       
       setTeam(prev => prev ? {
         ...prev,
-        members: prev.members.filter(m => m.id !== memberId),
+        members: (prev.members || []).filter(m => m.id.toString() !== memberId),
         memberCount: prev.memberCount - 1
       } : null);
       
@@ -192,7 +185,7 @@ export default function ManageTeamPage() {
     }
   };
 
-  const handlePromoteMember = async (memberId: string, newRole: 'captain' | 'member') => {
+  const handlePromoteMember = async (memberId: string, _newRole: 'captain' | 'member') => {
     if (!team) return;
     
     setActionLoading(memberId);
@@ -202,8 +195,8 @@ export default function ManageTeamPage() {
       
       setTeam(prev => prev ? {
         ...prev,
-        members: prev.members.map(m => 
-          m.id === memberId ? { ...m, role: newRole } : m
+        members: (prev.members || []).map(m => 
+          m.id.toString() === memberId ? { ...m } : m
         )
       } : null);
     } catch (error) {
@@ -241,7 +234,7 @@ export default function ManageTeamPage() {
   const pendingApplications = applications.filter(app => app.status === 'pending');
   const teamStats: TeamStats = {
     totalMembers: team.memberCount,
-    activeMembers: team.members.filter(m => m.isActive).length,
+    activeMembers: team.members?.length || 0,
     pendingApplications: pendingApplications.length,
     avgRating: team.statistics.averageRating,
     recentActivity: [
@@ -273,13 +266,9 @@ export default function ManageTeamPage() {
             <div className="bg-gray-800/30 backdrop-blur border border-green-500/30 rounded-lg p-6">
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-4">
-                  {team.logoUrl && (
-                    <img 
-                      src={team.logoUrl} 
-                      alt={team.name}
-                      className="w-16 h-16 rounded-lg border border-green-500/50"
-                    />
-                  )}
+                  <div className="w-16 h-16 bg-gradient-to-r from-green-500 to-blue-500 rounded-lg flex items-center justify-center text-2xl font-bold font-mono text-black">
+                    {team.name.slice(0, 2).toUpperCase()}
+                  </div>
                   <div>
                     <h1 className="text-3xl font-bold font-mono text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-blue-400">
                       {team.name}
@@ -321,7 +310,7 @@ export default function ManageTeamPage() {
               { label: 'Active Members', value: teamStats.activeMembers, icon: Shield, color: 'text-green-400' },
               { label: 'Pending Applications', value: teamStats.pendingApplications, icon: Clock, color: 'text-yellow-400' },
               { label: 'Average Rating', value: teamStats.avgRating, icon: Star, color: 'text-purple-400' }
-            ].map((stat, index) => {
+            ].map((stat, _index) => {
               const Icon = stat.icon;
               return (
                 <div key={stat.label} className="bg-gray-800/30 backdrop-blur border border-green-500/30 rounded-lg p-6">
@@ -437,7 +426,7 @@ export default function ManageTeamPage() {
               <div className="bg-gray-800/30 backdrop-blur border border-green-500/30 rounded-lg p-6">
                 <h3 className="font-mono text-green-400 font-bold mb-6">TEAM MEMBERS ({team.memberCount})</h3>
                 <div className="space-y-4">
-                  {team.members.map((member) => (
+                  {(team.members || []).map((member) => (
                     <div key={member.id} className="flex items-center justify-between p-4 bg-gray-900/50 rounded-lg">
                       <div className="flex items-center space-x-4">
                         <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-blue-500 rounded-full flex items-center justify-center text-lg font-bold font-mono text-black">
@@ -446,35 +435,22 @@ export default function ManageTeamPage() {
                         <div>
                           <div className="flex items-center space-x-2">
                             <span className="font-mono text-white font-bold">{member.username}</span>
-                            {member.role === 'captain' && <Crown className="h-4 w-4 text-yellow-400" />}
-                            {!member.isActive && <Badge variant="outline" className="text-red-400 border-red-400 text-xs">INACTIVE</Badge>}
+                            {team.captainId === member.id.toString() && <Crown className="h-4 w-4 text-yellow-400" />}
                           </div>
                           <div className="font-mono text-gray-400 text-sm">{member.email}</div>
-                          <div className="flex space-x-1 mt-1">
-                            {member.skills.slice(0, 3).map(skill => (
-                              <Badge key={skill} variant="outline" className="text-xs font-mono text-gray-400 border-gray-600">
-                                {skill}
-                              </Badge>
-                            ))}
-                            {member.skills.length > 3 && (
-                              <Badge variant="outline" className="text-xs font-mono text-gray-400 border-gray-600">
-                                +{member.skills.length - 3}
-                              </Badge>
-                            )}
-                          </div>
                           <div className="font-mono text-gray-500 text-xs mt-1">
-                            Joined {new Date(member.joinedAt).toLocaleDateString()}
+                            Joined {new Date(member.created_at).toLocaleDateString()}
                           </div>
                         </div>
                       </div>
 
-                      {member.role !== 'captain' && (
+                      {team.captainId !== member.id.toString() && (
                         <div className="flex items-center space-x-2">
                           <Button
                             variant="outline"
                             size="sm"
-                            onClick={() => handlePromoteMember(member.id, 'captain')}
-                            disabled={actionLoading === member.id}
+                            onClick={() => handlePromoteMember(member.id.toString(), 'captain')}
+                            disabled={actionLoading === member.id.toString()}
                             className="font-mono border-yellow-500/50 text-yellow-400 text-xs"
                           >
                             <Crown className="h-3 w-3 mr-1" />
@@ -483,8 +459,8 @@ export default function ManageTeamPage() {
                           <Button
                             variant="outline"
                             size="sm"
-                            onClick={() => setShowDeleteConfirm(member.id)}
-                            disabled={actionLoading === member.id}
+                            onClick={() => setShowDeleteConfirm(member.id.toString())}
+                            disabled={actionLoading === member.id.toString()}
                             className="font-mono border-red-500/50 text-red-400 text-xs"
                           >
                             <UserMinus className="h-3 w-3 mr-1" />
@@ -638,7 +614,7 @@ export default function ManageTeamPage() {
                       <label className="block text-sm font-mono text-green-400 mb-2">MESSAGE (Optional)</label>
                       <Input
                         value={inviteMessage}
-                        onChange={(e) => setInviteMessage(e.target.value)}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setInviteMessage(e.target.value)}
                         placeholder="Personal message for the invitation..."
                         className="font-mono bg-gray-900/50 border-green-500/30 text-white"
                         multiline

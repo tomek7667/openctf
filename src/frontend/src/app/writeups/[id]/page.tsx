@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeHighlight from "rehype-highlight";
@@ -17,7 +17,6 @@ import {
   Star,
   Eye,
   Heart,
-  Clock,
   Calendar,
   User,
   Trophy,
@@ -26,9 +25,9 @@ import {
   MessageSquare,
   Send,
   ThumbsUp,
+  ThumbsDown,
   Share,
   Bookmark,
-  Terminal,
   Code,
   Shield,
   Zap,
@@ -36,7 +35,8 @@ import {
   Lock,
   Search,
   Edit,
-  MoreHorizontal
+  Copy,
+  Download
 } from "@/components/ui/icons";
 import { 
   getWriteup, 
@@ -60,36 +60,7 @@ const categories = {
   misc: { icon: Shield, color: "from-yellow-500 to-green-500" },
 };
 
-function MatrixRain() {
-  const [drops, setDrops] = useState<number[]>([]);
 
-  useEffect(() => {
-    const columns = Math.floor(window.innerWidth / 20);
-    setDrops(Array.from({ length: columns }, () => Math.random() * window.innerHeight));
-  }, []);
-
-  return (
-    <div className="fixed inset-0 pointer-events-none overflow-hidden opacity-10">
-      {drops.map((drop, i) => (
-        <motion.div
-          key={i}
-          className="absolute text-green-400 font-mono text-sm"
-          style={{ left: i * 20 }}
-          animate={{
-            y: [drop, window.innerHeight + 100],
-          }}
-          transition={{
-            duration: Math.random() * 3 + 2,
-            repeat: Infinity,
-            ease: "linear",
-          }}
-        >
-          {Math.random() > 0.5 ? "1" : "0"}
-        </motion.div>
-      ))}
-    </div>
-  );
-}
 
 function HackerMarkdown({ content }: { content: string }) {
   return (
@@ -173,7 +144,8 @@ function HackerMarkdown({ content }: { content: string }) {
               )}
             </a>
           ),
-          code: ({ inline, className, children, ...props }) => {
+          code: ({ className, children, ...props }: any) => {
+            const inline = props.inline;
             if (inline) {
               return (
                 <code className="bg-gray-800 text-green-400 px-2 py-1 rounded font-mono text-sm border border-green-500/30" {...props}>
@@ -304,9 +276,10 @@ function StarRating({ rating, onRate, size = "md" }: {
   );
 }
 
-function CommentCard({ comment, onReply }: { 
+function CommentCard({ comment, onLike, onDislike }: { 
   comment: WriteupComment; 
-  onReply: (parentId: string) => void; 
+  onLike: (commentId: string) => void;
+  onDislike: (commentId: string) => void;
 }) {
   return (
     <motion.div
@@ -334,15 +307,19 @@ function CommentCard({ comment, onReply }: {
               {comment.content}
             </p>
             <div className="flex items-center space-x-4">
-              <button className="flex items-center space-x-1 text-gray-400 hover:text-green-400 transition-colors">
+              <button 
+                onClick={() => onLike(comment.id)}
+                className="flex items-center space-x-1 text-gray-400 hover:text-green-400 transition-colors"
+              >
                 <ThumbsUp className="h-4 w-4" />
                 <span className="font-mono text-sm">{comment.likes}</span>
               </button>
               <button 
-                onClick={() => onReply(comment.id)}
-                className="text-gray-400 hover:text-green-400 transition-colors font-mono text-sm"
+                onClick={() => onDislike(comment.id)}
+                className="flex items-center space-x-1 text-gray-400 hover:text-red-400 transition-colors"
               >
-                Reply
+                <ThumbsDown className="h-4 w-4" />
+                <span className="font-mono text-sm">{comment.dislikes || 0}</span>
               </button>
             </div>
           </div>
@@ -361,7 +338,6 @@ export default function WriteupDetailPage() {
   const [loading, setLoading] = useState(true);
   const [userRating, setUserRating] = useState(0);
   const [newComment, setNewComment] = useState("");
-  const [replyingTo, setReplyingTo] = useState<string | null>(null);
 
   useEffect(() => {
     const loadWriteup = async () => {
@@ -406,14 +382,89 @@ export default function WriteupDetailPage() {
     if (!newComment.trim() || !writeup) return;
 
     try {
-      const response = await addWriteupComment(writeup.id, newComment, replyingTo || undefined);
+      const response = await addWriteupComment(writeup.id, newComment);
       if (response.success && response.data) {
         setComments([...comments, response.data]);
         setNewComment("");
-        setReplyingTo(null);
       }
     } catch (error) {
       console.error('Error adding comment:', error);
+    }
+  };
+
+  const handleLikeComment = async (commentId: string) => {
+    // Update comment likes locally
+    setComments(comments.map(comment => 
+      comment.id === commentId 
+        ? { ...comment, likes: comment.likes + 1 }
+        : comment
+    ));
+  };
+
+  const handleDislikeComment = async (commentId: string) => {
+    // Update comment dislikes locally
+    setComments(comments.map(comment => 
+      comment.id === commentId 
+        ? { ...comment, dislikes: (comment.dislikes || 0) + 1 }
+        : comment
+    ));
+  };
+
+  const handleShare = async () => {
+    try {
+      if (navigator.share && writeup) {
+        await navigator.share({
+          title: writeup.title,
+          text: writeup.description,
+          url: window.location.href
+        });
+      } else {
+        handleCopyLink();
+      }
+    } catch (error) {
+      // Fallback to copying URL
+      handleCopyLink();
+    }
+  };
+
+  const handleCopyLink = async () => {
+    try {
+      await navigator.clipboard.writeText(window.location.href);
+      alert('Link copied to clipboard!');
+    } catch (error) {
+      console.error('Failed to copy link:', error);
+    }
+  };
+
+  const handleSave = () => {
+    // Toggle save state (in real app, this would save to user's bookmarks)
+    alert('Writeup saved to your bookmarks!');
+  };
+
+  const handleExportMD = () => {
+    if (!writeup) return;
+    
+    const markdown = `# ${writeup.title}\n\n${writeup.description}\n\n${writeup.content}`;
+    const blob = new Blob([markdown], { type: 'text/markdown' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${writeup.title.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.md`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
+  const handleAuthorClick = () => {
+    if (writeup?.authorId) {
+      router.push(`/users/${writeup.authorId}`);
+    }
+  };
+
+  const handleContestClick = () => {
+    if (writeup?.contestId) {
+      router.push(`/contests/${writeup.contestId}`);
     }
   };
 
@@ -443,8 +494,7 @@ export default function WriteupDetailPage() {
 
   return (
     <MainLayout>
-      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black relative">
-        <MatrixRain />
+      <div className="min-h-screen bg-background relative">
         
         <div className="container mx-auto px-4 py-8 relative z-10">
           {/* Header */}
@@ -462,7 +512,7 @@ export default function WriteupDetailPage() {
               BACK TO WRITEUPS
             </Button>
 
-            <div className="bg-gray-800/30 backdrop-blur border border-green-500/30 rounded-lg p-8">
+            <div className="bg-card/30 border border-border rounded-lg p-8">
               <div className="flex items-start justify-between mb-6">
                 <div className="flex items-start space-x-4 flex-1">
                   <div className={`p-3 rounded-lg bg-gradient-to-r ${categoryInfo?.color || 'from-gray-500 to-gray-600'} bg-opacity-20 border border-current/30`}>
@@ -516,11 +566,19 @@ export default function WriteupDetailPage() {
                       EDIT
                     </Button>
                   )}
-                  <Button variant="outline" className="font-mono border-gray-500 text-gray-400">
+                  <Button 
+                    onClick={handleShare}
+                    variant="outline" 
+                    className="font-mono border-gray-500 text-gray-400 hover:border-green-500 hover:text-green-400"
+                  >
                     <Share className="h-4 w-4 mr-2" />
                     SHARE
                   </Button>
-                  <Button variant="outline" className="font-mono border-gray-500 text-gray-400">
+                  <Button 
+                    onClick={handleSave}
+                    variant="outline" 
+                    className="font-mono border-gray-500 text-gray-400 hover:border-green-500 hover:text-green-400"
+                  >
                     <Bookmark className="h-4 w-4 mr-2" />
                     SAVE
                   </Button>
@@ -541,12 +599,22 @@ export default function WriteupDetailPage() {
                     <div>
                       <div className="flex items-center space-x-2">
                         <User className="h-4 w-4 text-green-400" />
-                        <span className="font-mono text-green-400">@{writeup.authorName}</span>
+                        <button 
+                          onClick={handleAuthorClick}
+                          className="font-mono text-green-400 hover:text-green-300 transition-colors cursor-pointer"
+                        >
+                          @{writeup.authorName}
+                        </button>
                       </div>
                       {writeup.contestName && (
                         <div className="flex items-center space-x-2 mt-1">
                           <Trophy className="h-4 w-4 text-gray-400" />
-                          <span className="font-mono text-gray-400 text-sm">{writeup.contestName}</span>
+                          <button 
+                            onClick={handleContestClick}
+                            className="font-mono text-gray-400 text-sm hover:text-green-400 transition-colors cursor-pointer"
+                          >
+                            {writeup.contestName}
+                          </button>
                           {writeup.challengeName && (
                             <span className="font-mono text-gray-400 text-sm">/ {writeup.challengeName}</span>
                           )}
@@ -565,10 +633,7 @@ export default function WriteupDetailPage() {
                     <Heart className="h-4 w-4" />
                     <span className="font-mono">{writeup.likes}</span>
                   </div>
-                  <div className="flex items-center space-x-1">
-                    <Clock className="h-4 w-4" />
-                    <span className="font-mono">{writeup.readTime}m read</span>
-                  </div>
+
                   <div className="flex items-center space-x-1">
                     <Calendar className="h-4 w-4" />
                     <span className="font-mono">{new Date(writeup.createdAt).toLocaleDateString()}</span>
@@ -595,7 +660,7 @@ export default function WriteupDetailPage() {
               animate={{ opacity: 1, x: 0 }}
               className="lg:col-span-3"
             >
-              <div className="bg-gray-800/20 backdrop-blur border border-green-500/20 rounded-lg p-8">
+              <div className="bg-card/20 border border-border rounded-lg p-8">
                 <HackerMarkdown content={writeup.content} />
               </div>
             </motion.div>
@@ -607,7 +672,7 @@ export default function WriteupDetailPage() {
               className="space-y-6"
             >
               {/* Rating */}
-              <div className="bg-gray-800/30 backdrop-blur border border-green-500/30 rounded-lg p-6">
+              <div className="bg-card/30 border border-border rounded-lg p-6">
                 <h3 className="font-mono text-green-400 font-bold mb-4">RATE THIS WRITEUP</h3>
                 <div className="text-center mb-4">
                   <div className="text-3xl font-bold font-mono text-yellow-400 mb-1">
@@ -627,15 +692,23 @@ export default function WriteupDetailPage() {
               </div>
 
               {/* Share */}
-              <div className="bg-gray-800/30 backdrop-blur border border-green-500/30 rounded-lg p-6">
+              <div className="bg-card/30 border border-border rounded-lg p-6">
                 <h3 className="font-mono text-green-400 font-bold mb-4">SHARE</h3>
                 <div className="space-y-3">
-                  <Button variant="outline" className="w-full font-mono justify-start">
-                    <Terminal className="h-4 w-4 mr-2" />
+                  <Button 
+                    onClick={handleCopyLink}
+                    variant="outline" 
+                    className="w-full font-mono justify-start hover:border-green-500 hover:text-green-400"
+                  >
+                    <Copy className="h-4 w-4 mr-2" />
                     Copy Link
                   </Button>
-                  <Button variant="outline" className="w-full font-mono justify-start">
-                    <Code className="h-4 w-4 mr-2" />
+                  <Button 
+                    onClick={handleExportMD}
+                    variant="outline" 
+                    className="w-full font-mono justify-start hover:border-green-500 hover:text-green-400"
+                  >
+                    <Download className="h-4 w-4 mr-2" />
                     Export MD
                   </Button>
                 </div>
@@ -649,7 +722,7 @@ export default function WriteupDetailPage() {
             animate={{ opacity: 1, y: 0 }}
             className="mt-12"
           >
-            <div className="bg-gray-800/20 backdrop-blur border border-green-500/20 rounded-lg p-8">
+            <div className="bg-card/20 border border-border rounded-lg p-8">
               <div className="flex items-center space-x-3 mb-6">
                 <MessageSquare className="h-6 w-6 text-green-400" />
                 <h2 className="text-2xl font-bold font-mono text-green-400">
@@ -662,31 +735,21 @@ export default function WriteupDetailPage() {
                 <div className="mb-4">
                   <Input
                     value={newComment}
-                    onChange={(e) => setNewComment(e.target.value)}
-                    placeholder={replyingTo ? "Reply to comment..." : "Add a comment..."}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewComment(e.target.value)}
+                    placeholder="Add a comment..."
                     className="font-mono bg-gray-800/50 border-green-500/30 text-white placeholder-gray-400"
                     multiline
                     rows={3}
                   />
                 </div>
-                <div className="flex items-center justify-between">
-                  {replyingTo && (
-                    <Button
-                      type="button"
-                      variant="outline"
-                      onClick={() => setReplyingTo(null)}
-                      className="font-mono border-gray-500 text-gray-400"
-                    >
-                      Cancel Reply
-                    </Button>
-                  )}
+                <div className="flex items-center justify-end">
                   <Button
                     type="submit"
                     disabled={!newComment.trim()}
-                    className="font-mono bg-green-500 hover:bg-green-600 text-black font-bold ml-auto"
+                    className="font-mono bg-green-500 hover:bg-green-600 text-black font-bold"
                   >
                     <Send className="h-4 w-4 mr-2" />
-                    {replyingTo ? "REPLY" : "COMMENT"}
+                    COMMENT
                   </Button>
                 </div>
               </form>
@@ -697,7 +760,8 @@ export default function WriteupDetailPage() {
                   <CommentCard
                     key={comment.id}
                     comment={comment}
-                    onReply={setReplyingTo}
+                    onLike={handleLikeComment}
+                    onDislike={handleDislikeComment}
                   />
                 ))}
 

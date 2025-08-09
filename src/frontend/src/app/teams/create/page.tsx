@@ -11,21 +11,15 @@ import {
   ArrowLeft,
   Users,
   Save,
-  Upload,
   Globe,
   Lock,
-  EyeOff,
   Plus,
   X,
-  Shield,
-  Terminal,
-  Settings,
-  HelpCircle,
-  Image as ImageIcon
+  Settings
 } from "@/components/ui/icons";
 import { useAuthStore } from "@/store/authStore";
 import { createTeam, Team } from "@/api/teams";
-import { getCountryByCode, getCountryFlag, getPopularCountries } from "@/lib/countries";
+import { getPopularCountries } from "@/lib/countries";
 
 const privacyOptions = [
   {
@@ -42,13 +36,7 @@ const privacyOptions = [
     icon: Lock,
     color: 'text-yellow-400 border-yellow-400'
   },
-  {
-    id: 'private',
-    label: 'Private',
-    description: 'Team is hidden and only accessible by invitation',
-    icon: EyeOff,
-    color: 'text-red-400 border-red-400'
-  }
+
 ];
 
 const availableSkills = [
@@ -71,9 +59,9 @@ export default function CreateTeamPage() {
     description: "",
     logoUrl: "",
     bannerUrl: "",
-    privacy: 'public' as 'public' | 'invite-only' | 'private',
+    privacy: 'public' as 'public' | 'invite-only',
     country: "",
-    maxMembers: 5,
+    maxMembers: 10,
     website: "",
     discord: "",
     github: "",
@@ -90,7 +78,7 @@ export default function CreateTeamPage() {
     // Team settings
     allowApplications: true,
     requireApproval: true,
-    autoAcceptFromRating: 0,
+    autoAcceptFromRating: undefined as number | undefined,
     visibilityLevel: 'public' as 'public' | 'members_only' | 'captain_only'
   });
 
@@ -147,30 +135,27 @@ export default function CreateTeamPage() {
       const team: Partial<Team> = {
         name: teamData.name,
         description: teamData.description,
-        logoUrl: teamData.logoUrl || undefined,
-        bannerUrl: teamData.bannerUrl || undefined,
+        ...(teamData.logoUrl.trim() && { logoUrl: teamData.logoUrl.trim() }),
+        ...(teamData.bannerUrl.trim() && { bannerUrl: teamData.bannerUrl.trim() }),
         privacy: teamData.privacy,
-        country: teamData.country || undefined,
-        maxMembers: teamData.maxMembers,
+        ...(teamData.country && { country: teamData.country }),
         socialLinks: {
-          website: teamData.website || undefined,
-          discord: teamData.discord || undefined,
-          github: teamData.github || undefined,
+          ...(teamData.website.trim() && { website: teamData.website.trim() }),
+          ...(teamData.discord.trim() && { discord: teamData.discord.trim() }),
+          ...(teamData.github.trim() && { github: teamData.github.trim() }),
         },
         recruitment: {
           isRecruiting: teamData.isRecruiting,
-          description: teamData.recruitmentDescription || undefined,
+          ...(teamData.recruitmentDescription && { description: teamData.recruitmentDescription }),
           requiredSkills: teamData.requiredSkills,
           preferredSkills: teamData.preferredSkills,
-          minExperience: teamData.minExperience || undefined,
-          timeCommitment: teamData.timeCommitment || undefined,
-          contactMethod: teamData.contactMethod,
-          maxMembers: teamData.maxMembers
+          ...(teamData.minExperience && { minExperience: teamData.minExperience }),
+          ...(teamData.timeCommitment && { timeCommitment: teamData.timeCommitment }),
+          contactMethod: teamData.contactMethod
         },
         settings: {
           allowApplications: teamData.allowApplications,
           requireApproval: teamData.requireApproval,
-          autoAcceptFromRating: teamData.autoAcceptFromRating,
           visibilityLevel: teamData.visibilityLevel
         }
       };
@@ -192,7 +177,7 @@ export default function CreateTeamPage() {
 
   return (
     <MainLayout>
-      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black">
+      <div className="min-h-screen bg-background">
         <div className="container mx-auto px-4 py-8">
           {/* Header */}
           <motion.div
@@ -210,14 +195,12 @@ export default function CreateTeamPage() {
             </Button>
 
             <div className="text-center mb-8">
-              <h1 className="text-5xl font-bold font-mono text-transparent bg-clip-text bg-gradient-to-r from-green-400 via-blue-400 to-purple-400 mb-4">
-                [CREATE TEAM]
+              <h1 className="text-2xl font-bold font-mono text-foreground mb-2">
+                CREATE_TEAM
               </h1>
-              <div className="flex items-center justify-center space-x-2 text-green-400">
-                <Terminal className="h-5 w-5" />
-                <span className="text-lg font-mono">&gt; Assemble your cyber elite</span>
-                <div className="w-2 h-5 bg-green-400 animate-pulse" />
-              </div>
+              <p className="text-sm text-muted-foreground font-mono">
+                Set up your cybersecurity team
+              </p>
             </div>
 
             {/* Progress Steps */}
@@ -281,7 +264,7 @@ export default function CreateTeamPage() {
                       <label className="block text-sm font-mono text-green-400 mb-2">DESCRIPTION *</label>
                       <Input
                         value={teamData.description}
-                        onChange={(e) => setTeamData(prev => ({ ...prev, description: e.target.value }))}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setTeamData(prev => ({ ...prev, description: e.target.value }))}
                         placeholder="Describe your team's focus and goals..."
                         className="font-mono bg-gray-800/50 border-green-500/30 text-white placeholder-gray-400"
                         multiline
@@ -299,28 +282,15 @@ export default function CreateTeamPage() {
                           className="w-full bg-gray-800/50 border border-green-500/30 rounded-lg px-3 py-2 font-mono text-white"
                         >
                           <option value="">Select country...</option>
-                          {getPopularCountries().map(code => {
-                            const country = getCountryByCode(code);
-                            return (
-                              <option key={code} value={code}>
-                                {getCountryFlag(code)} {country?.name}
-                              </option>
-                            );
-                          })}
+                          {getPopularCountries().map(country => (
+                            <option key={country.code} value={country.code}>
+                              {country.flag} {country.name}
+                            </option>
+                          ))}
                         </select>
                       </div>
 
-                      <div>
-                        <label className="block text-sm font-mono text-green-400 mb-2">MAX MEMBERS</label>
-                        <Input
-                          type="number"
-                          min="2"
-                          max="20"
-                          value={teamData.maxMembers}
-                          onChange={(e) => setTeamData(prev => ({ ...prev, maxMembers: parseInt(e.target.value) || 5 }))}
-                          className="font-mono bg-gray-800/50 border-green-500/30 text-white"
-                        />
-                      </div>
+
                     </div>
                   </div>
                 </div>
@@ -377,7 +347,7 @@ export default function CreateTeamPage() {
                       />
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
                         <label className="block text-sm font-mono text-green-400 mb-2">WEBSITE</label>
                         <Input
@@ -456,7 +426,7 @@ export default function CreateTeamPage() {
                         <label className="block text-sm font-mono text-green-400 mb-2">RECRUITMENT MESSAGE</label>
                         <Input
                           value={teamData.recruitmentDescription}
-                          onChange={(e) => setTeamData(prev => ({ ...prev, recruitmentDescription: e.target.value }))}
+                          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setTeamData(prev => ({ ...prev, recruitmentDescription: e.target.value }))}
                           placeholder="Describe what you're looking for in new members..."
                           className="font-mono bg-gray-800/50 border-green-500/30 text-white placeholder-gray-400"
                           multiline
@@ -670,21 +640,7 @@ export default function CreateTeamPage() {
                       </Button>
                     </div>
 
-                    <div>
-                      <label className="block text-sm font-mono text-green-400 mb-2">AUTO-ACCEPT FROM RATING</label>
-                      <Input
-                        type="number"
-                        min="0"
-                        max="3000"
-                        value={teamData.autoAcceptFromRating}
-                        onChange={(e) => setTeamData(prev => ({ ...prev, autoAcceptFromRating: parseInt(e.target.value) || 0 }))}
-                        placeholder="0 = disabled"
-                        className="font-mono bg-gray-800/50 border-green-500/30 text-white placeholder-gray-400"
-                      />
-                      <p className="text-xs font-mono text-gray-500 mt-1">
-                        Automatically accept applications from users with this rating or higher (0 to disable)
-                      </p>
-                    </div>
+
 
                     <div>
                       <label className="block text-sm font-mono text-green-400 mb-2">TEAM VISIBILITY</label>
@@ -714,10 +670,7 @@ export default function CreateTeamPage() {
                       <span className="text-gray-400">Privacy:</span>
                       <span className="text-white">{teamData.privacy.replace('-', ' ').toUpperCase()}</span>
                     </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-400">Max Members:</span>
-                      <span className="text-white">{teamData.maxMembers}</span>
-                    </div>
+
                     <div className="flex justify-between">
                       <span className="text-gray-400">Recruiting:</span>
                       <span className={teamData.isRecruiting ? 'text-green-400' : 'text-red-400'}>

@@ -14,11 +14,8 @@ import {
   Star,
   Eye,
   Heart,
-  Clock,
-  Calendar,
   BookOpen,
   PlusCircle,
-  TrendingUp,
   Award,
   CheckCircle,
   Terminal,
@@ -27,7 +24,6 @@ import {
   Zap,
   Cpu,
   Lock,
-  Users,
   Trophy
 } from "@/components/ui/icons";
 import { getWriteups, Writeup, WriteupFilters } from "@/api/writeups";
@@ -60,7 +56,7 @@ const sortOptions = [
 function WriteupCard({ writeup }: { writeup: Writeup }) {
   const categoryInfo = categories.find(c => c.id === writeup.category) || categories[0];
   const difficultyInfo = difficulties.find(d => d.id === writeup.difficulty) || difficulties[0];
-  const Icon = categoryInfo.icon;
+  const Icon = categoryInfo?.icon || Shield;
 
   return (
     <motion.div
@@ -75,7 +71,7 @@ function WriteupCard({ writeup }: { writeup: Writeup }) {
         {/* Header */}
         <div className="flex items-start justify-between mb-4">
           <div className="flex items-center space-x-3">
-            <div className={`p-2 rounded-lg bg-gradient-to-r ${categoryInfo.color} bg-opacity-20 border border-current/30`}>
+            <div className={`p-2 rounded-lg bg-gradient-to-r ${categoryInfo?.color || 'from-gray-500 to-gray-600'} bg-opacity-20 border border-current/30`}>
               <Icon className="h-5 w-5 text-white" />
             </div>
             <div>
@@ -88,7 +84,7 @@ function WriteupCard({ writeup }: { writeup: Writeup }) {
                 <Badge variant="outline" className="text-xs">
                   {writeup.category.toUpperCase()}
                 </Badge>
-                <span className={`text-xs font-mono ${difficultyInfo.color}`}>
+                <span className={`text-xs font-mono ${difficultyInfo?.color || 'text-gray-400'}`}>
                   [{writeup.difficulty.toUpperCase()}]
                 </span>
               </div>
@@ -164,18 +160,8 @@ function WriteupCard({ writeup }: { writeup: Writeup }) {
               <span className="font-mono">{writeup.likes}</span>
             </div>
           </div>
-          
-          <div className="flex items-center space-x-4">
-            <div className="flex items-center space-x-1">
-              <Clock className="h-4 w-4" />
-              <span className="font-mono">{writeup.readTime}m read</span>
-            </div>
-            <div className="flex items-center space-x-1">
-              <Calendar className="h-4 w-4" />
-              <span className="font-mono">
-                {new Date(writeup.createdAt).toLocaleDateString()}
-              </span>
-            </div>
+          <div className="text-xs text-gray-500 font-mono">
+            {new Date(writeup.createdAt).toLocaleDateString()}
           </div>
         </div>
       </div>
@@ -185,35 +171,13 @@ function WriteupCard({ writeup }: { writeup: Writeup }) {
 
 function GlowingHeader() {
   return (
-    <div className="relative mb-12 text-center">
-      <div className="absolute inset-0 bg-gradient-to-r from-green-500/20 via-blue-500/20 to-purple-500/20 blur-3xl animate-pulse" />
-      <div className="relative">
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="mb-6"
-        >
-          <h1 className="text-6xl font-bold font-mono text-transparent bg-clip-text bg-gradient-to-r from-green-400 via-blue-400 to-purple-400 mb-4">
-            [WRITEUPS]
-          </h1>
-          <div className="flex items-center justify-center space-x-2 text-green-400">
-            <Terminal className="h-6 w-6" />
-            <span className="text-xl font-mono">&gt; Knowledge database initialized</span>
-            <div className="w-2 h-6 bg-green-400 animate-pulse" />
-          </div>
-        </motion.div>
-        
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.3, duration: 0.6 }}
-          className="text-lg text-gray-300 font-mono max-w-3xl mx-auto"
-        >
-          Explore comprehensive writeups from the world's top CTF competitions.
-          Learn advanced techniques, discover new exploits, and sharpen your hacking skills.
-        </motion.p>
-      </div>
+    <div className="mb-8 text-center">
+      <h1 className="text-2xl font-bold font-mono text-foreground mb-2">
+        WRITEUP_DATABASE
+      </h1>
+      <p className="text-sm text-muted-foreground font-mono">
+        Explore comprehensive writeups from CTF competitions
+      </p>
     </div>
   );
 }
@@ -221,7 +185,7 @@ function GlowingHeader() {
 export default function WriteupsPage() {
   const [writeups, setWriteups] = useState<Writeup[]>([]);
   const [loading, setLoading] = useState(true);
-  const [filters, setFilters] = useState<WriteupFilters>({});
+
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [showFilters, setShowFilters] = useState(false);
@@ -235,9 +199,9 @@ export default function WriteupsPage() {
     setLoading(true);
     try {
       const currentFilters: WriteupFilters = {
-        search: searchQuery || undefined,
-        category: selectedCategory !== 'all' ? selectedCategory : undefined,
-        difficulty: selectedDifficulty !== 'all' ? selectedDifficulty : undefined,
+        ...(searchQuery && { search: searchQuery }),
+        ...(selectedCategory !== 'all' && { category: selectedCategory }),
+        ...(selectedDifficulty !== 'all' && { difficulty: selectedDifficulty }),
         sortBy: selectedSort as any,
       };
 
@@ -273,8 +237,8 @@ export default function WriteupsPage() {
 
   return (
     <MainLayout>
-      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black">
-        <div className="container mx-auto px-4 py-8">
+      <div>
+        <div>
           <GlowingHeader />
 
           {/* Controls */}

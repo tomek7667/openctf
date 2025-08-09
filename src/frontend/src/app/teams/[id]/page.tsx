@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { useParams } from "next/navigation";
+import { motion } from "framer-motion";
+import { useParams, useRouter } from "next/navigation";
 import {
 	Trophy,
 	Users,
@@ -11,15 +11,16 @@ import {
 	Target,
 	Calendar,
 	Globe,
-	User,
 	ChevronLeft,
 	ExternalLink,
 	Mail,
+	ChevronDown,
+	ChevronUp,
 } from "@/components/ui/icons";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
-import { MainLayout } from "@/components/layout/MainLayout";
+import { Header } from "@/components/layout/Header";
 import { getCountryByCode } from "@/lib/countries";
 import { clsx } from "clsx";
 
@@ -193,16 +194,17 @@ const MatrixRain = () => {
 	}, []);
 
 	return (
-		<div className="absolute inset-0 overflow-hidden pointer-events-none opacity-20">
+		<div className="fixed inset-0 overflow-hidden pointer-events-none opacity-20 -z-10">
 			{drops.map((position, index) => (
 				<motion.div
 					key={index}
 					className="absolute w-px bg-gradient-to-b from-green-400 to-transparent"
 					style={{ left: `${position}%`, height: '100px' }}
 					animate={{
-						y: ['-100px', '100vh'],
+						y: ['0vh', '100vh'],
 						opacity: [0, 1, 0],
 					}}
+					initial={{ y: '-10vh' }}
 					transition={{
 						duration: 3 + Math.random() * 2,
 						repeat: Infinity,
@@ -226,6 +228,7 @@ const HackerText = ({ text, className = "" }: { text: string, className?: string
 			}, 50);
 			return () => clearTimeout(timer);
 		}
+		return undefined;
 	}, [currentIndex, text]);
 
 	return (
@@ -242,9 +245,12 @@ const HackerText = ({ text, className = "" }: { text: string, className?: string
 	);
 };
 
-const CaptainCard = ({ captain }: { captain: TeamMember }) => (
+const CaptainCard = ({ captain }: { captain: TeamMember }) => {
+	const router = useRouter();
+
+	return (
 	<GlowingCard glowColor="yellow" className="mb-8">
-		<div className="p-6 relative">
+		<div className="p-6 relative cursor-pointer hover:bg-card/50 transition-colors" onClick={() => router.push(`/users/${captain.id}`)}>
 			<div className="absolute top-4 right-4">
 				<div className="flex items-center gap-2 px-3 py-1 bg-yellow-400/20 border border-yellow-400/50 rounded-full">
 					<Trophy className="h-4 w-4 text-yellow-400" />
@@ -255,11 +261,11 @@ const CaptainCard = ({ captain }: { captain: TeamMember }) => (
 			<div className="flex items-start gap-6">
 				<div className="relative">
 					<div className="w-24 h-24 rounded-full bg-gradient-to-br from-yellow-400 to-orange-500 flex items-center justify-center text-2xl font-bold text-black">
-						{captain.username[0].toUpperCase()}
+						{captain.username?.[0]?.toUpperCase() || 'C'}
 					</div>
 					<motion.div
 						className="absolute inset-0 rounded-full border-2 border-yellow-400"
-						animate={{ rotate: 360 }}
+						animate={{ rotate: "360deg" }}
 						transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
 					/>
 					{captain.verified && (
@@ -298,9 +304,13 @@ const CaptainCard = ({ captain }: { captain: TeamMember }) => (
 			</div>
 		</div>
 	</GlowingCard>
-);
+	);
+};
 
-const MemberGrid = ({ members }: { members: TeamMember[] }) => (
+const MemberGrid = ({ members }: { members: TeamMember[] }) => {
+	const router = useRouter();
+
+	return (
 	<GlowingCard glowColor="blue" className="mb-8">
 		<div className="p-6">
 			<div className="flex items-center gap-3 mb-6">
@@ -316,11 +326,12 @@ const MemberGrid = ({ members }: { members: TeamMember[] }) => (
 						initial={{ opacity: 0, y: 20 }}
 						animate={{ opacity: 1, y: 0 }}
 						transition={{ delay: index * 0.1 }}
-						className="p-4 border border-border/30 rounded-lg hover:border-blue-400/50 transition-all group"
+						className="p-4 border border-border/30 rounded-lg hover:border-blue-400/50 transition-all group cursor-pointer"
+						onClick={() => router.push(`/users/${member.id}`)}
 					>
 						<div className="flex items-center gap-3 mb-3">
 							<div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center font-bold text-white">
-								{member.username[0].toUpperCase()}
+								{member.username?.[0]?.toUpperCase() || 'M'}
 							</div>
 							<div className="flex-1">
 								<div className="flex items-center gap-2">
@@ -346,12 +357,27 @@ const MemberGrid = ({ members }: { members: TeamMember[] }) => (
 			</div>
 		</div>
 	</GlowingCard>
-);
+	);
+};
 
 const ContestTimeline = ({ contests }: { contests: Contest[] }) => {
+	const router = useRouter();
+	const [expandedYears, setExpandedYears] = useState<Set<number>>(new Set([new Date().getFullYear()]));
+
+	const toggleYear = (year: number) => {
+		setExpandedYears(prev => {
+			const newSet = new Set(prev);
+			if (newSet.has(year)) {
+				newSet.delete(year);
+			} else {
+				newSet.add(year);
+			}
+			return newSet;
+		});
+	};
 	const contestsByYear = contests.reduce((acc, contest) => {
 		if (!acc[contest.year]) acc[contest.year] = [];
-		acc[contest.year].push(contest);
+		acc[contest.year]!.push(contest);
 		return acc;
 	}, {} as Record<number, Contest[]>);
 
@@ -386,16 +412,22 @@ const ContestTimeline = ({ contests }: { contests: Contest[] }) => {
 				<div className="space-y-8">
 					{years.map((year) => (
 						<div key={year} className="relative">
-							<div className="flex items-center gap-4 mb-4">
+							<div className="flex items-center gap-4 mb-4 cursor-pointer hover:bg-card/30 p-2 rounded-lg transition-colors" onClick={() => toggleYear(year)}>
 								<div className="text-2xl font-bold font-mono text-purple-400">{year}</div>
 								<div className="h-px bg-gradient-to-r from-purple-400/50 to-transparent flex-1" />
 								<Badge variant="secondary" size="sm">
-									{contestsByYear[year].length} contests
+									{contestsByYear[year]?.length || 0} contests
 								</Badge>
+								{expandedYears.has(year) ? (
+									<ChevronUp className="h-4 w-4 text-purple-400" />
+								) : (
+									<ChevronDown className="h-4 w-4 text-purple-400" />
+								)}
 							</div>
 
-							<div className="grid gap-4 pl-8">
-								{contestsByYear[year]
+							{expandedYears.has(year) && (
+								<div className="grid gap-4 pl-8">
+									{(contestsByYear[year] || [])
 									.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
 									.map((contest, index) => (
 									<motion.div
@@ -403,7 +435,8 @@ const ContestTimeline = ({ contests }: { contests: Contest[] }) => {
 										initial={{ opacity: 0, x: -20 }}
 										animate={{ opacity: 1, x: 0 }}
 										transition={{ delay: index * 0.1 }}
-										className="relative p-4 border border-border/30 rounded-lg hover:border-purple-400/50 transition-all group"
+										className="relative p-4 border border-border/30 rounded-lg hover:border-purple-400/50 transition-all group cursor-pointer"
+										onClick={() => router.push(`/contests/${contest.id}`)}
 									>
 										<div className="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-1/2 w-3 h-3 bg-purple-400 rounded-full" />
 										
@@ -448,8 +481,9 @@ const ContestTimeline = ({ contests }: { contests: Contest[] }) => {
 											</div>
 										</div>
 									</motion.div>
-								))}
-							</div>
+									))}
+								</div>
+							)}
 						</div>
 					))}
 				</div>
@@ -481,17 +515,19 @@ export default function TeamPage() {
 
 	if (isLoading) {
 		return (
-			<MainLayout>
+			<div className="min-h-screen bg-background matrix-bg">
+				<Header />
 				<div className="min-h-screen flex items-center justify-center">
 					<LoadingSpinner size="lg" />
 				</div>
-			</MainLayout>
+			</div>
 		);
 	}
 
 	if (!team) {
 		return (
-			<MainLayout>
+			<div className="min-h-screen bg-background matrix-bg">
+				<Header />
 				<div className="min-h-screen flex items-center justify-center">
 					<div className="text-center">
 						<h1 className="text-2xl font-bold mb-4">Team Not Found</h1>
@@ -501,20 +537,21 @@ export default function TeamPage() {
 						</Button>
 					</div>
 				</div>
-			</MainLayout>
+			</div>
 		);
 	}
 
 	return (
-		<MainLayout>
+		<div className="min-h-screen bg-background matrix-bg">
+			<Header />
 			<div className="relative min-h-screen">
 				<MatrixRain />
 				
 				{/* Hero Section */}
-				<section className="relative py-12 px-4 overflow-hidden">
+				<section className="relative py-12 overflow-hidden">
 					<div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-secondary/10" />
 					
-					<div className="max-w-7xl mx-auto relative">
+					<div className="max-w-7xl mx-auto px-4 relative">
 						<motion.div
 							initial={{ opacity: 0, y: 30 }}
 							animate={{ opacity: 1, y: 0 }}
@@ -620,8 +657,8 @@ export default function TeamPage() {
 				</section>
 
 				{/* Main Content */}
-				<section className="py-8 px-4">
-					<div className="max-w-7xl mx-auto">
+				<section className="py-8">
+					<div className="max-w-7xl mx-auto px-4">
 						{/* Achievements */}
 						<GlowingCard glowColor="green" className="mb-8">
 							<div className="p-6">
@@ -657,6 +694,6 @@ export default function TeamPage() {
 					</div>
 				</section>
 			</div>
-		</MainLayout>
+		</div>
 	);
 }

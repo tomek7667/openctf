@@ -90,8 +90,31 @@ export default function RootLayout({
 				<link rel="manifest" href="/manifest.json" />
 				<meta name="theme-color" content="#00ffff" />
 				<meta name="color-scheme" content="dark" />
+				<script
+					dangerouslySetInnerHTML={{
+						__html: `
+							try {
+								// Prevent flash of unstyled content
+								document.documentElement.style.visibility = 'hidden';
+								window.addEventListener('DOMContentLoaded', function() {
+									document.documentElement.style.visibility = 'visible';
+								});
+							} catch (e) {
+								console.error('Initial script error:', e);
+							}
+						`,
+					}}
+				/>
 			</head>
-			<body className="font-mono antialiased bg-background text-foreground">
+			<body className="font-mono antialiased bg-background text-foreground" suppressHydrationWarning>
+				<noscript>
+					<div className="min-h-screen flex items-center justify-center">
+						<div className="text-center">
+							<h1 className="text-2xl font-bold mb-4">JavaScript Required</h1>
+							<p>This application requires JavaScript to function properly.</p>
+						</div>
+					</div>
+				</noscript>
 				<div id="root">
 					<Providers>{children}</Providers>
 				</div>

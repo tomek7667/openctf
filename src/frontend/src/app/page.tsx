@@ -10,6 +10,7 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { NoSSR } from "@/components/ui/NoSSR";
 import {
 	Shield,
 	Users,
@@ -192,6 +193,7 @@ export default function HomePage() {
 	];
 
 	return (
+		<NoSSR fallback={<div className="min-h-screen bg-background flex items-center justify-center"><div className="text-primary font-mono">Loading...</div></div>}>
 		<div className="relative min-h-screen">
 			{/* Hero Section */}
 			<section className="relative py-24 px-4 overflow-hidden">
@@ -396,5 +398,6 @@ export default function HomePage() {
 				</div>
 			</section>
 		</div>
+		</NoSSR>
 	);
 }

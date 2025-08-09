@@ -15,8 +15,17 @@ import {
 	Target,
 } from "@/components/ui/icons";
 import { Card, CardContent, CardHeader } from "@/components/ui/Card";
-import { TeamWithRanking } from "@/api/teams";
+import { Team } from "@/api/teams";
 import { clsx } from "clsx";
+
+interface TeamWithRanking extends Team {
+	ranking: number;
+	ratingPoints: number;
+	contestsCount: number;
+	avgPlace: number;
+	lastActive: string;
+	verified_at?: string;
+}
 
 interface TeamCardProps {
 	team: TeamWithRanking;

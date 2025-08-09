@@ -23,10 +23,16 @@ export const useAuthStore = create<AuthState>()(
 			isAuthenticated: false,
 			isLoading: false,
 			setAuth: (user, token, expiresIn = 3600) => {
-				const tokenExpiry = Date.now() + (expiresIn * 1000);
+				const tokenExpiry = Date.now() + expiresIn * 1000;
 				set({ user, token, tokenExpiry, isAuthenticated: true });
 			},
-			clearAuth: () => set({ user: null, token: null, tokenExpiry: null, isAuthenticated: false }),
+			clearAuth: () =>
+				set({
+					user: null,
+					token: null,
+					tokenExpiry: null,
+					isAuthenticated: false,
+				}),
 			setLoading: (loading) => set({ isLoading: loading }),
 			isTokenExpired: () => {
 				const { tokenExpiry } = get();

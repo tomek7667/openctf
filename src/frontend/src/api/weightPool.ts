@@ -21,7 +21,9 @@ export interface ContestWeightHistory {
 	reason?: string;
 }
 
-export const getMonthlyDistributions = async (): Promise<MonthlyDistribution[]> => {
+export const getMonthlyDistributions = async (): Promise<
+	MonthlyDistribution[]
+> => {
 	await sleep(1000);
 	// TODO: implement getMonthlyDistributions
 	return [
@@ -76,7 +78,9 @@ export const getMonthlyDistributions = async (): Promise<MonthlyDistribution[]> 
 	];
 };
 
-export const getContestWeightHistory = async (): Promise<ContestWeightHistory[]> => {
+export const getContestWeightHistory = async (): Promise<
+	ContestWeightHistory[]
+> => {
 	await sleep(1000);
 	// TODO: implement getContestWeightHistory
 	return [
@@ -101,7 +105,10 @@ export const getContestWeightHistory = async (): Promise<ContestWeightHistory[]>
 	];
 };
 
-export const getContestsByMonth = async (month: string, year: number): Promise<ContestWeightHistory[]> => {
+export const getContestsByMonth = async (
+	month: string,
+	year: number
+): Promise<ContestWeightHistory[]> => {
 	await sleep(1000);
 	// TODO: implement getContestsByMonth
 	const allContests = await getContestWeightHistory();
@@ -113,7 +120,9 @@ export const getContestsByMonth = async (month: string, year: number): Promise<C
 	});
 };
 
-export const getAggregatedContestsDifficulties = async (): Promise<AggregatedContestsDifficulties[]> => {
+export const getAggregatedContestsDifficulties = async (): Promise<
+	AggregatedContestsDifficulties[]
+> => {
 	await sleep(1000);
 	// TODO: implement getAggregatedContestsDifficulties
 	return [];

@@ -1,78 +1,87 @@
-import { ApiResponse } from '@/types/api';
+import { ApiResponse } from "@/types/api";
 
 export interface WriteupRating {
-  id: string;
-  userId: string;
-  writeupId: string;
-  rating: number; // 1-5 stars
-  createdAt: string;
+	id: string;
+	userId: string;
+	writeupId: string;
+	rating: number; // 1-5 stars
+	createdAt: string;
 }
 
 export interface WriteupComment {
-  id: string;
-  userId: string;
-  username: string;
-  writeupId: string;
-  content: string;
-  createdAt: string;
-  avatarUrl?: string;
-  parentId?: string; // For nested comments
-  level: number; // Nesting level
-  likes: number;
+	id: string;
+	userId: string;
+	username: string;
+	writeupId: string;
+	content: string;
+	createdAt: string;
+	avatarUrl?: string;
+	parentId?: string; // For nested comments
+	level: number; // Nesting level
+	likes: number;
+	dislikes?: number;
 }
 
 export interface Writeup {
-  id: string;
-  title: string;
-  description: string;
-  content: string; // Markdown content
-  authorId: string;
-  authorName: string;
-  authorAvatar?: string;
-  contestId?: string;
-  contestName?: string;
-  challengeName?: string;
-  category: 'web' | 'crypto' | 'reverse' | 'pwn' | 'forensics' | 'misc' | 'hardware';
-  difficulty: 'Easy' | 'Medium' | 'Hard' | 'Insane';
-  tags: string[];
-  views: number;
-  likes: number;
-  averageRating: number;
-  totalRatings: number;
-  createdAt: string;
-  updatedAt: string;
-  readTime: number; // in minutes
-  featured: boolean;
-  verified: boolean; // If the writeup is verified by moderators
+	id: string;
+	title: string;
+	description: string;
+	content: string; // Markdown content
+	authorId: string;
+	authorName: string;
+	authorAvatar?: string;
+	contestId?: string;
+	contestName?: string;
+	challengeName?: string;
+	category:
+		| "web"
+		| "crypto"
+		| "reverse"
+		| "pwn"
+		| "forensics"
+		| "misc"
+		| "hardware";
+	difficulty: "Easy" | "Medium" | "Hard" | "Insane";
+	tags: string[];
+	views: number;
+	likes: number;
+	averageRating: number;
+	totalRatings: number;
+	createdAt: string;
+	updatedAt: string;
+	readTime: number; // in minutes
+	featured: boolean;
+	verified: boolean; // If the writeup is verified by moderators
 }
 
 export interface WriteupFilters {
-  search?: string;
-  category?: string;
-  difficulty?: string;
-  author?: string;
-  contest?: string;
-  tags?: string[];
-  featured?: boolean;
-  verified?: boolean;
-  sortBy?: 'newest' | 'oldest' | 'rating' | 'views' | 'likes';
+	search?: string;
+	category?: string;
+	difficulty?: string;
+	author?: string;
+	contest?: string;
+	tags?: string[];
+	featured?: boolean;
+	verified?: boolean;
+	sortBy?: "newest" | "oldest" | "rating" | "views" | "likes";
 }
 
 export interface WriteupListResponse {
-  writeups: Writeup[];
-  total: number;
-  page: number;
-  limit: number;
-  totalPages: number;
+	writeups: Writeup[];
+	total: number;
+	page: number;
+	limit: number;
+	totalPages: number;
 }
 
 // Mock data
 const mockWriteups: Writeup[] = [
-  {
-    id: "wu-001",
-    title: "Breaking RSA with Small Exponent - picoCTF 2024",
-    description: "A comprehensive guide to exploiting RSA implementations with small public exponents. We'll explore Wiener's attack and other mathematical approaches to crack weak RSA keys.",
-    content: `# Breaking RSA with Small Exponent Attack
+	{
+		id: "wu-001",
+		title: "Breaking RSA with Small Exponent - picoCTF 2024",
+		description:
+			"A comprehensive guide to exploiting RSA implementations with small public exponents. We'll explore Wiener's attack and other mathematical approaches to crack weak RSA keys.",
+		content: `# Breaking RSA with Small Exponent Attack
 
 ## Challenge Overview
 
@@ -147,30 +156,32 @@ print(f"Flag: {flag}")
 4. Use proper padding schemes like OAEP to prevent these attacks
 
 This challenge teaches us the importance of proper cryptographic implementation and the dangers of using small exponents without adequate padding.`,
-    authorId: "user-001",
-    authorName: "CryptoNinja",
-    authorAvatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=64&h=64&fit=crop&crop=face",
-    contestId: "contest-001",
-    contestName: "picoCTF 2024",
-    challengeName: "Small RSA",
-    category: "crypto",
-    difficulty: "Medium",
-    tags: ["RSA", "low-exponent", "wiener-attack", "number-theory"],
-    views: 15420,
-    likes: 284,
-    averageRating: 4.8,
-    totalRatings: 156,
-    createdAt: "2024-01-15T10:30:00Z",
-    updatedAt: "2024-01-15T14:22:00Z",
-    readTime: 8,
-    featured: true,
-    verified: true
-  },
-  {
-    id: "wu-002",
-    title: "SQL Injection to RCE - Advanced Web Exploitation",
-    description: "From basic SQL injection to remote code execution. A step-by-step guide showing how to escalate a simple SQLi to full system compromise.",
-    content: `# SQL Injection to Remote Code Execution
+		authorId: "user-001",
+		authorName: "CryptoNinja",
+		authorAvatar:
+			"https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=64&h=64&fit=crop&crop=face",
+		contestId: "contest-001",
+		contestName: "picoCTF 2024",
+		challengeName: "Small RSA",
+		category: "crypto",
+		difficulty: "Medium",
+		tags: ["RSA", "low-exponent", "wiener-attack", "number-theory"],
+		views: 15420,
+		likes: 284,
+		averageRating: 4.8,
+		totalRatings: 156,
+		createdAt: "2024-01-15T10:30:00Z",
+		updatedAt: "2024-01-15T14:22:00Z",
+		readTime: 8,
+		featured: true,
+		verified: true,
+	},
+	{
+		id: "wu-002",
+		title: "SQL Injection to RCE - Advanced Web Exploitation",
+		description:
+			"From basic SQL injection to remote code execution. A step-by-step guide showing how to escalate a simple SQLi to full system compromise.",
+		content: `# SQL Injection to Remote Code Execution
 
 ## Challenge Overview
 
@@ -237,30 +248,32 @@ curl "http://target.com/shell.php?cmd=cat /flag.txt"
 5. Use Web Application Firewalls
 
 This exploit chain shows how a single vulnerability can lead to complete system compromise.`,
-    authorId: "user-002",
-    authorName: "WebHacker",
-    authorAvatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=64&h=64&fit=crop&crop=face",
-    contestId: "contest-002",
-    contestName: "HackTheBox Cyber Apocalypse",
-    challengeName: "Toxic",
-    category: "web",
-    difficulty: "Hard",
-    tags: ["sqli", "rce", "file-upload", "mysql", "web-shell"],
-    views: 8934,
-    likes: 198,
-    averageRating: 4.6,
-    totalRatings: 89,
-    createdAt: "2024-01-10T09:15:00Z",
-    updatedAt: "2024-01-11T16:45:00Z",
-    readTime: 12,
-    featured: true,
-    verified: true
-  },
-  {
-    id: "wu-003",
-    title: "Buffer Overflow with DEP/ASLR Bypass",
-    description: "Modern binary exploitation techniques for bypassing Data Execution Prevention and Address Space Layout Randomization on Linux x64.",
-    content: `# Buffer Overflow with DEP/ASLR Bypass
+		authorId: "user-002",
+		authorName: "WebHacker",
+		authorAvatar:
+			"https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=64&h=64&fit=crop&crop=face",
+		contestId: "contest-002",
+		contestName: "HackTheBox Cyber Apocalypse",
+		challengeName: "Toxic",
+		category: "web",
+		difficulty: "Hard",
+		tags: ["sqli", "rce", "file-upload", "mysql", "web-shell"],
+		views: 8934,
+		likes: 198,
+		averageRating: 4.6,
+		totalRatings: 89,
+		createdAt: "2024-01-10T09:15:00Z",
+		updatedAt: "2024-01-11T16:45:00Z",
+		readTime: 12,
+		featured: true,
+		verified: true,
+	},
+	{
+		id: "wu-003",
+		title: "Buffer Overflow with DEP/ASLR Bypass",
+		description:
+			"Modern binary exploitation techniques for bypassing Data Execution Prevention and Address Space Layout Randomization on Linux x64.",
+		content: `# Buffer Overflow with DEP/ASLR Bypass
 
 ## Introduction
 
@@ -343,30 +356,32 @@ one_gadget libc.so.6
 \`\`\`
 
 This challenge demonstrates how modern exploit mitigations can be bypassed using return-oriented programming and information leaks.`,
-    authorId: "user-003",
-    authorName: "BinaryNinja",
-    authorAvatar: "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=64&h=64&fit=crop&crop=face",
-    contestId: "contest-003",
-    contestName: "DEF CON CTF",
-    challengeName: "Speedrun",
-    category: "pwn",
-    difficulty: "Hard",
-    tags: ["buffer-overflow", "rop", "aslr-bypass", "dep-bypass", "one-gadget"],
-    views: 12567,
-    likes: 345,
-    averageRating: 4.9,
-    totalRatings: 203,
-    createdAt: "2024-01-05T14:20:00Z",
-    updatedAt: "2024-01-06T11:30:00Z",
-    readTime: 15,
-    featured: true,
-    verified: true
-  },
-  {
-    id: "wu-004",
-    title: "Android Malware Reverse Engineering",
-    description: "Complete analysis of a sophisticated Android banking trojan including static and dynamic analysis techniques.",
-    content: `# Android Malware Reverse Engineering
+		authorId: "user-003",
+		authorName: "BinaryNinja",
+		authorAvatar:
+			"https://images.unsplash.com/photo-1560250097-0b93528c311a?w=64&h=64&fit=crop&crop=face",
+		contestId: "contest-003",
+		contestName: "DEF CON CTF",
+		challengeName: "Speedrun",
+		category: "pwn",
+		difficulty: "Hard",
+		tags: ["buffer-overflow", "rop", "aslr-bypass", "dep-bypass", "one-gadget"],
+		views: 12567,
+		likes: 345,
+		averageRating: 4.9,
+		totalRatings: 203,
+		createdAt: "2024-01-05T14:20:00Z",
+		updatedAt: "2024-01-06T11:30:00Z",
+		readTime: 15,
+		featured: true,
+		verified: true,
+	},
+	{
+		id: "wu-004",
+		title: "Android Malware Reverse Engineering",
+		description:
+			"Complete analysis of a sophisticated Android banking trojan including static and dynamic analysis techniques.",
+		content: `# Android Malware Reverse Engineering
 
 ## Sample Overview
 
@@ -450,30 +465,38 @@ def decrypt_message(encrypted_data, key):
 - File paths: /data/data/com.android.systemupdate/
 
 This analysis provides insights into modern Android malware techniques and helps develop better detection mechanisms.`,
-    authorId: "user-004",
-    authorName: "MalwareHunter",
-    authorAvatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=64&h=64&fit=crop&crop=face",
-    contestId: "contest-004",
-    contestName: "FlareOn Challenge",
-    challengeName: "Android Maze",
-    category: "reverse",
-    difficulty: "Insane",
-    tags: ["android", "malware", "reverse-engineering", "jadx", "static-analysis"],
-    views: 6789,
-    likes: 156,
-    averageRating: 4.7,
-    totalRatings: 67,
-    createdAt: "2024-01-02T16:45:00Z",
-    updatedAt: "2024-01-03T09:20:00Z",
-    readTime: 20,
-    featured: false,
-    verified: true
-  },
-  {
-    id: "wu-005",
-    title: "Steganography in PNG Images - Hidden Messages",
-    description: "Advanced steganographic techniques for hiding and extracting data from PNG image files using LSB and frequency domain methods.",
-    content: `# Steganography in PNG Images
+		authorId: "user-004",
+		authorName: "MalwareHunter",
+		authorAvatar:
+			"https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=64&h=64&fit=crop&crop=face",
+		contestId: "contest-004",
+		contestName: "FlareOn Challenge",
+		challengeName: "Android Maze",
+		category: "reverse",
+		difficulty: "Insane",
+		tags: [
+			"android",
+			"malware",
+			"reverse-engineering",
+			"jadx",
+			"static-analysis",
+		],
+		views: 6789,
+		likes: 156,
+		averageRating: 4.7,
+		totalRatings: 67,
+		createdAt: "2024-01-02T16:45:00Z",
+		updatedAt: "2024-01-03T09:20:00Z",
+		readTime: 20,
+		featured: false,
+		verified: true,
+	},
+	{
+		id: "wu-005",
+		title: "Steganography in PNG Images - Hidden Messages",
+		description:
+			"Advanced steganographic techniques for hiding and extracting data from PNG image files using LSB and frequency domain methods.",
+		content: `# Steganography in PNG Images
 
 ## Challenge Overview
 
@@ -616,441 +639,492 @@ print(extract_flag("challenge.png"))
 \`\`\`
 
 This challenge demonstrated the importance of checking all channels and using multiple steganographic detection tools.`,
-    authorId: "user-005",
-    authorName: "ForensicsExpert",
-    authorAvatar: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=64&h=64&fit=crop&crop=face",
-    contestId: "contest-005",
-    contestName: "CSAW CTF",
-    challengeName: "Hidden in Plain Sight",
-    category: "forensics",
-    difficulty: "Easy",
-    tags: ["steganography", "lsb", "png", "stegsolve", "frequency-domain"],
-    views: 4567,
-    likes: 89,
-    averageRating: 4.3,
-    totalRatings: 34,
-    createdAt: "2023-12-28T11:30:00Z",
-    updatedAt: "2023-12-29T15:45:00Z",
-    readTime: 10,
-    featured: false,
-    verified: true
-  }
+		authorId: "user-005",
+		authorName: "ForensicsExpert",
+		authorAvatar:
+			"https://images.unsplash.com/photo-1494790108755-2616b612b786?w=64&h=64&fit=crop&crop=face",
+		contestId: "contest-005",
+		contestName: "CSAW CTF",
+		challengeName: "Hidden in Plain Sight",
+		category: "forensics",
+		difficulty: "Easy",
+		tags: ["steganography", "lsb", "png", "stegsolve", "frequency-domain"],
+		views: 4567,
+		likes: 89,
+		averageRating: 4.3,
+		totalRatings: 34,
+		createdAt: "2023-12-28T11:30:00Z",
+		updatedAt: "2023-12-29T15:45:00Z",
+		readTime: 10,
+		featured: false,
+		verified: true,
+	},
 ];
 
 const mockComments: WriteupComment[] = [
-  {
-    id: "comment-001",
-    userId: "user-006",
-    username: "MathGeek",
-    writeupId: "wu-001",
-    content: "Excellent explanation of the low exponent attack! The mathematical background really helps understand why this works.",
-    createdAt: "2024-01-15T12:30:00Z",
-    avatarUrl: "https://images.unsplash.com/photo-1527980965255-d3b416303d12?w=64&h=64&fit=crop&crop=face",
-    level: 0,
-    likes: 23
-  },
-  {
-    id: "comment-002",
-    userId: "user-007",
-    username: "CryptoStudent",
-    writeupId: "wu-001",
-    content: "Thanks for this writeup! Could you explain more about when Wiener's attack is applicable?",
-    createdAt: "2024-01-15T14:15:00Z",
-    avatarUrl: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=64&h=64&fit=crop&crop=face",
-    parentId: "comment-001",
-    level: 1,
-    likes: 8
-  },
-  {
-    id: "comment-003",
-    userId: "user-008",
-    username: "SQLNinja",
-    writeupId: "wu-002",
-    content: "Great escalation path! I've seen similar techniques used in real-world penetration tests.",
-    createdAt: "2024-01-10T16:20:00Z",
-    avatarUrl: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=64&h=64&fit=crop&crop=face",
-    level: 0,
-    likes: 15
-  }
+	{
+		id: "comment-001",
+		userId: "user-006",
+		username: "MathGeek",
+		writeupId: "wu-001",
+		content:
+			"Excellent explanation of the low exponent attack! The mathematical background really helps understand why this works.",
+		createdAt: "2024-01-15T12:30:00Z",
+		avatarUrl:
+			"https://images.unsplash.com/photo-1527980965255-d3b416303d12?w=64&h=64&fit=crop&crop=face",
+		level: 0,
+		likes: 23,
+		dislikes: 2,
+	},
+	{
+		id: "comment-002",
+		userId: "user-007",
+		username: "CryptoStudent",
+		writeupId: "wu-001",
+		content:
+			"Thanks for this writeup! Could you explain more about when Wiener's attack is applicable?",
+		createdAt: "2024-01-15T14:15:00Z",
+		avatarUrl:
+			"https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=64&h=64&fit=crop&crop=face",
+		parentId: "comment-001",
+		level: 1,
+		likes: 8,
+		dislikes: 1,
+	},
+	{
+		id: "comment-003",
+		userId: "user-008",
+		username: "SQLNinja",
+		writeupId: "wu-002",
+		content:
+			"Great escalation path! I've seen similar techniques used in real-world penetration tests.",
+		createdAt: "2024-01-10T16:20:00Z",
+		avatarUrl:
+			"https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=64&h=64&fit=crop&crop=face",
+		level: 0,
+		likes: 15,
+		dislikes: 0,
+	},
 ];
 
 const mockRatings: WriteupRating[] = [
-  {
-    id: "rating-001",
-    userId: "user-006",
-    writeupId: "wu-001",
-    rating: 5,
-    createdAt: "2024-01-15T12:30:00Z"
-  },
-  {
-    id: "rating-002",
-    userId: "user-007",
-    writeupId: "wu-001",
-    rating: 4,
-    createdAt: "2024-01-15T14:15:00Z"
-  }
+	{
+		id: "rating-001",
+		userId: "user-006",
+		writeupId: "wu-001",
+		rating: 5,
+		createdAt: "2024-01-15T12:30:00Z",
+	},
+	{
+		id: "rating-002",
+		userId: "user-007",
+		writeupId: "wu-001",
+		rating: 4,
+		createdAt: "2024-01-15T14:15:00Z",
+	},
 ];
 
 // API Functions
 export async function getWriteups(
-  filters: WriteupFilters = {},
-  page = 1,
-  limit = 12
+	filters: WriteupFilters = {},
+	page = 1,
+	limit = 12
 ): Promise<ApiResponse<WriteupListResponse>> {
-  // Simulate API delay
-  await new Promise(resolve => setTimeout(resolve, 300));
+	// Simulate API delay
+	await new Promise((resolve) => setTimeout(resolve, 300));
 
-  let filteredWriteups = [...mockWriteups];
+	let filteredWriteups = [...mockWriteups];
 
-  // Apply filters
-  if (filters.search) {
-    const search = filters.search.toLowerCase();
-    filteredWriteups = filteredWriteups.filter(writeup =>
-      writeup.title.toLowerCase().includes(search) ||
-      writeup.description.toLowerCase().includes(search) ||
-      writeup.tags.some(tag => tag.toLowerCase().includes(search))
-    );
-  }
+	// Apply filters
+	if (filters.search) {
+		const search = filters.search.toLowerCase();
+		filteredWriteups = filteredWriteups.filter(
+			(writeup) =>
+				writeup.title.toLowerCase().includes(search) ||
+				writeup.description.toLowerCase().includes(search) ||
+				writeup.tags.some((tag) => tag.toLowerCase().includes(search))
+		);
+	}
 
-  if (filters.category) {
-    filteredWriteups = filteredWriteups.filter(writeup => writeup.category === filters.category);
-  }
+	if (filters.category) {
+		filteredWriteups = filteredWriteups.filter(
+			(writeup) => writeup.category === filters.category
+		);
+	}
 
-  if (filters.difficulty) {
-    filteredWriteups = filteredWriteups.filter(writeup => writeup.difficulty === filters.difficulty);
-  }
+	if (filters.difficulty) {
+		filteredWriteups = filteredWriteups.filter(
+			(writeup) => writeup.difficulty === filters.difficulty
+		);
+	}
 
-  if (filters.author) {
-    filteredWriteups = filteredWriteups.filter(writeup => 
-      writeup.authorName.toLowerCase().includes(filters.author!.toLowerCase())
-    );
-  }
+	if (filters.author) {
+		filteredWriteups = filteredWriteups.filter((writeup) =>
+			writeup.authorName.toLowerCase().includes(filters.author!.toLowerCase())
+		);
+	}
 
-  if (filters.featured !== undefined) {
-    filteredWriteups = filteredWriteups.filter(writeup => writeup.featured === filters.featured);
-  }
+	if (filters.featured !== undefined) {
+		filteredWriteups = filteredWriteups.filter(
+			(writeup) => writeup.featured === filters.featured
+		);
+	}
 
-  if (filters.verified !== undefined) {
-    filteredWriteups = filteredWriteups.filter(writeup => writeup.verified === filters.verified);
-  }
+	if (filters.verified !== undefined) {
+		filteredWriteups = filteredWriteups.filter(
+			(writeup) => writeup.verified === filters.verified
+		);
+	}
 
-  if (filters.tags && filters.tags.length > 0) {
-    filteredWriteups = filteredWriteups.filter(writeup =>
-      filters.tags!.some(tag => writeup.tags.includes(tag))
-    );
-  }
+	if (filters.tags && filters.tags.length > 0) {
+		filteredWriteups = filteredWriteups.filter((writeup) =>
+			filters.tags!.some((tag) => writeup.tags.includes(tag))
+		);
+	}
 
-  // Apply sorting
-  switch (filters.sortBy) {
-    case 'oldest':
-      filteredWriteups.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
-      break;
-    case 'rating':
-      filteredWriteups.sort((a, b) => b.averageRating - a.averageRating);
-      break;
-    case 'views':
-      filteredWriteups.sort((a, b) => b.views - a.views);
-      break;
-    case 'likes':
-      filteredWriteups.sort((a, b) => b.likes - a.likes);
-      break;
-    case 'newest':
-    default:
-      filteredWriteups.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
-      break;
-  }
+	// Apply sorting
+	switch (filters.sortBy) {
+		case "oldest":
+			filteredWriteups.sort(
+				(a, b) =>
+					new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+			);
+			break;
+		case "rating":
+			filteredWriteups.sort((a, b) => b.averageRating - a.averageRating);
+			break;
+		case "views":
+			filteredWriteups.sort((a, b) => b.views - a.views);
+			break;
+		case "likes":
+			filteredWriteups.sort((a, b) => b.likes - a.likes);
+			break;
+		case "newest":
+		default:
+			filteredWriteups.sort(
+				(a, b) =>
+					new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+			);
+			break;
+	}
 
-  // Pagination
-  const total = filteredWriteups.length;
-  const totalPages = Math.ceil(total / limit);
-  const startIndex = (page - 1) * limit;
-  const endIndex = startIndex + limit;
-  const paginatedWriteups = filteredWriteups.slice(startIndex, endIndex);
+	// Pagination
+	const total = filteredWriteups.length;
+	const totalPages = Math.ceil(total / limit);
+	const startIndex = (page - 1) * limit;
+	const endIndex = startIndex + limit;
+	const paginatedWriteups = filteredWriteups.slice(startIndex, endIndex);
 
-  return {
-    success: true,
-    data: {
-      writeups: paginatedWriteups,
-      total,
-      page,
-      limit,
-      totalPages
-    }
-  };
+	return {
+		success: true,
+		data: {
+			writeups: paginatedWriteups,
+			total,
+			page,
+			limit,
+			totalPages,
+		},
+	};
 }
 
 export async function getWriteup(id: string): Promise<ApiResponse<Writeup>> {
-  await new Promise(resolve => setTimeout(resolve, 200));
+	await new Promise((resolve) => setTimeout(resolve, 200));
 
-  const writeup = mockWriteups.find(w => w.id === id);
+	const writeup = mockWriteups.find((w) => w.id === id);
 
-  if (!writeup) {
-    return {
-      success: false,
-      error: 'Writeup not found'
-    };
-  }
+	if (!writeup) {
+		return {
+			success: false,
+			error: "Writeup not found",
+		};
+	}
 
-  // Increment view count
-  writeup.views += 1;
+	// Increment view count
+	writeup.views += 1;
 
-  return {
-    success: true,
-    data: writeup
-  };
+	return {
+		success: true,
+		data: writeup,
+	};
 }
 
-export async function getWriteupComments(writeupId: string): Promise<ApiResponse<WriteupComment[]>> {
-  await new Promise(resolve => setTimeout(resolve, 150));
+export async function getWriteupComments(
+	writeupId: string
+): Promise<ApiResponse<WriteupComment[]>> {
+	await new Promise((resolve) => setTimeout(resolve, 150));
 
-  const comments = mockComments.filter(comment => comment.writeupId === writeupId);
+	const comments = mockComments.filter(
+		(comment) => comment.writeupId === writeupId
+	);
 
-  return {
-    success: true,
-    data: comments
-  };
+	return {
+		success: true,
+		data: comments,
+	};
 }
 
 export async function addWriteupComment(
-  writeupId: string,
-  content: string,
-  parentId?: string
+	writeupId: string,
+	content: string,
+	parentId?: string
 ): Promise<ApiResponse<WriteupComment>> {
-  await new Promise(resolve => setTimeout(resolve, 200));
+	await new Promise((resolve) => setTimeout(resolve, 200));
 
-  const newComment: WriteupComment = {
-    id: `comment-${Date.now()}`,
-    userId: 'current-user',
-    username: 'CurrentUser',
-    writeupId,
-    content,
-    createdAt: new Date().toISOString(),
-    ...(parentId && { parentId }),
-    level: parentId ? 1 : 0,
-    likes: 0
-  };
+	const newComment: WriteupComment = {
+		id: `comment-${Date.now()}`,
+		userId: "current-user",
+		username: "CurrentUser",
+		writeupId,
+		content,
+		createdAt: new Date().toISOString(),
+		...(parentId && { parentId }),
+		level: parentId ? 1 : 0,
+		likes: 0,
+		dislikes: 0,
+	};
 
-  mockComments.push(newComment);
+	mockComments.push(newComment);
 
-  return {
-    success: true,
-    data: newComment
-  };
+	return {
+		success: true,
+		data: newComment,
+	};
 }
 
-export async function rateWriteup(writeupId: string, rating: number): Promise<ApiResponse<void>> {
-  await new Promise(resolve => setTimeout(resolve, 200));
+export async function rateWriteup(
+	writeupId: string,
+	rating: number
+): Promise<ApiResponse<void>> {
+	await new Promise((resolve) => setTimeout(resolve, 200));
 
-  const writeup = mockWriteups.find(w => w.id === writeupId);
-  if (!writeup) {
-    return {
-      success: false,
-      error: 'Writeup not found'
-    };
-  }
+	const writeup = mockWriteups.find((w) => w.id === writeupId);
+	if (!writeup) {
+		return {
+			success: false,
+			error: "Writeup not found",
+		};
+	}
 
-  // Add new rating
-  const newRating: WriteupRating = {
-    id: `rating-${Date.now()}`,
-    userId: 'current-user',
-    writeupId,
-    rating,
-    createdAt: new Date().toISOString()
-  };
+	// Add new rating
+	const newRating: WriteupRating = {
+		id: `rating-${Date.now()}`,
+		userId: "current-user",
+		writeupId,
+		rating,
+		createdAt: new Date().toISOString(),
+	};
 
-  mockRatings.push(newRating);
+	mockRatings.push(newRating);
 
-  // Recalculate average rating
-  const writeupRatings = mockRatings.filter(r => r.writeupId === writeupId);
-  writeup.totalRatings = writeupRatings.length;
-  writeup.averageRating = writeupRatings.reduce((sum, r) => sum + r.rating, 0) / writeupRatings.length;
+	// Recalculate average rating
+	const writeupRatings = mockRatings.filter((r) => r.writeupId === writeupId);
+	writeup.totalRatings = writeupRatings.length;
+	writeup.averageRating =
+		writeupRatings.reduce((sum, r) => sum + r.rating, 0) /
+		writeupRatings.length;
 
-  return {
-    success: true,
-    data: undefined
-  };
+	return {
+		success: true,
+		data: undefined,
+	};
 }
 
-export async function createWriteup(writeupData: Partial<Writeup>, userId?: string): Promise<ApiResponse<Writeup>> {
-  await new Promise(resolve => setTimeout(resolve, 500));
+export async function createWriteup(
+	writeupData: Partial<Writeup>,
+	userId?: string
+): Promise<ApiResponse<Writeup>> {
+	await new Promise((resolve) => setTimeout(resolve, 500));
 
-  if (!userId) {
-    return {
-      success: false,
-      error: 'Authentication required'
-    };
-  }
+	if (!userId) {
+		return {
+			success: false,
+			error: "Authentication required",
+		};
+	}
 
-  const newWriteup: Writeup = {
-    id: `wu-${Date.now()}`,
-    title: writeupData.title || '',
-    description: writeupData.description || '',
-    content: writeupData.content || '',
-    authorId: userId,
-    authorName: 'CurrentUser', // In real app, this would come from user data
-    category: writeupData.category || 'misc',
-    difficulty: writeupData.difficulty || 'Easy',
-    tags: writeupData.tags || [],
-    views: 0,
-    likes: 0,
-    averageRating: 0,
-    totalRatings: 0,
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-    readTime: Math.ceil((writeupData.content || '').length / 200), // Rough estimate
-    featured: false,
-    verified: false,
-    ...(writeupData.contestId && { contestId: writeupData.contestId }),
-    ...(writeupData.contestName && { contestName: writeupData.contestName }),
-    ...(writeupData.challengeName && { challengeName: writeupData.challengeName })
-  };
+	const newWriteup: Writeup = {
+		id: `wu-${Date.now()}`,
+		title: writeupData.title || "",
+		description: writeupData.description || "",
+		content: writeupData.content || "",
+		authorId: userId,
+		authorName: "CurrentUser", // In real app, this would come from user data
+		category: writeupData.category || "misc",
+		difficulty: writeupData.difficulty || "Easy",
+		tags: writeupData.tags || [],
+		views: 0,
+		likes: 0,
+		averageRating: 0,
+		totalRatings: 0,
+		createdAt: new Date().toISOString(),
+		updatedAt: new Date().toISOString(),
+		readTime: Math.ceil((writeupData.content || "").length / 200), // Rough estimate
+		featured: false,
+		verified: false,
+		...(writeupData.contestId && { contestId: writeupData.contestId }),
+		...(writeupData.contestName && { contestName: writeupData.contestName }),
+		...(writeupData.challengeName && {
+			challengeName: writeupData.challengeName,
+		}),
+	};
 
-  mockWriteups.unshift(newWriteup);
+	mockWriteups.unshift(newWriteup);
 
-  return {
-    success: true,
-    data: newWriteup
-  };
+	return {
+		success: true,
+		data: newWriteup,
+	};
 }
 
 export async function updateWriteup(
-  id: string,
-  writeupData: Partial<Writeup>,
-  userId?: string
+	id: string,
+	writeupData: Partial<Writeup>,
+	userId?: string
 ): Promise<ApiResponse<Writeup>> {
-  await new Promise(resolve => setTimeout(resolve, 500));
+	await new Promise((resolve) => setTimeout(resolve, 500));
 
-  if (!userId) {
-    return {
-      success: false,
-      error: 'Authentication required'
-    };
-  }
+	if (!userId) {
+		return {
+			success: false,
+			error: "Authentication required",
+		};
+	}
 
-  const writeupIndex = mockWriteups.findIndex(w => w.id === id);
-  if (writeupIndex === -1) {
-    return {
-      success: false,
-      error: 'Writeup not found'
-    };
-  }
+	const writeupIndex = mockWriteups.findIndex((w) => w.id === id);
+	if (writeupIndex === -1) {
+		return {
+			success: false,
+			error: "Writeup not found",
+		};
+	}
 
-  const writeup = mockWriteups[writeupIndex];
-  if (!writeup) {
-    return {
-      success: false,
-      error: 'Writeup not found'
-    };
-  }
+	const writeup = mockWriteups[writeupIndex];
+	if (!writeup) {
+		return {
+			success: false,
+			error: "Writeup not found",
+		};
+	}
 
-  if (writeup.authorId !== userId) {
-    return {
-      success: false,
-      error: 'Permission denied'
-    };
-  }
+	if (writeup.authorId !== userId) {
+		return {
+			success: false,
+			error: "Permission denied",
+		};
+	}
 
-  const updatedWriteup: Writeup = {
-    ...writeup,
-    ...writeupData,
-    id: writeup.id, // Ensure ID cannot be changed
-    authorId: writeup.authorId, // Ensure author cannot be changed
-    createdAt: writeup.createdAt, // Ensure creation date cannot be changed
-    updatedAt: new Date().toISOString(),
-    readTime: Math.ceil((writeupData.content || writeup.content).length / 200),
-  };
+	const updatedWriteup: Writeup = {
+		...writeup,
+		...writeupData,
+		id: writeup.id, // Ensure ID cannot be changed
+		authorId: writeup.authorId, // Ensure author cannot be changed
+		createdAt: writeup.createdAt, // Ensure creation date cannot be changed
+		updatedAt: new Date().toISOString(),
+		readTime: Math.ceil((writeupData.content || writeup.content).length / 200),
+	};
 
-  mockWriteups[writeupIndex] = updatedWriteup;
+	mockWriteups[writeupIndex] = updatedWriteup;
 
-  return {
-    success: true,
-    data: updatedWriteup
-  };
+	return {
+		success: true,
+		data: updatedWriteup,
+	};
 }
 
-export async function deleteWriteup(id: string, userId?: string): Promise<ApiResponse<void>> {
-  await new Promise(resolve => setTimeout(resolve, 300));
+export async function deleteWriteup(
+	id: string,
+	userId?: string
+): Promise<ApiResponse<void>> {
+	await new Promise((resolve) => setTimeout(resolve, 300));
 
-  if (!userId) {
-    return {
-      success: false,
-      error: 'Authentication required'
-    };
-  }
+	if (!userId) {
+		return {
+			success: false,
+			error: "Authentication required",
+		};
+	}
 
-  const writeupIndex = mockWriteups.findIndex(w => w.id === id);
-  if (writeupIndex === -1) {
-    return {
-      success: false,
-      error: 'Writeup not found'
-    };
-  }
+	const writeupIndex = mockWriteups.findIndex((w) => w.id === id);
+	if (writeupIndex === -1) {
+		return {
+			success: false,
+			error: "Writeup not found",
+		};
+	}
 
-  const writeup = mockWriteups[writeupIndex];
-  if (!writeup) {
-    return {
-      success: false,
-      error: 'Writeup not found'
-    };
-  }
+	const writeup = mockWriteups[writeupIndex];
+	if (!writeup) {
+		return {
+			success: false,
+			error: "Writeup not found",
+		};
+	}
 
-  if (writeup.authorId !== userId) {
-    return {
-      success: false,
-      error: 'Permission denied'
-    };
-  }
+	if (writeup.authorId !== userId) {
+		return {
+			success: false,
+			error: "Permission denied",
+		};
+	}
 
-  mockWriteups.splice(writeupIndex, 1);
+	mockWriteups.splice(writeupIndex, 1);
 
-  // Also remove associated comments and ratings
-  const commentIndicesToRemove = mockComments
-    .map((comment, index) => comment.writeupId === id ? index : -1)
-    .filter(index => index !== -1)
-    .reverse(); // Remove from end to avoid index shifting
+	// Also remove associated comments and ratings
+	const commentIndicesToRemove = mockComments
+		.map((comment, index) => (comment.writeupId === id ? index : -1))
+		.filter((index) => index !== -1)
+		.reverse(); // Remove from end to avoid index shifting
 
-  commentIndicesToRemove.forEach(index => {
-    mockComments.splice(index, 1);
-  });
+	commentIndicesToRemove.forEach((index) => {
+		mockComments.splice(index, 1);
+	});
 
-  const ratingIndicesToRemove = mockRatings
-    .map((rating, index) => rating.writeupId === id ? index : -1)
-    .filter(index => index !== -1)
-    .reverse();
+	const ratingIndicesToRemove = mockRatings
+		.map((rating, index) => (rating.writeupId === id ? index : -1))
+		.filter((index) => index !== -1)
+		.reverse();
 
-  ratingIndicesToRemove.forEach(index => {
-    mockRatings.splice(index, 1);
-  });
+	ratingIndicesToRemove.forEach((index) => {
+		mockRatings.splice(index, 1);
+	});
 
-  return {
-    success: true,
-    data: undefined
-  };
+	return {
+		success: true,
+		data: undefined,
+	};
 }
 
-export async function getUserWriteups(userId: string, page = 1, limit = 12): Promise<ApiResponse<WriteupListResponse>> {
-  await new Promise(resolve => setTimeout(resolve, 200));
+export async function getUserWriteups(
+	userId: string,
+	page = 1,
+	limit = 12
+): Promise<ApiResponse<WriteupListResponse>> {
+	await new Promise((resolve) => setTimeout(resolve, 200));
 
-  const userWriteups = mockWriteups.filter(writeup => writeup.authorId === userId);
+	const userWriteups = mockWriteups.filter(
+		(writeup) => writeup.authorId === userId
+	);
 
-  // Sort by creation date (newest first)
-  userWriteups.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+	// Sort by creation date (newest first)
+	userWriteups.sort(
+		(a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+	);
 
-  // Pagination
-  const total = userWriteups.length;
-  const totalPages = Math.ceil(total / limit);
-  const startIndex = (page - 1) * limit;
-  const endIndex = startIndex + limit;
-  const paginatedWriteups = userWriteups.slice(startIndex, endIndex);
+	// Pagination
+	const total = userWriteups.length;
+	const totalPages = Math.ceil(total / limit);
+	const startIndex = (page - 1) * limit;
+	const endIndex = startIndex + limit;
+	const paginatedWriteups = userWriteups.slice(startIndex, endIndex);
 
-  return {
-    success: true,
-    data: {
-      writeups: paginatedWriteups,
-      total,
-      page,
-      limit,
-      totalPages
-    }
-  };
+	return {
+		success: true,
+		data: {
+			writeups: paginatedWriteups,
+			total,
+			page,
+			limit,
+			totalPages,
+		},
+	};
 }

@@ -11,6 +11,7 @@ import React, { Suspense } from "react";
 import { ErrorBoundary } from "@/components/ui/ErrorBoundary";
 import { LoadingFallback } from "@/components/ui/LoadingFallback";
 import ToastContainer from "@/components/ui/ToastContainer";
+import { NoSSR } from "@/components/ui/NoSSR";
 
 interface ProvidersProps {
 	children: React.ReactNode;
@@ -22,9 +23,11 @@ interface ProvidersProps {
 export function Providers({ children }: ProvidersProps) {
 	return (
 		<ErrorBoundary>
-			<Suspense fallback={<LoadingFallback />}>
-				{children}
-			</Suspense>
+			<NoSSR fallback={<LoadingFallback message="Initializing..." />}>
+				<Suspense fallback={<LoadingFallback />}>
+					{children}
+				</Suspense>
+			</NoSSR>
 
 			{/* Toast notifications */}
 			<ToastContainer />

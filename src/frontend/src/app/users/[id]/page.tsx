@@ -130,21 +130,7 @@ const getUserDetails = async (id: string): Promise<UserDetails> => {
 	};
 };
 
-const CyberGlow = ({ children, color = "blue" }: { children: React.ReactNode, color?: string }) => (
-	<div className="relative group">
-		<div className={clsx(
-			"absolute inset-0 rounded-lg blur opacity-30 group-hover:opacity-50 transition-opacity duration-500",
-			color === "blue" && "bg-blue-500",
-			color === "purple" && "bg-purple-500",
-			color === "green" && "bg-green-500",
-			color === "red" && "bg-red-500",
-			color === "yellow" && "bg-yellow-400",
-		)} />
-		<div className="relative">
-			{children}
-		</div>
-	</div>
-);
+
 
 const HackerTerminal = ({ lines, className = "" }: { lines: string[], className?: string }) => {
 	const [visibleLines, setVisibleLines] = useState<string[]>([]);
@@ -153,42 +139,47 @@ const HackerTerminal = ({ lines, className = "" }: { lines: string[], className?
 	useEffect(() => {
 		if (currentLine < lines.length) {
 			const timer = setTimeout(() => {
-				setVisibleLines(prev => [...prev, lines[currentLine]]);
+				const line = lines[currentLine];
+				if (line) {
+					setVisibleLines(prev => [...prev, line]);
+				}
 				setCurrentLine(prev => prev + 1);
-			}, 500);
+			}, 800);
 			return () => clearTimeout(timer);
 		}
+		return undefined;
 	}, [currentLine, lines]);
 
 	return (
-		<div className={clsx("bg-black/90 border border-green-400/50 rounded-lg p-4 font-mono text-sm", className)}>
-			<div className="flex items-center gap-2 mb-3 border-b border-green-400/30 pb-2">
-				<div className="w-3 h-3 rounded-full bg-red-500" />
-				<div className="w-3 h-3 rounded-full bg-yellow-500" />
-				<div className="w-3 h-3 rounded-full bg-green-500" />
-				<span className="text-green-400 text-xs ml-2">cyberninja@terminal:~$</span>
+		<div className={clsx("bg-card border-2 border-green-400/50 rounded-lg p-6 font-mono text-sm", className)}>
+			<div className="flex items-center gap-2 mb-4 border-b border-green-400/30 pb-3">
+				<div className="w-3 h-3 rounded-full bg-red-500 shadow-sm" />
+				<div className="w-3 h-3 rounded-full bg-yellow-500 shadow-sm" />
+				<div className="w-3 h-3 rounded-full bg-green-500 shadow-sm" />
+				<span className="text-green-400 text-xs ml-2 font-bold">cyberninja@terminal:~$</span>
 			</div>
 			
 			{visibleLines.map((line, index) => (
 				<motion.div
 					key={index}
-					initial={{ opacity: 0 }}
-					animate={{ opacity: 1 }}
-					className="text-green-400 mb-1"
+					initial={{ opacity: 0, x: -10 }}
+					animate={{ opacity: 1, x: 0 }}
+					transition={{ duration: 0.3 }}
+					className="text-green-400 mb-2 leading-relaxed"
 				>
-					<span className="text-green-600">{">"} </span>
-					{line}
+					<span className="text-green-400 font-bold">$ </span>
+					<span className="text-foreground">{line}</span>
 				</motion.div>
 			))}
 			
 			{currentLine < lines.length && (
 				<motion.div
-					className="text-green-400"
-					animate={{ opacity: [1, 0] }}
-					transition={{ duration: 0.8, repeat: Infinity }}
+					className="text-green-400 flex items-center"
+					animate={{ opacity: [1, 0.3] }}
+					transition={{ duration: 1, repeat: Infinity, repeatType: "reverse" }}
 				>
-					<span className="text-green-600">{">"} </span>
-					<span className="bg-green-400 text-black px-1">█</span>
+					<span className="text-green-400 font-bold">$ </span>
+					<span className="bg-green-400 w-2 h-5 ml-1 animate-pulse inline-block">█</span>
 				</motion.div>
 			)}
 		</div>
@@ -197,65 +188,61 @@ const HackerTerminal = ({ lines, className = "" }: { lines: string[], className?
 
 const SkillRadar = ({ categories }: { categories: { category: string; solved: number; color: string }[] }) => {
 	const maxSolved = Math.max(...categories.map(c => c.solved));
+	const displayCategories = categories.slice(0, 6);
 	
 	return (
-		<div className="relative w-64 h-64 mx-auto">
-			{/* Radar Grid */}
-			{[20, 40, 60, 80, 100].map((percentage) => (
-				<div
-					key={percentage}
-					className="absolute inset-0 border border-green-400/20 rounded-full"
-					style={{
-						width: `${percentage}%`,
-						height: `${percentage}%`,
-						top: `${(100 - percentage) / 2}%`,
-						left: `${(100 - percentage) / 2}%`,
-					}}
+		<div className="relative w-48 h-48 mx-auto">
+			<svg className="absolute inset-0 w-full h-full" viewBox="0 0 200 200">
+				{[20, 40, 60, 80].map((radius) => (
+					<circle key={radius} cx="100" cy="100" r={radius} fill="none" stroke="rgb(34, 197, 94, 0.2)" strokeWidth="1" />
+				))}
+				
+				{displayCategories.map((category, i) => {
+					const angle = (i * 60) - 90;
+					const radians = (angle * Math.PI) / 180;
+					const level = (category.solved / maxSolved) * 80;
+					const x = 100 + level * Math.cos(radians);
+					const y = 100 + level * Math.sin(radians);
+					return <line key={i} x1="100" y1="100" x2={x} y2={y} stroke="rgb(34, 197, 94, 0.4)" strokeWidth="1" />;
+				})}
+				
+				<polygon
+					points={displayCategories.map((category, i) => {
+						const angle = (i * 60) - 90;
+						const radians = (angle * Math.PI) / 180;
+						const level = (category.solved / maxSolved) * 80;
+						const x = 100 + level * Math.cos(radians);
+						const y = 100 + level * Math.sin(radians);
+						return `${x},${y}`;
+					}).join(' ')}
+					fill="rgba(34, 197, 94, 0.2)" stroke="rgb(34, 197, 94)" strokeWidth="2"
 				/>
-			))}
+				
+				{displayCategories.map((category, i) => {
+					const angle = (i * 60) - 90;
+					const radians = (angle * Math.PI) / 180;
+					const level = (category.solved / maxSolved) * 80;
+					const x = 100 + level * Math.cos(radians);
+					const y = 100 + level * Math.sin(radians);
+					return <circle key={i} cx={x} cy={y} r="3" fill="rgb(34, 197, 94)" />;
+				})}
+			</svg>
 			
-			{/* Radar Lines */}
-			{categories.map((_, index) => {
-				const angle = (index * 360) / categories.length;
-				return (
-					<div
-						key={index}
-						className="absolute w-px h-32 bg-green-400/20 origin-bottom"
-						style={{
-							top: '50%',
-							left: '50%',
-							transform: `rotate(${angle}deg) translateX(-50%)`,
-						}}
-					/>
-				);
-			})}
-			
-			{/* Data Points */}
-			{categories.map((category, index) => {
-				const angle = (index * 360) / categories.length - 90; // Start from top
-				const radius = (category.solved / maxSolved) * 120;
-				const x = 128 + radius * Math.cos((angle * Math.PI) / 180);
-				const y = 128 + radius * Math.sin((angle * Math.PI) / 180);
+			{displayCategories.map((category, i) => {
+				const angle = (i * 60) - 90;
+				const radians = (angle * Math.PI) / 180;
+				const x = 100 + 95 * Math.cos(radians);
+				const y = 100 + 95 * Math.sin(radians);
 				
 				return (
-					<div key={category.category}>
-						<div
-							className={clsx("absolute w-3 h-3 rounded-full border-2", category.color)}
-							style={{
-								left: x - 6,
-								top: y - 6,
-								backgroundColor: category.color.replace('text-', 'rgb(var(--') + '))',
-							}}
-						/>
-						<div
-							className="absolute text-xs font-mono font-bold"
-							style={{
-								left: x + (x > 128 ? 10 : -30),
-								top: y - 6,
-							}}
-						>
-							<span className={category.color}>{category.category}</span>
-							<div className="text-xs text-muted-foreground">{category.solved}</div>
+					<div
+						key={category.category}
+						className="absolute text-xs font-mono text-green-400 transform -translate-x-1/2 -translate-y-1/2 whitespace-nowrap"
+						style={{ left: `${(x / 200) * 100}%`, top: `${(y / 200) * 100}%` }}
+					>
+						<div className="text-center">
+							<div>{category.category}</div>
+							<div className="text-xs text-gray-400">{category.solved}</div>
 						</div>
 					</div>
 				);
@@ -311,6 +298,21 @@ export default function UserPage() {
 	const [user, setUser] = useState<UserDetails | null>(null);
 	const [isLoading, setIsLoading] = useState(true);
 	const [showAllContests, setShowAllContests] = useState(false);
+	const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+
+	useEffect(() => {
+		const handleMouseMove = (e: MouseEvent) => {
+			const { clientX, clientY } = e;
+			const { innerWidth, innerHeight } = window;
+			setMousePosition({
+				x: (clientX / innerWidth - 0.5) * 20,
+				y: (clientY / innerHeight - 0.5) * 20
+			});
+		};
+
+		window.addEventListener('mousemove', handleMouseMove);
+		return () => window.removeEventListener('mousemove', handleMouseMove);
+	}, []);
 
 	useEffect(() => {
 		const fetchUser = async () => {
@@ -366,29 +368,7 @@ export default function UserPage() {
 
 	return (
 		<MainLayout>
-			<div className="min-h-screen relative overflow-hidden">
-				{/* Animated Background */}
-				<div className="absolute inset-0">
-					{Array.from({ length: 50 }).map((_, i) => (
-						<motion.div
-							key={i}
-							className="absolute w-1 h-1 bg-blue-400/30 rounded-full"
-							style={{
-								left: `${Math.random() * 100}%`,
-								top: `${Math.random() * 100}%`,
-							}}
-							animate={{
-								opacity: [0.3, 1, 0.3],
-								scale: [1, 1.5, 1],
-							}}
-							transition={{
-								duration: 2 + Math.random() * 2,
-								repeat: Infinity,
-								delay: Math.random() * 2,
-							}}
-						/>
-					))}
-				</div>
+			<div className="min-h-screen">
 
 				{/* Hero Section */}
 				<section className="relative py-12 px-4">
@@ -411,24 +391,30 @@ export default function UserPage() {
 								</Button>
 							</div>
 
-							<CyberGlow color="purple">
-								<div className="relative">
+							<div className="relative">
 									{/* User Avatar */}
 									<motion.div
 										className="w-32 h-32 mx-auto mb-6 relative"
-										animate={{ rotateY: [0, 360] }}
-										transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
+										animate={{ 
+											x: mousePosition.x * 0.5,
+											y: mousePosition.y * 0.3,
+											rotateX: mousePosition.y * 0.5,
+											rotateY: mousePosition.x * 0.5
+										}}
+										transition={{ type: "spring", stiffness: 150, damping: 15 }}
 									>
-										<div className="w-full h-full rounded-full bg-gradient-to-br from-blue-400 via-purple-500 to-pink-500 flex items-center justify-center text-4xl font-bold text-white relative overflow-hidden">
-											<div className="absolute inset-0 bg-black/20" />
-											<span className="relative z-10">{user.username[0].toUpperCase()}</span>
+										<div className="w-full h-full rounded-full bg-gradient-to-br from-blue-400 via-purple-500 to-pink-500 flex items-center justify-center text-4xl font-bold text-white">
+											<span>{user.username?.[0]?.toUpperCase() || 'U'}</span>
 										</div>
 										
 										{/* Ranking Ring */}
 										<motion.div
 											className="absolute inset-0 rounded-full border-4 border-yellow-400"
-											animate={{ rotate: 360 }}
-											transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+											animate={{ 
+												rotate: -mousePosition.x * 0.3,
+												scale: 1 + Math.abs(mousePosition.x + mousePosition.y) * 0.001
+											}}
+											transition={{ type: "spring", stiffness: 200, damping: 20 }}
 										/>
 										
 										{/* Rank Badge */}
@@ -469,15 +455,19 @@ export default function UserPage() {
 										{user.teamName && (
 											<motion.div
 												whileHover={{ scale: 1.05 }}
-												className="inline-flex items-center gap-2 px-4 py-2 bg-primary/20 border border-primary/50 rounded-full"
+												className="inline-flex items-center gap-2 px-4 py-2 bg-primary/20 border border-primary/50 rounded-full cursor-pointer"
+												onClick={() => {
+													if (user.teamId) {
+														window.location.href = `/teams/${user.teamId}`;
+													}
+												}}
 											>
 												<Users className="h-4 w-4 text-primary" />
 												<span className="font-mono text-primary font-bold">{user.teamName}</span>
 											</motion.div>
 										)}
 									</div>
-								</div>
-							</CyberGlow>
+							</div>
 						</motion.div>
 
 						{/* Live Stats Grid */}
@@ -496,9 +486,8 @@ export default function UserPage() {
 									animate={{ opacity: 1, scale: 1 }}
 									transition={{ delay: 0.1 + index * 0.05 }}
 									whileHover={{ scale: 1.05 }}
-									className="p-4 bg-card/50 backdrop-blur-sm border border-border/50 rounded-lg relative overflow-hidden group"
+									className="p-4 bg-card border border-border rounded-lg group"
 								>
-									<div className="absolute inset-0 bg-gradient-to-br from-transparent to-white/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 									<div className="relative z-10 text-center">
 										<stat.icon className={clsx("h-6 w-6 mx-auto mb-2", stat.color)} />
 										<div className={clsx("text-xl font-bold font-mono", stat.color)}>{stat.value}</div>
@@ -534,11 +523,11 @@ export default function UserPage() {
 								transition={{ delay: 0.4 }}
 								className="text-center"
 							>
-								<h3 className="text-xl font-bold font-mono text-blue-400 mb-4 flex items-center justify-center gap-2">
+								<h3 className="text-xl font-bold font-mono text-green-400 mb-4 flex items-center justify-center gap-2">
 									<Target className="h-5 w-5" />
-									SKILL_MATRIX
+									SKILL RADAR
 								</h3>
-								<div className="p-6 bg-card/30 backdrop-blur-sm border border-border/50 rounded-lg">
+								<div className="bg-gray-800/30 backdrop-blur border border-green-500/30 rounded-lg p-6">
 									<SkillRadar categories={user.favoriteCategories} />
 								</div>
 							</motion.div>
@@ -588,8 +577,17 @@ export default function UserPage() {
 										onClick={() => setShowAllContests(!showAllContests)}
 										className="font-mono text-xs"
 									>
-										{showAllContests ? <ChevronUp className="h-3 w-3 mr-1" /> : <ChevronDown className="h-3 w-3 mr-1" />}
-										{showAllContests ? "Show Less" : `Show All ${user.contests.length}`}
+										{showAllContests ? (
+											<>
+												<ChevronUp className="h-3 w-3 mr-1" />
+												Show Less
+											</>
+										) : (
+											<>
+												<ChevronDown className="h-3 w-3 mr-1" />
+												Show All ({user.contests.length})
+											</>
+										)}
 									</Button>
 								)}
 							</div>
@@ -603,13 +601,25 @@ export default function UserPage() {
 											animate={{ opacity: 1, x: 0 }}
 											exit={{ opacity: 0, x: -20 }}
 											transition={{ delay: index * 0.1 }}
-											className="p-4 bg-card/30 backdrop-blur-sm border border-border/50 rounded-lg hover:border-orange-400/50 transition-all group"
+											className="p-4 bg-card border border-border rounded-lg hover:border-orange-400/50 transition-all group cursor-pointer"
+											onClick={() => {
+												window.location.href = `/contests/${contest.id}`;
+											}}
 										>
 											<div className="flex items-center justify-between mb-3">
-												<div>
-													<h4 className="font-bold text-sm">{contest.name}</h4>
+												<div className="flex-1">
+													<h4 className="font-bold text-sm hover:text-orange-400 transition-colors">{contest.name}</h4>
 													<div className="text-xs text-muted-foreground font-mono">
 														{new Date(contest.date).toLocaleDateString()}
+													</div>
+													<div className="text-xs text-muted-foreground mt-1">
+														Team: <span 
+															className="text-primary hover:text-primary/80 cursor-pointer font-mono"
+															onClick={(e) => {
+																e.stopPropagation();
+																window.location.href = `/teams/${contest.teamId}`;
+															}}
+														>{contest.teamName}</span>
 													</div>
 												</div>
 												
