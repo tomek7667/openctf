@@ -9,7 +9,9 @@ export const login = async (credentials: LoginDto): Promise<AuthResponse> => {
 		user: {
 			id: 1,
 			username: credentials.identity,
-			email: credentials.identity.includes("@") ? credentials.identity : `${credentials.identity}@example.com`,
+			email: credentials.identity.includes("@")
+				? credentials.identity
+				: `${credentials.identity}@example.com`,
 			created_at: new Date().toISOString(),
 			password: "[HIDDEN]",
 			permission_level: "player",
@@ -17,7 +19,9 @@ export const login = async (credentials: LoginDto): Promise<AuthResponse> => {
 	};
 };
 
-export const register = async (userData: RegisterDto): Promise<AuthResponse> => {
+export const register = async (
+	userData: RegisterDto
+): Promise<AuthResponse> => {
 	await sleep(1000);
 	// TODO: implement register
 	return {
@@ -51,20 +55,25 @@ export const logout = async (): Promise<void> => {
 	// TODO: implement logout
 };
 
-export const forgotPassword = async (_email: string): Promise<{ success: boolean; message: string }> => {
+export const forgotPassword = async (
+	_email: string
+): Promise<{ success: boolean; message: string }> => {
 	await sleep(1000);
 	// TODO: implement forgotPassword
 	return {
 		success: true,
-		message: "Password reset instructions sent to your email"
+		message: "Password reset instructions sent to your email",
 	};
 };
 
-export const resetPassword = async (_token: string, _newPassword: string): Promise<{ success: boolean; message: string }> => {
+export const resetPassword = async (
+	_token: string,
+	_newPassword: string
+): Promise<{ success: boolean; message: string }> => {
 	await sleep(1000);
 	// TODO: implement resetPassword
 	return {
 		success: true,
-		message: "Password reset successfully"
+		message: "Password reset successfully",
 	};
 };

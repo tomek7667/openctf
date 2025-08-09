@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Menu, X, Trophy, Shield, Users, User, MessageSquare, LogIn } from "@/components/ui/icons";
+import { Menu, X, Trophy, Shield, Users, User, BookOpen, LogIn } from "@/components/ui/icons";
 import { useAuthStore } from "@/store/authStore";
 import { AuthModal } from "@/components/auth/AuthModal";
 import { UserMenu } from "@/components/auth/UserMenu";
@@ -28,10 +28,10 @@ const navigation = [
 		icon: Trophy,
 	},
 	{
-		id: "forum",
-		label: "Forum",
-		href: "/forum",
-		icon: MessageSquare,
+		id: "writeups",
+		label: "Writeups",
+		href: "/writeups",
+		icon: BookOpen,
 	},
 	{
 		id: "weight-pool",
@@ -60,12 +60,12 @@ export function Header() {
 		<header className="sticky top-0 z-50 w-full border-b border-primary/30 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
 			<div className="container mx-auto px-4">
 				<div className="flex h-16 items-center justify-between">
-					<Link href="/" className="flex items-center space-x-2">
-						<div className="h-8 w-8 rounded-none bg-primary glow-text flex items-center justify-center text-black font-bold">
+					<Link href="/" className="flex items-center space-x-2 min-w-0">
+						<div className="h-8 w-8 rounded-none bg-primary glow-text flex items-center justify-center text-black font-bold flex-shrink-0">
 							[O]
 						</div>
-						<span className="text-xl font-bold font-mono glow-text">
-							&gt; OpenCTF
+						<span className="text-xl font-bold font-mono glow-text whitespace-nowrap">
+							<span className="hidden sm:inline">&gt; </span>OpenCTF
 						</span>
 					</Link>
 

@@ -19,8 +19,8 @@ import { Badge } from "@/components/ui/Badge";
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 import { MainLayout } from "@/components/layout/MainLayout";
 import { ContestCard } from "@/components/contests/ContestCard";
-import { getContests } from "@/api/contests";
-import { Contest, ContestStatus, ContestStatusType } from "@/types/api";
+import { getContests, Contest } from "@/api/contests";
+import { ContestStatus, ContestStatusType } from "@/types/api";
 import { clsx } from "clsx";
 
 const contestStatuses: {
@@ -106,7 +106,7 @@ const StatCard = ({
 );
 
 const ContestTableRow = ({ contest }: { contest: Contest }) => (
-	<tr className="border-b border-border/50 hover:bg-muted/20 transition-colors">
+	<tr className="border-b border-border/50 hover:bg-muted/20 transition-colors cursor-pointer" onClick={() => window.location.href = `/contests/${contest.id}`}>
 		<td className="p-4 font-mono">
 			<div>
 				<div className="font-bold text-foreground">
@@ -118,7 +118,7 @@ const ContestTableRow = ({ contest }: { contest: Contest }) => (
 			</div>
 		</td>
 		<td className="p-4 font-mono text-sm">
-			{new Date(contest.start).toLocaleDateString()}
+			{new Date(contest.startTime).toLocaleDateString()}
 		</td>
 		<td className="p-4 font-mono text-sm">
 			<div className="flex items-center gap-1">
@@ -126,38 +126,34 @@ const ContestTableRow = ({ contest }: { contest: Contest }) => (
 				<span
 					className={clsx(
 						"font-bold",
-						(contest.assignedWeightPoints || contest.assigned_weight_points) >= 80
+						(contest.weight || 0) >= 80
 							? "text-red-400"
-							: (contest.assignedWeightPoints || contest.assigned_weight_points) >= 50
+							: (contest.weight || 0) >= 50
 								? "text-yellow-400"
-								: (contest.assignedWeightPoints || contest.assigned_weight_points) >= 20
+								: (contest.weight || 0) >= 20
 									? "text-blue-400"
 									: "text-green-400"
 					)}
 				>
-					{contest.assignedWeightPoints || contest.assigned_weight_points}
+					{contest.weight || 0}
 				</span>
 			</div>
 		</td>
 		<td className="p-4">
-			{contest.averageRating &&
-			contest.totalRatings &&
-			contest.totalRatings > 0 ? (
+			{false ? (
 				<div className="flex items-center gap-1">
 					{Array.from({ length: 5 }).map((_, i) => (
 						<Star
 							key={i}
 							className={clsx(
 								"h-3 w-3",
-								i < Math.floor(contest.averageRating!)
+								i < Math.floor(0)
 									? "text-yellow-400 fill-current"
 									: "text-gray-600"
 							)}
 						/>
 					))}
-					<span className="text-xs text-muted-foreground ml-1">
-						({contest.averageRating.toFixed(1)})
-					</span>
+					<span className="text-xs text-muted-foreground ml-1">(0.0)</span>
 				</div>
 			) : (
 				<span className="text-xs text-muted-foreground">No ratings</span>
@@ -171,9 +167,9 @@ const ContestTableRow = ({ contest }: { contest: Contest }) => (
 		</td>
 		<td className="p-4">
 			<div className="flex items-center gap-2">
-				{contest.url && (
+				{contest.website && (
 					<a
-						href={contest.url}
+						href={contest.website}
 						target="_blank"
 						rel="noopener noreferrer"
 						className="p-1.5 rounded transition-colors hover:bg-primary/10 text-muted-foreground hover:text-primary"
@@ -193,12 +189,7 @@ const ContestTableRow = ({ contest }: { contest: Contest }) => (
 						</svg>
 					</a>
 				)}
-				<a
-					href={`/contests/${contest.id}`}
-					className="btn-terminal px-2 py-1 text-xs font-mono font-bold"
-				>
-					DETAILS
-				</a>
+
 			</div>
 		</td>
 	</tr>
@@ -220,9 +211,9 @@ export default function ContestsPage() {
 		const fetchContests = async () => {
 			try {
 				setIsLoading(true);
-				const response = await getContests({ limit: 50 });
-				setContests(response.items);
-				setFilteredContests(response.items);
+				const response = await getContests({}, 1, 50);
+				setContests(response.data?.contests || []);
+				setFilteredContests(response.data?.contests || []);
 			} catch (error) {
 				console.error("Error fetching contests:", error);
 			} finally {
@@ -257,25 +248,22 @@ export default function ContestsPage() {
 		// Rating filter
 		if (filters.minRating !== undefined) {
 			filtered = filtered.filter(
-				(contest) =>
-					contest.averageRating && contest.averageRating >= filters.minRating!
+				(_contest) => false // No rating system in current Contest interface
 			);
 		}
 
 		// Weight filter
 		if (filters.minWeight !== undefined && filters.maxWeight !== undefined) {
-			filtered = filtered.filter(
-				(contest) => {
-					const weight = contest.assignedWeightPoints || contest.assigned_weight_points;
-					return weight >= filters.minWeight! && weight <= filters.maxWeight!;
-				}
-			);
+			filtered = filtered.filter((contest) => {
+				const weight = contest.weight || 0;
+				return weight >= filters.minWeight! && weight <= filters.maxWeight!;
+			});
 		}
 
 		// Year filter
 		if (filters.year) {
 			filtered = filtered.filter(
-				(contest) => new Date(contest.start).getFullYear() === filters.year
+				(contest) => new Date(contest.startTime).getFullYear() === filters.year
 			);
 		}
 
@@ -309,7 +297,7 @@ export default function ContestsPage() {
 
 	// Group contests by status
 	const ongoingContests = filteredContests.filter(
-		(c) => c.status === "ongoing"
+		(c) => c.status === "live" // Contest interface uses 'live' not 'ongoing'
 	);
 	const upcomingContests = filteredContests.filter(
 		(c) => c.status === "upcoming"
@@ -321,7 +309,7 @@ export default function ContestsPage() {
 	// Stats
 	const stats = {
 		total: contests.length,
-		ongoing: contests.filter((c) => c.status === "ongoing").length,
+		ongoing: contests.filter((c) => c.status === "live").length, // Contest interface uses 'live'
 		upcoming: contests.filter((c) => c.status === "upcoming").length,
 		finished: contests.filter((c) => c.status === "finished").length,
 	};
@@ -558,7 +546,8 @@ export default function ContestsPage() {
 						) : (
 							<>
 								{/* Ongoing Contests */}
-								{(filters.status === "all" || filters.status === "ongoing") &&
+								{(filters.status === "all" ||
+									filters.status === ContestStatus.ONGOING) &&
 									ongoingContests.length > 0 && (
 										<motion.div
 											initial={{ opacity: 0, y: 20 }}

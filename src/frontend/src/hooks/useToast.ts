@@ -16,7 +16,7 @@ const useToastStore = create<ToastStore>()(
 		toasts: [],
 
 		addToast: (toast) => {
-			const id = Math.random().toString(36).substr(2, 9);
+			const id = Math.random().toString(36).substring(2, 11);
 			const newToast: Toast = { ...toast, id };
 
 			set((state) => ({

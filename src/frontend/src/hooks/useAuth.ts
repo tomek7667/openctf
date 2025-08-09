@@ -1,9 +1,17 @@
-import { useAuthStore } from '@/store/authStore';
-import { login, register, logout } from '@/api/auth';
-import type { LoginDto, RegisterDto } from '@/types/api';
+import { useAuthStore } from "@/store/authStore";
+import { login, register, logout } from "@/api/auth";
+import type { LoginDto, RegisterDto } from "@/types/api";
 
 export function useAuth() {
-	const { user, token, isAuthenticated, isLoading, setAuth, clearAuth, setLoading } = useAuthStore();
+	const {
+		user,
+		token,
+		isAuthenticated,
+		isLoading,
+		setAuth,
+		clearAuth,
+		setLoading,
+	} = useAuthStore();
 
 	const handleLogin = async (credentials: LoginDto) => {
 		setLoading(true);
@@ -37,7 +45,7 @@ export function useAuth() {
 			await logout();
 			clearAuth();
 		} catch (error) {
-			console.error('Logout failed:', error);
+			console.error("Logout failed:", error);
 		} finally {
 			setLoading(false);
 		}

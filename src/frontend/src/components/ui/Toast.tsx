@@ -42,6 +42,8 @@ const ToastComponent = ({ toast, onRemove }: ToastComponentProps) => {
 		if (duration === Infinity) return;
 
 		const startTime = Date.now();
+		let timeoutId: NodeJS.Timeout | null = null;
+
 		const interval = setInterval(() => {
 			const elapsed = Date.now() - startTime;
 			const remaining = Math.max(0, duration - elapsed);
@@ -49,12 +51,15 @@ const ToastComponent = ({ toast, onRemove }: ToastComponentProps) => {
 
 			if (remaining <= 0) {
 				setIsVisible(false);
-				setTimeout(() => onRemove(toast.id), 300);
+				timeoutId = setTimeout(() => onRemove(toast.id), 300);
 				clearInterval(interval);
 			}
 		}, 50);
 
-		return () => clearInterval(interval);
+		return () => {
+			clearInterval(interval);
+			if (timeoutId) clearTimeout(timeoutId);
+		};
 	}, [duration, toast.id, onRemove]);
 
 	const handleClose = () => {

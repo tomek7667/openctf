@@ -16,7 +16,6 @@ import {
 	Clock,
 	Users,
 	Trophy,
-	Star,
 	Shield,
 	ExternalLink,
 	Flag,
@@ -25,8 +24,8 @@ import {
 import { Badge } from "@/components/ui/Badge";
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 import { MainLayout } from "@/components/layout/MainLayout";
-import { getContest } from "@/api/contests";
-import { Contest, Place } from "@/types/api";
+import { getContest, Contest } from "@/api/contests";
+import { Place } from "@/types/api";
 import { clsx } from "clsx";
 
 const getStatusColor = (status: string) => {
@@ -49,34 +48,11 @@ const getWeightColor = (weight: number) => {
 	return "text-green-400";
 };
 
-const renderStars = (rating?: undefined | number) => {
-	if (!rating)
-		return (
-			<span className="text-muted-foreground text-sm">No ratings yet</span>
-		);
-	return (
-		<div className="flex items-center gap-1">
-			{Array.from({ length: 5 }).map((_, i) => (
-				<Star
-					key={i}
-					className={clsx(
-						"h-4 w-4",
-						i < Math.floor(rating)
-							? "text-yellow-400 fill-current"
-							: "text-gray-600"
-					)}
-				/>
-			))}
-			<span className="text-sm text-muted-foreground ml-1">
-				({rating.toFixed(1)})
-			</span>
-		</div>
-	);
-};
+
 
 // Mock places data - in real app this would come from API
-const getMockPlaces = (contestId: number): Place[] => {
-	if (contestId === 3 || contestId === 4) {
+const getMockPlaces = (contestId: string): Place[] => {
+	if (contestId === "contest-003" || contestId === "contest-004") {
 		// Only finished contests have places
 		return [
 			{
@@ -86,7 +62,7 @@ const getMockPlaces = (contestId: number): Place[] => {
 				ctftime_team_id: 12345,
 				contest_points: 5000,
 				openctf_points: 85,
-				associated_contest_id: contestId,
+				associated_contest_id: 1,
 				assigned_weight_points: 85,
 			},
 			{
@@ -96,44 +72,38 @@ const getMockPlaces = (contestId: number): Place[] => {
 				ctftime_team_id: 67890,
 				contest_points: 4750,
 				openctf_points: 80,
-				associated_contest_id: contestId,
+				associated_contest_id: 1,
 				assigned_weight_points: 80,
 			},
 			{
 				id: 3,
-				teamName: "cybersec masters",
+				team_name: "cybersec masters",
 				place: 3,
-				ctftimeTeamId: 11111,
-				contestPoints: 4200,
-				openctfPoints: 75,
-				associatedContestId: contestId,
-				assignedWeightPoints: 75,
-				createdAt: "2024-05-20T06:30:00Z",
-				updatedAt: "2024-05-20T06:30:00Z",
+				ctftime_team_id: 11111,
+				contest_points: 4200,
+				openctf_points: 75,
+				associated_contest_id: 1,
+				assigned_weight_points: 75,
 			},
 			{
 				id: 4,
-				teamName: "null pointer exception",
+				team_name: "null pointer exception",
 				place: 4,
-				ctftimeTeamId: 22222,
-				contestPoints: 3800,
-				openctfPoints: 70,
-				associatedContestId: contestId,
-				assignedWeightPoints: 70,
-				createdAt: "2024-05-20T06:30:00Z",
-				updatedAt: "2024-05-20T06:30:00Z",
+				ctftime_team_id: 22222,
+				contest_points: 3800,
+				openctf_points: 70,
+				associated_contest_id: 1,
+				assigned_weight_points: 70,
 			},
 			{
 				id: 5,
-				teamName: "the stack smashers",
+				team_name: "the stack smashers",
 				place: 5,
-				ctftimeTeamId: 33333,
-				contestPoints: 3400,
-				openctfPoints: 65,
-				associatedContestId: contestId,
-				assignedWeightPoints: 65,
-				createdAt: "2024-05-20T06:30:00Z",
-				updatedAt: "2024-05-20T06:30:00Z",
+				ctftime_team_id: 33333,
+				contest_points: 3400,
+				openctf_points: 65,
+				associated_contest_id: 1,
+				assigned_weight_points: 65,
 			},
 		] as Place[];
 	}
@@ -144,34 +114,49 @@ const PlaceRow = ({ place, index }: { place: Place; index: number }) => {
 	const getPlaceStyle = (position: number) => {
 		switch (position) {
 			case 1:
-				return "bg-gradient-to-r from-yellow-500/20 to-yellow-600/20 border-yellow-400/50";
+				return "bg-gradient-to-r from-yellow-500/30 to-orange-500/20 border-yellow-400 shadow-lg shadow-yellow-400/20 animate-pulse";
 			case 2:
-				return "bg-gradient-to-r from-gray-400/20 to-gray-500/20 border-gray-400/50";
+				return "bg-gradient-to-r from-gray-300/30 to-gray-500/20 border-gray-400 shadow-lg shadow-gray-400/20";
 			case 3:
-				return "bg-gradient-to-r from-amber-600/20 to-amber-700/20 border-amber-600/50";
+				return "bg-gradient-to-r from-amber-600/30 to-yellow-700/20 border-amber-600 shadow-lg shadow-amber-600/20";
 			default:
-				return "hover:bg-muted/20";
+				return "hover:bg-muted/20 border-border/50";
 		}
 	};
 
 	const getPlaceIcon = (position: number) => {
 		switch (position) {
 			case 1:
-				return <Trophy className="h-5 w-5 text-yellow-400" />;
+				return (
+					<div className="flex items-center gap-2">
+						<Trophy className="h-6 w-6 text-yellow-400 animate-bounce" />
+						<span className="text-yellow-400 font-bold text-lg glow-text">👑</span>
+					</div>
+				);
 			case 2:
 				return (
-					<div className="w-5 h-5 rounded-full bg-gray-300 flex items-center justify-center text-black font-bold text-xs">
-						2
+					<div className="flex items-center gap-2">
+						<div className="w-6 h-6 rounded-full bg-gray-300 flex items-center justify-center text-black font-bold text-sm glow-text">
+							2
+						</div>
+						<span className="text-gray-300 text-lg">🥈</span>
 					</div>
 				);
 			case 3:
 				return (
-					<div className="w-5 h-5 rounded-full bg-amber-600 flex items-center justify-center text-black font-bold text-xs">
-						3
+					<div className="flex items-center gap-2">
+						<div className="w-6 h-6 rounded-full bg-amber-600 flex items-center justify-center text-black font-bold text-sm glow-text">
+							3
+						</div>
+						<span className="text-amber-600 text-lg">🥉</span>
 					</div>
 				);
 			default:
-				return <span className="text-primary font-bold">#{position}</span>;
+				return (
+					<div className="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold text-xs">
+						{position}
+					</div>
+				);
 		}
 	};
 
@@ -180,32 +165,55 @@ const PlaceRow = ({ place, index }: { place: Place; index: number }) => {
 			initial={{ opacity: 0, x: -20 }}
 			animate={{ opacity: 1, x: 0 }}
 			transition={{ delay: index * 0.1 }}
+			onClick={() => {
+				window.location.href = `/teams/${place.team_name.toLowerCase().replace(/\s+/g, '-')}`;
+			}}
 			className={clsx(
-				"border-b border-border/50 transition-colors",
+				"border-b transition-all duration-300 cursor-pointer hover:bg-primary/5",
 				getPlaceStyle(place.place)
 			)}
 		>
-			<td className="p-4">
+			<td className="p-3">
 				<div className="flex items-center gap-3">
 					{getPlaceIcon(place.place)}
-					<span className="font-mono font-bold">{place.place}</span>
+					<span className={clsx(
+						"font-mono font-bold text-sm",
+						place.place <= 3 ? "text-foreground" : "text-primary"
+					)}>
+						#{place.place}
+					</span>
 				</div>
 			</td>
-			<td className="p-4">
-				<div className="font-mono font-bold text-foreground">
-					{place.team_name}
-				</div>
-				{place.ctftime_team_id && (
-					<div className="text-xs text-muted-foreground">
-						CTFtime ID: {place.ctftime_team_id}
+			<td className="p-3">
+				<div>
+					<div className={clsx(
+						"font-mono font-bold text-sm",
+						place.place === 1 ? "text-yellow-400 glow-text" :
+						place.place === 2 ? "text-gray-300" :
+						place.place === 3 ? "text-amber-600" : "text-foreground"
+					)}>
+						{place.team_name}
+						{place.place === 1 && <span className="ml-2 text-xs animate-pulse">[CHAMPION]</span>}
+						{place.place === 2 && <span className="ml-2 text-xs">[RUNNER-UP]</span>}
+						{place.place === 3 && <span className="ml-2 text-xs">[THIRD]</span>}
 					</div>
-				)}
+					{place.ctftime_team_id && (
+						<div className="text-xs text-muted-foreground font-mono">
+							CTFtime: {place.ctftime_team_id}
+						</div>
+					)}
+				</div>
 			</td>
-			<td className="p-4 font-mono text-right">
-				{place.contest_points?.toFixed(0) || 0}
+			<td className="p-3 font-mono text-xs font-bold text-right">
+				{place.contest_points?.toLocaleString() || 0}
 			</td>
-			<td className="p-4 font-mono text-right">
-				<span className="text-primary font-bold">
+			<td className="p-3 font-mono text-xs text-right">
+				<span className={clsx(
+					"font-bold",
+					place.place === 1 ? "text-yellow-400 glow-text" :
+					place.place === 2 ? "text-gray-300" :
+					place.place === 3 ? "text-amber-600" : "text-primary"
+				)}>
 					{place.openctf_points?.toFixed(1) || 0}
 				</span>
 			</td>
@@ -215,7 +223,7 @@ const PlaceRow = ({ place, index }: { place: Place; index: number }) => {
 
 export default function ContestDetailsPage() {
 	const params = useParams();
-	const contestId = parseInt(params.id as string);
+	const contestId = params.id as string;
 
 	const [contest, setContest] = useState<Contest | null>(null);
 	const [places, setPlaces] = useState<Place[]>([]);
@@ -226,13 +234,15 @@ export default function ContestDetailsPage() {
 			try {
 				setIsLoading(true);
 				// Get contest details
-				const contestData = await getContest(contestId);
-				setContest(contestData);
+				const contestResponse = await getContest(contestId);
+				if (contestResponse.success && contestResponse.data) {
+					setContest(contestResponse.data);
 
-				// Get places for finished contests
-				if (contestData.status === "finished") {
-					const placesData = getMockPlaces(contestId);
-					setPlaces(placesData);
+					// Get places for finished contests
+					if (contestResponse.data.status === "finished") {
+						const placesData = getMockPlaces(contestId);
+						setPlaces(placesData);
+					}
 				}
 			} catch (error) {
 				console.error("Error fetching contest details:", error);
@@ -284,8 +294,8 @@ export default function ContestDetailsPage() {
 	};
 
 	const getDuration = () => {
-		const start = parseISO(contest.start);
-		const end = parseISO(contest.end);
+		const start = parseISO(contest.startTime);
+		const end = parseISO(contest.endTime);
 		const duration = intervalToDuration({ start, end });
 
 		if (duration.days) {
@@ -296,15 +306,15 @@ export default function ContestDetailsPage() {
 
 	const getTimeStatus = () => {
 		// const now = new Date();
-		const start = parseISO(contest.start);
-		const end = parseISO(contest.end);
+		const start = parseISO(contest.startTime);
+		const end = parseISO(contest.endTime);
 
 		if (contest.status === "upcoming") {
 			return {
 				label: `Starts ${formatDistanceToNow(start, { addSuffix: true })}`,
 				color: "text-blue-400",
 			};
-		} else if (contest.status === "ongoing") {
+		} else if (contest.status === "live") {
 			return {
 				label: `Ends ${formatDistanceToNow(end, { addSuffix: true })}`,
 				color: "text-green-400",
@@ -352,7 +362,7 @@ export default function ContestDetailsPage() {
 												getStatusColor(contest.status || "unknown")
 											)}
 										>
-											{contest.status === "ongoing" && (
+											{contest.status === "live" && (
 												<Target className="h-4 w-4" />
 											)}
 											{contest.status === "upcoming" && (
@@ -363,11 +373,13 @@ export default function ContestDetailsPage() {
 											)}
 											{(contest.status || "unknown").toUpperCase()}
 										</div>
-										{contest.ctftime_id && (
-											<Badge variant="outline" className="font-mono">
-												<Flag className="h-3 w-3 mr-1" />
-												CTFtime
-											</Badge>
+										{contest.ctftimeId && (
+											<a href={`https://ctftime.org/event/${contest.ctftimeId}`} target="_blank" rel="noopener noreferrer">
+												<Badge variant="outline" className="font-mono cursor-pointer hover:bg-primary/10">
+													<Flag className="h-3 w-3 mr-1" />
+													CTFtime
+												</Badge>
+											</a>
 										)}
 									</div>
 
@@ -390,25 +402,32 @@ export default function ContestDetailsPage() {
 								</div>
 
 								{/* Additional Details */}
-								{(contest.rules || contest.prizes) && (
+								{(contest.rulesUrl || contest.prizes.length > 0) && (
 									<div className="space-y-4">
-										{contest.rules && (
+										{contest.rulesUrl && (
 											<div>
 												<h3 className="font-bold font-mono text-primary mb-2">
 													&gt; RULES
 												</h3>
-												<p className="text-muted-foreground">{contest.rules}</p>
+												<a href={contest.rulesUrl} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
+													View Contest Rules
+												</a>
 											</div>
 										)}
 
-										{contest.prizes && (
+										{contest.prizes.length > 0 && (
 											<div>
 												<h3 className="font-bold font-mono text-primary mb-2">
 													&gt; PRIZES
 												</h3>
-												<p className="text-muted-foreground">
-													{contest.prizes}
-												</p>
+												<div className="space-y-2">
+													{contest.prizes.slice(0, 3).map((prize, index) => (
+														<div key={index} className="text-muted-foreground text-sm">
+															{prize.rank}. {prize.description}
+															{prize.value && prize.currency && ` - ${prize.value} ${prize.currency}`}
+														</div>
+													))}
+												</div>
 											</div>
 										)}
 									</div>
@@ -429,7 +448,7 @@ export default function ContestDetailsPage() {
 												<span className="text-sm">Start Date</span>
 											</div>
 											<div className="font-mono text-sm">
-												{formatContestDate(contest.start)}
+												{formatContestDate(contest.startTime)}
 											</div>
 										</div>
 
@@ -459,38 +478,25 @@ export default function ContestDetailsPage() {
 											<div
 												className={clsx(
 													"font-mono font-bold",
-													getWeightColor(contest.assignedWeightPoints || contest.assigned_weight_points)
+													getWeightColor(contest.weight || 0)
 												)}
 											>
-												{contest.assignedWeightPoints || contest.assigned_weight_points} pts
+												{contest.weight || 0} pts
 											</div>
 										</div>
 
-										{contest.averageRating &&
-											contest.totalRatings &&
-											contest.totalRatings > 0 && (
-												<div>
-													<div className="flex items-center gap-2 text-muted-foreground mb-1">
-														<Star className="h-4 w-4" />
-														<span className="text-sm">Quality Rating</span>
-													</div>
-													{renderStars(contest.averageRating)}
-													<div className="text-xs text-muted-foreground mt-1">
-														Based on {contest.totalRatings} ratings
-													</div>
-												</div>
-											)}
 
-										{contest.url && (
-											<div className="pt-2">
+
+										{contest.website && (
+											<div className="pt-4">
 												<a
-													href={contest.url}
+													href={contest.website}
 													target="_blank"
 													rel="noopener noreferrer"
-													className="btn-terminal w-full justify-center"
+													className="w-full bg-primary hover:bg-primary/80 text-primary-foreground px-4 py-2 rounded font-mono font-bold text-sm transition-colors flex items-center justify-center gap-2"
 												>
-													<ExternalLink className="h-4 w-4 mr-2" />
-													VISIT_CONTEST
+													<ExternalLink className="h-4 w-4" />
+													VISIT CONTEST
 												</a>
 											</div>
 										)}
@@ -518,20 +524,28 @@ export default function ContestDetailsPage() {
 								</div>
 
 								<div className="bg-card/30 rounded-none hacker-border overflow-hidden">
+									<div className="p-3 bg-muted/50 border-b border-border">
+										<div className="flex items-center gap-2">
+											<Trophy className="h-4 w-4 text-yellow-400" />
+											<h3 className="text-sm font-bold font-mono text-yellow-400">
+												FINAL STANDINGS ({places.length})
+											</h3>
+										</div>
+									</div>
 									<div className="overflow-x-auto">
 										<table className="w-full">
-											<thead className="bg-muted/50">
-												<tr className="border-b border-border">
-													<th className="p-4 text-left font-mono text-sm font-bold">
+											<thead className="bg-muted/30">
+												<tr className="border-b border-border/50">
+													<th className="p-3 text-left font-mono text-xs font-bold">
 														Rank
 													</th>
-													<th className="p-4 text-left font-mono text-sm font-bold">
-														Team Name
+													<th className="p-3 text-left font-mono text-xs font-bold">
+														Team
 													</th>
-													<th className="p-4 text-right font-mono text-sm font-bold">
+													<th className="p-3 text-right font-mono text-xs font-bold">
 														Contest Points
 													</th>
-													<th className="p-4 text-right font-mono text-sm font-bold">
+													<th className="p-3 text-right font-mono text-xs font-bold">
 														OpenCTF Points
 													</th>
 												</tr>
@@ -564,7 +578,7 @@ export default function ContestDetailsPage() {
 								<p className="text-yellow-400">
 									{contest.status === "upcoming" &&
 										"// Leaderboard will be available when contest starts"}
-									{contest.status === "ongoing" &&
+									{contest.status === "live" &&
 										"// Live leaderboard coming soon"}
 									{contest.status === "cancelled" &&
 										"// Contest was cancelled - no leaderboard available"}

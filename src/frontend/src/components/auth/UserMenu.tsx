@@ -76,6 +76,15 @@ export function UserMenu() {
 								</div>
 
 								<div className="border-t border-border/50 pt-3 space-y-1">
+									<a
+										href="/profile"
+										className="w-full flex items-center gap-3 p-2 rounded transition-colors hover:bg-primary/10 text-left font-mono text-sm"
+										onClick={() => setIsOpen(false)}
+									>
+										<User className="h-4 w-4 text-muted-foreground" />
+										<span className="text-muted-foreground">&gt; Profile</span>
+									</a>
+
 									<button className="w-full flex items-center gap-3 p-2 rounded transition-colors hover:bg-primary/10 text-left font-mono text-sm">
 										<Settings className="h-4 w-4 text-muted-foreground" />
 										<span className="text-muted-foreground">&gt; Settings</span>

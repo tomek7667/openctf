@@ -10,6 +10,7 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { NoSSR } from "@/components/ui/NoSSR";
 import {
 	Shield,
 	Users,
@@ -90,7 +91,7 @@ const StatCard = ({
 	<motion.div
 		initial={{ opacity: 0, y: 20 }}
 		animate={{ opacity: 1, y: 0 }}
-		className="text-center p-6 bg-card/50 backdrop-blur-sm rounded-none hacker-border"
+		className="text-center p-6 bg-card/50 backdrop-blur-sm rounded-none hacker-border mt-2"
 	>
 		<div className="flex justify-center mb-3">
 			<div className="p-3 bg-primary/10 rounded-full">
@@ -119,44 +120,32 @@ const StatCard = ({
 );
 
 export default function HomePage() {
-	console.log("🏠 HomePage render");
 
 	const [stats, setStats] = useState<PlatformStats | null>(null);
 	const [isLoading, setIsLoading] = useState(true);
 
 	useEffect(() => {
-		console.log("📊 useEffect triggered");
 		let mounted = true;
 
 		const fetchStats = async () => {
-			console.log("🔄 fetchStats started");
 			try {
 				if (!mounted) {
-					console.log("❌ Component unmounted, aborting");
 					return;
 				}
-				console.log("⏳ Setting loading true");
 				setIsLoading(true);
-				console.log("🌐 Calling statsApi.getPlatformStats()");
 				const data = await getPlatformStats();
 				if (!mounted) {
-					console.log("❌ Component unmounted after API call");
 					return;
 				}
-				console.log("✅ Stats received:", data);
 				setStats(data);
 			} catch (error) {
 				if (!mounted) {
-					console.log("❌ Component unmounted in catch");
 					return;
 				}
-				console.error("💥 Error fetching platform stats:", error);
 			} finally {
 				if (mounted) {
-					console.log("🏁 Setting loading false");
 					setIsLoading(false);
 				} else {
-					console.log("❌ Component unmounted in finally");
 				}
 			}
 		};
@@ -164,7 +153,6 @@ export default function HomePage() {
 		fetchStats();
 
 		return () => {
-			console.log("🧹 useEffect cleanup");
 			mounted = false;
 		};
 	}, []);
@@ -205,6 +193,7 @@ export default function HomePage() {
 	];
 
 	return (
+		<NoSSR fallback={<div className="min-h-screen bg-background flex items-center justify-center"><div className="text-primary font-mono">Loading...</div></div>}>
 		<div className="relative min-h-screen">
 			{/* Hero Section */}
 			<section className="relative py-24 px-4 overflow-hidden">
@@ -346,7 +335,7 @@ export default function HomePage() {
 						</p>
 					</motion.div>
 
-					<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+					<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 py-4">
 						{features.map((feature, index) => (
 							<motion.div
 								key={feature.title}
@@ -409,5 +398,6 @@ export default function HomePage() {
 				</div>
 			</section>
 		</div>
+		</NoSSR>
 	);
 }

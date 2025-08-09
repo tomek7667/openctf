@@ -180,7 +180,10 @@ const TeamRow = ({ team, index }: { team: TeamData; index: number }) => (
 		initial={{ opacity: 0, x: -20 }}
 		animate={{ opacity: 1, x: 0 }}
 		transition={{ delay: index * 0.1 }}
-		className={`p-4 mb-2 rounded-none border transition-all duration-300 hover:scale-[1.02] font-mono ${getPlaceStyle(team.place)}`}
+		onClick={() => {
+			window.location.href = `/teams/${team.name.toLowerCase().replace(/\s+/g, '-')}`;
+		}}
+		className={`p-4 mb-2 rounded-none border transition-all duration-300 hover:scale-[1.01] cursor-pointer font-mono ${getPlaceStyle(team.place)}`}
 	>
 		<div className="flex items-center justify-between">
 			<div className="flex items-center space-x-4">

@@ -89,11 +89,16 @@ export enum ContestStatus {
 	CANCELLED = "cancelled",
 }
 
-export type ContestStatusType = ContestStatus.UPCOMING | ContestStatus.ONGOING | ContestStatus.FINISHED | ContestStatus.CANCELLED;
+export type ContestStatusType =
+	| ContestStatus.UPCOMING
+	| ContestStatus.ONGOING
+	| ContestStatus.FINISHED
+	| ContestStatus.CANCELLED;
 
 export interface ApiResponse<T = unknown> {
 	success: boolean;
 	message?: string;
+	error?: string;
 	data?: T;
 }
 

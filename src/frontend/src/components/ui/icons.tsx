@@ -531,6 +531,151 @@ export const MapPin = createIcon(
 	</>
 );
 
+// New icons for writeups
+export const BookOpen = createIcon(
+	"BookOpen",
+	<>
+		<path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
+		<path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
+	</>
+);
+
+export const Edit = createIcon(
+	"Edit",
+	<>
+		<path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+		<path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4Z" />
+	</>
+);
+
+export const Save = createIcon(
+	"Save",
+	<>
+		<path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
+		<polyline points="17,21 17,13 7,13 7,21" />
+		<polyline points="7,3 7,8 15,8" />
+	</>
+);
+
+export const Terminal = createIcon(
+	"Terminal",
+	<>
+		<polyline points="4,17 10,11 4,5" />
+		<line x1="12" x2="20" y1="19" y2="19" />
+	</>
+);
+
+export const Code = createIcon(
+	"Code",
+	<>
+		<polyline points="16,18 22,12 16,6" />
+		<polyline points="8,6 2,12 8,18" />
+	</>
+);
+
+export const Zap = createIcon(
+	"Zap",
+	<polygon points="13,2 3,14 12,14 11,22 21,10 12,10" />
+);
+
+export const Cpu = createIcon(
+	"Cpu",
+	<>
+		<rect x="4" y="4" width="16" height="16" rx="2" />
+		<rect x="9" y="9" width="6" height="6" />
+		<path d="M9 1v3" />
+		<path d="M15 1v3" />
+		<path d="M9 20v3" />
+		<path d="M15 20v3" />
+		<path d="M20 9h3" />
+		<path d="M20 14h3" />
+		<path d="M1 9h3" />
+		<path d="M1 14h3" />
+	</>
+);
+
+export const Award = createIcon(
+	"Award",
+	<>
+		<circle cx="12" cy="8" r="6" />
+		<path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11" />
+	</>
+);
+
+export const PlusCircle = createIcon(
+	"PlusCircle",
+	<>
+		<circle cx="12" cy="12" r="10" />
+		<path d="M8 12h8" />
+		<path d="M12 8v8" />
+	</>
+);
+
+export const ThumbsUp = createIcon(
+	"ThumbsUp",
+	<>
+		<path d="M7 10v12" />
+		<path d="M15 5.88 14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h2.76a2 2 0 0 0 1.79-1.11L12 2h0a3.13 3.13 0 0 1 3 3.88Z" />
+	</>
+);
+
+export const ThumbsDown = createIcon(
+	"ThumbsDown",
+	<>
+		<path d="M17 14V2" />
+		<path d="M9 18.12 10 14H4.17a2 2 0 0 1-1.92-2.56l2.33-8A2 2 0 0 1 6.5 2H20a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-2.76a2 2 0 0 0-1.79 1.11L12 22h0a3.13 3.13 0 0 1-3-3.88Z" />
+	</>
+);
+
+export const Copy = createIcon(
+	"Copy",
+	<>
+		<rect width="14" height="14" x="8" y="8" rx="2" ry="2" />
+		<path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" />
+	</>
+);
+
+export const Send = createIcon(
+	"Send",
+	<path d="M9.912 11.025 21 2l-8.975 12.088a1 1 0 0 1-.755.427H8a1 1 0 0 1-1-1V9.73a1 1 0 0 1 .438-.83Z" />
+);
+
+export const HelpCircle = createIcon(
+	"HelpCircle",
+	<>
+		<circle cx="12" cy="12" r="10" />
+		<path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+		<path d="M12 17h.01" />
+	</>
+);
+
+export const Trash2 = createIcon(
+	"Trash2",
+	<>
+		<path d="M3 6h18" />
+		<path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
+		<path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
+		<line x1="10" x2="10" y1="11" y2="17" />
+		<line x1="14" x2="14" y1="11" y2="17" />
+	</>
+);
+
+export const Github = createIcon(
+	"Github",
+	<>
+		<path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5 0-1.2-.5-2.4-1.3-3.4.1-.4.1-1.2-.1-2.1 0 0-1.1 0-3.5 1.3a12.3 12.3 0 0 0-6.2 0C6.5 7.8 5.4 7.8 5.4 7.8c-.2.9-.2 1.7-.1 2.1C4.5 10.9 4 12.1 4 13.3c0 3.5 3 5.5 6 5.5-.4.4-.7 1.1-1 1.8-.3.1-.7.1-1.1 0-.5-.1-1-.5-1.4-1.1-.4-.6-.9-.9-1.5-.9-.3 0-.1.2.1.3.3.1.6.4.8.8.2.4.6.7 1.1.8.3.1.6.1.9 0V22" />
+	</>
+);
+
+export const Linkedin = createIcon(
+	"Linkedin",
+	<>
+		<path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
+		<rect width="4" height="12" x="2" y="9" />
+		<circle cx="4" cy="4" r="2" />
+	</>
+);
+
 // Create compound icons for specific use cases
 export const LoadingSpinner = createIcon(
 	"LoadingSpinner",
@@ -624,6 +769,25 @@ export const Icons = {
 	Home,
 	Globe,
 	MapPin,
+
+	// Content & Writing
+	BookOpen,
+	Edit,
+	Save,
+	Terminal,
+	Code,
+	Zap,
+	Cpu,
+	Award,
+	PlusCircle,
+	ThumbsUp,
+	ThumbsDown,
+	Copy,
+	Send,
+	HelpCircle,
+	Trash2,
+	Github,
+	Linkedin,
 } as const;
 
 export default Icons;
