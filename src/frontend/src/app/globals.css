@@ -256,13 +256,14 @@
 
 	/* Hacker card hover effects */
 	.card-hover {
-		@apply transition-all duration-200 hover:border-primary/50 hover:-translate-y-1;
+		@apply transition-all duration-200 hover:border-primary/50;
 		transition:
 			all 0.2s ease,
 			box-shadow 0.2s ease;
 	}
 
 	.card-hover:hover {
+		transform: translateY(-2px);
 		box-shadow:
 			0 0 20px rgba(0, 255, 255, 0.2),
 			0 10px 40px rgba(0, 0, 0, 0.3);
