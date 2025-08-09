@@ -494,7 +494,7 @@ export default function WriteupDetailPage() {
 
   return (
     <MainLayout>
-      <div className="min-h-screen bg-background relative">
+      <div className="min-h-screen relative">
         
         <div className="container mx-auto px-4 py-8 relative z-10">
           {/* Header */}
@@ -611,7 +611,7 @@ export default function WriteupDetailPage() {
                           <Trophy className="h-4 w-4 text-gray-400" />
                           <button 
                             onClick={handleContestClick}
-                            className="font-mono text-gray-400 text-sm hover:text-green-400 transition-colors cursor-pointer"
+                            className="font-mono text-lime-400 underline text-sm hover:text-lime-300 transition-colors cursor-pointer"
                           >
                             {writeup.contestName}
                           </button>
