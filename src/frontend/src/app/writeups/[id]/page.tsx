@@ -378,7 +378,8 @@ export default function WriteupDetailPage() {
                   {isAuthenticated && user?.id?.toString() === writeup.authorId && (
                     <Button
                       onClick={() => router.push(`/writeups/${writeup.id}/edit`)}
-                      className="font-mono bg-blue-500 hover:bg-blue-600 text-white"
+                      variant="outline"
+                      className="font-mono border-green-500/50 text-green-400 hover:bg-green-500/10"
                     >
                       <Edit className="h-4 w-4 mr-2" />
                       EDIT
