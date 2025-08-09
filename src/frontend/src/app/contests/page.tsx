@@ -10,7 +10,6 @@ import {
 	Clock,
 	Users,
 	Target,
-
 	Shield,
 } from "@/components/ui/icons";
 import { Input } from "@/components/ui/Input";
@@ -65,10 +64,11 @@ interface ContestFilters {
 	year?: undefined | number;
 }
 
-
-
 const ContestTableRow = ({ contest }: { contest: Contest }) => (
-	<tr className="border-b border-border/50 hover:bg-muted/20 transition-colors cursor-pointer" onClick={() => window.location.href = `/contests/${contest.id}`}>
+	<tr
+		className="border-b border-border/50 hover:bg-muted/20 transition-colors cursor-pointer"
+		onClick={() => (window.location.href = `/contests/${contest.id}`)}
+	>
 		<td className="p-4 font-mono">
 			<div>
 				<div className="font-bold text-foreground">
@@ -80,16 +80,22 @@ const ContestTableRow = ({ contest }: { contest: Contest }) => (
 			</div>
 		</td>
 		<td className="p-4 font-mono text-xs">
-			{new Date(contest.startTime).toLocaleDateString()}<br/>
-			{new Date(contest.startTime).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+			{new Date(contest.startTime).toLocaleDateString()}
+			<br />
+			{new Date(contest.startTime).toLocaleTimeString([], {
+				hour: "2-digit",
+				minute: "2-digit",
+			})}
 		</td>
 		<td className="p-4 font-mono text-xs">
-			{new Date(contest.endTime).toLocaleDateString()}<br/>
-			{new Date(contest.endTime).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+			{new Date(contest.endTime).toLocaleDateString()}
+			<br />
+			{new Date(contest.endTime).toLocaleTimeString([], {
+				hour: "2-digit",
+				minute: "2-digit",
+			})}
 		</td>
-		<td className="p-4 font-mono text-xs">
-			{contest.duration}h
-		</td>
+		<td className="p-4 font-mono text-xs">{contest.duration}h</td>
 		<td className="p-4 font-mono text-sm">
 			<div className="flex items-center gap-1">
 				<Shield className="h-4 w-4 text-muted-foreground" />
@@ -126,8 +132,6 @@ export default function ContestsPage() {
 		search: "",
 		status: "all",
 	});
-
-	console.log("this is fetch");
 
 	// Fetch contests on mount
 	useEffect(() => {
@@ -223,7 +227,10 @@ export default function ContestsPage() {
 		const itemsPerPage = 6;
 		const totalPages = Math.ceil(contests.length / itemsPerPage);
 		const startIndex = (currentPage - 1) * itemsPerPage;
-		const currentContests = contests.slice(startIndex, startIndex + itemsPerPage);
+		const currentContests = contests.slice(
+			startIndex,
+			startIndex + itemsPerPage
+		);
 
 		return (
 			<motion.div
@@ -239,11 +246,7 @@ export default function ContestsPage() {
 				</div>
 				<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 					{currentContests.map((contest, index) => (
-						<ContestCard
-							key={contest.id}
-							contest={contest}
-							index={index}
-						/>
+						<ContestCard key={contest.id} contest={contest} index={index} />
 					))}
 				</div>
 				{totalPages > 1 && (
@@ -258,7 +261,8 @@ export default function ContestsPage() {
 							&lt;
 						</Button>
 						{Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
-							const pageNum = Math.max(1, Math.min(totalPages - 4, currentPage - 2)) + i;
+							const pageNum =
+								Math.max(1, Math.min(totalPages - 4, currentPage - 2)) + i;
 							return (
 								<Button
 									key={pageNum}
@@ -291,7 +295,10 @@ export default function ContestsPage() {
 		const itemsPerPage = 6;
 		const totalPages = Math.ceil(contests.length / itemsPerPage);
 		const startIndex = (currentPage - 1) * itemsPerPage;
-		const currentContests = contests.slice(startIndex, startIndex + itemsPerPage);
+		const currentContests = contests.slice(
+			startIndex,
+			startIndex + itemsPerPage
+		);
 
 		return (
 			<motion.div
@@ -308,11 +315,7 @@ export default function ContestsPage() {
 				</div>
 				<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 					{currentContests.map((contest, index) => (
-						<ContestCard
-							key={contest.id}
-							contest={contest}
-							index={index}
-						/>
+						<ContestCard key={contest.id} contest={contest} index={index} />
 					))}
 				</div>
 				{totalPages > 1 && (
@@ -327,7 +330,8 @@ export default function ContestsPage() {
 							&lt;
 						</Button>
 						{Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
-							const pageNum = Math.max(1, Math.min(totalPages - 4, currentPage - 2)) + i;
+							const pageNum =
+								Math.max(1, Math.min(totalPages - 4, currentPage - 2)) + i;
 							return (
 								<Button
 									key={pageNum}
@@ -360,19 +364,26 @@ export default function ContestsPage() {
 		const itemsPerPage = 20;
 		const totalPages = Math.ceil(contests.length / itemsPerPage);
 		const startIndex = (currentPage - 1) * itemsPerPage;
-		const currentContests = contests.slice(startIndex, startIndex + itemsPerPage);
+		const currentContests = contests.slice(
+			startIndex,
+			startIndex + itemsPerPage
+		);
 
 		const getVisiblePages = () => {
 			const delta = 2;
 			const range = [];
 			const rangeWithDots = [];
 
-			for (let i = Math.max(2, currentPage - delta); i <= Math.min(totalPages - 1, currentPage + delta); i++) {
+			for (
+				let i = Math.max(2, currentPage - delta);
+				i <= Math.min(totalPages - 1, currentPage + delta);
+				i++
+			) {
 				range.push(i);
 			}
 
 			if (currentPage - delta > 2) {
-				rangeWithDots.push(1, '...');
+				rangeWithDots.push(1, "...");
 			} else {
 				rangeWithDots.push(1);
 			}
@@ -380,7 +391,7 @@ export default function ContestsPage() {
 			rangeWithDots.push(...range);
 
 			if (currentPage + delta < totalPages - 1) {
-				rangeWithDots.push('...', totalPages);
+				rangeWithDots.push("...", totalPages);
 			} else if (totalPages > 1) {
 				rangeWithDots.push(totalPages);
 			}
@@ -406,12 +417,24 @@ export default function ContestsPage() {
 						<table className="w-full">
 							<thead className="bg-muted/50">
 								<tr className="border-b border-border">
-									<th className="p-4 text-left font-mono text-sm font-bold">Contest</th>
-									<th className="p-4 text-left font-mono text-sm font-bold">Start</th>
-									<th className="p-4 text-left font-mono text-sm font-bold">End</th>
-									<th className="p-4 text-left font-mono text-sm font-bold">Duration</th>
-									<th className="p-4 text-left font-mono text-sm font-bold">Weight</th>
-									<th className="p-4 text-left font-mono text-sm font-bold">Teams</th>
+									<th className="p-4 text-left font-mono text-sm font-bold">
+										Contest
+									</th>
+									<th className="p-4 text-left font-mono text-sm font-bold">
+										Start
+									</th>
+									<th className="p-4 text-left font-mono text-sm font-bold">
+										End
+									</th>
+									<th className="p-4 text-left font-mono text-sm font-bold">
+										Duration
+									</th>
+									<th className="p-4 text-left font-mono text-sm font-bold">
+										Weight
+									</th>
+									<th className="p-4 text-left font-mono text-sm font-bold">
+										Teams
+									</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -444,9 +467,14 @@ export default function ContestsPage() {
 								</Button>
 							</div>
 							<div className="flex items-center gap-1">
-								{getVisiblePages().map((page, index) => (
-									page === '...' ? (
-										<span key={`dots-${index}`} className="px-2 font-mono text-muted-foreground">...</span>
+								{getVisiblePages().map((page, index) =>
+									page === "..." ? (
+										<span
+											key={`dots-${index}`}
+											className="px-2 font-mono text-muted-foreground"
+										>
+											...
+										</span>
 									) : (
 										<Button
 											key={page}
@@ -458,7 +486,7 @@ export default function ContestsPage() {
 											{page}
 										</Button>
 									)
-								))}
+								)}
 							</div>
 							<div className="flex items-center gap-2">
 								<Button
@@ -480,7 +508,9 @@ export default function ContestsPage() {
 									&gt;&gt;
 								</Button>
 								<span className="text-sm text-muted-foreground font-mono ml-2">
-									{startIndex + 1}-{Math.min(startIndex + itemsPerPage, contests.length)} of {contests.length}
+									{startIndex + 1}-
+									{Math.min(startIndex + itemsPerPage, contests.length)} of{" "}
+									{contests.length}
 								</span>
 							</div>
 						</div>

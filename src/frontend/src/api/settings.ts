@@ -1,0 +1,58 @@
+import { sleep } from "@/lib/utils";
+
+export interface PasswordChangeDto {
+	currentPassword: string;
+	newPassword: string;
+	confirmPassword: string;
+}
+
+export interface NotificationSettings {
+	email: boolean;
+	browser: boolean;
+	contests: boolean;
+	writeups: boolean;
+}
+
+export interface PrivacySettings {
+	profilePublic: boolean;
+	showEmail: boolean;
+	showLocation: boolean;
+}
+
+export interface ConnectionSettings {
+	github: string;
+	ctftime: string;
+	discord: string;
+}
+
+export const changePassword = async (data: PasswordChangeDto): Promise<{ success: boolean; message: string }> => {
+	await sleep(1000);
+	if (data.newPassword !== data.confirmPassword) {
+		return { success: false, message: "Passwords do not match" };
+	}
+	return { success: true, message: "Password updated successfully" };
+};
+
+export const updateNotifications = async (_settings: NotificationSettings): Promise<{ success: boolean; message: string }> => {
+	await sleep(800);
+	return { success: true, message: "Notification settings updated" };
+};
+
+export const updatePrivacy = async (_settings: PrivacySettings): Promise<{ success: boolean; message: string }> => {
+	await sleep(800);
+	return { success: true, message: "Privacy settings updated" };
+};
+
+export const updateConnections = async (_connections: ConnectionSettings): Promise<{ success: boolean; message: string }> => {
+	await sleep(1000);
+	return { success: true, message: "Connected services updated" };
+};
+
+export const connectGithub = async (): Promise<{ success: boolean; url?: string; message: string }> => {
+	await sleep(500);
+	return { 
+		success: true, 
+		url: "https://github.com/login/oauth/authorize?client_id=mock",
+		message: "Redirecting to GitHub..." 
+	};
+};

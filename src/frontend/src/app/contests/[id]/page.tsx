@@ -26,11 +26,13 @@ import {
 	Eye,
 	Heart,
 } from "@/components/ui/icons";
+import { TwitterShareButton } from "@/components/ui/TwitterShareButton";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 import { MainLayout } from "@/components/layout/MainLayout";
 import { getContest, Contest, getLiveLeaderboard, LiveLeaderboard } from "@/api/contests";
+import { getUserTeams } from "@/api/teams";
 
 import { useAuth } from "@/hooks/useAuth";
 import { clsx } from "clsx";
@@ -65,7 +67,13 @@ interface Place {
 	ctftimeId: number;
 }
 
-function PlaceRow({ place, index }: { place: Place; index: number }) {
+function PlaceRow({ place, index, contestName, userTeam, isCaptain }: { 
+	place: Place; 
+	index: number;
+	contestName: string;
+	userTeam?: string | undefined;
+	isCaptain?: boolean;
+}) {
 	const getRowStyle = (rank: number) => {
 		if (rank === 1) return "bg-gradient-to-r from-yellow-500/30 to-orange-500/20 border-yellow-400 shadow-lg shadow-yellow-400/20";
 		if (rank === 2) return "bg-gradient-to-r from-gray-300/30 to-gray-500/20 border-gray-400 shadow-lg shadow-gray-400/20";
@@ -159,9 +167,19 @@ function PlaceRow({ place, index }: { place: Place; index: number }) {
 				</Link>
 			</td>
 			<td className="p-3 font-mono text-lg text-right">
-				<Link href={`/teams/${place.teamName.toLowerCase().replace(/\s+/g, '-')}`} className="block cursor-pointer">
-					<span className={getPointsColor(place.rank)}>{place.openctfPoints}</span>
-				</Link>
+				<div className="flex items-center justify-end gap-2">
+					<Link href={`/teams/${place.teamName.toLowerCase().replace(/\s+/g, '-')}`} className="cursor-pointer">
+						<span className={getPointsColor(place.rank)}>{place.openctfPoints}</span>
+					</Link>
+					{userTeam === place.teamName && (
+						<TwitterShareButton
+							contestName={contestName}
+							teamName={place.teamName}
+							place={place.rank}
+							isCaptain={isCaptain || false}
+						/>
+					)}
+				</div>
 			</td>
 		</motion.tr>
 	);
@@ -271,12 +289,14 @@ function WriteupCard({ writeup }: { writeup: any }) {
 export default function ContestDetailsPage() {
 	const params = useParams();
 	const contestId = params.id as string;
-	const { isAuthenticated } = useAuth();
+	const { isAuthenticated, user } = useAuth();
 
 	const [contest, setContest] = useState<Contest | null>(null);
 	const [leaderboard, setLeaderboard] = useState<LiveLeaderboard | null>(null);
 	const [writeups, setWriteups] = useState<any[]>([]);
 	const [isLoading, setIsLoading] = useState(true);
+	const [userTeam, setUserTeam] = useState<string | undefined>();
+	const [isCaptain, setIsCaptain] = useState(false);
 
 	useEffect(() => {
 		const fetchContestDetails = async () => {
@@ -299,6 +319,18 @@ export default function ContestDetailsPage() {
 					const writeupsData = getMockWriteups(contestId);
 					setWriteups(writeupsData);
 				}
+
+				// Get user's team information if authenticated
+				if (isAuthenticated && user) {
+					const userTeamsResponse = await getUserTeams(user.id.toString());
+					if (userTeamsResponse.success && userTeamsResponse.data && userTeamsResponse.data.length > 0) {
+						const team = userTeamsResponse.data[0]; // Assume user's primary team
+						if (team) {
+							setUserTeam(team.name);
+							setIsCaptain(team.captainId === user.id.toString());
+						}
+					}
+				}
 			} catch (error) {
 				console.error("Error fetching contest details:", error);
 			} finally {
@@ -309,7 +341,7 @@ export default function ContestDetailsPage() {
 		if (contestId) {
 			fetchContestDetails();
 		}
-	}, [contestId]);
+	}, [contestId, isAuthenticated, user]);
 
 	if (isLoading) {
 		return (
@@ -630,6 +662,9 @@ export default function ContestDetailsPage() {
 															ctftimeId: 12345 + index * 1000
 														}}
 														index={index}
+														contestName={contest.name}
+														userTeam={userTeam}
+														isCaptain={isCaptain}
 													/>
 												))}
 											</tbody>

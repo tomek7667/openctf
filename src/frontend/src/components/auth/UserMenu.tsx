@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { User, LogOut, Settings, Shield, ChevronDown } from "@/components/ui/icons";
+import { User, LogOut, Shield, ChevronDown } from "@/components/ui/icons";
 import { useAuthStore } from "@/store/authStore";
 import { logout } from "@/api/auth";
 
@@ -84,11 +84,6 @@ export function UserMenu() {
 										<User className="h-4 w-4 text-muted-foreground" />
 										<span className="text-muted-foreground">&gt; Profile</span>
 									</a>
-
-									<button className="w-full flex items-center gap-3 p-2 rounded transition-colors hover:bg-primary/10 text-left font-mono text-sm">
-										<Settings className="h-4 w-4 text-muted-foreground" />
-										<span className="text-muted-foreground">&gt; Settings</span>
-									</button>
 									
 									<button
 										onClick={handleLogout}
