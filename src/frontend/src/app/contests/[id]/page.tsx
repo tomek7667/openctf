@@ -20,12 +20,19 @@ import {
 	ExternalLink,
 	Flag,
 	Target,
+	BookOpen,
+	PlusCircle,
+	Star,
+	Eye,
+	Heart,
 } from "@/components/ui/icons";
 import { Badge } from "@/components/ui/Badge";
+import { Button } from "@/components/ui/Button";
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 import { MainLayout } from "@/components/layout/MainLayout";
 import { getContest, Contest } from "@/api/contests";
 import { Place } from "@/types/api";
+import { useAuth } from "@/hooks/useAuth";
 import { clsx } from "clsx";
 
 const getStatusColor = (status: string) => {
@@ -35,7 +42,7 @@ const getStatusColor = (status: string) => {
 		case "ongoing":
 			return "bg-green-500/20 text-green-400 border-green-400/50";
 		case "finished":
-			return "bg-gray-500/20 text-gray-400 border-gray-400/50";
+			return "bg-green-500/20 text-green-400 border-green-400/50";
 		default:
 			return "bg-primary/20 text-primary border-primary/50";
 	}
@@ -112,7 +119,7 @@ const PlaceRow = ({ place, index }: { place: Place; index: number }) => {
 	const getPlaceStyle = (position: number) => {
 		switch (position) {
 			case 1:
-				return "bg-gradient-to-r from-yellow-500/30 to-orange-500/20 border-yellow-400 shadow-lg shadow-yellow-400/20 animate-pulse";
+				return "bg-gradient-to-r from-yellow-500/30 to-orange-500/20 border-yellow-400 shadow-lg shadow-yellow-400/20";
 			case 2:
 				return "bg-gradient-to-r from-gray-300/30 to-gray-500/20 border-gray-400 shadow-lg shadow-gray-400/20";
 			case 3:
@@ -126,29 +133,18 @@ const PlaceRow = ({ place, index }: { place: Place; index: number }) => {
 		switch (position) {
 			case 1:
 				return (
-					<div className="flex items-center gap-2">
-						<Trophy className="h-6 w-6 text-yellow-400 animate-bounce" />
-						<span className="text-yellow-400 font-bold text-lg glow-text">
-							👑
-						</span>
-					</div>
+					<Trophy className="h-6 w-6 text-yellow-400 animate-bounce" />
 				);
 			case 2:
 				return (
-					<div className="flex items-center gap-2">
-						<div className="w-6 h-6 rounded-full bg-gray-300 flex items-center justify-center text-black font-bold text-sm glow-text">
-							2
-						</div>
-						<span className="text-gray-300 text-lg">🥈</span>
+					<div className="w-6 h-6 rounded-full bg-gray-300 flex items-center justify-center text-black font-bold text-sm">
+						2
 					</div>
 				);
 			case 3:
 				return (
-					<div className="flex items-center gap-2">
-						<div className="w-6 h-6 rounded-full bg-amber-600 flex items-center justify-center text-black font-bold text-sm glow-text">
-							3
-						</div>
-						<span className="text-amber-600 text-lg">🥉</span>
+					<div className="w-6 h-6 rounded-full bg-amber-600 flex items-center justify-center text-black font-bold text-sm">
+						3
 					</div>
 				);
 			default:
@@ -182,7 +178,7 @@ const PlaceRow = ({ place, index }: { place: Place; index: number }) => {
 							place.place <= 3 ? "text-foreground" : "text-primary"
 						)}
 					>
-						#{place.place}
+						{place.place}
 					</span>
 				</div>
 			</td>
@@ -192,7 +188,7 @@ const PlaceRow = ({ place, index }: { place: Place; index: number }) => {
 						className={clsx(
 							"font-mono font-bold text-sm",
 							place.place === 1
-								? "text-yellow-400 glow-text"
+								? "text-yellow-400"
 								: place.place === 2
 									? "text-gray-300"
 									: place.place === 3
@@ -201,13 +197,6 @@ const PlaceRow = ({ place, index }: { place: Place; index: number }) => {
 						)}
 					>
 						{place.team_name}
-						{place.place === 1 && (
-							<span className="ml-2 text-xs animate-pulse">[CHAMPION]</span>
-						)}
-						{place.place === 2 && (
-							<span className="ml-2 text-xs">[RUNNER-UP]</span>
-						)}
-						{place.place === 3 && <span className="ml-2 text-xs">[THIRD]</span>}
 					</div>
 					{place.ctftime_team_id && (
 						<div className="text-xs text-muted-foreground font-mono">
@@ -224,7 +213,7 @@ const PlaceRow = ({ place, index }: { place: Place; index: number }) => {
 					className={clsx(
 						"font-bold",
 						place.place === 1
-							? "text-yellow-400 glow-text"
+							? "text-yellow-400"
 							: place.place === 2
 								? "text-gray-300"
 								: place.place === 3
@@ -239,12 +228,115 @@ const PlaceRow = ({ place, index }: { place: Place; index: number }) => {
 	);
 };
 
+// Mock writeups data
+const getMockWriteups = (contestId: string) => {
+	if (contestId === "contest-003") {
+		return [
+			{
+				id: 1,
+				title: "Web Challenge: SQL Injection in Login Form",
+				description: "A detailed walkthrough of exploiting SQL injection vulnerability in the contest's login system.",
+				authorName: "hackerman",
+				authorAvatar: null,
+				category: "web",
+				difficulty: "Medium",
+				tags: ["sql-injection", "web", "authentication"],
+				averageRating: 4.5,
+				totalRatings: 12,
+				views: 234,
+				likes: 18,
+				createdAt: "2024-01-15T10:30:00Z",
+				featured: true,
+				verified: true,
+			},
+			{
+				id: 2,
+				title: "Crypto: RSA Key Recovery",
+				description: "How to recover RSA private key from weak random number generation.",
+				authorName: "cryptoking",
+				authorAvatar: null,
+				category: "crypto",
+				difficulty: "Hard",
+				tags: ["rsa", "crypto", "weak-rng"],
+				averageRating: 4.8,
+				totalRatings: 8,
+				views: 156,
+				likes: 24,
+				createdAt: "2024-01-16T14:20:00Z",
+				featured: false,
+				verified: true,
+			},
+		];
+	}
+	return [];
+};
+
+function WriteupCard({ writeup }: { writeup: any }) {
+	return (
+		<motion.div
+			initial={{ opacity: 0, y: 20 }}
+			animate={{ opacity: 1, y: 0 }}
+			transition={{ duration: 0.3 }}
+			className="group relative"
+		>
+			<div className="absolute inset-0 bg-gradient-to-r from-green-500/20 to-blue-500/20 rounded-lg blur-xl group-hover:blur-2xl transition-all duration-500 opacity-0 group-hover:opacity-100" />
+			
+			<div className="relative bg-card/50 backdrop-blur-sm border border-green-500/30 rounded-lg p-6 h-full hover:border-green-400/50 transition-all duration-300 group-hover:shadow-lg group-hover:shadow-green-500/20">
+				<div className="flex items-start justify-between mb-4">
+					<div>
+						<h3 className="font-mono text-lg font-bold text-white group-hover:text-green-400 transition-colors line-clamp-2">
+							<Link href={`/writeups/${writeup.id}`}>
+								{writeup.title}
+							</Link>
+						</h3>
+						<div className="flex items-center space-x-2 mt-1">
+							<Badge variant="outline" className="text-xs">
+								{writeup.category.toUpperCase()}
+							</Badge>
+							<span className="text-xs font-mono text-yellow-400">
+								[{writeup.difficulty.toUpperCase()}]
+							</span>
+						</div>
+					</div>
+				</div>
+
+				<p className="text-gray-300 text-sm mb-4 line-clamp-3 font-mono">
+					{writeup.description}
+				</p>
+
+				<div className="flex items-center space-x-4 mb-4 text-sm">
+					<span className="text-gray-300 font-mono">@{writeup.authorName}</span>
+				</div>
+
+				<div className="flex items-center justify-between text-sm text-gray-400">
+					<div className="flex items-center space-x-4">
+						<div className="flex items-center space-x-1">
+							<Star className="h-4 w-4 text-yellow-400 fill-current" />
+							<span className="font-mono">{writeup.averageRating.toFixed(1)}</span>
+						</div>
+						<div className="flex items-center space-x-1">
+							<Eye className="h-4 w-4" />
+							<span className="font-mono">{writeup.views}</span>
+						</div>
+						<div className="flex items-center space-x-1">
+							<Heart className="h-4 w-4" />
+							<span className="font-mono">{writeup.likes}</span>
+						</div>
+					</div>
+				</div>
+			</div>
+		</motion.div>
+	);
+}
+
 export default function ContestDetailsPage() {
 	const params = useParams();
 	const contestId = params.id as string;
+	const { isAuthenticated } = useAuth();
 
 	const [contest, setContest] = useState<Contest | null>(null);
 	const [places, setPlaces] = useState<Place[]>([]);
+	const [writeups, setWriteups] = useState<any[]>([]);
 	const [isLoading, setIsLoading] = useState(true);
 
 	useEffect(() => {
@@ -261,6 +353,10 @@ export default function ContestDetailsPage() {
 						const placesData = getMockPlaces(contestId);
 						setPlaces(placesData);
 					}
+
+					// Get writeups for this contest
+					const writeupsData = getMockWriteups(contestId);
+					setWriteups(writeupsData);
 				}
 			} catch (error) {
 				console.error("Error fetching contest details:", error);
@@ -352,7 +448,7 @@ export default function ContestDetailsPage() {
 		<MainLayout>
 			<div className="min-h-screen">
 				{/* Header */}
-				<section className="py-8 px-4 border-b border-border/50">
+				<section className="py-8 px-4">
 					<div className="max-w-7xl mx-auto">
 						<div className="flex items-center gap-4 mb-6">
 							<Link
@@ -542,7 +638,7 @@ export default function ContestDetailsPage() {
 
 				{/* Leaderboard Section */}
 				{contest.status === "finished" && places.length > 0 && (
-					<section className="py-12 px-4">
+					<section className="py-12 px-4 border-b border-border/50">
 						<div className="max-w-7xl mx-auto">
 							<motion.div
 								initial={{ opacity: 0, y: 20 }}
@@ -602,7 +698,7 @@ export default function ContestDetailsPage() {
 
 				{/* No Leaderboard Message */}
 				{contest.status !== "finished" && (
-					<section className="py-12 px-4">
+					<section className="py-12 px-4 border-b border-border/50">
 						<div className="max-w-7xl mx-auto text-center">
 							<div className="terminal glass-terminal p-8 max-w-lg mx-auto">
 								<div className="text-primary mb-2">
@@ -620,6 +716,50 @@ export default function ContestDetailsPage() {
 						</div>
 					</section>
 				)}
+
+				{/* Writeups Section */}
+				<section className="py-12 px-4">
+					<div className="max-w-7xl mx-auto">
+						<div className="flex items-center justify-between mb-8">
+							<div className="flex items-center gap-3">
+								<BookOpen className="h-6 w-6 text-green-400" />
+								<h2 className="text-2xl font-bold font-mono text-green-400">
+									&gt; WRITEUPS
+								</h2>
+							</div>
+							{isAuthenticated && (
+								<Link href={`/writeups/create?contest=${contestId}`}>
+									<Button className="font-mono bg-gradient-to-r from-green-500 to-blue-500 hover:from-green-600 hover:to-blue-600 text-black font-bold">
+										<PlusCircle className="h-4 w-4 mr-2" />
+										CREATE WRITEUP
+									</Button>
+								</Link>
+							)}
+						</div>
+
+						{writeups.length > 0 ? (
+							<div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+								{writeups.map((writeup) => (
+									<WriteupCard key={writeup.id} writeup={writeup} />
+								))}
+							</div>
+						) : (
+							<div className="text-center py-12">
+								<BookOpen className="h-16 w-16 text-gray-600 mx-auto mb-4" />
+								<h3 className="text-xl font-mono text-gray-400 mb-2">No writeups yet</h3>
+								<p className="text-gray-500 font-mono mb-4">Be the first to share your solution!</p>
+								{isAuthenticated && (
+									<Link href={`/writeups/create?contest=${contestId}`}>
+										<Button className="font-mono bg-gradient-to-r from-green-500 to-blue-500 hover:from-green-600 hover:to-blue-600 text-black font-bold">
+											<PlusCircle className="h-4 w-4 mr-2" />
+											CREATE WRITEUP
+										</Button>
+									</Link>
+								)}
+							</div>
+						)}
+					</div>
+				</section>
 			</div>
 		</MainLayout>
 	);
