@@ -48,8 +48,6 @@ const getWeightColor = (weight: number) => {
 	return "text-green-400";
 };
 
-
-
 // Mock places data - in real app this would come from API
 const getMockPlaces = (contestId: string): Place[] => {
 	if (contestId === "contest-003" || contestId === "contest-004") {
@@ -130,7 +128,9 @@ const PlaceRow = ({ place, index }: { place: Place; index: number }) => {
 				return (
 					<div className="flex items-center gap-2">
 						<Trophy className="h-6 w-6 text-yellow-400 animate-bounce" />
-						<span className="text-yellow-400 font-bold text-lg glow-text">👑</span>
+						<span className="text-yellow-400 font-bold text-lg glow-text">
+							👑
+						</span>
 					</div>
 				);
 			case 2:
@@ -166,7 +166,7 @@ const PlaceRow = ({ place, index }: { place: Place; index: number }) => {
 			animate={{ opacity: 1, x: 0 }}
 			transition={{ delay: index * 0.1 }}
 			onClick={() => {
-				window.location.href = `/teams/${place.team_name.toLowerCase().replace(/\s+/g, '-')}`;
+				window.location.href = `/teams/${place.team_name.toLowerCase().replace(/\s+/g, "-")}`;
 			}}
 			className={clsx(
 				"border-b transition-all duration-300 cursor-pointer hover:bg-primary/5",
@@ -176,25 +176,37 @@ const PlaceRow = ({ place, index }: { place: Place; index: number }) => {
 			<td className="p-3">
 				<div className="flex items-center gap-3">
 					{getPlaceIcon(place.place)}
-					<span className={clsx(
-						"font-mono font-bold text-sm",
-						place.place <= 3 ? "text-foreground" : "text-primary"
-					)}>
+					<span
+						className={clsx(
+							"font-mono font-bold text-sm",
+							place.place <= 3 ? "text-foreground" : "text-primary"
+						)}
+					>
 						#{place.place}
 					</span>
 				</div>
 			</td>
 			<td className="p-3">
 				<div>
-					<div className={clsx(
-						"font-mono font-bold text-sm",
-						place.place === 1 ? "text-yellow-400 glow-text" :
-						place.place === 2 ? "text-gray-300" :
-						place.place === 3 ? "text-amber-600" : "text-foreground"
-					)}>
+					<div
+						className={clsx(
+							"font-mono font-bold text-sm",
+							place.place === 1
+								? "text-yellow-400 glow-text"
+								: place.place === 2
+									? "text-gray-300"
+									: place.place === 3
+										? "text-amber-600"
+										: "text-foreground"
+						)}
+					>
 						{place.team_name}
-						{place.place === 1 && <span className="ml-2 text-xs animate-pulse">[CHAMPION]</span>}
-						{place.place === 2 && <span className="ml-2 text-xs">[RUNNER-UP]</span>}
+						{place.place === 1 && (
+							<span className="ml-2 text-xs animate-pulse">[CHAMPION]</span>
+						)}
+						{place.place === 2 && (
+							<span className="ml-2 text-xs">[RUNNER-UP]</span>
+						)}
 						{place.place === 3 && <span className="ml-2 text-xs">[THIRD]</span>}
 					</div>
 					{place.ctftime_team_id && (
@@ -208,12 +220,18 @@ const PlaceRow = ({ place, index }: { place: Place; index: number }) => {
 				{place.contest_points?.toLocaleString() || 0}
 			</td>
 			<td className="p-3 font-mono text-xs text-right">
-				<span className={clsx(
-					"font-bold",
-					place.place === 1 ? "text-yellow-400 glow-text" :
-					place.place === 2 ? "text-gray-300" :
-					place.place === 3 ? "text-amber-600" : "text-primary"
-				)}>
+				<span
+					className={clsx(
+						"font-bold",
+						place.place === 1
+							? "text-yellow-400 glow-text"
+							: place.place === 2
+								? "text-gray-300"
+								: place.place === 3
+									? "text-amber-600"
+									: "text-primary"
+					)}
+				>
 					{place.openctf_points?.toFixed(1) || 0}
 				</span>
 			</td>
@@ -374,8 +392,15 @@ export default function ContestDetailsPage() {
 											{(contest.status || "unknown").toUpperCase()}
 										</div>
 										{contest.ctftimeId && (
-											<a href={`https://ctftime.org/event/${contest.ctftimeId}`} target="_blank" rel="noopener noreferrer">
-												<Badge variant="outline" className="font-mono cursor-pointer hover:bg-primary/10">
+											<a
+												href={`https://ctftime.org/event/${contest.ctftimeId}`}
+												target="_blank"
+												rel="noopener noreferrer"
+											>
+												<Badge
+													variant="outline"
+													className="font-mono cursor-pointer hover:bg-primary/10"
+												>
 													<Flag className="h-3 w-3 mr-1" />
 													CTFtime
 												</Badge>
@@ -409,7 +434,12 @@ export default function ContestDetailsPage() {
 												<h3 className="font-bold font-mono text-primary mb-2">
 													&gt; RULES
 												</h3>
-												<a href={contest.rulesUrl} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
+												<a
+													href={contest.rulesUrl}
+													target="_blank"
+													rel="noopener noreferrer"
+													className="text-primary hover:underline"
+												>
 													View Contest Rules
 												</a>
 											</div>
@@ -422,9 +452,14 @@ export default function ContestDetailsPage() {
 												</h3>
 												<div className="space-y-2">
 													{contest.prizes.slice(0, 3).map((prize, index) => (
-														<div key={index} className="text-muted-foreground text-sm">
+														<div
+															key={index}
+															className="text-muted-foreground text-sm"
+														>
 															{prize.rank}. {prize.description}
-															{prize.value && prize.currency && ` - ${prize.value} ${prize.currency}`}
+															{prize.value &&
+																prize.currency &&
+																` - ${prize.value} ${prize.currency}`}
 														</div>
 													))}
 												</div>
@@ -484,8 +519,6 @@ export default function ContestDetailsPage() {
 												{contest.weight || 0} pts
 											</div>
 										</div>
-
-
 
 										{contest.website && (
 											<div className="pt-4">
