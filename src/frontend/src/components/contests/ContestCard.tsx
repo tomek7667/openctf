@@ -9,7 +9,6 @@ import {
 	Users,
 	Trophy,
 	Calendar,
-	ExternalLink,
 	Flag,
 	Target,
 	Shield,
@@ -198,12 +197,6 @@ export function ContestCard({ contest, index = 0 }: ContestCardProps) {
 							<div className="flex items-center gap-1">
 								<Flag className="h-4 w-4" />
 								<span className="text-xs">CTFtime</span>
-							</div>
-						)}
-						{contest.website && (
-							<div className="flex items-center gap-1">
-								<ExternalLink className="h-4 w-4" />
-								<span className="text-xs">Website</span>
 							</div>
 						)}
 					</div>

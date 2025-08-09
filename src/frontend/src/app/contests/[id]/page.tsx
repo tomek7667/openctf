@@ -30,8 +30,8 @@ import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 import { MainLayout } from "@/components/layout/MainLayout";
-import { getContest, Contest } from "@/api/contests";
-import { Place } from "@/types/api";
+import { getContest, Contest, getLiveLeaderboard, LiveLeaderboard } from "@/api/contests";
+
 import { useAuth } from "@/hooks/useAuth";
 import { clsx } from "clsx";
 
@@ -40,9 +40,10 @@ const getStatusColor = (status: string) => {
 		case "upcoming":
 			return "bg-blue-500/20 text-blue-400 border-blue-400/50";
 		case "ongoing":
+		case "live":
 			return "bg-green-500/20 text-green-400 border-green-400/50";
 		case "finished":
-			return "bg-green-500/20 text-green-400 border-green-400/50";
+			return "bg-primary/20 text-primary border-primary/50";
 		default:
 			return "bg-primary/20 text-primary border-primary/50";
 	}
@@ -55,105 +56,74 @@ const getWeightColor = (weight: number) => {
 	return "text-green-400";
 };
 
-// Mock places data - in real app this would come from API
-const getMockPlaces = (contestId: string): Place[] => {
-	if (contestId === "contest-003" || contestId === "contest-004") {
-		// Only finished contests have places
-		return [
-			{
-				id: 1,
-				team_name: "perfect blue",
-				place: 1,
-				ctftime_team_id: 12345,
-				contest_points: 5000,
-				openctf_points: 85,
-				associated_contest_id: 1,
-				assigned_weight_points: 85,
-			},
-			{
-				id: 2,
-				team_name: "team rocket",
-				place: 2,
-				ctftime_team_id: 67890,
-				contest_points: 4750,
-				openctf_points: 80,
-				associated_contest_id: 1,
-				assigned_weight_points: 80,
-			},
-			{
-				id: 3,
-				team_name: "cybersec masters",
-				place: 3,
-				ctftime_team_id: 11111,
-				contest_points: 4200,
-				openctf_points: 75,
-				associated_contest_id: 1,
-				assigned_weight_points: 75,
-			},
-			{
-				id: 4,
-				team_name: "null pointer exception",
-				place: 4,
-				ctftime_team_id: 22222,
-				contest_points: 3800,
-				openctf_points: 70,
-				associated_contest_id: 1,
-				assigned_weight_points: 70,
-			},
-			{
-				id: 5,
-				team_name: "the stack smashers",
-				place: 5,
-				ctftime_team_id: 33333,
-				contest_points: 3400,
-				openctf_points: 65,
-				associated_contest_id: 1,
-				assigned_weight_points: 65,
-			},
-		] as Place[];
-	}
-	return [];
-};
+interface Place {
+	id: string;
+	rank: number;
+	teamName: string;
+	contestPoints: number;
+	openctfPoints: string;
+	ctftimeId: number;
+}
 
-const PlaceRow = ({ place, index }: { place: Place; index: number }) => {
-	const getPlaceStyle = (position: number) => {
-		switch (position) {
-			case 1:
-				return "bg-gradient-to-r from-yellow-500/30 to-orange-500/20 border-yellow-400 shadow-lg shadow-yellow-400/20";
-			case 2:
-				return "bg-gradient-to-r from-gray-300/30 to-gray-500/20 border-gray-400 shadow-lg shadow-gray-400/20";
-			case 3:
-				return "bg-gradient-to-r from-amber-600/30 to-yellow-700/20 border-amber-600 shadow-lg shadow-amber-600/20";
-			default:
-				return "hover:bg-muted/20 border-border/50";
-		}
+function PlaceRow({ place, index }: { place: Place; index: number }) {
+	const getRowStyle = (rank: number) => {
+		if (rank === 1) return "bg-gradient-to-r from-yellow-500/30 to-orange-500/20 border-yellow-400 shadow-lg shadow-yellow-400/20";
+		if (rank === 2) return "bg-gradient-to-r from-gray-300/30 to-gray-500/20 border-gray-400 shadow-lg shadow-gray-400/20";
+		if (rank === 3) return "bg-gradient-to-r from-amber-600/30 to-yellow-700/20 border-amber-600 shadow-lg shadow-amber-600/20";
+		return "hover:bg-muted/20 border-border/50";
 	};
 
-	const getPlaceIcon = (position: number) => {
-		switch (position) {
-			case 1:
-				return (
-					<Trophy className="h-6 w-6 text-yellow-400 animate-bounce" />
-				);
-			case 2:
-				return (
-					<div className="w-6 h-6 rounded-full bg-gray-300 flex items-center justify-center text-black font-bold text-sm">
-						2
-					</div>
-				);
-			case 3:
-				return (
-					<div className="w-6 h-6 rounded-full bg-amber-600 flex items-center justify-center text-black font-bold text-sm">
-						3
-					</div>
-				);
-			default:
-				return (
-					<div className="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold text-xs">
-						{position}
-					</div>
-				);
+	const getRankDisplay = (rank: number) => {
+		if (rank === 1) {
+			return <Trophy className="h-8 w-8 text-yellow-400" />;
 		}
+		if (rank === 2) {
+			return (
+				<div className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center text-black font-bold text-lg glow-text">
+					2
+				</div>
+			);
+		}
+		if (rank === 3) {
+			return (
+				<div className="w-8 h-8 rounded-full bg-amber-600 flex items-center justify-center text-black font-bold text-lg glow-text">
+					3
+				</div>
+			);
+		}
+		return (
+			<div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold text-lg">
+				{rank}
+			</div>
+		);
+	};
+
+	const getTeamNameColor = (rank: number) => {
+		if (rank === 1) return "text-yellow-400 glow-text";
+		if (rank === 2) return "text-gray-300";
+		if (rank === 3) return "text-amber-600";
+		return "text-foreground";
+	};
+
+	const getTitle = (rank: number) => {
+		if (rank === 1) return "[CHAMPION]";
+		if (rank === 2) return "[RUNNER-UP]";
+		if (rank === 3) return "[THIRD]";
+		return "";
+	};
+
+	const getTitleColor = (rank: number) => {
+		if (rank === 1) return "text-xs animate-pulse";
+		if (rank === 2) return "text-xs";
+		if (rank === 3) return "text-xs";
+		return "";
+	};
+
+	const getPointsColor = (rank: number) => {
+		if (rank === 1) return "font-bold text-yellow-400 glow-text";
+		if (rank === 2) return "font-bold text-gray-300";
+		if (rank === 3) return "font-bold text-amber-600";
+		return "font-bold text-primary";
 	};
 
 	return (
@@ -161,72 +131,41 @@ const PlaceRow = ({ place, index }: { place: Place; index: number }) => {
 			initial={{ opacity: 0, x: -20 }}
 			animate={{ opacity: 1, x: 0 }}
 			transition={{ delay: index * 0.1 }}
-			onClick={() => {
-				window.location.href = `/teams/${place.team_name.toLowerCase().replace(/\s+/g, "-")}`;
-			}}
-			className={clsx(
-				"border-b transition-all duration-300 cursor-pointer hover:bg-primary/5",
-				getPlaceStyle(place.place)
-			)}
+			className={`border-b transition-all duration-300 hover:bg-primary/5 ${getRowStyle(place.rank)}`}
 		>
-			<td className="p-3">
-				<div className="flex items-center gap-3">
-					{getPlaceIcon(place.place)}
-					<span
-						className={clsx(
-							"font-mono font-bold text-sm",
-							place.place <= 3 ? "text-foreground" : "text-primary"
-						)}
-					>
-						{place.place}
-					</span>
-				</div>
+			<td className="p-3 w-16">
+				<Link href={`/teams/${place.teamName.toLowerCase().replace(/\s+/g, '-')}`} className="flex items-center justify-center cursor-pointer">
+					{getRankDisplay(place.rank)}
+				</Link>
 			</td>
 			<td className="p-3">
-				<div>
-					<div
-						className={clsx(
-							"font-mono font-bold text-sm",
-							place.place === 1
-								? "text-yellow-400"
-								: place.place === 2
-									? "text-gray-300"
-									: place.place === 3
-										? "text-amber-600"
-										: "text-foreground"
+				<Link href={`/teams/${place.teamName.toLowerCase().replace(/\s+/g, '-')}`} className="block cursor-pointer">
+					<div className={`font-mono font-bold text-sm ${getTeamNameColor(place.rank)}`}>
+						{place.teamName}
+						{getTitle(place.rank) && (
+							<span className={`ml-2 ${getTitleColor(place.rank)}`}>
+								{getTitle(place.rank)}
+							</span>
 						)}
-					>
-						{place.team_name}
 					</div>
-					{place.ctftime_team_id && (
-						<div className="text-xs text-muted-foreground font-mono">
-							CTFtime: {place.ctftime_team_id}
-						</div>
-					)}
-				</div>
+					<div className="text-xs text-muted-foreground font-mono">
+						CTFtime: {place.ctftimeId}
+					</div>
+				</Link>
 			</td>
-			<td className="p-3 font-mono text-xs font-bold text-right">
-				{place.contest_points?.toLocaleString() || 0}
+			<td className="p-3 font-mono text-lg font-bold text-right">
+				<Link href={`/teams/${place.teamName.toLowerCase().replace(/\s+/g, '-')}`} className="block cursor-pointer">
+					{place.contestPoints}
+				</Link>
 			</td>
-			<td className="p-3 font-mono text-xs text-right">
-				<span
-					className={clsx(
-						"font-bold",
-						place.place === 1
-							? "text-yellow-400"
-							: place.place === 2
-								? "text-gray-300"
-								: place.place === 3
-									? "text-amber-600"
-									: "text-primary"
-					)}
-				>
-					{place.openctf_points?.toFixed(1) || 0}
-				</span>
+			<td className="p-3 font-mono text-lg text-right">
+				<Link href={`/teams/${place.teamName.toLowerCase().replace(/\s+/g, '-')}`} className="block cursor-pointer">
+					<span className={getPointsColor(place.rank)}>{place.openctfPoints}</span>
+				</Link>
 			</td>
 		</motion.tr>
 	);
-};
+}
 
 // Mock writeups data
 const getMockWriteups = (contestId: string) => {
@@ -335,7 +274,7 @@ export default function ContestDetailsPage() {
 	const { isAuthenticated } = useAuth();
 
 	const [contest, setContest] = useState<Contest | null>(null);
-	const [places, setPlaces] = useState<Place[]>([]);
+	const [leaderboard, setLeaderboard] = useState<LiveLeaderboard | null>(null);
 	const [writeups, setWriteups] = useState<any[]>([]);
 	const [isLoading, setIsLoading] = useState(true);
 
@@ -348,10 +287,12 @@ export default function ContestDetailsPage() {
 				if (contestResponse.success && contestResponse.data) {
 					setContest(contestResponse.data);
 
-					// Get places for finished contests
-					if (contestResponse.data.status === "finished") {
-						const placesData = getMockPlaces(contestId);
-						setPlaces(placesData);
+					// Get leaderboard if contest is live or finished
+					if (contestResponse.data.status === 'live' || contestResponse.data.status === 'finished') {
+						const leaderboardResponse = await getLiveLeaderboard(contestId);
+						if (leaderboardResponse.success && leaderboardResponse.data) {
+							setLeaderboard(leaderboardResponse.data);
+						}
 					}
 
 					// Get writeups for this contest
@@ -393,7 +334,7 @@ export default function ContestDetailsPage() {
 							<br />
 							{"// Error 404: Resource does not exist"}
 						</p>
-						<Link href="/contests" className="btn-terminal">
+						<Link href="/contests" className="inline-block px-4 py-2 bg-green-500/20 border border-green-400/50 text-green-400 font-mono font-bold hover:bg-green-500/30 transition-colors">
 							&gt; BACK_TO_CONTESTS
 						</Link>
 					</div>
@@ -419,7 +360,6 @@ export default function ContestDetailsPage() {
 	};
 
 	const getTimeStatus = () => {
-		// const now = new Date();
 		const start = parseISO(contest.startTime);
 		const end = parseISO(contest.endTime);
 
@@ -637,8 +577,8 @@ export default function ContestDetailsPage() {
 				</section>
 
 				{/* Leaderboard Section */}
-				{contest.status === "finished" && places.length > 0 && (
-					<section className="py-12 px-4 border-b border-border/50">
+				{contest.status === "finished" && leaderboard && leaderboard.entries.length > 0 && (
+					<section className="py-12 px-4">
 						<div className="max-w-7xl mx-auto">
 							<motion.div
 								initial={{ opacity: 0, y: 20 }}
@@ -653,19 +593,12 @@ export default function ContestDetailsPage() {
 								</div>
 
 								<div className="bg-card/30 rounded-none hacker-border overflow-hidden">
-									<div className="p-3 bg-muted/50 border-b border-border">
-										<div className="flex items-center gap-2">
-											<Trophy className="h-4 w-4 text-yellow-400" />
-											<h3 className="text-sm font-bold font-mono text-yellow-400">
-												FINAL STANDINGS ({places.length})
-											</h3>
-										</div>
-									</div>
+
 									<div className="overflow-x-auto">
 										<table className="w-full">
 											<thead className="bg-muted/30">
 												<tr className="border-b border-border/50">
-													<th className="p-3 text-left font-mono text-xs font-bold">
+													<th className="p-3 text-center font-mono text-xs font-bold w-16">
 														Rank
 													</th>
 													<th className="p-3 text-left font-mono text-xs font-bold">
@@ -680,10 +613,22 @@ export default function ContestDetailsPage() {
 												</tr>
 											</thead>
 											<tbody>
-												{places.map((place, index) => (
+												{[...leaderboard.entries, ...Array.from({length: Math.max(0, 15 - leaderboard.entries.length)}, (_, i) => ({
+													participantId: `mock-${leaderboard.entries.length + i + 1}`,
+													rank: leaderboard.entries.length + i + 1,
+													participantName: `Team${leaderboard.entries.length + i + 1}`,
+													score: Math.max(100, 5000 - (leaderboard.entries.length + i) * 200)
+												}))].map((entry, index) => (
 													<PlaceRow
-														key={place.id}
-														place={place}
+														key={entry.participantId}
+														place={{
+															id: entry.participantId,
+															rank: entry.rank,
+															teamName: entry.participantName,
+															contestPoints: entry.score || Math.max(100, 5000 - (entry.rank - 1) * 200),
+															openctfPoints: (1000 - (entry.rank - 1) * 50).toFixed(1),
+															ctftimeId: 12345 + index * 1000
+														}}
 														index={index}
 													/>
 												))}
@@ -692,27 +637,6 @@ export default function ContestDetailsPage() {
 									</div>
 								</div>
 							</motion.div>
-						</div>
-					</section>
-				)}
-
-				{/* No Leaderboard Message */}
-				{contest.status !== "finished" && (
-					<section className="py-12 px-4 border-b border-border/50">
-						<div className="max-w-7xl mx-auto text-center">
-							<div className="terminal glass-terminal p-8 max-w-lg mx-auto">
-								<div className="text-primary mb-2">
-									root@openctf:~# cat leaderboard.txt
-								</div>
-								<p className="text-yellow-400">
-									{contest.status === "upcoming" &&
-										"// Leaderboard will be available when contest starts"}
-									{contest.status === "live" &&
-										"// Live leaderboard coming soon"}
-									{contest.status === "cancelled" &&
-										"// Contest was cancelled - no leaderboard available"}
-								</p>
-							</div>
 						</div>
 					</section>
 				)}

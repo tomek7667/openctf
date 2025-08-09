@@ -10,7 +10,7 @@ import {
 	Clock,
 	Users,
 	Target,
-	Star,
+
 	Shield,
 } from "@/components/ui/icons";
 import { Input } from "@/components/ui/Input";
@@ -19,6 +19,7 @@ import { Badge } from "@/components/ui/Badge";
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 import { MainLayout } from "@/components/layout/MainLayout";
 import { ContestCard } from "@/components/contests/ContestCard";
+import { LiveCTFWidget } from "@/components/contests/LiveCTFWidget";
 import { getContests, Contest } from "@/api/contests";
 import { ContestStatus, ContestStatusType } from "@/types/api";
 import { clsx } from "clsx";
@@ -64,46 +65,7 @@ interface ContestFilters {
 	year?: undefined | number;
 }
 
-const StatCard = ({
-	icon: Icon,
-	label,
-	value,
-	description,
-	isLoading = false,
-}: {
-	icon: React.ComponentType<{ className?: undefined | string }>;
-	label: string;
-	value: string | number;
-	description?: undefined | string;
-	isLoading?: undefined | boolean;
-}) => (
-	<motion.div
-		initial={{ opacity: 0, y: 20 }}
-		animate={{ opacity: 1, y: 0 }}
-		className="p-6 bg-card/50 backdrop-blur-sm rounded-none hacker-border"
-	>
-		<div className="flex items-center gap-3 mb-3">
-			<div className="p-2 bg-primary/10 rounded">
-				<Icon className="h-5 w-5 text-primary" />
-			</div>
-			<h3 className="font-mono font-bold text-foreground">{label}</h3>
-		</div>
 
-		{isLoading ? (
-			<div className="text-2xl font-bold text-primary mb-1 font-mono animate-pulse">
-				---
-			</div>
-		) : (
-			<div className="text-2xl font-bold text-primary mb-1 font-mono glow-text">
-				{value}
-			</div>
-		)}
-
-		{description && (
-			<p className="text-xs text-muted-foreground font-mono">{description}</p>
-		)}
-	</motion.div>
-);
 
 const ContestTableRow = ({ contest }: { contest: Contest }) => (
 	<tr className="border-b border-border/50 hover:bg-muted/20 transition-colors cursor-pointer" onClick={() => window.location.href = `/contests/${contest.id}`}>
@@ -112,13 +74,21 @@ const ContestTableRow = ({ contest }: { contest: Contest }) => (
 				<div className="font-bold text-foreground">
 					{contest.name.replace(/-/g, " ").toUpperCase()}
 				</div>
-				<div className="text-sm text-muted-foreground truncate max-w-xs">
+				<div className="text-sm text-muted-foreground">
 					{contest.description}
 				</div>
 			</div>
 		</td>
-		<td className="p-4 font-mono text-sm">
-			{new Date(contest.startTime).toLocaleDateString()}
+		<td className="p-4 font-mono text-xs">
+			{new Date(contest.startTime).toLocaleDateString()}<br/>
+			{new Date(contest.startTime).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+		</td>
+		<td className="p-4 font-mono text-xs">
+			{new Date(contest.endTime).toLocaleDateString()}<br/>
+			{new Date(contest.endTime).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+		</td>
+		<td className="p-4 font-mono text-xs">
+			{contest.duration}h
 		</td>
 		<td className="p-4 font-mono text-sm">
 			<div className="flex items-center gap-1">
@@ -139,57 +109,10 @@ const ContestTableRow = ({ contest }: { contest: Contest }) => (
 				</span>
 			</div>
 		</td>
-		<td className="p-4">
-			{false ? (
-				<div className="flex items-center gap-1">
-					{Array.from({ length: 5 }).map((_, i) => (
-						<Star
-							key={i}
-							className={clsx(
-								"h-3 w-3",
-								i < Math.floor(0)
-									? "text-yellow-400 fill-current"
-									: "text-gray-600"
-							)}
-						/>
-					))}
-					<span className="text-xs text-muted-foreground ml-1">(0.0)</span>
-				</div>
-			) : (
-				<span className="text-xs text-muted-foreground">No ratings</span>
-			)}
-		</td>
 		<td className="p-4 font-mono text-sm">
 			<div className="flex items-center gap-1">
 				<Users className="h-4 w-4 text-muted-foreground" />
 				{contest.participantCount}
-			</div>
-		</td>
-		<td className="p-4">
-			<div className="flex items-center gap-2">
-				{contest.website && (
-					<a
-						href={contest.website}
-						target="_blank"
-						rel="noopener noreferrer"
-						className="p-1.5 rounded transition-colors hover:bg-primary/10 text-muted-foreground hover:text-primary"
-					>
-						<svg
-							className="h-4 w-4"
-							fill="none"
-							stroke="currentColor"
-							viewBox="0 0 24 24"
-						>
-							<path
-								strokeLinecap="round"
-								strokeLinejoin="round"
-								strokeWidth={2}
-								d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
-							/>
-						</svg>
-					</a>
-				)}
-
 			</div>
 		</td>
 	</tr>
@@ -295,6 +218,278 @@ export default function ContestsPage() {
 		});
 	};
 
+	const OngoingContestsSection = ({ contests }: { contests: Contest[] }) => {
+		const [currentPage, setCurrentPage] = useState(1);
+		const itemsPerPage = 6;
+		const totalPages = Math.ceil(contests.length / itemsPerPage);
+		const startIndex = (currentPage - 1) * itemsPerPage;
+		const currentContests = contests.slice(startIndex, startIndex + itemsPerPage);
+
+		return (
+			<motion.div
+				initial={{ opacity: 0, y: 20 }}
+				animate={{ opacity: 1, y: 0 }}
+				className="space-y-6"
+			>
+				<div className="flex items-center gap-3">
+					<Target className="h-6 w-6 text-green-400" />
+					<h2 className="text-2xl font-bold font-mono text-green-400 glow-text">
+						&gt; LIVE_CONTESTS ({contests.length})
+					</h2>
+				</div>
+				<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+					{currentContests.map((contest, index) => (
+						<ContestCard
+							key={contest.id}
+							contest={contest}
+							index={index}
+						/>
+					))}
+				</div>
+				{totalPages > 1 && (
+					<div className="flex items-center justify-center gap-2">
+						<Button
+							variant="outline"
+							size="sm"
+							onClick={() => setCurrentPage(currentPage - 1)}
+							disabled={currentPage === 1}
+							className="font-mono"
+						>
+							&lt;
+						</Button>
+						{Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+							const pageNum = Math.max(1, Math.min(totalPages - 4, currentPage - 2)) + i;
+							return (
+								<Button
+									key={pageNum}
+									variant={currentPage === pageNum ? "primary" : "outline"}
+									size="sm"
+									onClick={() => setCurrentPage(pageNum)}
+									className="font-mono min-w-[2.5rem]"
+								>
+									{pageNum}
+								</Button>
+							);
+						})}
+						<Button
+							variant="outline"
+							size="sm"
+							onClick={() => setCurrentPage(currentPage + 1)}
+							disabled={currentPage === totalPages}
+							className="font-mono"
+						>
+							&gt;
+						</Button>
+					</div>
+				)}
+			</motion.div>
+		);
+	};
+
+	const UpcomingContestsSection = ({ contests }: { contests: Contest[] }) => {
+		const [currentPage, setCurrentPage] = useState(1);
+		const itemsPerPage = 6;
+		const totalPages = Math.ceil(contests.length / itemsPerPage);
+		const startIndex = (currentPage - 1) * itemsPerPage;
+		const currentContests = contests.slice(startIndex, startIndex + itemsPerPage);
+
+		return (
+			<motion.div
+				initial={{ opacity: 0, y: 20 }}
+				animate={{ opacity: 1, y: 0 }}
+				transition={{ delay: 0.1 }}
+				className="space-y-6"
+			>
+				<div className="flex items-center gap-3">
+					<Clock className="h-6 w-6 text-blue-400" />
+					<h2 className="text-2xl font-bold font-mono text-blue-400">
+						&gt; UPCOMING_CONTESTS ({contests.length})
+					</h2>
+				</div>
+				<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+					{currentContests.map((contest, index) => (
+						<ContestCard
+							key={contest.id}
+							contest={contest}
+							index={index}
+						/>
+					))}
+				</div>
+				{totalPages > 1 && (
+					<div className="flex items-center justify-center gap-2">
+						<Button
+							variant="outline"
+							size="sm"
+							onClick={() => setCurrentPage(currentPage - 1)}
+							disabled={currentPage === 1}
+							className="font-mono"
+						>
+							&lt;
+						</Button>
+						{Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+							const pageNum = Math.max(1, Math.min(totalPages - 4, currentPage - 2)) + i;
+							return (
+								<Button
+									key={pageNum}
+									variant={currentPage === pageNum ? "primary" : "outline"}
+									size="sm"
+									onClick={() => setCurrentPage(pageNum)}
+									className="font-mono min-w-[2.5rem]"
+								>
+									{pageNum}
+								</Button>
+							);
+						})}
+						<Button
+							variant="outline"
+							size="sm"
+							onClick={() => setCurrentPage(currentPage + 1)}
+							disabled={currentPage === totalPages}
+							className="font-mono"
+						>
+							&gt;
+						</Button>
+					</div>
+				)}
+			</motion.div>
+		);
+	};
+
+	const FinishedContestsSection = ({ contests }: { contests: Contest[] }) => {
+		const [currentPage, setCurrentPage] = useState(1);
+		const itemsPerPage = 20;
+		const totalPages = Math.ceil(contests.length / itemsPerPage);
+		const startIndex = (currentPage - 1) * itemsPerPage;
+		const currentContests = contests.slice(startIndex, startIndex + itemsPerPage);
+
+		const getVisiblePages = () => {
+			const delta = 2;
+			const range = [];
+			const rangeWithDots = [];
+
+			for (let i = Math.max(2, currentPage - delta); i <= Math.min(totalPages - 1, currentPage + delta); i++) {
+				range.push(i);
+			}
+
+			if (currentPage - delta > 2) {
+				rangeWithDots.push(1, '...');
+			} else {
+				rangeWithDots.push(1);
+			}
+
+			rangeWithDots.push(...range);
+
+			if (currentPage + delta < totalPages - 1) {
+				rangeWithDots.push('...', totalPages);
+			} else if (totalPages > 1) {
+				rangeWithDots.push(totalPages);
+			}
+
+			return rangeWithDots;
+		};
+
+		return (
+			<motion.div
+				initial={{ opacity: 0, y: 20 }}
+				animate={{ opacity: 1, y: 0 }}
+				transition={{ delay: 0.2 }}
+				className="space-y-6"
+			>
+				<div className="flex items-center gap-3">
+					<Trophy className="h-6 w-6 text-yellow-400" />
+					<h2 className="text-2xl font-bold font-mono text-yellow-400">
+						&gt; FINISHED_CONTESTS ({contests.length})
+					</h2>
+				</div>
+				<div className="bg-card/30 rounded-none hacker-border overflow-hidden">
+					<div className="overflow-x-auto">
+						<table className="w-full">
+							<thead className="bg-muted/50">
+								<tr className="border-b border-border">
+									<th className="p-4 text-left font-mono text-sm font-bold">Contest</th>
+									<th className="p-4 text-left font-mono text-sm font-bold">Start</th>
+									<th className="p-4 text-left font-mono text-sm font-bold">End</th>
+									<th className="p-4 text-left font-mono text-sm font-bold">Duration</th>
+									<th className="p-4 text-left font-mono text-sm font-bold">Weight</th>
+									<th className="p-4 text-left font-mono text-sm font-bold">Teams</th>
+								</tr>
+							</thead>
+							<tbody>
+								{currentContests.map((contest) => (
+									<ContestTableRow key={contest.id} contest={contest} />
+								))}
+							</tbody>
+						</table>
+					</div>
+					{totalPages > 1 && (
+						<div className="flex items-center justify-between p-4 bg-muted/20 border-t border-border">
+							<div className="flex items-center gap-2">
+								<Button
+									variant="outline"
+									size="sm"
+									onClick={() => setCurrentPage(1)}
+									disabled={currentPage === 1}
+									className="font-mono"
+								>
+									&lt;&lt;
+								</Button>
+								<Button
+									variant="outline"
+									size="sm"
+									onClick={() => setCurrentPage(currentPage - 1)}
+									disabled={currentPage === 1}
+									className="font-mono"
+								>
+									&lt;
+								</Button>
+							</div>
+							<div className="flex items-center gap-1">
+								{getVisiblePages().map((page, index) => (
+									page === '...' ? (
+										<span key={`dots-${index}`} className="px-2 font-mono text-muted-foreground">...</span>
+									) : (
+										<Button
+											key={page}
+											variant={currentPage === page ? "primary" : "outline"}
+											size="sm"
+											onClick={() => setCurrentPage(page as number)}
+											className="font-mono min-w-[2.5rem]"
+										>
+											{page}
+										</Button>
+									)
+								))}
+							</div>
+							<div className="flex items-center gap-2">
+								<Button
+									variant="outline"
+									size="sm"
+									onClick={() => setCurrentPage(currentPage + 1)}
+									disabled={currentPage === totalPages}
+									className="font-mono"
+								>
+									&gt;
+								</Button>
+								<Button
+									variant="outline"
+									size="sm"
+									onClick={() => setCurrentPage(totalPages)}
+									disabled={currentPage === totalPages}
+									className="font-mono"
+								>
+									&gt;&gt;
+								</Button>
+								<span className="text-sm text-muted-foreground font-mono ml-2">
+									{startIndex + 1}-{Math.min(startIndex + itemsPerPage, contests.length)} of {contests.length}
+								</span>
+							</div>
+						</div>
+					)}
+				</div>
+			</motion.div>
+		);
+	};
+
 	// Group contests by status
 	const ongoingContests = filteredContests.filter(
 		(c) => c.status === "live" // Contest interface uses 'live' not 'ongoing'
@@ -325,13 +520,13 @@ export default function ContestsPage() {
 		<MainLayout>
 			<div className="min-h-screen">
 				{/* Hero Section */}
-				<section className="py-16 px-4 relative overflow-hidden">
+				<section className="py-8 px-4 relative overflow-hidden">
 					<div className="absolute inset-0 matrix-bg opacity-20" />
 					<div className="relative max-w-7xl mx-auto">
 						<motion.div
 							initial={{ opacity: 0, y: 30 }}
 							animate={{ opacity: 1, y: 0 }}
-							className="text-center mb-12"
+							className="text-center mb-6"
 						>
 							<h1 className="text-4xl md:text-6xl font-bold mb-6 font-mono">
 								<span className="terminal-prompt">$ </span>
@@ -360,42 +555,13 @@ export default function ContestsPage() {
 							</div>
 						</motion.div>
 
-						{/* Stats Grid */}
-						<div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-12">
-							<StatCard
-								icon={Calendar}
-								label="Total Contests"
-								value={stats.total}
-								description="All time"
-								isLoading={isLoading}
-							/>
-							<StatCard
-								icon={Target}
-								label="Live Now"
-								value={stats.ongoing}
-								description="Currently running"
-								isLoading={isLoading}
-							/>
-							<StatCard
-								icon={Clock}
-								label="Upcoming"
-								value={stats.upcoming}
-								description="Starting soon"
-								isLoading={isLoading}
-							/>
-							<StatCard
-								icon={Trophy}
-								label="Completed"
-								value={stats.finished}
-								description="Finished events"
-								isLoading={isLoading}
-							/>
-						</div>
+						{/* Live CTF Widget */}
+						<LiveCTFWidget contests={contests} />
 					</div>
 				</section>
 
 				{/* Filters Section */}
-				<section className="py-8 px-4 bg-muted/30">
+				<section className="py-6 px-4 bg-muted/30">
 					<div className="max-w-7xl mx-auto">
 						<motion.div
 							initial={{ opacity: 0, y: 20 }}
@@ -537,8 +703,8 @@ export default function ContestsPage() {
 				</section>
 
 				{/* Contest Sections */}
-				<section className="py-12 px-4">
-					<div className="max-w-7xl mx-auto space-y-16">
+				<section className="py-6 px-4">
+					<div className="max-w-7xl mx-auto space-y-6">
 						{isLoading ? (
 							<div className="flex justify-center py-12">
 								<LoadingSpinner size="lg" />
@@ -549,118 +715,19 @@ export default function ContestsPage() {
 								{(filters.status === "all" ||
 									filters.status === ContestStatus.ONGOING) &&
 									ongoingContests.length > 0 && (
-										<motion.div
-											initial={{ opacity: 0, y: 20 }}
-											animate={{ opacity: 1, y: 0 }}
-											className="space-y-6"
-										>
-											<div className="flex items-center gap-3">
-												<Target className="h-6 w-6 text-green-400" />
-												<h2 className="text-2xl font-bold font-mono text-green-400 glow-text">
-													&gt; LIVE_CONTESTS ({ongoingContests.length})
-												</h2>
-											</div>
-											<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-												{ongoingContests.map((contest, index) => (
-													<ContestCard
-														key={contest.id}
-														contest={contest}
-														index={index}
-													/>
-												))}
-											</div>
-										</motion.div>
+										<OngoingContestsSection contests={ongoingContests} />
 									)}
 
 								{/* Upcoming Contests */}
 								{(filters.status === "all" || filters.status === "upcoming") &&
 									upcomingContests.length > 0 && (
-										<motion.div
-											initial={{ opacity: 0, y: 20 }}
-											animate={{ opacity: 1, y: 0 }}
-											transition={{ delay: 0.1 }}
-											className="space-y-6"
-										>
-											<div className="flex items-center gap-3">
-												<Clock className="h-6 w-6 text-blue-400" />
-												<h2 className="text-2xl font-bold font-mono text-blue-400">
-													&gt; UPCOMING_CONTESTS ({upcomingContests.length})
-												</h2>
-											</div>
-											<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-												{upcomingContests.map((contest, index) => (
-													<ContestCard
-														key={contest.id}
-														contest={contest}
-														index={index}
-													/>
-												))}
-											</div>
-										</motion.div>
+										<UpcomingContestsSection contests={upcomingContests} />
 									)}
 
 								{/* Finished Contests - Table View */}
 								{(filters.status === "all" || filters.status === "finished") &&
 									finishedContests.length > 0 && (
-										<motion.div
-											initial={{ opacity: 0, y: 20 }}
-											animate={{ opacity: 1, y: 0 }}
-											transition={{ delay: 0.2 }}
-											className="space-y-6"
-										>
-											<div className="flex items-center gap-3">
-												<Trophy className="h-6 w-6 text-yellow-400" />
-												<h2 className="text-2xl font-bold font-mono text-yellow-400">
-													&gt; FINISHED_CONTESTS ({finishedContests.length})
-												</h2>
-											</div>
-
-											<div className="bg-card/30 rounded-none hacker-border overflow-hidden">
-												<div className="overflow-x-auto">
-													<table className="w-full">
-														<thead className="bg-muted/50">
-															<tr className="border-b border-border">
-																<th className="p-4 text-left font-mono text-sm font-bold">
-																	Contest
-																</th>
-																<th className="p-4 text-left font-mono text-sm font-bold">
-																	Date
-																</th>
-																<th className="p-4 text-left font-mono text-sm font-bold">
-																	Weight
-																</th>
-																<th className="p-4 text-left font-mono text-sm font-bold">
-																	Rating
-																</th>
-																<th className="p-4 text-left font-mono text-sm font-bold">
-																	Teams
-																</th>
-																<th className="p-4 text-left font-mono text-sm font-bold">
-																	Actions
-																</th>
-															</tr>
-														</thead>
-														<tbody>
-															{finishedContests.slice(0, 20).map((contest) => (
-																<ContestTableRow
-																	key={contest.id}
-																	contest={contest}
-																/>
-															))}
-														</tbody>
-													</table>
-												</div>
-
-												{finishedContests.length > 20 && (
-													<div className="p-4 bg-muted/20 border-t border-border">
-														<p className="text-sm text-muted-foreground font-mono text-center">
-															Showing first 20 of {finishedContests.length}{" "}
-															finished contests
-														</p>
-													</div>
-												)}
-											</div>
-										</motion.div>
+										<FinishedContestsSection contests={finishedContests} />
 									)}
 
 								{/* No Results */}

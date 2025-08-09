@@ -136,20 +136,32 @@ const getUserDetails = async (id: string): Promise<UserDetails> => {
 const HackerTerminal = ({ lines, className = "" }: { lines: string[], className?: string }) => {
 	const [visibleLines, setVisibleLines] = useState<string[]>([]);
 	const [currentLine, setCurrentLine] = useState(0);
+	const [isComplete, setIsComplete] = useState(false);
 
 	useEffect(() => {
-		if (currentLine < lines.length) {
+		if (!isComplete && currentLine < lines.length) {
 			const timer = setTimeout(() => {
 				const line = lines[currentLine];
 				if (line) {
 					setVisibleLines(prev => [...prev, line]);
 				}
-				setCurrentLine(prev => prev + 1);
-			}, 800);
+				const nextLine = currentLine + 1;
+				setCurrentLine(nextLine);
+				if (nextLine >= lines.length) {
+					setIsComplete(true);
+				}
+			}, 200);
 			return () => clearTimeout(timer);
 		}
 		return undefined;
-	}, [currentLine, lines]);
+	}, [currentLine, lines, isComplete]);
+
+	useEffect(() => {
+		if (!isComplete) {
+			setCurrentLine(0);
+			setVisibleLines([]);
+		}
+	}, [lines, isComplete]);
 
 	return (
 		<div className={clsx("bg-card border-2 border-green-400/50 rounded-lg p-6 font-mono text-sm", className)}>
@@ -173,7 +185,7 @@ const HackerTerminal = ({ lines, className = "" }: { lines: string[], className?
 				</motion.div>
 			))}
 			
-			{currentLine < lines.length && (
+			{!isComplete && currentLine < lines.length && (
 				<motion.div
 					className="text-green-400 flex items-center"
 					animate={{ opacity: [1, 0.3] }}
