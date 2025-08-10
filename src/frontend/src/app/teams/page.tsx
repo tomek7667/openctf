@@ -158,7 +158,7 @@ const TeamTableRow = ({ team }: { team: TeamWithStats }) => {
 					</div>
 					<div>
 						<div className="flex items-center gap-2">
-							<span className="font-bold text-foreground font-mono text-sm">
+							<span className="font-bold text-foreground font-mono text-base">
 								{team.name}
 							</span>
 							<PrivacyIcon className={`h-3 w-3 ${privacyColors[team.privacy]}`} />
@@ -168,7 +168,7 @@ const TeamTableRow = ({ team }: { team: TeamWithStats }) => {
 								</Badge>
 							)}
 						</div>
-						<div className="text-xs text-muted-foreground truncate max-w-xs">
+						<div className="text-sm text-muted-foreground truncate">
 							{team.description}
 						</div>
 					</div>
@@ -177,17 +177,17 @@ const TeamTableRow = ({ team }: { team: TeamWithStats }) => {
 			<td className="p-3">
 				<div className="flex items-center gap-2">
 					<span className="text-base">{getCountryByCode(team.country_code || "US")?.flag || "🌍"}</span>
-					<span className="font-mono text-xs">{team.country_code || "US"}</span>
+					<span className="font-mono text-sm">{team.country_code || "US"}</span>
 				</div>
 			</td>
-			<td className="p-3 font-mono text-xs font-bold text-primary">
+			<td className="p-3 font-mono text-sm font-bold text-primary">
 				{team.statistics.currentRating.toLocaleString()}
 			</td>
-			<td className="p-3 font-mono text-xs">
+			<td className="p-3 font-mono text-sm">
 				{team.memberCount}
 			</td>
-			<td className="p-3 font-mono text-xs">{team.statistics.contestsParticipated}</td>
-			<td className="p-3 font-mono text-xs">{team.statistics.contestsWon}</td>
+			<td className="p-3 font-mono text-sm">{team.statistics.contestsParticipated}</td>
+			<td className="p-3 font-mono text-sm">{team.statistics.contestsWon}</td>
 		</tr>
 	);
 };
@@ -649,12 +649,12 @@ export default function TeamsPage() {
 										<table className="w-full">
 											<thead className="bg-muted/30">
 												<tr className="border-b border-border/50">
-													<th className="p-3 text-left font-mono text-xs font-bold">Team</th>
-													<th className="p-3 text-left font-mono text-xs font-bold">Country</th>
-													<th className="p-3 text-left font-mono text-xs font-bold">Rating</th>
-													<th className="p-3 text-left font-mono text-xs font-bold">Members</th>
-													<th className="p-3 text-left font-mono text-xs font-bold">Contests</th>
-													<th className="p-3 text-left font-mono text-xs font-bold">Wins</th>
+													<th className="p-3 text-left font-mono text-sm font-bold w-auto">Team</th>
+													<th className="p-3 text-left font-mono text-sm font-bold w-24">Country</th>
+													<th className="p-3 text-left font-mono text-sm font-bold w-24">Rating</th>
+													<th className="p-3 text-left font-mono text-sm font-bold w-20">Members</th>
+													<th className="p-3 text-left font-mono text-sm font-bold w-20">Contests</th>
+													<th className="p-3 text-left font-mono text-sm font-bold w-16">Wins</th>
 												</tr>
 											</thead>
 											<tbody>

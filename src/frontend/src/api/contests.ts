@@ -540,7 +540,8 @@ const mockContests: Contest[] = [
 	{
 		id: "contest-005",
 		name: "DEFCON CTF Quals 2024",
-		description: "The legendary DEFCON CTF qualifiers. Only the best teams advance to compete at DEFCON in Las Vegas.",
+		description:
+			"The legendary DEFCON CTF qualifiers. Only the best teams advance to compete at DEFCON in Las Vegas.",
 		format: "jeopardy",
 		difficulty: "expert",
 		startTime: "2024-05-04T00:00:00Z",
@@ -570,7 +571,12 @@ const mockContests: Contest[] = [
 		tags: ["defcon", "elite", "qualifiers", "ctftime"],
 		country: "US",
 		language: "English",
-		statistics: { totalSolves: 0, avgScore: 0, topScore: 0, challengeStats: [] },
+		statistics: {
+			totalSolves: 0,
+			avgScore: 0,
+			topScore: 0,
+			challengeStats: [],
+		},
 		createdAt: "2024-01-01T00:00:00Z",
 		updatedAt: "2024-01-01T00:00:00Z",
 	},
@@ -578,7 +584,8 @@ const mockContests: Contest[] = [
 	{
 		id: "contest-006",
 		name: "Google CTF 2024",
-		description: "Google's annual cybersecurity competition featuring cutting-edge challenges and innovative problem-solving.",
+		description:
+			"Google's annual cybersecurity competition featuring cutting-edge challenges and innovative problem-solving.",
 		format: "jeopardy",
 		difficulty: "advanced",
 		startTime: "2024-06-21T18:00:00Z",
@@ -596,9 +603,14 @@ const mockContests: Contest[] = [
 		website: "https://capturetheflag.withgoogle.com",
 		entryFee: 0,
 		prizes: [
-			{ rank: 1, description: "Google CTF Champions", value: 13370, currency: "USD" },
+			{
+				rank: 1,
+				description: "Google CTF Champions",
+				value: 13370,
+				currency: "USD",
+			},
 			{ rank: 2, description: "Second Place", value: 7331, currency: "USD" },
-			{ rank: 3, description: "Third Place", value: 3133, currency: "USD" }
+			{ rank: 3, description: "Third Place", value: 3133, currency: "USD" },
 		],
 		status: "upcoming",
 		visibility: "public",
@@ -612,7 +624,12 @@ const mockContests: Contest[] = [
 		tags: ["google", "international", "prizes", "ctftime"],
 		country: "US",
 		language: "English",
-		statistics: { totalSolves: 0, avgScore: 0, topScore: 0, challengeStats: [] },
+		statistics: {
+			totalSolves: 0,
+			avgScore: 0,
+			topScore: 0,
+			challengeStats: [],
+		},
 		createdAt: "2024-01-05T00:00:00Z",
 		updatedAt: "2024-01-05T00:00:00Z",
 	},
@@ -620,7 +637,8 @@ const mockContests: Contest[] = [
 	{
 		id: "contest-007",
 		name: "HackTheBox University CTF 2024",
-		description: "University-focused CTF competition designed for students and academic teams worldwide.",
+		description:
+			"University-focused CTF competition designed for students and academic teams worldwide.",
 		format: "jeopardy",
 		difficulty: "intermediate",
 		startTime: "2024-04-12T16:00:00Z",
@@ -638,9 +656,19 @@ const mockContests: Contest[] = [
 		website: "https://ctf.hackthebox.com",
 		entryFee: 0,
 		prizes: [
-			{ rank: 1, description: "HTB VIP+ Subscriptions", value: 2000, currency: "USD" },
-			{ rank: 2, description: "HTB VIP Subscriptions", value: 1000, currency: "USD" },
-			{ rank: 3, description: "HTB Swag Package", value: 500, currency: "USD" }
+			{
+				rank: 1,
+				description: "HTB VIP+ Subscriptions",
+				value: 2000,
+				currency: "USD",
+			},
+			{
+				rank: 2,
+				description: "HTB VIP Subscriptions",
+				value: 1000,
+				currency: "USD",
+			},
+			{ rank: 3, description: "HTB Swag Package", value: 500, currency: "USD" },
 		],
 		status: "finished",
 		visibility: "public",
@@ -664,8 +692,8 @@ const mockContests: Contest[] = [
 				{ category: "pwn", count: 4, avgSolves: 23 },
 				{ category: "reverse", count: 4, avgSolves: 28 },
 				{ category: "forensics", count: 3, avgSolves: 45 },
-				{ category: "misc", count: 2, avgSolves: 89 }
-			]
+				{ category: "misc", count: 2, avgSolves: 89 },
+			],
 		},
 		createdAt: "2024-02-01T00:00:00Z",
 		updatedAt: "2024-04-14T17:00:00Z",
@@ -674,7 +702,8 @@ const mockContests: Contest[] = [
 	{
 		id: "contest-008",
 		name: "PlaidCTF 2024",
-		description: "Carnegie Mellon's Plaid Parliament of Pwning presents their annual high-quality CTF competition.",
+		description:
+			"Carnegie Mellon's Plaid Parliament of Pwning presents their annual high-quality CTF competition.",
 		format: "jeopardy",
 		difficulty: "expert",
 		startTime: "2024-04-19T21:00:00Z",
@@ -713,8 +742,8 @@ const mockContests: Contest[] = [
 				{ category: "crypto", count: 4, avgSolves: 18 },
 				{ category: "web", count: 3, avgSolves: 34 },
 				{ category: "reverse", count: 2, avgSolves: 8 },
-				{ category: "misc", count: 2, avgSolves: 67 }
-			]
+				{ category: "misc", count: 2, avgSolves: 67 },
+			],
 		},
 		createdAt: "2024-01-20T00:00:00Z",
 		updatedAt: "2024-04-21T22:00:00Z",
@@ -724,7 +753,8 @@ const mockContests: Contest[] = [
 	{
 		id: "live-001",
 		name: "CyberApocalypse CTF 2024",
-		description: "HackTheBox's flagship CTF event with space-themed challenges.",
+		description:
+			"HackTheBox's flagship CTF event with space-themed challenges.",
 		format: "jeopardy",
 		difficulty: "intermediate",
 		startTime: "2024-03-09T14:00:00Z",
@@ -741,7 +771,9 @@ const mockContests: Contest[] = [
 		organizerWebsite: "https://hackthebox.com",
 		website: "https://ctf.hackthebox.com",
 		entryFee: 0,
-		prizes: [{ rank: 1, description: "HTB Swag + VIP", value: 1000, currency: "USD" }],
+		prizes: [
+			{ rank: 1, description: "HTB Swag + VIP", value: 1000, currency: "USD" },
+		],
 		status: "live",
 		visibility: "public",
 		participantCount: 8934,
@@ -754,7 +786,12 @@ const mockContests: Contest[] = [
 		tags: ["hackthebox", "space", "intermediate", "ctftime"],
 		country: "UK",
 		language: "English",
-		statistics: { totalSolves: 12456, avgScore: 1234, topScore: 4567, challengeStats: [] },
+		statistics: {
+			totalSolves: 12456,
+			avgScore: 1234,
+			topScore: 4567,
+			challengeStats: [],
+		},
 		createdAt: "2024-02-01T00:00:00Z",
 		updatedAt: "2024-03-12T10:00:00Z",
 	},
@@ -791,7 +828,12 @@ const mockContests: Contest[] = [
 		tags: ["volga", "russia", "qualifier", "ctftime"],
 		country: "RU",
 		language: "English",
-		statistics: { totalSolves: 3456, avgScore: 987, topScore: 2345, challengeStats: [] },
+		statistics: {
+			totalSolves: 3456,
+			avgScore: 987,
+			topScore: 2345,
+			challengeStats: [],
+		},
 		createdAt: "2024-02-10T00:00:00Z",
 		updatedAt: "2024-03-12T15:00:00Z",
 	},
@@ -828,7 +870,12 @@ const mockContests: Contest[] = [
 		tags: ["asis", "iran", "qualifier", "expert", "ctftime"],
 		country: "IR",
 		language: "English",
-		statistics: { totalSolves: 1234, avgScore: 567, topScore: 1890, challengeStats: [] },
+		statistics: {
+			totalSolves: 1234,
+			avgScore: 567,
+			topScore: 1890,
+			challengeStats: [],
+		},
 		createdAt: "2024-02-15T00:00:00Z",
 		updatedAt: "2024-03-11T22:00:00Z",
 	},
@@ -865,7 +912,12 @@ const mockContests: Contest[] = [
 		tags: ["0ctf", "china", "qualifier", "expert", "ctftime"],
 		country: "CN",
 		language: "English",
-		statistics: { totalSolves: 789, avgScore: 234, topScore: 1456, challengeStats: [] },
+		statistics: {
+			totalSolves: 789,
+			avgScore: 234,
+			topScore: 1456,
+			challengeStats: [],
+		},
 		createdAt: "2024-02-20T00:00:00Z",
 		updatedAt: "2024-03-12T08:00:00Z",
 	},
@@ -889,7 +941,14 @@ const mockContests: Contest[] = [
 		organizerWebsite: "https://linecorp.com",
 		website: "https://linectf.me",
 		entryFee: 0,
-		prizes: [{ rank: 1, description: "LINE Swag Package", value: 500, currency: "USD" }],
+		prizes: [
+			{
+				rank: 1,
+				description: "LINE Swag Package",
+				value: 500,
+				currency: "USD",
+			},
+		],
 		status: "live",
 		visibility: "public",
 		participantCount: 1234,
@@ -902,7 +961,12 @@ const mockContests: Contest[] = [
 		tags: ["line", "japan", "corporate", "ctftime"],
 		country: "JP",
 		language: "English",
-		statistics: { totalSolves: 2345, avgScore: 678, topScore: 1789, challengeStats: [] },
+		statistics: {
+			totalSolves: 2345,
+			avgScore: 678,
+			topScore: 1789,
+			challengeStats: [],
+		},
 		createdAt: "2024-02-28T00:00:00Z",
 		updatedAt: "2024-03-12T12:00:00Z",
 	},
@@ -939,10 +1003,15 @@ const mockContests: Contest[] = [
 		tags: ["midnight", "sweden", "nordic", "qualifier", "ctftime"],
 		country: "SE",
 		language: "English",
-		statistics: { totalSolves: 1567, avgScore: 445, topScore: 1234, challengeStats: [] },
+		statistics: {
+			totalSolves: 1567,
+			avgScore: 445,
+			topScore: 1234,
+			challengeStats: [],
+		},
 		createdAt: "2024-02-25T00:00:00Z",
 		updatedAt: "2024-03-12T20:00:00Z",
-	}
+	},
 ];
 
 // Generate 40 upcoming contests
@@ -951,25 +1020,49 @@ const upcomingContests = Array.from({ length: 40 }, (_, i) => {
 	const startDate = new Date(2024, 2, 15 + i, startHour); // Starting from March 15, 2024, each contest on different day with random hour
 	const duration = 24 + Math.floor(Math.random() * 48);
 	const endDate = new Date(startDate.getTime() + duration * 60 * 60 * 1000);
-	const regStart = new Date(startDate.getTime() - (7 + Math.random() * 14) * 24 * 60 * 60 * 1000);
+	const regStart = new Date(
+		startDate.getTime() - (7 + Math.random() * 14) * 24 * 60 * 60 * 1000
+	);
 	const regEnd = new Date(startDate.getTime() - 60 * 60 * 1000);
-	
-	const organizers = ["CyberSec Corp", "HackLab", "SecureNet", "CyberGuards", "InfoSec Alliance", "TechDefenders", "CyberWarriors", "SecureTech"];
-	const countries = ["US", "UK", "DE", "FR", "JP", "KR", "CA", "AU", "NL", "SE"];
+
+	const organizers = [
+		"CyberSec Corp",
+		"HackLab",
+		"SecureNet",
+		"CyberGuards",
+		"InfoSec Alliance",
+		"TechDefenders",
+		"CyberWarriors",
+		"SecureTech",
+	];
+	const countries = [
+		"US",
+		"UK",
+		"DE",
+		"FR",
+		"JP",
+		"KR",
+		"CA",
+		"AU",
+		"NL",
+		"SE",
+	];
 	const difficulties = ["beginner", "intermediate", "advanced", "expert"];
 	const formats = ["jeopardy", "attack-defense", "king-of-the-hill", "mixed"];
-	
+
 	const selectedOrganizer = organizers[i % organizers.length];
-	
+
 	return {
-		id: `upcoming-${String(i + 1).padStart(3, '0')}`,
+		id: `upcoming-${String(i + 1).padStart(3, "0")}`,
 		name: `${selectedOrganizer} CTF ${2024 + Math.floor(i / 20)}`,
 		description: `Cybersecurity competition featuring diverse challenges across multiple categories. Join teams worldwide in this exciting event.`,
 		format: formats[i % formats.length] as any,
 		difficulty: difficulties[i % difficulties.length] as any,
 		startTime: startDate.toISOString(),
 		endTime: endDate.toISOString(),
-		duration: Math.round((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60)),
+		duration: Math.round(
+			(endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60)
+		),
 		timezone: "UTC",
 		registrationStart: regStart.toISOString(),
 		registrationEnd: regEnd.toISOString(),
@@ -979,23 +1072,39 @@ const upcomingContests = Array.from({ length: 40 }, (_, i) => {
 		maxTeamSize: 3 + Math.floor(Math.random() * 4),
 		minTeamSize: 1,
 		organizer: selectedOrganizer || "Unknown Organizer",
-		organizerWebsite: `https://${(selectedOrganizer || "unknown").toLowerCase().replace(/\s+/g, '')}.com`,
-		website: `https://ctf.${(selectedOrganizer || "unknown").toLowerCase().replace(/\s+/g, '')}.com`,
+		organizerWebsite: `https://${(selectedOrganizer || "unknown").toLowerCase().replace(/\s+/g, "")}.com`,
+		website: `https://ctf.${(selectedOrganizer || "unknown").toLowerCase().replace(/\s+/g, "")}.com`,
 		entryFee: Math.random() > 0.7 ? Math.floor(Math.random() * 100) : 0,
-		prizes: [{ rank: 1, description: "Champion Trophy", value: Math.floor(Math.random() * 5000), currency: "USD" }],
+		prizes: [
+			{
+				rank: 1,
+				description: "Champion Trophy",
+				value: Math.floor(Math.random() * 5000),
+				currency: "USD",
+			},
+		],
 		status: "upcoming" as any,
 		visibility: "public" as any,
 		participantCount: 0,
 		teamCount: 0,
 		individualCount: 0,
 		totalChallenges: 15 + Math.floor(Math.random() * 20),
-		scoringMode: Math.random() > 0.5 ? "dynamic" : "static" as any,
+		scoringMode: Math.random() > 0.5 ? "dynamic" : ("static" as any),
 		ctftimeId: 2024200 + i,
 		weight: Math.round((Math.random() * 50 + 10) * 10) / 10,
-		tags: ["upcoming", "ctftime", (countries[i % countries.length] || "us").toLowerCase()],
+		tags: [
+			"upcoming",
+			"ctftime",
+			(countries[i % countries.length] || "us").toLowerCase(),
+		],
 		country: countries[i % countries.length] || "US",
 		language: "English",
-		statistics: { totalSolves: 0, avgScore: 0, topScore: 0, challengeStats: [] },
+		statistics: {
+			totalSolves: 0,
+			avgScore: 0,
+			topScore: 0,
+			challengeStats: [],
+		},
 		createdAt: new Date(2024, 1, 1 + i).toISOString(),
 		updatedAt: new Date(2024, 1, 1 + i).toISOString(),
 	};
@@ -1004,29 +1113,59 @@ const upcomingContests = Array.from({ length: 40 }, (_, i) => {
 // Generate 150 finished contests
 const finishedContests = Array.from({ length: 150 }, (_, i) => {
 	const endDate = new Date(2024, 1, 1 + Math.floor(i / 3)); // Ending from Feb 1, 2024
-	const startDate = new Date(endDate.getTime() - (24 + Math.random() * 48) * 60 * 60 * 1000);
-	const regStart = new Date(startDate.getTime() - (7 + Math.random() * 14) * 24 * 60 * 60 * 1000);
+	const startDate = new Date(
+		endDate.getTime() - (24 + Math.random() * 48) * 60 * 60 * 1000
+	);
+	const regStart = new Date(
+		startDate.getTime() - (7 + Math.random() * 14) * 24 * 60 * 60 * 1000
+	);
 	const regEnd = new Date(startDate.getTime() - 60 * 60 * 1000);
-	
-	const organizers = ["SecureCorp", "CyberLabs", "InfoDefense", "TechSec", "CyberElite", "SecureHack", "DefenseTech", "CyberPro"];
-	const countries = ["US", "UK", "DE", "FR", "JP", "KR", "CA", "AU", "NL", "SE", "IT", "ES", "BR", "IN"];
+
+	const organizers = [
+		"SecureCorp",
+		"CyberLabs",
+		"InfoDefense",
+		"TechSec",
+		"CyberElite",
+		"SecureHack",
+		"DefenseTech",
+		"CyberPro",
+	];
+	const countries = [
+		"US",
+		"UK",
+		"DE",
+		"FR",
+		"JP",
+		"KR",
+		"CA",
+		"AU",
+		"NL",
+		"SE",
+		"IT",
+		"ES",
+		"BR",
+		"IN",
+	];
 	const difficulties = ["beginner", "intermediate", "advanced", "expert"];
 	const formats = ["jeopardy", "attack-defense", "king-of-the-hill", "mixed"];
-	
+
 	const participants = Math.floor(Math.random() * 2000) + 50;
 	const teamRatio = Math.random() * 0.8 + 0.2;
 	const teamCount = Math.floor(participants * teamRatio);
 	const individualCount = participants - teamCount;
-	
+
 	return {
-		id: `finished-${String(i + 1).padStart(3, '0')}`,
+		id: `finished-${String(i + 1).padStart(3, "0")}`,
 		name: `${organizers[i % organizers.length]} CTF ${2023 + Math.floor(i / 35)}`,
 		description: `Completed cybersecurity competition with ${participants} participants. Featured challenges across web, crypto, pwn, reverse, forensics, and misc categories.`,
 		format: formats[i % formats.length] as any,
 		difficulty: difficulties[i % difficulties.length] as any,
 		startTime: startDate.toISOString(),
 		endTime: endDate.toISOString(),
-		duration: Math.round((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60)),
+		duration: Math.round(
+			(endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60)
+		),
 		timezone: "UTC",
 		registrationStart: regStart.toISOString(),
 		registrationEnd: regEnd.toISOString(),
@@ -1036,35 +1175,70 @@ const finishedContests = Array.from({ length: 150 }, (_, i) => {
 		maxTeamSize: 3 + Math.floor(Math.random() * 4),
 		minTeamSize: 1,
 		organizer: organizers[i % organizers.length] || "Unknown Organizer",
-		organizerWebsite: `https://${(organizers[i % organizers.length] || "unknown").toLowerCase().replace(/\s+/g, '')}.com`,
-		website: `https://ctf.${(organizers[i % organizers.length] || "unknown").toLowerCase().replace(/\s+/g, '')}.com`,
+		organizerWebsite: `https://${(organizers[i % organizers.length] || "unknown").toLowerCase().replace(/\s+/g, "")}.com`,
+		website: `https://ctf.${(organizers[i % organizers.length] || "unknown").toLowerCase().replace(/\s+/g, "")}.com`,
 		entryFee: Math.random() > 0.8 ? Math.floor(Math.random() * 100) : 0,
-		prizes: [{ rank: 1, description: "Winner", value: Math.floor(Math.random() * 10000), currency: "USD" }],
+		prizes: [
+			{
+				rank: 1,
+				description: "Winner",
+				value: Math.floor(Math.random() * 10000),
+				currency: "USD",
+			},
+		],
 		status: "finished" as any,
 		visibility: "public" as any,
 		participantCount: participants,
 		teamCount: teamCount,
 		individualCount: individualCount,
 		totalChallenges: 15 + Math.floor(Math.random() * 25),
-		scoringMode: Math.random() > 0.5 ? "dynamic" : "static" as any,
+		scoringMode: Math.random() > 0.5 ? "dynamic" : ("static" as any),
 		ctftimeId: 2023000 + i,
 		weight: Math.round((Math.random() * 60 + 5) * 10) / 10,
-		tags: ["finished", "ctftime", (countries[i % countries.length] || "us").toLowerCase()],
+		tags: [
+			"finished",
+			"ctftime",
+			(countries[i % countries.length] || "us").toLowerCase(),
+		],
 		country: countries[i % countries.length] || "US",
 		language: "English",
-		rulesUrl: `https://ctf.${(organizers[i % organizers.length] || "unknown").toLowerCase().replace(/\s+/g, '')}.com/rules`,
+		rulesUrl: `https://ctf.${(organizers[i % organizers.length] || "unknown").toLowerCase().replace(/\s+/g, "")}.com/rules`,
 		statistics: {
 			totalSolves: Math.floor(Math.random() * participants * 10),
 			avgScore: Math.floor(Math.random() * 2000) + 500,
 			topScore: Math.floor(Math.random() * 5000) + 2000,
 			challengeStats: [
-				{ category: "web", count: 3 + Math.floor(Math.random() * 5), avgSolves: Math.floor(Math.random() * 100) + 20 },
-				{ category: "crypto", count: 3 + Math.floor(Math.random() * 4), avgSolves: Math.floor(Math.random() * 80) + 15 },
-				{ category: "pwn", count: 2 + Math.floor(Math.random() * 4), avgSolves: Math.floor(Math.random() * 50) + 5 },
-				{ category: "reverse", count: 2 + Math.floor(Math.random() * 4), avgSolves: Math.floor(Math.random() * 60) + 10 },
-				{ category: "forensics", count: 2 + Math.floor(Math.random() * 4), avgSolves: Math.floor(Math.random() * 70) + 25 },
-				{ category: "misc", count: 1 + Math.floor(Math.random() * 3), avgSolves: Math.floor(Math.random() * 90) + 30 }
-			]
+				{
+					category: "web",
+					count: 3 + Math.floor(Math.random() * 5),
+					avgSolves: Math.floor(Math.random() * 100) + 20,
+				},
+				{
+					category: "crypto",
+					count: 3 + Math.floor(Math.random() * 4),
+					avgSolves: Math.floor(Math.random() * 80) + 15,
+				},
+				{
+					category: "pwn",
+					count: 2 + Math.floor(Math.random() * 4),
+					avgSolves: Math.floor(Math.random() * 50) + 5,
+				},
+				{
+					category: "reverse",
+					count: 2 + Math.floor(Math.random() * 4),
+					avgSolves: Math.floor(Math.random() * 60) + 10,
+				},
+				{
+					category: "forensics",
+					count: 2 + Math.floor(Math.random() * 4),
+					avgSolves: Math.floor(Math.random() * 70) + 25,
+				},
+				{
+					category: "misc",
+					count: 1 + Math.floor(Math.random() * 3),
+					avgSolves: Math.floor(Math.random() * 90) + 30,
+				},
+			],
 		},
 		createdAt: new Date(2023, 10, 1 + i).toISOString(),
 		updatedAt: endDate.toISOString(),
@@ -1072,7 +1246,11 @@ const finishedContests = Array.from({ length: 150 }, (_, i) => {
 });
 
 // Combine all contests
-const allMockContests = [...mockContests, ...upcomingContests, ...finishedContests];
+const allMockContests = [
+	...mockContests,
+	...upcomingContests,
+	...finishedContests,
+];
 
 const mockRegistrations: ContestRegistration[] = [
 	{

@@ -45,7 +45,7 @@ interface Contest {
 	points: number;
 	year: number;
 	logo?: string;
-	difficulty: "Easy" | "Medium" | "Hard" | "Insane";
+	rating: number; // 0-5 star rating
 }
 
 interface TeamDetails {
@@ -142,15 +142,15 @@ const getTeamDetails = async (id: string): Promise<TeamDetails> => {
 			},
 		],
 		contests: [
-			{ id: 1, name: "DEFCON CTF 2024", date: "2024-08-10", place: 1, participants: 156, points: 2847, year: 2024, difficulty: "Insane" },
-			{ id: 2, name: "PlaidCTF 2024", date: "2024-04-15", place: 2, participants: 234, points: 2534, year: 2024, difficulty: "Hard" },
-			{ id: 3, name: "Google CTF 2024", date: "2024-06-22", place: 1, participants: 187, points: 2789, year: 2024, difficulty: "Insane" },
-			{ id: 4, name: "0CTF/TCTF 2023", date: "2023-09-15", place: 1, participants: 145, points: 2456, year: 2023, difficulty: "Hard" },
-			{ id: 5, name: "HITCON CTF 2023", date: "2023-12-08", place: 3, participants: 98, points: 2234, year: 2023, difficulty: "Hard" },
-			{ id: 6, name: "Real World CTF 2023", date: "2023-11-20", place: 1, participants: 67, points: 2567, year: 2023, difficulty: "Insane" },
-			{ id: 7, name: "DEFCON CTF 2023", date: "2023-08-12", place: 2, participants: 134, points: 2678, year: 2023, difficulty: "Insane" },
-			{ id: 8, name: "TokyoWesterns CTF 2022", date: "2022-09-03", place: 1, participants: 178, points: 2456, year: 2022, difficulty: "Medium" },
-			{ id: 9, name: "SECCON CTF 2022", date: "2022-11-12", place: 1, participants: 156, points: 2334, year: 2022, difficulty: "Hard" },
+			{ id: 1, name: "DEFCON CTF 2024", date: "2024-08-10", place: 1, participants: 156, points: 2847, year: 2024, rating: 5 },
+			{ id: 2, name: "PlaidCTF 2024", date: "2024-04-15", place: 2, participants: 234, points: 2534, year: 2024, rating: 4 },
+			{ id: 3, name: "Google CTF 2024", date: "2024-06-22", place: 1, participants: 187, points: 2789, year: 2024, rating: 5 },
+			{ id: 4, name: "0CTF/TCTF 2023", date: "2023-09-15", place: 1, participants: 145, points: 2456, year: 2023, rating: 4 },
+			{ id: 5, name: "HITCON CTF 2023", date: "2023-12-08", place: 3, participants: 98, points: 2234, year: 2023, rating: 4 },
+			{ id: 6, name: "Real World CTF 2023", date: "2023-11-20", place: 1, participants: 67, points: 2567, year: 2023, rating: 5 },
+			{ id: 7, name: "DEFCON CTF 2023", date: "2023-08-12", place: 2, participants: 134, points: 2678, year: 2023, rating: 5 },
+			{ id: 8, name: "TokyoWesterns CTF 2022", date: "2022-09-03", place: 1, participants: 178, points: 2456, year: 2022, rating: 3 },
+			{ id: 9, name: "SECCON CTF 2022", date: "2022-11-12", place: 1, participants: 156, points: 2334, year: 2022, rating: 4 },
 		],
 		achievements: [
 			"🏆 DEFCON CTF Champions 2024",
@@ -383,22 +383,9 @@ const ContestTimeline = ({ contests }: { contests: Contest[] }) => {
 
 	const years = Object.keys(contestsByYear).map(Number).sort((a, b) => b - a);
 
-	const getDifficultyColor = (difficulty: string) => {
-		switch (difficulty) {
-			case "Easy": return "text-green-400 border-green-400/50 bg-green-400/10";
-			case "Medium": return "text-yellow-400 border-yellow-400/50 bg-yellow-400/10";
-			case "Hard": return "text-orange-400 border-orange-400/50 bg-orange-400/10";
-			case "Insane": return "text-red-400 border-red-400/50 bg-red-400/10";
-			default: return "text-blue-400 border-blue-400/50 bg-blue-400/10";
-		}
-	};
 
-	const getPlaceColor = (place: number) => {
-		if (place === 1) return "text-yellow-400 bg-yellow-400/20";
-		if (place <= 3) return "text-orange-400 bg-orange-400/20";
-		if (place <= 10) return "text-blue-400 bg-blue-400/20";
-		return "text-muted-foreground bg-muted/20";
-	};
+
+
 
 	return (
 		<GlowingCard glowColor="purple" className="mb-8">
@@ -440,31 +427,33 @@ const ContestTimeline = ({ contests }: { contests: Contest[] }) => {
 									>
 										<div className="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-1/2 w-3 h-3 bg-purple-400 rounded-full" />
 										
-										<div className="flex items-start justify-between mb-2">
-											<div>
-												<h4 className="font-bold text-sm mb-1">{contest.name}</h4>
-												<div className="text-xs text-muted-foreground font-mono">
+										<div className="flex items-start justify-between mb-3">
+											<div className="flex-1">
+												<div className="flex items-center gap-2 mb-2">
+													<h4 className="font-bold text-base">{contest.name}</h4>
+													{contest.place === 1 && (
+														<Trophy className="h-5 w-5 text-yellow-400" />
+													)}
+												</div>
+												<div className="text-sm text-muted-foreground font-mono">
 													{new Date(contest.date).toLocaleDateString()}
 												</div>
 											</div>
 											
-											<div className="flex items-center gap-2">
-												<div className={clsx(
-													"px-2 py-1 rounded text-xs font-bold font-mono",
-													getPlaceColor(contest.place)
-												)}>
-													#{contest.place}
-												</div>
-												<div className={clsx(
-													"px-2 py-1 rounded text-xs font-mono border",
-													getDifficultyColor(contest.difficulty)
-												)}>
-													{contest.difficulty}
-												</div>
+											<div className="flex items-center gap-1">
+												{Array.from({ length: 5 }, (_, i) => (
+													<Star
+														key={i}
+														className={clsx(
+															"h-4 w-4",
+															i < contest.rating ? "text-yellow-400 fill-yellow-400" : "text-gray-600"
+														)}
+													/>
+												))}
 											</div>
 										</div>
 
-										<div className="grid grid-cols-3 gap-4 text-xs">
+										<div className="grid grid-cols-3 gap-4 text-sm">
 											<div>
 												<span className="text-muted-foreground">Participants:</span>
 												<div className="font-mono font-bold">{contest.participants}</div>
