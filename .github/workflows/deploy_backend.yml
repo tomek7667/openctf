@@ -52,7 +52,7 @@ jobs:
         run: |
           GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -o ./openctfapi ./cmd/server
 
-      - name: "Upload binary to server"
+      - name: "Upload binary and assets to server"
         if: success()
         uses: appleboy/scp-action@master
         with:
@@ -60,7 +60,9 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           port: ${{ secrets.SSH_PORT }}
           key: ${{ secrets.SSH_KEY }}
-          source: ./src/backend/openctfapi
+          source: |
+            ./src/backend/openctfapi
+            ./src/backend/assets/**
           strip_components: 3
           target: ${{ secrets.SSH_DIST_DEST }}
 
@@ -70,8 +72,12 @@ jobs:
     needs: test-and-build
 
     steps:
+      - name: "Check required assets"
+        working-directory: ./src/backend
+        run: test -f assets/email/openctf-logo.png
+
       - name: "Restart the daemon with the new binary and env variables"
         run: |
           cd ${{ secrets.SSH_DIST_DEST }}
           ls -al
-          APP_URL="${{ secrets.APP_URL }}" ICLOUD_EMAIL="${{ secrets.ICLOUD_EMAIL }}" ICLOUD_SENDER_EMAIL="${{ secrets.ICLOUD_SENDER_EMAIL }}" ICLOUD_APP_SPECIFIC_PASSWORD="${{ secrets.ICLOUD_APP_SPECIFIC_PASSWORD }}" NEXT_PUBLIC_API_URL="${{ secrets.API_URL }}" POSTGRES_HOST="${{ secrets.POSTGRES_HOST }}" POSTGRES_PORT="${{ secrets.POSTGRES_PORT }}" POSTGRES_USER="${{ secrets.POSTGRES_USER }}" POSTGRES_DB="${{ secrets.POSTGRES_DB }}" POSTGRES_PASSWORD="${{ secrets.POSTGRES_PASSWORD }}" ADMIN_SERVICE_PASSWORD="${{ secrets.ADMIN_SERVICE_PASSWORD }}" JWT_SECRET="${{ secrets.JWT_SECRET }}" GIN_MODE="${{ secrets.GIN_MODE }}" APP_NAME="${{ secrets.APP_NAME }}" LOKI_ENDPOINT="${{ secrets.LOKI_ENDPOINT }}" LOKI_USERNAME="${{ secrets.LOKI_USERNAME }}" LOKI_PASSWORD="${{ secrets.LOKI_PASSWORD }}" SSH_DIST_DEST="${{ secrets.SSH_DIST_DEST }}" NGINX_DIST="${{ secrets.NGINX_DIST }}" APP_PORT="${{ secrets.APP_PORT }}" ALLOWED_ORIGINS="${{ secrets.ALLOWED_ORIGINS }}" LOG_LEVEL="${{ vars.LOG_LEVEL }}" pm2 restart "${{ secrets.APP_NAME }}" --update-env
+          APP_URL="${{ secrets.APP_URL }}" ICLOUD_EMAIL="${{ secrets.ICLOUD_EMAIL }}" ICLOUD_SENDER_EMAIL="${{ secrets.ICLOUD_SENDER_EMAIL }}" ICLOUD_APP_SPECIFIC_PASSWORD="${{ secrets.ICLOUD_APP_SPECIFIC_PASSWORD }}" NEXT_PUBLIC_API_URL="${{ secrets.API_URL }}" POSTGRES_HOST="${{ secrets.POSTGRES_HOST }}" POSTGRES_PORT="${{ secrets.POSTGRES_PORT }}" POSTGRES_USER="${{ secrets.POSTGRES_USER }}" POSTGRES_DB="${{ secrets.POSTGRES_DB }}" POSTGRES_PASSWORD="${{ secrets.POSTGRES_PASSWORD }}" ADMIN_SERVICE_PASSWORD="${{ secrets.ADMIN_SERVICE_PASSWORD }}" JWT_SECRET="${{ secrets.JWT_SECRET }}" GIN_MODE="${{ secrets.GIN_MODE }}" APP_NAME="${{ secrets.APP_NAME }}" LOKI_ENDPOINT="${{ secrets.LOKI_ENDPOINT }}" LOKI_USERNAME="${{ secrets.LOKI_USERNAME }}" LOKI_PASSWORD="${{ secrets.LOKI_PASSWORD }}" SSH_DIST_DEST="${{ secrets.SSH_DIST_DEST }}" NGINX_DIST="${{ secrets.NGINX_DIST }}" APP_PORT="${{ secrets.APP_PORT }}" ALLOWED_ORIGINS="${{ secrets.ALLOWED_ORIGINS }}" LOG_LEVEL="${{ vars.LOG_LEVEL }}" ASSETS_DIR="${{ secrets.SSH_DIST_DEST }}/assets" pm2 restart "${{ secrets.APP_NAME }}" --update-env
