@@ -1,6 +1,8 @@
 module openctfbackend
 
-go 1.23.5
+go 1.24.5
+
+toolchain go1.24.6
 
 require (
 	entgo.io/ent v0.14.4
@@ -15,6 +17,7 @@ require (
 	github.com/swaggo/files v1.0.1
 	github.com/swaggo/gin-swagger v1.6.0
 	github.com/swaggo/swag v1.16.4
+	github.com/tomek7667/goimail v0.0.2
 	golang.org/x/crypto v0.39.0
 )
 
@@ -79,5 +82,7 @@ require (
 	golang.org/x/tools v0.33.0 // indirect
 	google.golang.org/appengine v1.6.8 // indirect
 	google.golang.org/protobuf v1.36.6 // indirect
+	gopkg.in/alexcesaro/quotedprintable.v3 v3.0.0-20150716171945-2caba252f4dc // indirect
+	gopkg.in/mail.v2 v2.3.1 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )

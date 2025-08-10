@@ -9,6 +9,7 @@ import (
 
 	ratelimit "github.com/JGLTechnologies/gin-rate-limit"
 	"github.com/gin-gonic/gin"
+	"github.com/tomek7667/goimail/icloud"
 )
 
 type RestClient interface {
@@ -29,6 +30,8 @@ type ServiceClient interface {
 	ListTeams(ctx context.Context, dto *service.ListTeamsDto) ([]*ent.Team, error)
 	Login(ctx context.Context, dto *service.LoginDto) (*ent.User, *string, error)
 	Register(ctx context.Context, dto *service.RegisterDto) (*ent.User, *string, error)
+	DeleteUserByUsername(ctx context.Context, username string) error
+	VerifyEmail(ctx context.Context, dto *service.VerifyEmailDto) (*ent.User, *string, error)
 	VerifyTeam(ctx context.Context, verifier *ent.User, dto *service.VerifyTeamDto) (*ent.Team, error)
 	MergeTeams(ctx context.Context, user *ent.User, dto *service.MergeTeamsDto) (*ent.Team, error)
 	VerifyToken(ctx context.Context, token string) (*ent.User, error)
@@ -47,20 +50,27 @@ type CtftimeClient interface {
 	GetTeam(id int) (*ctftime.Team, error)
 }
 
+type MailerClient interface {
+	SendMail(subject, body string, options *icloud.SendMailOptions, to ...string) error
+}
+
 type Handler struct {
 	RestClient    RestClient
 	ServiceClient ServiceClient
 	CtftimeClient CtftimeClient
+	MailerClient  MailerClient
 }
 
 func New(
 	restClient RestClient,
 	serviceClient ServiceClient,
 	ctftimeClient CtftimeClient,
+	mailerClient MailerClient,
 ) *Handler {
 	return &Handler{
 		RestClient:    restClient,
 		ServiceClient: serviceClient,
 		CtftimeClient: ctftimeClient,
+		MailerClient:  mailerClient,
 	}
 }

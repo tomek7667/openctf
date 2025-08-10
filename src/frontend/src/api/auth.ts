@@ -1,6 +1,6 @@
 import { BASE_URL } from "./constant";
 import { sleep } from "@/lib/utils";
-import type { LoginDto, RegisterDto, AuthResponse, User } from "@/types/api";
+import type { LoginDto, RegisterDto, AuthResponse } from "@/types/api";
 
 export const login = async (credentials: LoginDto): Promise<AuthResponse> => {
 	const response = await fetch(`${BASE_URL}/api/auth/login`, {
@@ -44,22 +44,8 @@ export const register = async (
 	};
 };
 
-export const getCurrentUser = async (): Promise<User> => {
-	await sleep(1000);
-	// TODO: implement getCurrentUser
-	return {
-		id: 1,
-		username: "mockuser",
-		email: "mockuser@example.com",
-		created_at: new Date().toISOString(),
-		password: "[HIDDEN]",
-		permission_level: "player",
-	};
-};
-
 export const logout = async (): Promise<void> => {
-	await sleep(1000);
-	// TODO: implement logout
+	// TODO: invalidating tokens on BE side
 };
 
 export const forgotPassword = async (
@@ -83,4 +69,21 @@ export const resetPassword = async (
 		success: true,
 		message: "Password reset successfully",
 	};
+};
+
+export const verifyEmail = async (code: string): Promise<AuthResponse> => {
+	const response = await fetch(`${BASE_URL}/api/auth/verify`, {
+		method: "POST",
+		headers: {
+			"Content-Type": "application/json",
+		},
+		credentials: "include",
+		body: JSON.stringify({ code }),
+	});
+	const { data, success, message } = await response.json();
+	if (!success) {
+		throw new Error(message ?? "Email verification failed");
+	}
+	const { user, token } = data;
+	return { token, user };
 };

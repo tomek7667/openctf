@@ -1,10 +1,12 @@
 package openctf
 
 import (
+	"fmt"
 	"net/http"
 
 	"openctfbackend/internal/rest"
 	"openctfbackend/internal/service"
+	"openctfbackend/internal/utils"
 
 	"github.com/gin-gonic/gin"
 )
@@ -40,6 +42,28 @@ func (h *Handler) AuthRegister(ctx *gin.Context) {
 			"data":    nil,
 		})
 		return
+	}
+	// user.ConfirmationCode
+	err = h.MailerClient.SendMail(
+		"[openctf] confirm your account",
+		fmt.Sprintf(`
+			Hello %s,
+			<br>
+			Please confirm your account by clicking the link below:
+			<br>
+			<a href="%s">Confirm Account</a>
+			<br>
+			Thank you for registering with us!
+		`,
+			user.Username,
+			fmt.Sprintf("%s/confirm?code=%s", utils.Getenv("APP_URL", "https://openctf.cyber-man.pl/"), *user.ConfirmationCode),
+		),
+		nil,
+		user.Email,
+	)
+	if err != nil {
+		h.ServiceClient.DeleteUserByUsername(ctx, user.Username)
+		err = fmt.Errorf("failed to send confirmation e-mail to %s: %w", dto.Email, err)
 	}
 	rest.FailOrReturn(ctx, map[string]any{
 		"user":  user,

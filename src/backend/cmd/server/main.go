@@ -15,12 +15,14 @@ import (
 	"openctfbackend/internal/utils"
 
 	"github.com/joho/godotenv"
+	"github.com/tomek7667/goimail/icloud"
 )
 
 var (
 	restClient    *rest.Client
 	serviceClient *service.Client
 	ctftimeClient *ctftime.Client
+	icloudClient  *icloud.Client
 )
 
 func getCreds() string {
@@ -52,6 +54,11 @@ func init() {
 		slog.Error("initializing ctftime client failed", "err", err)
 		panic(err)
 	}
+	icloudClient, err = icloud.New(
+		utils.Getenv("ICLOUD_EMAIL", ""),
+		utils.Getenv("ICLOUD_SENDER_EMAIL", ""),
+		utils.Getenv("ICLOUD_APP_SPECIFIC_PASSWORD", ""),
+	)
 }
 
 // SetupSwaggerDocs configures the global docs settings for Swagger.
@@ -70,6 +77,7 @@ func main() {
 		restClient,
 		serviceClient,
 		ctftimeClient,
+		icloudClient,
 	)
 	crawler := crawler.New(
 		serviceClient,
