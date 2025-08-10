@@ -3,21 +3,22 @@ import { sleep } from "@/lib/utils";
 import type { LoginDto, RegisterDto, AuthResponse, User } from "@/types/api";
 
 export const login = async (credentials: LoginDto): Promise<AuthResponse> => {
-	console.log(BASE_URL);
-	await sleep(1000);
-	// TODO: implement login
-	return {
-		token: "mock_jwt_token_" + Date.now(),
-		user: {
-			id: 1,
-			username: credentials.identity,
-			email: credentials.identity.includes("@")
-				? credentials.identity
-				: `${credentials.identity}@example.com`,
-			created_at: new Date().toISOString(),
-			password: "[HIDDEN]",
-			permission_level: "player",
+	const response = await fetch(`${BASE_URL}/api/auth/login`, {
+		method: "POST",
+		headers: {
+			"Content-Type": "application/json",
 		},
+		credentials: "include",
+		body: JSON.stringify(credentials),
+	});
+	const { data, success, message } = await response.json();
+	if (!success) {
+		throw new Error(message ?? "unknown error occurred");
+	}
+	const { user, token } = data;
+	return {
+		token,
+		user,
 	};
 };
 
