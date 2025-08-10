@@ -2,7 +2,15 @@
 
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Eye, EyeOff, Shield, Lock, Mail, User } from "@/components/ui/icons";
+import {
+	X,
+	Eye,
+	EyeOff,
+	Shield,
+	Lock,
+	Mail,
+	User,
+} from "@/components/ui/icons";
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
 import { useAuthStore } from "@/store/authStore";
@@ -17,13 +25,17 @@ interface AuthModalProps {
 
 type AuthMode = "login" | "register" | "forgot" | "success";
 
-export function AuthModal({ isOpen, onClose, initialMode = "login" }: AuthModalProps) {
+export function AuthModal({
+	isOpen,
+	onClose,
+	initialMode = "login",
+}: AuthModalProps) {
 	const [mode, setMode] = useState<AuthMode>(initialMode);
 	const [showPassword, setShowPassword] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);
 	const [error, setError] = useState("");
 	const [successMessage, setSuccessMessage] = useState("");
-	
+
 	const { setAuth, setLoading } = useAuthStore();
 
 	const [formData, setFormData] = useState({
@@ -101,7 +113,7 @@ export function AuthModal({ isOpen, onClose, initialMode = "login" }: AuthModalP
 					className="absolute inset-0 bg-black/80 backdrop-blur-sm"
 					onClick={onClose}
 				/>
-				
+
 				<motion.div
 					initial={{ opacity: 0, scale: 0.95 }}
 					animate={{ opacity: 1, scale: 1 }}
@@ -128,9 +140,14 @@ export function AuthModal({ isOpen, onClose, initialMode = "login" }: AuthModalP
 							<div className="text-center space-y-4">
 								<Shield className="h-12 w-12 mx-auto text-green-400" />
 								<p className="font-mono text-green-400">ACCESS_GRANTED</p>
-								<p className="text-muted-foreground text-sm">{successMessage}</p>
-								<Button onClick={() => switchMode("login")} className="w-full font-mono">
-									{">"}  back_to_login
+								<p className="text-muted-foreground text-sm">
+									{successMessage}
+								</p>
+								<Button
+									onClick={() => switchMode("login")}
+									className="w-full font-mono"
+								>
+									{">"} back_to_login
 								</Button>
 							</div>
 						) : (
@@ -147,7 +164,12 @@ export function AuthModal({ isOpen, onClose, initialMode = "login" }: AuthModalP
 													type="text"
 													placeholder="root@openctf"
 													value={formData.identity}
-													onChange={(e) => setFormData({ ...formData, identity: e.target.value })}
+													onChange={(e) =>
+														setFormData({
+															...formData,
+															identity: e.target.value,
+														})
+													}
 													className="pl-10 font-mono bg-black/50 border-primary/30"
 													required
 												/>
@@ -163,7 +185,12 @@ export function AuthModal({ isOpen, onClose, initialMode = "login" }: AuthModalP
 													type={showPassword ? "text" : "password"}
 													placeholder="••••••••"
 													value={formData.password}
-													onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+													onChange={(e) =>
+														setFormData({
+															...formData,
+															password: e.target.value,
+														})
+													}
 													className="pl-10 pr-10 font-mono bg-black/50 border-primary/30"
 													required
 												/>
@@ -172,7 +199,11 @@ export function AuthModal({ isOpen, onClose, initialMode = "login" }: AuthModalP
 													onClick={() => setShowPassword(!showPassword)}
 													className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-primary"
 												>
-													{showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+													{showPassword ? (
+														<EyeOff className="h-4 w-4" />
+													) : (
+														<Eye className="h-4 w-4" />
+													)}
 												</button>
 											</div>
 										</div>
@@ -191,7 +222,12 @@ export function AuthModal({ isOpen, onClose, initialMode = "login" }: AuthModalP
 													type="text"
 													placeholder="h4ck3r"
 													value={formData.username}
-													onChange={(e) => setFormData({ ...formData, username: e.target.value })}
+													onChange={(e) =>
+														setFormData({
+															...formData,
+															username: e.target.value,
+														})
+													}
 													className="pl-10 font-mono bg-black/50 border-primary/30"
 													required
 												/>
@@ -207,7 +243,9 @@ export function AuthModal({ isOpen, onClose, initialMode = "login" }: AuthModalP
 													type="email"
 													placeholder="user@domain.tld"
 													value={formData.email}
-													onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+													onChange={(e) =>
+														setFormData({ ...formData, email: e.target.value })
+													}
 													className="pl-10 font-mono bg-black/50 border-primary/30"
 													required
 												/>
@@ -223,7 +261,12 @@ export function AuthModal({ isOpen, onClose, initialMode = "login" }: AuthModalP
 													type={showPassword ? "text" : "password"}
 													placeholder="••••••••"
 													value={formData.password}
-													onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+													onChange={(e) =>
+														setFormData({
+															...formData,
+															password: e.target.value,
+														})
+													}
 													className="pl-10 pr-10 font-mono bg-black/50 border-primary/30"
 													required
 												/>
@@ -232,7 +275,11 @@ export function AuthModal({ isOpen, onClose, initialMode = "login" }: AuthModalP
 													onClick={() => setShowPassword(!showPassword)}
 													className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-primary"
 												>
-													{showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+													{showPassword ? (
+														<EyeOff className="h-4 w-4" />
+													) : (
+														<Eye className="h-4 w-4" />
+													)}
 												</button>
 											</div>
 										</div>
@@ -244,7 +291,12 @@ export function AuthModal({ isOpen, onClose, initialMode = "login" }: AuthModalP
 												type="text"
 												placeholder="elite hacker..."
 												value={formData.description}
-												onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+												onChange={(e) =>
+													setFormData({
+														...formData,
+														description: e.target.value,
+													})
+												}
 												className="font-mono bg-black/50 border-primary/30"
 											/>
 										</div>
@@ -262,7 +314,9 @@ export function AuthModal({ isOpen, onClose, initialMode = "login" }: AuthModalP
 												type="email"
 												placeholder="user@domain.tld"
 												value={formData.email}
-												onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+												onChange={(e) =>
+													setFormData({ ...formData, email: e.target.value })
+												}
 												className="pl-10 font-mono bg-black/50 border-primary/30"
 												required
 											/>

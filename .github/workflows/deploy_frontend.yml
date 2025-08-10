@@ -67,4 +67,4 @@ jobs:
         run: |
           cd ${{ secrets.SSH_FRONTEND_DEST }}
           yarn install --production
-          PORT="${{ secrets.FE_PORT }}" pm2 restart "${{ secrets.FE_APP_NAME }}" --update-env
+          NEXT_PUBLIC_API_URL="${{ secrets.API_URL }}" PORT="${{ secrets.FE_PORT }}" pm2 restart "${{ secrets.FE_APP_NAME }}" --update-env

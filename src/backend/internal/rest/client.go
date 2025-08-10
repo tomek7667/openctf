@@ -24,6 +24,14 @@ func New(port string) *Client {
 		Port: port,
 	}
 	c.Router = gin.New()
+	c.Router.Use(cors.New(cors.Config{
+		AllowOrigins:     strings.Split(utils.Getenv("ALLOWED_ORIGINS", "http://rce.wtf:3000,http://127.0.0.1:3000"), ","),
+		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowHeaders:     []string{"Origin", "Accept", "Authorization", "Content-Type", "X-CSRF-Token"},
+		ExposeHeaders:    []string{"Content-Length", "Link"},
+		AllowCredentials: true,
+		MaxAge:           300,
+	}))
 	return c
 }
 
@@ -47,15 +55,6 @@ func (c *Client) Serve() {
 			return ""
 		}),
 	)
-
-	c.Router.Use(cors.New(cors.Config{
-		AllowOrigins:     strings.Split(utils.Getenv("ALLOWED_ORIGINS", "http://rce.wtf:3000,http://127.0.0.1:3000"), ","),
-		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
-		AllowHeaders:     []string{"Origin", "Accept", "Authorization", "Content-Type", "X-CSRF-Token"},
-		ExposeHeaders:    []string{"Content-Length", "Link"},
-		AllowCredentials: true,
-		MaxAge:           300,
-	}))
 
 	// Automatic swagger docs based on comments
 	docs.SwaggerInfo.BasePath = "/api"

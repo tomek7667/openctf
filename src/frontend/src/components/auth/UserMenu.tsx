@@ -35,7 +35,9 @@ export function UserMenu() {
 					<User className="h-4 w-4 text-primary" />
 				</div>
 				<span className="text-foreground">{user.username}</span>
-				<ChevronDown className={`h-4 w-4 text-muted-foreground transition-transform ${isOpen ? "rotate-180" : ""}`} />
+				<ChevronDown
+					className={`h-4 w-4 text-muted-foreground transition-transform ${isOpen ? "rotate-180" : ""}`}
+				/>
 			</button>
 
 			<AnimatePresence>
@@ -55,18 +57,22 @@ export function UserMenu() {
 								<div className="text-primary font-mono text-sm mb-3">
 									$ whoami
 								</div>
-								
+
 								<div className="space-y-3 mb-4">
 									<div className="flex items-center gap-3">
 										<div className="w-10 h-10 bg-primary/20 rounded border border-primary/30 flex items-center justify-center">
 											<User className="h-5 w-5 text-primary" />
 										</div>
 										<div>
-											<div className="font-mono font-bold text-foreground">{user.username}</div>
-											<div className="text-xs text-muted-foreground">{user.email}</div>
+											<div className="font-mono font-bold text-foreground">
+												{user.username}
+											</div>
+											<div className="text-xs text-muted-foreground">
+												{user.email}
+											</div>
 										</div>
 									</div>
-									
+
 									<div className="flex items-center gap-2">
 										<Shield className="h-4 w-4 text-primary" />
 										<span className="text-sm font-mono text-muted-foreground">
@@ -84,7 +90,7 @@ export function UserMenu() {
 										<User className="h-4 w-4 text-muted-foreground" />
 										<span className="text-muted-foreground">&gt; Profile</span>
 									</a>
-									
+
 									<button
 										onClick={handleLogout}
 										className="w-full flex items-center gap-3 p-2 rounded transition-colors hover:bg-red-500/10 text-left font-mono text-sm text-red-400"
