@@ -68,7 +68,6 @@ jobs:
           source: "src/backend/openctfapi,src/backend/assets"
           strip_components: 3
           target: ${{ secrets.SSH_DIST_DEST }}
-          debug: true
 
   deploy:
     runs-on: self-hosted
