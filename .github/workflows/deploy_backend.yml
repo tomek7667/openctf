@@ -52,6 +52,11 @@ jobs:
         run: |
           GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -o ./openctfapi ./cmd/server
 
+      - name: "Verify upload sources exist"
+        run: |
+          ls -al src/backend/openctfapi
+          find src/backend/assets -maxdepth 2 -type f -print || true
+
       - name: "Upload binary and assets to server"
         if: success()
         uses: appleboy/scp-action@master
@@ -60,11 +65,10 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           port: ${{ secrets.SSH_PORT }}
           key: ${{ secrets.SSH_KEY }}
-          source: |
-            ./src/backend/openctfapi
-            ./src/backend/assets/**
+          source: "src/backend/openctfapi,src/backend/assets"
           strip_components: 3
           target: ${{ secrets.SSH_DIST_DEST }}
+          debug: true
 
   deploy:
     runs-on: self-hosted
