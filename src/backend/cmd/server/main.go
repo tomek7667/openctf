@@ -92,7 +92,6 @@ func main() {
 		serviceClient,
 	)
 	if len(os.Args) > 1 {
-		slog.Info("the args are", "args", os.Args)
 		switch os.Args[1] {
 		case "openctf":
 			openctf.Handle()
@@ -109,7 +108,6 @@ func main() {
 			slog.Error("unknown command", "command", os.Args[1])
 			os.Exit(1)
 		}
-
 	}
 
 	wg := &sync.WaitGroup{}
