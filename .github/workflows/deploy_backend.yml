@@ -9,6 +9,10 @@ on:
       - ".github/workflows/deploy_backend.yml"
   workflow_dispatch:
 
+permissions:
+  actions: write
+  contents: read
+
 jobs:
   test-and-build:
     runs-on: ubuntu-latest
@@ -81,6 +85,43 @@ jobs:
           strip_components: 3
           target: ${{ secrets.SSH_DIST_DEST }}
 
+      - name: "Update vars.VERSION to +1"
+        if: success()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const name = 'VERSION';
+
+            async function getVar() {
+              try {
+                const { data } = await github.request('GET /repos/{owner}/{repo}/actions/variables/{name}', {
+                  owner, repo, name
+                });
+                return data.value;
+              } catch (e) {
+                if (e.status === 404) return null;
+                throw e;
+              }
+            }
+
+            const currentRaw = await getVar();
+            const current = Number.isInteger(parseInt(currentRaw, 10)) ? parseInt(currentRaw, 10) : 0;
+            const next = current + 1;
+
+            if (currentRaw === null) {
+              await github.request('POST /repos/{owner}/{repo}/actions/variables', {
+                owner, repo, name, value: String(next)
+              });
+              core.info(`Created ${name}=${next}`);
+            } else {
+              await github.request('PATCH /repos/{owner}/{repo}/actions/variables/{name}', {
+                owner, repo, name, value: String(next)
+              });
+              core.info(`Updated ${name}: ${current} -> ${next}`);
+            }
+
   deploy:
     runs-on: self-hosted
     needs: test-and-build
@@ -95,4 +136,4 @@ jobs:
         run: |
           cd "${{ secrets.SSH_DIST_DEST }}"
           ls -al
-          APP_URL="${{ secrets.APP_URL }}" ICLOUD_EMAIL="${{ secrets.ICLOUD_EMAIL }}" ICLOUD_SENDER_EMAIL="${{ secrets.ICLOUD_SENDER_EMAIL }}" ICLOUD_APP_SPECIFIC_PASSWORD="${{ secrets.ICLOUD_APP_SPECIFIC_PASSWORD }}" NEXT_PUBLIC_API_URL="${{ secrets.API_URL }}" POSTGRES_HOST="${{ secrets.POSTGRES_HOST }}" POSTGRES_PORT="${{ secrets.POSTGRES_PORT }}" POSTGRES_USER="${{ secrets.POSTGRES_USER }}" POSTGRES_DB="${{ secrets.POSTGRES_DB }}" POSTGRES_PASSWORD="${{ secrets.POSTGRES_PASSWORD }}" ADMIN_SERVICE_PASSWORD="${{ secrets.ADMIN_SERVICE_PASSWORD }}" JWT_SECRET="${{ secrets.JWT_SECRET }}" GIN_MODE="${{ secrets.GIN_MODE }}" APP_NAME="${{ secrets.APP_NAME }}" LOKI_ENDPOINT="${{ secrets.LOKI_ENDPOINT }}" LOKI_USERNAME="${{ secrets.LOKI_USERNAME }}" LOKI_PASSWORD="${{ secrets.LOKI_PASSWORD }}" SSH_DIST_DEST="${{ secrets.SSH_DIST_DEST }}" NGINX_DIST="${{ secrets.NGINX_DIST }}" APP_PORT="${{ secrets.APP_PORT }}" ALLOWED_ORIGINS="${{ secrets.ALLOWED_ORIGINS }}" LOG_LEVEL="${{ vars.LOG_LEVEL }}" ASSETS_DIR="${{ secrets.SSH_DIST_DEST }}/assets" pm2 restart "${{ secrets.APP_NAME }}" --update-env
+          APP_URL="${{ secrets.APP_URL }}" ICLOUD_EMAIL="${{ secrets.ICLOUD_EMAIL }}" ICLOUD_SENDER_EMAIL="${{ secrets.ICLOUD_SENDER_EMAIL }}" ICLOUD_APP_SPECIFIC_PASSWORD="${{ secrets.ICLOUD_APP_SPECIFIC_PASSWORD }}" NEXT_PUBLIC_API_URL="${{ secrets.API_URL }}" POSTGRES_HOST="${{ secrets.POSTGRES_HOST }}" POSTGRES_PORT="${{ secrets.POSTGRES_PORT }}" POSTGRES_USER="${{ secrets.POSTGRES_USER }}" POSTGRES_DB="${{ secrets.POSTGRES_DB }}" POSTGRES_PASSWORD="${{ secrets.POSTGRES_PASSWORD }}" ADMIN_SERVICE_PASSWORD="${{ secrets.ADMIN_SERVICE_PASSWORD }}" JWT_SECRET="${{ secrets.JWT_SECRET }}" GIN_MODE="${{ secrets.GIN_MODE }}" APP_NAME="${{ secrets.APP_NAME }}" LOKI_ENDPOINT="${{ secrets.LOKI_ENDPOINT }}" LOKI_USERNAME="${{ secrets.LOKI_USERNAME }}" LOKI_PASSWORD="${{ secrets.LOKI_PASSWORD }}" SSH_DIST_DEST="${{ secrets.SSH_DIST_DEST }}" NGINX_DIST="${{ secrets.NGINX_DIST }}" APP_PORT="${{ secrets.APP_PORT }}" ALLOWED_ORIGINS="${{ secrets.ALLOWED_ORIGINS }}" LOG_LEVEL="${{ vars.LOG_LEVEL }}" ASSETS_DIR="${{ secrets.SSH_DIST_DEST }}/assets" VERSION="${{ vars.VERSION }}" pm2 restart "${{ secrets.APP_NAME }}" --update-env

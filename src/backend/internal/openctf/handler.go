@@ -6,6 +6,7 @@ import (
 	"openctfbackend/ent"
 	"openctfbackend/internal/ctftime"
 	"openctfbackend/internal/service"
+	"openctfbackend/internal/utils"
 
 	ratelimit "github.com/JGLTechnologies/gin-rate-limit"
 	"github.com/gin-gonic/gin"
@@ -73,4 +74,8 @@ func New(
 		CtftimeClient: ctftimeClient,
 		MailerClient:  mailerClient,
 	}
+}
+
+func (*Handler) GetVersion() string {
+	return utils.Getenv("VERSION", "1")
 }
