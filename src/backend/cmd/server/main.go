@@ -87,8 +87,25 @@ func main() {
 	croner := croner.New(
 		serviceClient,
 	)
-	if len(os.Args) > 0 {
+	if len(os.Args) > 1 {
 		slog.Info("the args are", "args", os.Args)
+		switch os.Args[1] {
+		case "openctf":
+			openctf.Handle()
+		case "crawler":
+			crawler.Handle()
+			return
+		case "croner":
+			croner.Handle()
+			return
+		case "version", "v", "--version", "-v":
+			fmt.Println(openctf.GetVersion())
+			return
+		default:
+			slog.Error("unknown command", "command", os.Args[1])
+			os.Exit(1)
+		}
+
 	}
 
 	wg := &sync.WaitGroup{}

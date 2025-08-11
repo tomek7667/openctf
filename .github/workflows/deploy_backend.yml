@@ -84,7 +84,6 @@ jobs:
           source: ./src/backend/openctfapi
           strip_components: 3
           target: ${{ secrets.SSH_DIST_DEST }}
-          debug: true
 
       - name: "Update vars.VERSION to +1"
         if: success()
