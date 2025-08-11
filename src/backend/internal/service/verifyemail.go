@@ -20,7 +20,7 @@ func (c *Client) VerifyEmail(ctx context.Context, dto *VerifyEmailDto) (*ent.Use
 		return nil, nil, fmt.Errorf("invalid confirmation code: %w", err)
 	}
 	u, err = u.Update().
-		SetConfirmationCode("").
+		SetNillableConfirmationCode(nil).
 		SetEmailConfirmedAt(time.Now()).
 		Save(ctx)
 	if err != nil {

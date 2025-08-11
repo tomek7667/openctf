@@ -28,9 +28,9 @@ export default function ConfirmPage() {
 				useAuthStore.getState().setAuth(user, token);
 				setStatus("success");
 				setMessage("Email verified successfully");
-				
+
 				const timer = setInterval(() => {
-					setCountdown(prev => {
+					setCountdown((prev) => {
 						const next = prev - 0.1;
 						if (next <= 0) {
 							clearInterval(timer);
