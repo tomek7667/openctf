@@ -163,7 +163,7 @@ If you didn't create an account, you can safely ignore this email.
 	}
 
 	return h.MailerClient.SendMail(
-		"[openctf] confirm your account",
+		"OpenCTF Confirm E-mail",
 		html,
 		opts,
 		user.Email,
