@@ -79,7 +79,7 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           source: src/backend/openctfapi
           strip_components: 3
-          target: ${{ secrets.SSH_DIST_DEST }}/debug
+          target: ${{ secrets.SSH_DIST_DEST }}
 
   deploy:
     runs-on: self-hosted
