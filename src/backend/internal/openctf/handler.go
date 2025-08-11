@@ -6,7 +6,6 @@ import (
 	"openctfbackend/ent"
 	"openctfbackend/internal/ctftime"
 	"openctfbackend/internal/service"
-	"openctfbackend/internal/utils"
 
 	ratelimit "github.com/JGLTechnologies/gin-rate-limit"
 	"github.com/gin-gonic/gin"
@@ -77,5 +76,5 @@ func New(
 }
 
 func (*Handler) GetVersion() string {
-	return utils.Getenv("VERSION", "1")
+	return version
 }
