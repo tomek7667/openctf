@@ -109,7 +109,7 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           key: ${{ secrets.SSH_KEY }}
           source: ./src/backend/assets
-          strip_components: 3
+          strip_components: 4
           target: ${{ secrets.SSH_DIST_DEST }}/assets
           rm: true
 
