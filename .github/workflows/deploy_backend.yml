@@ -88,8 +88,8 @@ jobs:
     steps:
       - name: "Verify assets exist on server"
         run: |
-          test -f "${{ secrets.SSH_DIST_DEST }}/email/openctf-logo.png" \
-          || { echo "Asset missing on server"; ls -al "${{ secrets.SSH_DIST_DEST }}/email" || true; exit 1; }
+          test -f "${{ secrets.SSH_DIST_DEST }}/assets/email/openctf-logo.png" \
+          || { echo "Asset missing on server"; ls -al "${{ secrets.SSH_DIST_DEST }}/assets/email" || true; exit 1; }
 
       - name: "Restart the daemon with the new binary and env variables"
         run: |
