@@ -12,7 +12,6 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/tomek7667/goimail/icloud"
-	"gopkg.in/mail.v2"
 )
 
 func (h *Handler) sendConfirmEmail(user *ent.User) error {
@@ -135,30 +134,9 @@ func (h *Handler) sendConfirmEmail(user *ent.User) error {
 		confirmURL,
 	)
 
-	// 	plain := fmt.Sprintf(`Hello %s,
-
-	// Welcome to OpenCTF.
-
-	// Confirm your account by opening this link:
-	// %s
-
-	// If you didn't create an account, you can safely ignore this email.
-	// `, user.Username, confirmURL)
-
 	opts := &icloud.SendMailOptions{
-		BodyContentType: "text/html",
-		// Alternatives: []struct {
-		// 	BodyContentType string
-		// 	Body            string
-		// }{
-		// 	{BodyContentType: "text/plain", Body: plain},
-		// },
 		EmbeddedImages: []string{
 			logoPath,
-		},
-		MessageSettings: []mail.MessageSetting{
-			mail.SetCharset("UTF-8"),
-			mail.SetEncoding(mail.QuotedPrintable),
 		},
 	}
 

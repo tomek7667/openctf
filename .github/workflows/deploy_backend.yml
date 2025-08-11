@@ -111,6 +111,7 @@ jobs:
           source: ./src/backend/assets
           strip_components: 3
           target: ${{ secrets.SSH_DIST_DEST }}/assets
+          rm: true
 
       - name: "Upload binary to server"
         if: success()
