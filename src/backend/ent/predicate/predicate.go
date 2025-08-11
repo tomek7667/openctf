@@ -6,6 +6,12 @@ import (
 	"entgo.io/ent/dialect/sql"
 )
 
+// Achievement is the predicate function for achievement builders.
+type Achievement func(*sql.Selector)
+
+// Activity is the predicate function for activity builders.
+type Activity func(*sql.Selector)
+
 // AggregatedContestsDifficulties is the predicate function for aggregatedcontestsdifficulties builders.
 type AggregatedContestsDifficulties func(*sql.Selector)
 
@@ -23,6 +29,9 @@ type Team func(*sql.Selector)
 
 // User is the predicate function for user builders.
 type User func(*sql.Selector)
+
+// UserProfile is the predicate function for userprofile builders.
+type UserProfile func(*sql.Selector)
 
 // WeightRating is the predicate function for weightrating builders.
 type WeightRating func(*sql.Selector)

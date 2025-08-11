@@ -31,7 +31,7 @@ func getCreds() string {
 }
 
 func init() {
-	godotenv.Load(".env.prod")
+	godotenv.Load(".env.local")
 	logger.SetLogLevel()
 }
 

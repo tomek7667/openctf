@@ -120,7 +120,12 @@ const mockUserProfile = {
 			date: "2024-01-15",
 			likes: 284,
 		},
-		{ type: "contest", title: "picoCTF 2024", place: 12, date: "2024-01-10" },
+		{
+			type: "contest",
+			title: "picoCTF 2024",
+			place: 12,
+			date: "2024-01-10",
+		},
 		{
 			type: "writeup",
 			title: "SQL Injection to RCE",

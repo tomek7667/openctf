@@ -14,6 +14,10 @@ import (
 // Tx is a transactional client that is created by calling Client.Tx().
 type Tx struct {
 	config
+	// Achievement is the client for interacting with the Achievement builders.
+	Achievement *AchievementClient
+	// Activity is the client for interacting with the Activity builders.
+	Activity *ActivityClient
 	// AggregatedContestsDifficulties is the client for interacting with the AggregatedContestsDifficulties builders.
 	AggregatedContestsDifficulties *AggregatedContestsDifficultiesClient
 	// Contest is the client for interacting with the Contest builders.
@@ -26,6 +30,8 @@ type Tx struct {
 	Team *TeamClient
 	// User is the client for interacting with the User builders.
 	User *UserClient
+	// UserProfile is the client for interacting with the UserProfile builders.
+	UserProfile *UserProfileClient
 	// WeightRating is the client for interacting with the WeightRating builders.
 	WeightRating *WeightRatingClient
 
@@ -159,12 +165,15 @@ func (tx *Tx) Client() *Client {
 }
 
 func (tx *Tx) init() {
+	tx.Achievement = NewAchievementClient(tx.config)
+	tx.Activity = NewActivityClient(tx.config)
 	tx.AggregatedContestsDifficulties = NewAggregatedContestsDifficultiesClient(tx.config)
 	tx.Contest = NewContestClient(tx.config)
 	tx.ContestRating = NewContestRatingClient(tx.config)
 	tx.Place = NewPlaceClient(tx.config)
 	tx.Team = NewTeamClient(tx.config)
 	tx.User = NewUserClient(tx.config)
+	tx.UserProfile = NewUserProfileClient(tx.config)
 	tx.WeightRating = NewWeightRatingClient(tx.config)
 }
 
@@ -175,7 +184,7 @@ func (tx *Tx) init() {
 // of them in order to commit or rollback the transaction.
 //
 // If a closed transaction is embedded in one of the generated entities, and the entity
-// applies a query, for example: AggregatedContestsDifficulties.QueryXXX(), the query will be executed
+// applies a query, for example: Achievement.QueryXXX(), the query will be executed
 // through the driver which created this transaction.
 //
 // Note that txDriver is not goroutine safe.

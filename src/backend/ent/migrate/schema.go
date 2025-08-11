@@ -8,6 +8,52 @@ import (
 )
 
 var (
+	// AchievementsColumns holds the columns for the "achievements" table.
+	AchievementsColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "name", Type: field.TypeString, Unique: true},
+		{Name: "description", Type: field.TypeString},
+		{Name: "rarity", Type: field.TypeString},
+		{Name: "unlocked_at", Type: field.TypeTime},
+		{Name: "achievement_user", Type: field.TypeInt},
+	}
+	// AchievementsTable holds the schema information for the "achievements" table.
+	AchievementsTable = &schema.Table{
+		Name:       "achievements",
+		Columns:    AchievementsColumns,
+		PrimaryKey: []*schema.Column{AchievementsColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{
+			{
+				Symbol:     "achievements_users_user",
+				Columns:    []*schema.Column{AchievementsColumns[5]},
+				RefColumns: []*schema.Column{UsersColumns[0]},
+				OnDelete:   schema.NoAction,
+			},
+		},
+	}
+	// ActivitiesColumns holds the columns for the "activities" table.
+	ActivitiesColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "type", Type: field.TypeString},
+		{Name: "title", Type: field.TypeString},
+		{Name: "description", Type: field.TypeString},
+		{Name: "date", Type: field.TypeTime},
+		{Name: "activity_user", Type: field.TypeInt},
+	}
+	// ActivitiesTable holds the schema information for the "activities" table.
+	ActivitiesTable = &schema.Table{
+		Name:       "activities",
+		Columns:    ActivitiesColumns,
+		PrimaryKey: []*schema.Column{ActivitiesColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{
+			{
+				Symbol:     "activities_users_user",
+				Columns:    []*schema.Column{ActivitiesColumns[5]},
+				RefColumns: []*schema.Column{UsersColumns[0]},
+				OnDelete:   schema.NoAction,
+			},
+		},
+	}
 	// ContestsColumns holds the columns for the "contests" table.
 	ContestsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
@@ -164,6 +210,37 @@ var (
 		Columns:    UsersColumns,
 		PrimaryKey: []*schema.Column{UsersColumns[0]},
 	}
+	// UserProfilesColumns holds the columns for the "user_profiles" table.
+	UserProfilesColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "location", Type: field.TypeString, Nullable: true, Size: 30},
+		{Name: "github_link", Type: field.TypeString, Nullable: true},
+		{Name: "linkedin_link", Type: field.TypeString, Nullable: true},
+		{Name: "twitter_link", Type: field.TypeString, Nullable: true},
+		{Name: "website_link", Type: field.TypeString, Nullable: true},
+		{Name: "web_skill_level", Type: field.TypeInt, Default: 0},
+		{Name: "rev_skill_level", Type: field.TypeInt, Default: 0},
+		{Name: "pwn_skill_level", Type: field.TypeInt, Default: 0},
+		{Name: "crypto_skill_level", Type: field.TypeInt, Default: 0},
+		{Name: "misc_skill_level", Type: field.TypeInt, Default: 0},
+		{Name: "show_email", Type: field.TypeBool, Default: false},
+		{Name: "show_location", Type: field.TypeBool, Default: false},
+		{Name: "user_profile_user", Type: field.TypeInt},
+	}
+	// UserProfilesTable holds the schema information for the "user_profiles" table.
+	UserProfilesTable = &schema.Table{
+		Name:       "user_profiles",
+		Columns:    UserProfilesColumns,
+		PrimaryKey: []*schema.Column{UserProfilesColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{
+			{
+				Symbol:     "user_profiles_users_user",
+				Columns:    []*schema.Column{UserProfilesColumns[13]},
+				RefColumns: []*schema.Column{UsersColumns[0]},
+				OnDelete:   schema.NoAction,
+			},
+		},
+	}
 	// WeightRatingsColumns holds the columns for the "weight_ratings" table.
 	WeightRatingsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
@@ -225,17 +302,22 @@ var (
 	}
 	// Tables holds all the tables in the schema.
 	Tables = []*schema.Table{
+		AchievementsTable,
+		ActivitiesTable,
 		ContestsTable,
 		ContestRatingsTable,
 		PlacesTable,
 		TeamsTable,
 		UsersTable,
+		UserProfilesTable,
 		WeightRatingsTable,
 		TeamMembersTable,
 	}
 )
 
 func init() {
+	AchievementsTable.ForeignKeys[0].RefTable = UsersTable
+	ActivitiesTable.ForeignKeys[0].RefTable = UsersTable
 	ContestsTable.ForeignKeys[0].RefTable = TeamsTable
 	ContestRatingsTable.ForeignKeys[0].RefTable = UsersTable
 	ContestRatingsTable.ForeignKeys[1].RefTable = ContestsTable
@@ -243,6 +325,7 @@ func init() {
 	PlacesTable.ForeignKeys[1].RefTable = TeamsTable
 	TeamsTable.ForeignKeys[0].RefTable = UsersTable
 	TeamsTable.ForeignKeys[1].RefTable = UsersTable
+	UserProfilesTable.ForeignKeys[0].RefTable = UsersTable
 	WeightRatingsTable.ForeignKeys[0].RefTable = TeamsTable
 	WeightRatingsTable.ForeignKeys[1].RefTable = ContestsTable
 	TeamMembersTable.ForeignKeys[0].RefTable = TeamsTable

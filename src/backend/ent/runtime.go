@@ -3,12 +3,15 @@
 package ent
 
 import (
+	"openctfbackend/ent/achievement"
+	"openctfbackend/ent/activity"
 	"openctfbackend/ent/contest"
 	"openctfbackend/ent/contestrating"
 	"openctfbackend/ent/place"
 	"openctfbackend/ent/schema"
 	"openctfbackend/ent/team"
 	"openctfbackend/ent/user"
+	"openctfbackend/ent/userprofile"
 	"openctfbackend/ent/weightrating"
 	"time"
 )
@@ -17,6 +20,22 @@ import (
 // (default values, validators, hooks and policies) and stitches it
 // to their package variables.
 func init() {
+	achievementFields := schema.Achievement{}.Fields()
+	_ = achievementFields
+	// achievementDescUnlockedAt is the schema descriptor for unlocked_at field.
+	achievementDescUnlockedAt := achievementFields[3].Descriptor()
+	// achievement.DefaultUnlockedAt holds the default value on creation for the unlocked_at field.
+	achievement.DefaultUnlockedAt = achievementDescUnlockedAt.Default.(time.Time)
+	activityFields := schema.Activity{}.Fields()
+	_ = activityFields
+	// activityDescType is the schema descriptor for type field.
+	activityDescType := activityFields[0].Descriptor()
+	// activity.TypeValidator is a validator for the "type" field. It is called by the builders before save.
+	activity.TypeValidator = activityDescType.Validators[0].(func(string) error)
+	// activityDescDate is the schema descriptor for date field.
+	activityDescDate := activityFields[3].Descriptor()
+	// activity.DefaultDate holds the default value on creation for the date field.
+	activity.DefaultDate = activityDescDate.Default.(time.Time)
 	contestFields := schema.Contest{}.Fields()
 	_ = contestFields
 	// contestDescName is the schema descriptor for name field.
@@ -109,6 +128,120 @@ func init() {
 	userDescLogo := userFields[8].Descriptor()
 	// user.LogoValidator is a validator for the "logo" field. It is called by the builders before save.
 	user.LogoValidator = userDescLogo.Validators[0].(func([]byte) error)
+	userprofileFields := schema.UserProfile{}.Fields()
+	_ = userprofileFields
+	// userprofileDescLocation is the schema descriptor for location field.
+	userprofileDescLocation := userprofileFields[0].Descriptor()
+	// userprofile.LocationValidator is a validator for the "location" field. It is called by the builders before save.
+	userprofile.LocationValidator = userprofileDescLocation.Validators[0].(func(string) error)
+	// userprofileDescWebSkillLevel is the schema descriptor for web_skill_level field.
+	userprofileDescWebSkillLevel := userprofileFields[5].Descriptor()
+	// userprofile.DefaultWebSkillLevel holds the default value on creation for the web_skill_level field.
+	userprofile.DefaultWebSkillLevel = userprofileDescWebSkillLevel.Default.(int)
+	// userprofile.WebSkillLevelValidator is a validator for the "web_skill_level" field. It is called by the builders before save.
+	userprofile.WebSkillLevelValidator = func() func(int) error {
+		validators := userprofileDescWebSkillLevel.Validators
+		fns := [...]func(int) error{
+			validators[0].(func(int) error),
+			validators[1].(func(int) error),
+		}
+		return func(web_skill_level int) error {
+			for _, fn := range fns {
+				if err := fn(web_skill_level); err != nil {
+					return err
+				}
+			}
+			return nil
+		}
+	}()
+	// userprofileDescRevSkillLevel is the schema descriptor for rev_skill_level field.
+	userprofileDescRevSkillLevel := userprofileFields[6].Descriptor()
+	// userprofile.DefaultRevSkillLevel holds the default value on creation for the rev_skill_level field.
+	userprofile.DefaultRevSkillLevel = userprofileDescRevSkillLevel.Default.(int)
+	// userprofile.RevSkillLevelValidator is a validator for the "rev_skill_level" field. It is called by the builders before save.
+	userprofile.RevSkillLevelValidator = func() func(int) error {
+		validators := userprofileDescRevSkillLevel.Validators
+		fns := [...]func(int) error{
+			validators[0].(func(int) error),
+			validators[1].(func(int) error),
+		}
+		return func(rev_skill_level int) error {
+			for _, fn := range fns {
+				if err := fn(rev_skill_level); err != nil {
+					return err
+				}
+			}
+			return nil
+		}
+	}()
+	// userprofileDescPwnSkillLevel is the schema descriptor for pwn_skill_level field.
+	userprofileDescPwnSkillLevel := userprofileFields[7].Descriptor()
+	// userprofile.DefaultPwnSkillLevel holds the default value on creation for the pwn_skill_level field.
+	userprofile.DefaultPwnSkillLevel = userprofileDescPwnSkillLevel.Default.(int)
+	// userprofile.PwnSkillLevelValidator is a validator for the "pwn_skill_level" field. It is called by the builders before save.
+	userprofile.PwnSkillLevelValidator = func() func(int) error {
+		validators := userprofileDescPwnSkillLevel.Validators
+		fns := [...]func(int) error{
+			validators[0].(func(int) error),
+			validators[1].(func(int) error),
+		}
+		return func(pwn_skill_level int) error {
+			for _, fn := range fns {
+				if err := fn(pwn_skill_level); err != nil {
+					return err
+				}
+			}
+			return nil
+		}
+	}()
+	// userprofileDescCryptoSkillLevel is the schema descriptor for crypto_skill_level field.
+	userprofileDescCryptoSkillLevel := userprofileFields[8].Descriptor()
+	// userprofile.DefaultCryptoSkillLevel holds the default value on creation for the crypto_skill_level field.
+	userprofile.DefaultCryptoSkillLevel = userprofileDescCryptoSkillLevel.Default.(int)
+	// userprofile.CryptoSkillLevelValidator is a validator for the "crypto_skill_level" field. It is called by the builders before save.
+	userprofile.CryptoSkillLevelValidator = func() func(int) error {
+		validators := userprofileDescCryptoSkillLevel.Validators
+		fns := [...]func(int) error{
+			validators[0].(func(int) error),
+			validators[1].(func(int) error),
+		}
+		return func(crypto_skill_level int) error {
+			for _, fn := range fns {
+				if err := fn(crypto_skill_level); err != nil {
+					return err
+				}
+			}
+			return nil
+		}
+	}()
+	// userprofileDescMiscSkillLevel is the schema descriptor for misc_skill_level field.
+	userprofileDescMiscSkillLevel := userprofileFields[9].Descriptor()
+	// userprofile.DefaultMiscSkillLevel holds the default value on creation for the misc_skill_level field.
+	userprofile.DefaultMiscSkillLevel = userprofileDescMiscSkillLevel.Default.(int)
+	// userprofile.MiscSkillLevelValidator is a validator for the "misc_skill_level" field. It is called by the builders before save.
+	userprofile.MiscSkillLevelValidator = func() func(int) error {
+		validators := userprofileDescMiscSkillLevel.Validators
+		fns := [...]func(int) error{
+			validators[0].(func(int) error),
+			validators[1].(func(int) error),
+		}
+		return func(misc_skill_level int) error {
+			for _, fn := range fns {
+				if err := fn(misc_skill_level); err != nil {
+					return err
+				}
+			}
+			return nil
+		}
+	}()
+	// userprofileDescShowEmail is the schema descriptor for show_email field.
+	userprofileDescShowEmail := userprofileFields[10].Descriptor()
+	// userprofile.DefaultShowEmail holds the default value on creation for the show_email field.
+	userprofile.DefaultShowEmail = userprofileDescShowEmail.Default.(bool)
+	// userprofileDescShowLocation is the schema descriptor for show_location field.
+	userprofileDescShowLocation := userprofileFields[11].Descriptor()
+	// userprofile.DefaultShowLocation holds the default value on creation for the show_location field.
+	userprofile.DefaultShowLocation = userprofileDescShowLocation.Default.(bool)
 	weightratingFields := schema.WeightRating{}.Fields()
 	_ = weightratingFields
 	// weightratingDescDifficulty is the schema descriptor for difficulty field.
