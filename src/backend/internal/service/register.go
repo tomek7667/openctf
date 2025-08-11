@@ -24,8 +24,12 @@ func (c *Client) Register(ctx context.Context, dto *RegisterDto) (*ent.User, *st
 	if err != nil {
 		return nil, nil, err
 	}
+	tx, err := c.C.BeginTx(ctx, nil)
+	if err != nil {
+		return nil, nil, fmt.Errorf("failed to initialize transaction: %w", err)
+	}
 
-	u, err := c.C.User.
+	u, err := tx.User.
 		Create().
 		SetUsername(dto.Username).
 		SetEmail(dto.Email).
@@ -35,8 +39,30 @@ func (c *Client) Register(ctx context.Context, dto *RegisterDto) (*ent.User, *st
 		SetConfirmationCode(fmt.Sprintf("%08d", utils.RandInt(0, 99999999))).
 		Save(ctx)
 	if err != nil {
-		return nil, nil, errors.Join(fmt.Errorf("failed creating user"), err)
+		return nil, nil, rollback(tx, fmt.Errorf("failed creating user: %w", err))
 	}
+	_, err = tx.UserProfile.
+		Create().
+		SetUserID(u.ID).
+		Save(ctx)
+	if err != nil {
+		return nil, nil, rollback(tx, fmt.Errorf("failed creating user profile: %w", err))
+	}
+	_, err = c.AddActivity(
+		ctx,
+		tx,
+		WelcomeActivityType,
+		"Joined OpenCTF community!",
+		"",
+		u.ID,
+	)
+	if err != nil {
+		return nil, nil, rollback(tx, fmt.Errorf("failed adding welcome activity for user %s: %w", u.Email, err))
+	}
+	if err := tx.Commit(); err != nil {
+		return nil, nil, fmt.Errorf("failed to commit transaction: %w", err)
+	}
+
 	token, err := utils.GetToken(u)
 	if err != nil {
 		return nil, nil, errors.Join(fmt.Errorf("failed getting token for new user; id=%d", u.ID), err)

@@ -27,7 +27,7 @@ var (
 				Symbol:     "achievements_users_user",
 				Columns:    []*schema.Column{AchievementsColumns[5]},
 				RefColumns: []*schema.Column{UsersColumns[0]},
-				OnDelete:   schema.NoAction,
+				OnDelete:   schema.Cascade,
 			},
 		},
 	}
@@ -50,7 +50,7 @@ var (
 				Symbol:     "activities_users_user",
 				Columns:    []*schema.Column{ActivitiesColumns[5]},
 				RefColumns: []*schema.Column{UsersColumns[0]},
-				OnDelete:   schema.NoAction,
+				OnDelete:   schema.Cascade,
 			},
 		},
 	}
@@ -237,7 +237,7 @@ var (
 				Symbol:     "user_profiles_users_user",
 				Columns:    []*schema.Column{UserProfilesColumns[13]},
 				RefColumns: []*schema.Column{UsersColumns[0]},
-				OnDelete:   schema.NoAction,
+				OnDelete:   schema.Cascade,
 			},
 		},
 	}
