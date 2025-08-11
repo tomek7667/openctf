@@ -69,7 +69,7 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           port: ${{ secrets.SSH_PORT }}
           key: ${{ secrets.SSH_KEY }}
-          source: src/backend/assets
+          source: ./src/backend/assets
           strip_components: 3
           target: ${{ secrets.SSH_DIST_DEST }}/assets
 
@@ -81,9 +81,10 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           port: ${{ secrets.SSH_PORT }}
           key: ${{ secrets.SSH_KEY }}
-          source: src/backend/openctfapi
+          source: ./src/backend/openctfapi
           strip_components: 3
           target: ${{ secrets.SSH_DIST_DEST }}
+          debug: true
 
       - name: "Update vars.VERSION to +1"
         if: success()
