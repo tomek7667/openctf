@@ -184,6 +184,12 @@ func (h *Handler) AuthRegister(ctx *gin.Context) {
 	if err != nil {
 		h.ServiceClient.DeleteUserByUsername(ctx, user.Username)
 		err = fmt.Errorf("failed to send confirmation e-mail to %s: %w", dto.Email, err)
+		ctx.JSON(http.StatusBadRequest, map[string]any{
+			"success": false,
+			"message": err.Error(),
+			"data":    nil,
+		})
+		return
 	}
 	rest.FailOrReturn(ctx, map[string]any{
 		"user":  user,
