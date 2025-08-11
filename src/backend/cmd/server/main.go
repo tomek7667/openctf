@@ -48,12 +48,16 @@ func init() {
 	serviceClient, err = service.New(getCreds())
 	if err != nil {
 		slog.Error("initializing ent client failed", "err", err)
-		panic(err)
+		if len(os.Args) == 1 {
+			panic(err)
+		}
 	}
 	ctftimeClient, err = ctftime.New(utils.Getenv("CTFTIME_API_URL", "https://ctftime.org/api/v1"))
 	if err != nil {
 		slog.Error("initializing ctftime client failed", "err", err)
-		panic(err)
+		if len(os.Args) == 1 {
+			panic(err)
+		}
 	}
 	icloudClient, err = icloud.New(
 		utils.Getenv("ICLOUD_EMAIL", ""),
