@@ -31,7 +31,13 @@ import {
 } from "@/components/ui/icons";
 import { useAuthStore } from "@/store/authStore";
 import { getUserWriteups, WriteupListResponse } from "@/api/writeups";
-import { changePassword, updateNotifications, updatePrivacy, updateConnections, connectGithub } from "@/api/settings";
+import {
+	changePassword,
+	updateNotifications,
+	updatePrivacy,
+	updateConnections,
+	connectGithub,
+} from "@/api/settings";
 
 // Mock user profile data - in real app this would come from API
 const mockUserProfile = {
@@ -233,16 +239,24 @@ export default function ProfilePage() {
 	>("overview");
 	const [settingsData, setSettingsData] = useState({
 		password: { current: "", new: "", confirm: "" },
-		notifications: { email: true, browser: false, contests: true, writeups: true },
+		notifications: {
+			email: true,
+			browser: false,
+			contests: true,
+			writeups: true,
+		},
 		connections: { github: "", ctftime: "", discord: "" },
-		privacy: { profilePublic: true, showEmail: false, showLocation: true }
+		privacy: { profilePublic: true, showEmail: false, showLocation: true },
 	});
 	const [loading, setLoading] = useState({
 		password: false,
 		connections: false,
-		saveAll: false
+		saveAll: false,
 	});
-	const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
+	const [toast, setToast] = useState<{
+		message: string;
+		type: "success" | "error";
+	} | null>(null);
 
 	useEffect(() => {
 		if (!isAuthenticated) {
@@ -770,157 +784,250 @@ export default function ProfilePage() {
 									</h3>
 									<div className="grid grid-cols-1 md:grid-cols-3 gap-4">
 										<div>
-											<label className="block font-mono text-sm text-gray-300 mb-2">CURRENT PASSWORD</label>
+											<label className="block font-mono text-sm text-gray-300 mb-2">
+												CURRENT PASSWORD
+											</label>
 											<input
 												type="password"
 												value={settingsData.password.current}
-												onChange={(e) => setSettingsData(prev => ({ ...prev, password: { ...prev.password, current: e.target.value } }))}
+												onChange={(e) =>
+													setSettingsData((prev) => ({
+														...prev,
+														password: {
+															...prev.password,
+															current: e.target.value,
+														},
+													}))
+												}
 												className="w-full bg-gray-900/50 border border-gray-600 rounded-lg px-3 py-2 font-mono text-sm text-white focus:border-green-500 focus:outline-none"
 												placeholder="Enter current password"
 											/>
 										</div>
 										<div>
-											<label className="block font-mono text-sm text-gray-300 mb-2">NEW PASSWORD</label>
+											<label className="block font-mono text-sm text-gray-300 mb-2">
+												NEW PASSWORD
+											</label>
 											<input
 												type="password"
 												value={settingsData.password.new}
-												onChange={(e) => setSettingsData(prev => ({ ...prev, password: { ...prev.password, new: e.target.value } }))}
+												onChange={(e) =>
+													setSettingsData((prev) => ({
+														...prev,
+														password: { ...prev.password, new: e.target.value },
+													}))
+												}
 												className="w-full bg-gray-900/50 border border-gray-600 rounded-lg px-3 py-2 font-mono text-sm text-white focus:border-green-500 focus:outline-none"
 												placeholder="Enter new password"
 											/>
 										</div>
 										<div>
-											<label className="block font-mono text-sm text-gray-300 mb-2">CONFIRM PASSWORD</label>
+											<label className="block font-mono text-sm text-gray-300 mb-2">
+												CONFIRM PASSWORD
+											</label>
 											<input
 												type="password"
 												value={settingsData.password.confirm}
-												onChange={(e) => setSettingsData(prev => ({ ...prev, password: { ...prev.password, confirm: e.target.value } }))}
+												onChange={(e) =>
+													setSettingsData((prev) => ({
+														...prev,
+														password: {
+															...prev.password,
+															confirm: e.target.value,
+														},
+													}))
+												}
 												className="w-full bg-gray-900/50 border border-gray-600 rounded-lg px-3 py-2 font-mono text-sm text-white focus:border-green-500 focus:outline-none"
 												placeholder="Confirm new password"
 											/>
 										</div>
 									</div>
-									<Button 
+									<Button
 										className="mt-4 font-mono bg-gradient-to-r from-green-500 to-blue-500 hover:from-green-600 hover:to-blue-600 text-black font-bold"
 										onClick={async () => {
-											setLoading(prev => ({ ...prev, password: true }));
+											setLoading((prev) => ({ ...prev, password: true }));
 											try {
 												const result = await changePassword({
 													currentPassword: settingsData.password.current,
 													newPassword: settingsData.password.new,
-													confirmPassword: settingsData.password.confirm
+													confirmPassword: settingsData.password.confirm,
 												});
 												if (result.success) {
-													setSettingsData(prev => ({ ...prev, password: { current: "", new: "", confirm: "" } }));
+													setSettingsData((prev) => ({
+														...prev,
+														password: { current: "", new: "", confirm: "" },
+													}));
 												}
-												setToast({ message: result.message, type: result.success ? 'success' : 'error' });
+												setToast({
+													message: result.message,
+													type: result.success ? "success" : "error",
+												});
 											} finally {
-												setLoading(prev => ({ ...prev, password: false }));
+												setLoading((prev) => ({ ...prev, password: false }));
 											}
 										}}
 										disabled={loading.password}
 									>
-										<Key className="h-4 w-4 mr-2" />{loading.password ? 'UPDATING...' : 'UPDATE PASSWORD'}
+										<Key className="h-4 w-4 mr-2" />
+										{loading.password ? "UPDATING..." : "UPDATE PASSWORD"}
 									</Button>
 								</div>
 
 								<div className="bg-gray-800/30 backdrop-blur border border-green-500/30 rounded-lg p-6">
 									<h3 className="font-mono text-green-400 font-bold mb-6 flex items-center">
-										<Link className="h-5 w-5 mr-2" />CONNECTED SERVICES
+										<Link className="h-5 w-5 mr-2" />
+										CONNECTED SERVICES
 									</h3>
 									<div className="space-y-4">
 										<div className="flex items-center justify-between p-4 bg-gray-900/50 rounded-lg border border-gray-700">
 											<div className="flex items-center space-x-3">
 												<Github className="h-6 w-6 text-gray-300" />
 												<div>
-													<div className="font-mono text-white font-bold">GitHub</div>
-													<div className="font-mono text-xs text-gray-400">Connect your GitHub account</div>
+													<div className="font-mono text-white font-bold">
+														GitHub
+													</div>
+													<div className="font-mono text-xs text-gray-400">
+														Connect your GitHub account
+													</div>
 												</div>
 											</div>
-											<Button 
-												variant="outline" 
+											<Button
+												variant="outline"
 												className="font-mono border-green-500/50 text-green-400 hover:bg-green-500/10"
 												onClick={async () => {
-													setLoading(prev => ({ ...prev, connections: true }));
+													setLoading((prev) => ({
+														...prev,
+														connections: true,
+													}));
 													try {
 														const result = await connectGithub();
 														if (result.success && result.url) {
-															window.open(result.url, '_blank');
+															window.open(result.url, "_blank");
 														}
 													} finally {
-														setLoading(prev => ({ ...prev, connections: false }));
+														setLoading((prev) => ({
+															...prev,
+															connections: false,
+														}));
 													}
 												}}
 												disabled={loading.connections}
 											>
-												{loading.connections ? 'CONNECTING...' : 'CONNECT'}
+												{loading.connections ? "CONNECTING..." : "CONNECT"}
 											</Button>
 										</div>
 										<div className="flex items-center justify-between p-4 bg-gray-900/50 rounded-lg border border-gray-700">
 											<div className="flex items-center space-x-3">
 												<Trophy className="h-6 w-6 text-orange-400" />
 												<div>
-													<div className="font-mono text-white font-bold">CTFtime</div>
-													<div className="font-mono text-xs text-gray-400">Sync your CTF history and ratings</div>
+													<div className="font-mono text-white font-bold">
+														CTFtime
+													</div>
+													<div className="font-mono text-xs text-gray-400">
+														Sync your CTF history and ratings
+													</div>
 												</div>
 											</div>
 											<div className="flex items-center space-x-2">
 												<input
 													type="text"
 													value={settingsData.connections.ctftime}
-													onChange={(e) => setSettingsData(prev => ({ ...prev, connections: { ...prev.connections, ctftime: e.target.value } }))}
+													onChange={(e) =>
+														setSettingsData((prev) => ({
+															...prev,
+															connections: {
+																...prev.connections,
+																ctftime: e.target.value,
+															},
+														}))
+													}
 													className="bg-gray-900/50 border border-gray-600 rounded px-3 py-1 font-mono text-sm text-white focus:border-green-500 focus:outline-none w-32"
 													placeholder="Team ID"
 												/>
-												<Button 
-													variant="outline" 
+												<Button
+													variant="outline"
 													className="font-mono border-green-500/50 text-green-400 hover:bg-green-500/10"
 													onClick={async () => {
-														setLoading(prev => ({ ...prev, connections: true }));
+														setLoading((prev) => ({
+															...prev,
+															connections: true,
+														}));
 														try {
-															const result = await updateConnections(settingsData.connections);
-															setToast({ message: result.message, type: result.success ? 'success' : 'error' });
+															const result = await updateConnections(
+																settingsData.connections
+															);
+															setToast({
+																message: result.message,
+																type: result.success ? "success" : "error",
+															});
 														} finally {
-															setLoading(prev => ({ ...prev, connections: false }));
+															setLoading((prev) => ({
+																...prev,
+																connections: false,
+															}));
 														}
 													}}
 													disabled={loading.connections}
 												>
-													{loading.connections ? 'LINKING...' : 'LINK'}
+													{loading.connections ? "LINKING..." : "LINK"}
 												</Button>
 											</div>
 										</div>
 										<div className="flex items-center justify-between p-4 bg-gray-900/50 rounded-lg border border-gray-700">
 											<div className="flex items-center space-x-3">
-												<div className="w-6 h-6 bg-indigo-500 rounded flex items-center justify-center text-white font-bold text-xs">D</div>
+												<div className="w-6 h-6 bg-indigo-500 rounded flex items-center justify-center text-white font-bold text-xs">
+													D
+												</div>
 												<div>
-													<div className="font-mono text-white font-bold">Discord</div>
-													<div className="font-mono text-xs text-gray-400">Join team communications</div>
+													<div className="font-mono text-white font-bold">
+														Discord
+													</div>
+													<div className="font-mono text-xs text-gray-400">
+														Join team communications
+													</div>
 												</div>
 											</div>
 											<div className="flex items-center space-x-2">
 												<input
 													type="text"
 													value={settingsData.connections.discord}
-													onChange={(e) => setSettingsData(prev => ({ ...prev, connections: { ...prev.connections, discord: e.target.value } }))}
+													onChange={(e) =>
+														setSettingsData((prev) => ({
+															...prev,
+															connections: {
+																...prev.connections,
+																discord: e.target.value,
+															},
+														}))
+													}
 													className="bg-gray-900/50 border border-gray-600 rounded px-3 py-1 font-mono text-sm text-white focus:border-green-500 focus:outline-none w-40"
 													placeholder="username#1234"
 												/>
-												<Button 
-													variant="outline" 
+												<Button
+													variant="outline"
 													className="font-mono border-green-500/50 text-green-400 hover:bg-green-500/10"
 													onClick={async () => {
-														setLoading(prev => ({ ...prev, connections: true }));
+														setLoading((prev) => ({
+															...prev,
+															connections: true,
+														}));
 														try {
-															const result = await updateConnections(settingsData.connections);
-															setToast({ message: result.message, type: result.success ? 'success' : 'error' });
+															const result = await updateConnections(
+																settingsData.connections
+															);
+															setToast({
+																message: result.message,
+																type: result.success ? "success" : "error",
+															});
 														} finally {
-															setLoading(prev => ({ ...prev, connections: false }));
+															setLoading((prev) => ({
+																...prev,
+																connections: false,
+															}));
 														}
 													}}
 													disabled={loading.connections}
 												>
-													{loading.connections ? 'SAVING...' : 'SAVE'}
+													{loading.connections ? "SAVING..." : "SAVE"}
 												</Button>
 											</div>
 										</div>
@@ -929,29 +1036,67 @@ export default function ProfilePage() {
 
 								<div className="bg-gray-800/30 backdrop-blur border border-green-500/30 rounded-lg p-6">
 									<h3 className="font-mono text-green-400 font-bold mb-6 flex items-center">
-										<Bell className="h-5 w-5 mr-2" />NOTIFICATIONS
+										<Bell className="h-5 w-5 mr-2" />
+										NOTIFICATIONS
 									</h3>
 									<div className="space-y-4">
 										{[
-											{ key: 'email', label: 'Email Notifications', desc: 'Receive updates via email' },
-											{ key: 'browser', label: 'Browser Notifications', desc: 'Show desktop notifications' },
-											{ key: 'contests', label: 'Contest Updates', desc: 'New contests and reminders' },
-											{ key: 'writeups', label: 'Writeup Activity', desc: 'Comments and likes on your writeups' }
-										].map(item => (
-											<div key={item.key} className="flex items-center justify-between p-4 bg-gray-900/50 rounded-lg">
+											{
+												key: "email",
+												label: "Email Notifications",
+												desc: "Receive updates via email",
+											},
+											{
+												key: "browser",
+												label: "Browser Notifications",
+												desc: "Show desktop notifications",
+											},
+											{
+												key: "contests",
+												label: "Contest Updates",
+												desc: "New contests and reminders",
+											},
+											{
+												key: "writeups",
+												label: "Writeup Activity",
+												desc: "Comments and likes on your writeups",
+											},
+										].map((item) => (
+											<div
+												key={item.key}
+												className="flex items-center justify-between p-4 bg-gray-900/50 rounded-lg"
+											>
 												<div>
-													<div className="font-mono text-white font-bold">{item.label}</div>
-													<div className="font-mono text-xs text-gray-400">{item.desc}</div>
+													<div className="font-mono text-white font-bold">
+														{item.label}
+													</div>
+													<div className="font-mono text-xs text-gray-400">
+														{item.desc}
+													</div>
 												</div>
 												<label className="relative inline-flex items-center cursor-pointer">
 													<input
 														type="checkbox"
-														checked={(settingsData.notifications as any)[item.key]}
-														onChange={(e) => setSettingsData(prev => ({ ...prev, notifications: { ...prev.notifications, [item.key]: e.target.checked } }))}
+														checked={
+															(settingsData.notifications as any)[item.key]
+														}
+														onChange={(e) =>
+															setSettingsData((prev) => ({
+																...prev,
+																notifications: {
+																	...prev.notifications,
+																	[item.key]: e.target.checked,
+																},
+															}))
+														}
 														className="sr-only"
 													/>
-													<div className={`w-11 h-6 rounded-full transition-colors ${(settingsData.notifications as any)[item.key] ? 'bg-green-500' : 'bg-gray-600'}`}>
-														<div className={`w-5 h-5 bg-white rounded-full transition-transform ${(settingsData.notifications as any)[item.key] ? 'translate-x-5' : 'translate-x-0.5'} mt-0.5`} />
+													<div
+														className={`w-11 h-6 rounded-full transition-colors ${(settingsData.notifications as any)[item.key] ? "bg-green-500" : "bg-gray-600"}`}
+													>
+														<div
+															className={`w-5 h-5 bg-white rounded-full transition-transform ${(settingsData.notifications as any)[item.key] ? "translate-x-5" : "translate-x-0.5"} mt-0.5`}
+														/>
 													</div>
 												</label>
 											</div>
@@ -961,28 +1106,60 @@ export default function ProfilePage() {
 
 								<div className="bg-gray-800/30 backdrop-blur border border-green-500/30 rounded-lg p-6">
 									<h3 className="font-mono text-green-400 font-bold mb-6 flex items-center">
-										<Shield className="h-5 w-5 mr-2" />PRIVACY SETTINGS
+										<Shield className="h-5 w-5 mr-2" />
+										PRIVACY SETTINGS
 									</h3>
 									<div className="space-y-4">
 										{[
-											{ key: 'profilePublic', label: 'Public Profile', desc: 'Allow others to view your profile' },
-											{ key: 'showEmail', label: 'Show Email', desc: 'Display email on public profile' },
-											{ key: 'showLocation', label: 'Show Location', desc: 'Display location on profile' }
-										].map(item => (
-											<div key={item.key} className="flex items-center justify-between p-4 bg-gray-900/50 rounded-lg">
+											{
+												key: "profilePublic",
+												label: "Public Profile",
+												desc: "Allow others to view your profile",
+											},
+											{
+												key: "showEmail",
+												label: "Show Email",
+												desc: "Display email on public profile",
+											},
+											{
+												key: "showLocation",
+												label: "Show Location",
+												desc: "Display location on profile",
+											},
+										].map((item) => (
+											<div
+												key={item.key}
+												className="flex items-center justify-between p-4 bg-gray-900/50 rounded-lg"
+											>
 												<div>
-													<div className="font-mono text-white font-bold">{item.label}</div>
-													<div className="font-mono text-xs text-gray-400">{item.desc}</div>
+													<div className="font-mono text-white font-bold">
+														{item.label}
+													</div>
+													<div className="font-mono text-xs text-gray-400">
+														{item.desc}
+													</div>
 												</div>
 												<label className="relative inline-flex items-center cursor-pointer">
 													<input
 														type="checkbox"
 														checked={(settingsData.privacy as any)[item.key]}
-														onChange={(e) => setSettingsData(prev => ({ ...prev, privacy: { ...prev.privacy, [item.key]: e.target.checked } }))}
+														onChange={(e) =>
+															setSettingsData((prev) => ({
+																...prev,
+																privacy: {
+																	...prev.privacy,
+																	[item.key]: e.target.checked,
+																},
+															}))
+														}
 														className="sr-only"
 													/>
-													<div className={`w-11 h-6 rounded-full transition-colors ${(settingsData.privacy as any)[item.key] ? 'bg-green-500' : 'bg-gray-600'}`}>
-														<div className={`w-5 h-5 bg-white rounded-full transition-transform ${(settingsData.privacy as any)[item.key] ? 'translate-x-5' : 'translate-x-0.5'} mt-0.5`} />
+													<div
+														className={`w-11 h-6 rounded-full transition-colors ${(settingsData.privacy as any)[item.key] ? "bg-green-500" : "bg-gray-600"}`}
+													>
+														<div
+															className={`w-5 h-5 bg-white rounded-full transition-transform ${(settingsData.privacy as any)[item.key] ? "translate-x-5" : "translate-x-0.5"} mt-0.5`}
+														/>
 													</div>
 												</label>
 											</div>
@@ -991,23 +1168,27 @@ export default function ProfilePage() {
 								</div>
 
 								<div className="flex justify-end">
-									<Button 
+									<Button
 										className="font-mono bg-gradient-to-r from-green-500 to-blue-500 hover:from-green-600 hover:to-blue-600 text-black font-bold px-8"
 										onClick={async () => {
-											setLoading(prev => ({ ...prev, saveAll: true }));
+											setLoading((prev) => ({ ...prev, saveAll: true }));
 											try {
 												await Promise.all([
 													updateNotifications(settingsData.notifications),
-													updatePrivacy(settingsData.privacy)
+													updatePrivacy(settingsData.privacy),
 												]);
-												setToast({ message: 'All settings saved successfully!', type: 'success' });
+												setToast({
+													message: "All settings saved successfully!",
+													type: "success",
+												});
 											} finally {
-												setLoading(prev => ({ ...prev, saveAll: false }));
+												setLoading((prev) => ({ ...prev, saveAll: false }));
 											}
 										}}
 										disabled={loading.saveAll}
 									>
-										<Save className="h-4 w-4 mr-2" />{loading.saveAll ? 'SAVING...' : 'SAVE ALL SETTINGS'}
+										<Save className="h-4 w-4 mr-2" />
+										{loading.saveAll ? "SAVING..." : "SAVE ALL SETTINGS"}
 									</Button>
 								</div>
 							</div>
@@ -1022,9 +1203,9 @@ export default function ProfilePage() {
 						animate={{ opacity: 1, y: 0 }}
 						exit={{ opacity: 0, y: 50 }}
 						className={`px-6 py-3 rounded-lg font-mono text-sm border ${
-							toast.type === 'success' 
-								? 'bg-green-500/20 text-green-400 border-green-500/50' 
-								: 'bg-red-500/20 text-red-400 border-red-500/50'
+							toast.type === "success"
+								? "bg-green-500/20 text-green-400 border-green-500/50"
+								: "bg-red-500/20 text-red-400 border-red-500/50"
 						}`}
 					>
 						{toast.message}
