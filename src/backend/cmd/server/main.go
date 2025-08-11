@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"log/slog"
+	"os"
 	"sync"
 
 	"openctfbackend/internal/crawler"
@@ -86,6 +87,9 @@ func main() {
 	croner := croner.New(
 		serviceClient,
 	)
+	if len(os.Args) > 0 {
+		slog.Info("the args are", "args", os.Args)
+	}
 
 	wg := &sync.WaitGroup{}
 	wg.Add(3)
