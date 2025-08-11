@@ -89,37 +89,35 @@ jobs:
         if: success()
         uses: actions/github-script@v7
         with:
-          github-token: ${{ github.token }}
+          github-token: ${{ secrets.GH_PAT_ACTIONS }}
           script: |
             const { owner, repo } = context.repo;
-                  const name = 'VERSION';
+            const name = 'VERSION';
 
-                  async function getVar() {
-                    try {
-                      const { data } = await github.request(
-                        'GET /repos/{owner}/{repo}/actions/variables/{name}',
-                        { owner, repo, name }
-                      );
-                      return data.value;
-                    } catch (e) {
-                      if (e.status === 404) return null;
-                      throw e;
-                    }
-                  }
+            async function getVar() {
+              try {
+                const { data } = await github.request(
+                  'GET /repos/{owner}/{repo}/actions/variables/{name}', { owner, repo, name }
+                );
+                return data.value;
+              } catch (e) {
+                if (e.status === 404) return null;
+                throw e;
+              }
+            }
 
-                  const curRaw = await getVar();
-                  const cur = Number.isInteger(parseInt(curRaw, 10)) ? parseInt(curRaw, 10) : 0;
-                  const next = cur + 1;
+            const curRaw = await getVar();
+            const cur = Number.isInteger(parseInt(curRaw,10)) ? parseInt(curRaw,10) : 0;
+            const next = cur + 1;
 
-                  const payload = { owner, repo, name, value: String(next) };
-
-                  if (curRaw === null) {
-                    await github.request('POST /repos/{owner}/{repo}/actions/variables', payload);
-                    core.info(`Created ${name}=${next}`);
-                  } else {
-                    await github.request('PATCH /repos/{owner}/{repo}/actions/variables/{name}', payload);
-                    core.info(`Updated ${name}: ${cur} -> ${next}`);
-                  }
+            const payload = { owner, repo, name, value: String(next) };
+            if (curRaw === null) {
+              await github.request('POST /repos/{owner}/{repo}/actions/variables', payload);
+              core.info(`Created ${name}=${next}`);
+            } else {
+              await github.request('PATCH /repos/{owner}/{repo}/actions/variables/{name}', payload);
+              core.info(`Updated ${name}: ${cur} -> ${next}`);
+            }
 
   deploy:
     runs-on: self-hosted
