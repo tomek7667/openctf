@@ -25,7 +25,7 @@ func (h *Handler) AuthVerify(ctx *gin.Context) {
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, map[string]any{
 			"success": false,
-			"message": fmt.Errorf("failed to verify e-mail with code'%s': %w", dto.Code, err),
+			"message": fmt.Errorf("failed to verify e-mail with code '%s': %w", dto.Code, err),
 			"data":    nil,
 		})
 		return
