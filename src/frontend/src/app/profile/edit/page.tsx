@@ -6,180 +6,46 @@ import { motion } from "framer-motion";
 import { MainLayout } from "@/components/layout/MainLayout";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
-import { Badge } from "@/components/ui/Badge";
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
+import type { User as UserType } from "@/types/api";
 import {
 	ArrowLeft,
-	User,
 	Save,
 	Github,
 	Linkedin,
 	Globe,
+	User,
 	Eye,
 	EyeOff,
-	Plus,
 	X,
-	Shield,
 	Link as LinkIcon,
-	CheckCircle as Check,
 	Terminal,
-	Eye as Bell,
-	EyeOff as BellOff,
+	ShieldCheck,
+	ShieldUnchecked,
 } from "@/components/ui/icons";
 import { useAuthStore } from "@/store/authStore";
-import { Select } from "@/components/ui/Select";
 import "./slider.css";
-
-// Enhanced user profile interface
-interface UserProfile {
-	id: string;
-	username: string;
-	email: string;
-	bio?: string;
-	location?: string;
-	joinedDate: string;
-	avatar?: string;
-	socialLinks: {
-		github?: string;
-		linkedin?: string;
-		twitter?: string;
-		website?: string;
-		ctftime?: string;
-		discord?: string;
-	};
-	skills: string[];
-	skillLevels: { [skill: string]: number };
-	specializations: string[];
-	certifications: string[];
-	preferences: {
-		profileVisibility: "public" | "private";
-		showEmail: boolean;
-		showLocation: boolean;
-		emailNotifications: boolean;
-		discordNotifications: boolean;
-		teamInvitations: boolean;
-		contestReminders: boolean;
-	};
-	externalAccounts: {
-		github: { connected: boolean; username?: string; verifiedAt?: string };
-		ctftime: { connected: boolean; teamId?: string; verifiedAt?: string };
-		discord: { connected: boolean; username?: string; userId?: string };
-	};
-}
-
-// Mock API functions
-const updateUserProfile = async (
-	profile: Partial<UserProfile>
-): Promise<{ success: boolean; data?: UserProfile; error?: string }> => {
-	await new Promise((resolve) => setTimeout(resolve, 1000));
-	return { success: true, data: profile as UserProfile };
-};
-
-const connectExternalAccount = async (
-	provider: string
-): Promise<{ success: boolean; data?: any; error?: string }> => {
-	await new Promise((resolve) => setTimeout(resolve, 2000));
-	if (provider === "github") {
-		return {
-			success: true,
-			data: { username: "cyberninja", verifiedAt: new Date().toISOString() },
-		};
-	}
-	return { success: true, data: {} };
-};
-
-const disconnectExternalAccount = async (
-	_provider: string
-): Promise<{ success: boolean; error?: string }> => {
-	await new Promise((resolve) => setTimeout(resolve, 1000));
-	return { success: true };
-};
-
-// Available skills and specializations
-const availableSkills = [
-	"Web Security",
-	"Cryptography",
-	"Reverse Engineering",
-	"Binary Exploitation",
-	"Digital Forensics",
-	"Network Security",
-	"Mobile Security",
-	"Hardware Hacking",
-	"Social Engineering",
-	"OSINT",
-	"Malware Analysis",
-	"Penetration Testing",
-	"Python",
-	"JavaScript",
-	"C/C++",
-	"Assembly",
-	"Go",
-	"Rust",
-	"Java",
-	"PHP",
-];
-
-const availableSpecializations = [
-	"Web Application Testing",
-	"API Security",
-	"Cloud Security",
-	"DevSecOps",
-	"Incident Response",
-	"Threat Hunting",
-	"Vulnerability Research",
-	"Bug Bounty",
-	"Red Team",
-	"Blue Team",
-	"Purple Team",
-	"Security Architecture",
-];
+import {
+	getUserProfile,
+	skillsNames,
+	updateUserProfile,
+	UserProfile,
+} from "@/api";
+import useToast from "@/hooks/useToast";
 
 export default function EditProfilePage() {
 	const router = useRouter();
-	const { isAuthenticated } = useAuthStore();
+	const { isAuthenticated, token, user } = useAuthStore();
 
-	const [loading, setLoading] = useState(true);
+	const [pageLoading, setPageLoading] = useState(true);
 	const [saving, setSaving] = useState(false);
-	const [connecting, setConnecting] = useState<string | null>(null);
 
 	// Form state
-	const [profile, setProfile] = useState<UserProfile>({
-		id: "1",
-		username: "CyberNinja",
-		email: "cyberninja@example.com",
-		bio: "",
-		location: "",
-		joinedDate: "2019-03-15",
-		socialLinks: {},
-		skills: [],
-		skillLevels: {},
-		specializations: [],
-		certifications: [],
-		preferences: {
-			profileVisibility: "public",
-			showEmail: false,
-			showLocation: true,
-			emailNotifications: true,
-			discordNotifications: false,
-			teamInvitations: true,
-			contestReminders: true,
-		},
-		externalAccounts: {
-			github: { connected: false },
-			ctftime: { connected: false },
-			discord: { connected: false },
-		},
-	});
 
-	const [newSkill, setNewSkill] = useState("");
-	const [newSpecialization, setNewSpecialization] = useState("");
-	const [newCertification, setNewCertification] = useState("");
-	const [showSkillsDropdown, setShowSkillsDropdown] = useState(false);
-	const [showSpecializationsDropdown, setShowSpecializationsDropdown] =
-		useState(false);
-	const [highlightedSkillIndex, setHighlightedSkillIndex] = useState(0);
-	const [highlightedSpecializationIndex, setHighlightedSpecializationIndex] =
-		useState(0);
+	const [profile, setProfile] = useState<UserProfile | null>(null);
+	const [newProfile, setNewProfile] = useState<UserProfile | null>(null);
+	const [newUser, setNewUser] = useState<UserType | null>(null);
+	const { toast } = useToast();
 
 	useEffect(() => {
 		if (!isAuthenticated) {
@@ -187,133 +53,64 @@ export default function EditProfilePage() {
 			return;
 		}
 
-		// Mock loading user profile
-		const loadProfile = async () => {
-			await new Promise((resolve) => setTimeout(resolve, 1000));
-			setLoading(false);
+		const loadUserData = async () => {
+			try {
+				const profileResponse = await getUserProfile(token!);
+				setNewProfile(profileResponse.userProfile);
+				setProfile(profileResponse.userProfile);
+			} catch (error: any) {
+				console.error("Error loading user data:", error);
+				toast.error(
+					"an error occured while loading user profile",
+					error?.message ?? "error loading user data"
+				);
+			} finally {
+				setPageLoading(false);
+			}
 		};
 
-		loadProfile();
-	}, [isAuthenticated, router]);
+		loadUserData();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [isAuthenticated, router, token]);
 
 	useEffect(() => {
-		const handleClickOutside = () => {
-			if (showSkillsDropdown) {
-				setShowSkillsDropdown(false);
-			}
-			if (showSpecializationsDropdown) {
-				setShowSpecializationsDropdown(false);
-			}
-		};
-		document.addEventListener("mousedown", handleClickOutside);
-		return () => document.removeEventListener("mousedown", handleClickOutside);
-	}, [showSkillsDropdown, showSpecializationsDropdown]);
+		if (user !== null) {
+			setNewUser(user);
+		}
+	}, [user]);
 
 	const handleSave = async () => {
 		setSaving(true);
 		try {
-			const response = await updateUserProfile(profile);
-			if (response.success) {
-				router.push("/profile");
-			}
-		} catch (error) {
+			await Promise.all([
+				updateUserProfile(token!, newProfile!),
+				// update user acc too
+			]);
+
+			router.push("/profile");
+		} catch (error: any) {
 			console.error("Error saving profile:", error);
+			toast.error(
+				"an error occured while saving user profile",
+				error?.message ?? "error saving user data"
+			);
 		} finally {
 			setSaving(false);
 		}
-	};
-
-	const handleConnectAccount = async (provider: string) => {
-		setConnecting(provider);
-		try {
-			const response = await connectExternalAccount(provider);
-			if (response.success) {
-				setProfile((prev) => ({
-					...prev,
-					externalAccounts: {
-						...prev.externalAccounts,
-						[provider]: {
-							connected: true,
-							...response.data,
-						},
-					},
-				}));
-			}
-		} catch (error) {
-			console.error(`Error connecting ${provider}:`, error);
-		} finally {
-			setConnecting(null);
-		}
-	};
-
-	const handleDisconnectAccount = async (provider: string) => {
-		try {
-			const response = await disconnectExternalAccount(provider);
-			if (response.success) {
-				setProfile((prev) => ({
-					...prev,
-					externalAccounts: {
-						...prev.externalAccounts,
-						[provider]: { connected: false },
-					},
-				}));
-			}
-		} catch (error) {
-			console.error(`Error disconnecting ${provider}:`, error);
-		}
-	};
-
-	const removeSkill = (skill: string) => {
-		setProfile((prev) => {
-			const newSkillLevels = { ...prev.skillLevels };
-			delete newSkillLevels[skill];
-			return {
-				...prev,
-				skills: prev.skills.filter((s) => s !== skill),
-				skillLevels: newSkillLevels,
-			};
-		});
-	};
-
-	const updateSkillLevel = (skill: string, level: number) => {
-		setProfile((prev) => ({
-			...prev,
-			skillLevels: { ...prev.skillLevels, [skill]: level },
-		}));
-	};
-
-	const removeSpecialization = (spec: string) => {
-		setProfile((prev) => ({
-			...prev,
-			specializations: prev.specializations.filter((s) => s !== spec),
-		}));
-	};
-
-	const addCertification = () => {
-		if (
-			newCertification.trim() &&
-			!profile.certifications.includes(newCertification.trim())
-		) {
-			setProfile((prev) => ({
-				...prev,
-				certifications: [...prev.certifications, newCertification.trim()],
-			}));
-			setNewCertification("");
-		}
-	};
-
-	const removeCertification = (cert: string) => {
-		setProfile((prev) => ({
-			...prev,
-			certifications: prev.certifications.filter((c) => c !== cert),
-		}));
 	};
 
 	if (!isAuthenticated) {
 		return null;
 	}
 
-	if (loading) {
+	if (
+		pageLoading ||
+		user === null ||
+		token === null ||
+		newUser === null ||
+		newProfile === null ||
+		profile === null
+	) {
 		return (
 			<MainLayout>
 				<div className="flex justify-center items-center min-h-screen">
@@ -373,51 +170,80 @@ export default function EditProfilePage() {
 								<div className="space-y-4">
 									<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 										<div>
-											<label className="block text-sm font-mono text-green-400 mb-2">
-												USERNAME
+											<label
+												className={`block text-sm font-mono text-green-400 mb-2 ${user.username !== newUser.username && "italic"}`}
+											>
+												{user.username !== newUser.username && "*"} USERNAME
 											</label>
 											<Input
-												value={profile.username}
-												onChange={(e) =>
-													setProfile((prev) => ({
-														...prev,
-														username: e.target.value,
-													}))
-												}
+												value={newUser.username}
+												onChange={(e) => {
+													setNewUser((prev) => {
+														if (prev === null) {
+															return null;
+														}
+														return {
+															...prev,
+															username: e.target.value,
+														};
+													});
+												}}
 												className="font-mono bg-gray-800/50 border-green-500/30 text-white"
-												disabled // Username changes require verification
 											/>
-											<p className="text-xs font-mono text-gray-500 mt-1">
-												Contact support to change username
-											</p>
 										</div>
 										<div>
-											<label className="block text-sm font-mono text-green-400 mb-2">
-												EMAIL
+											<label
+												className={`block text-sm font-mono text-green-400 mb-2 ${newUser.email !== user.email && "italic"}`}
+											>
+												{newUser.email !== user.email && "*"} EMAIL{" "}
+												{newUser.email_confirmed_at !== null &&
+												newUser.email === user.email ? (
+													<ShieldCheck className="h-4 w-4" />
+												) : (
+													<ShieldUnchecked className="h-4 w-4" />
+												)}
 											</label>
 											<Input
-												value={profile.email}
-												onChange={(e) =>
-													setProfile((prev) => ({
-														...prev,
-														email: e.target.value,
-													}))
-												}
+												value={newUser.email}
+												onChange={(e) => {
+													setNewUser((prev) => {
+														if (prev === null) {
+															return null;
+														}
+														return {
+															...prev,
+															email: e.target.value,
+														};
+													});
+												}}
 												className="font-mono bg-gray-800/50 border-green-500/30 text-white"
 												type="email"
 											/>
+											<p className="text-xs font-mono text-gray-500 mt-1">
+												You&apos;ll have to confirm after a change
+											</p>
 										</div>
 									</div>
 
 									<div>
-										<label className="block text-sm font-mono text-green-400 mb-2">
-											BIO
+										<label
+											className={`block text-sm font-mono text-green-400 mb-2 ${newUser.description !== user.description && "italic"}`}
+										>
+											{newUser.description !== user.description && "*"} BIO
 										</label>
 										<Input
-											value={profile.bio}
-											onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-												setProfile((prev) => ({ ...prev, bio: e.target.value }))
-											}
+											value={newUser.description}
+											onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+												setNewUser((prev) => {
+													if (prev === null) {
+														return null;
+													}
+													return {
+														...prev,
+														description: e.target.value,
+													};
+												});
+											}}
 											placeholder="Tell the community about yourself..."
 											className="font-mono bg-gray-800/50 border-green-500/30 text-white placeholder-gray-400"
 											multiline
@@ -426,17 +252,26 @@ export default function EditProfilePage() {
 									</div>
 
 									<div>
-										<label className="block text-sm font-mono text-green-400 mb-2">
+										<label
+											className={`block text-sm font-mono text-green-400 mb-2 ${profile.location !== newProfile.location && "italic"}`}
+										>
+											{profile.location !== newProfile.location && "* "}
 											LOCATION
 										</label>
 										<Input
-											value={profile.location}
-											onChange={(e) =>
-												setProfile((prev) => ({
-													...prev,
-													location: e.target.value,
-												}))
-											}
+											value={newProfile.location ?? ""}
+											onChange={(e) => {
+												setNewProfile((prev) => {
+													if (prev === null) {
+														return null;
+													}
+													return {
+														...prev,
+														location:
+															e.target.value === "" ? null : e.target.value,
+													};
+												});
+											}}
 											placeholder="e.g. San Francisco, CA"
 											className="font-mono bg-gray-800/50 border-green-500/30 text-white placeholder-gray-400"
 										/>
@@ -471,49 +306,54 @@ export default function EditProfilePage() {
 											placeholder: "https://linkedin.com/in/username",
 										},
 										{
-											key: "website",
-											label: "Website",
-											icon: Globe,
-											placeholder: "https://yourwebsite.com",
-										},
-										{
 											key: "twitter",
 											label: "Twitter",
 											icon: LinkIcon,
 											placeholder: "https://twitter.com/username",
 										},
 										{
-											key: "ctftime",
-											label: "CTFtime",
-											icon: Shield,
-											placeholder: "https://ctftime.org/user/12345",
-										},
-										{
-											key: "discord",
-											label: "Discord",
-											icon: LinkIcon,
-											placeholder: "username#1234",
+											key: "website",
+											label: "Website",
+											icon: Globe,
+											placeholder: "https://yourwebsite.com",
 										},
 									].map(({ key, label, icon: _Icon, placeholder }) => (
 										<div key={key}>
-											<label className="block text-sm font-mono text-green-400 mb-2">
+											<label
+												className={`block text-sm font-mono text-green-400 mb-2 ${profile[`${key as "github" | "linkedin" | "twitter" | "website"}_link`] !== newProfile[`${key as "github" | "linkedin" | "twitter" | "website"}_link`] && "italic"}`}
+											>
+												{profile[
+													`${key as "github" | "linkedin" | "twitter" | "website"}_link`
+												] !==
+													newProfile[
+														`${key as "github" | "linkedin" | "twitter" | "website"}_link`
+													] && "* "}
 												{label.toUpperCase()}
 											</label>
 											<Input
 												value={
-													profile.socialLinks[
-														key as keyof typeof profile.socialLinks
-													] || ""
+													newProfile[
+														`${
+															key as
+																| "github"
+																| "linkedin"
+																| "twitter"
+																| "website"
+														}_link`
+													]!
 												}
-												onChange={(e) =>
-													setProfile((prev) => ({
-														...prev,
-														socialLinks: {
-															...prev.socialLinks,
-															[key]: e.target.value,
-														},
-													}))
-												}
+												onChange={(e) => {
+													setNewProfile((prev) => {
+														if (prev === null) {
+															return null;
+														}
+														return {
+															...prev,
+															[`${key}_link`]:
+																e.target.value === "" ? null : e.target.value,
+														};
+													});
+												}}
 												placeholder={placeholder}
 												className="font-mono bg-gray-800/50 border-green-500/30 text-white placeholder-gray-400"
 											/>
@@ -535,115 +375,44 @@ export default function EditProfilePage() {
 
 								{/* Skills with Levels */}
 								<div className="mb-6">
-									<label className="block text-sm font-mono text-green-400 mb-3">
+									<label
+										className={`block text-sm font-mono text-green-400 mb-3 ${skillsNames.some((skill) => profile[`${skill as "web" | "rev" | "pwn" | "crypto" | "misc"}_skill_level`] !== newProfile[`${skill as "web" | "rev" | "pwn" | "crypto" | "misc"}_skill_level`]) && "italic"}`}
+									>
+										{skillsNames.some(
+											(skill) =>
+												profile[
+													`${skill as "web" | "rev" | "pwn" | "crypto" | "misc"}_skill_level`
+												] !==
+												newProfile[
+													`${skill as "web" | "rev" | "pwn" | "crypto" | "misc"}_skill_level`
+												]
+										) && "* "}
 										TECHNICAL SKILLS & LEVELS
 									</label>
-									<div className="relative mb-3">
-										<Input
-											value={newSkill}
-											onChange={(e) => {
-												setNewSkill(e.target.value);
-												setShowSkillsDropdown(true);
-												setHighlightedSkillIndex(0);
-											}}
-											onFocus={() => setShowSkillsDropdown(true)}
-											onKeyDown={(e) => {
-												const filtered = availableSkills.filter(
-													(skill) =>
-														skill
-															.toLowerCase()
-															.includes(newSkill.toLowerCase()) &&
-														!profile.skills.includes(skill)
-												);
-
-												if (e.key === "ArrowDown") {
-													e.preventDefault();
-													setHighlightedSkillIndex((prev) =>
-														prev < filtered.length - 1 ? prev + 1 : 0
-													);
-												} else if (e.key === "ArrowUp") {
-													e.preventDefault();
-													setHighlightedSkillIndex((prev) =>
-														prev > 0 ? prev - 1 : filtered.length - 1
-													);
-												} else if (e.key === "Enter") {
-													e.preventDefault();
-													if (
-														filtered.length > 0 &&
-														filtered[highlightedSkillIndex]
-													) {
-														const skill = filtered[highlightedSkillIndex];
-														setProfile((prev) => ({
-															...prev,
-															skills: [...prev.skills, skill],
-															skillLevels: { ...prev.skillLevels, [skill]: 50 },
-														}));
-														setNewSkill("");
-														setShowSkillsDropdown(false);
-														setHighlightedSkillIndex(0);
-													}
-												}
-											}}
-											placeholder="Search and add skill..."
-											className="font-mono bg-gray-800/50 border-green-500/30 text-white placeholder-gray-400"
-										/>
-										{showSkillsDropdown && (
-											<div className="absolute z-[200] w-full mt-1 bg-gray-800 border border-green-500/30 rounded-lg max-h-48 overflow-y-auto shadow-2xl">
-												{availableSkills
-													.filter(
-														(skill) =>
-															skill
-																.toLowerCase()
-																.includes(newSkill.toLowerCase()) &&
-															!profile.skills.includes(skill)
-													)
-													.map((skill, index) => (
-														<button
-															key={skill}
-															type="button"
-															onMouseDown={(e) => {
-																e.preventDefault();
-																setProfile((prev) => ({
-																	...prev,
-																	skills: [...prev.skills, skill],
-																	skillLevels: {
-																		...prev.skillLevels,
-																		[skill]: 50,
-																	},
-																}));
-																setNewSkill("");
-																setShowSkillsDropdown(false);
-																setHighlightedSkillIndex(0);
-															}}
-															onMouseEnter={() =>
-																setHighlightedSkillIndex(index)
-															}
-															className={`w-full text-left px-3 py-2 font-mono text-white first:rounded-t-lg last:rounded-b-lg ${
-																index === highlightedSkillIndex
-																	? "bg-green-500/30"
-																	: "hover:bg-green-500/20"
-															}`}
-														>
-															{skill}
-														</button>
-													))}
-											</div>
-										)}
-									</div>
 									<div className="space-y-3">
-										{profile.skills.map((skill) => (
+										{skillsNames.map((skill) => (
 											<div
 												key={skill}
 												className="bg-gray-900/50 border border-gray-700 rounded-lg p-4"
 											>
 												<div className="flex items-center justify-between mb-2">
-													<span className="font-mono text-green-400 font-bold">
+													<span
+														className={`font-mono text-green-400 font-bold ${profile[`${skill as "web" | "rev" | "pwn" | "crypto" | "misc"}_skill_level`] !== newProfile[`${skill as "web" | "rev" | "pwn" | "crypto" | "misc"}_skill_level`] && "italic"}`}
+													>
+														{profile[
+															`${skill as "web" | "rev" | "pwn" | "crypto" | "misc"}_skill_level`
+														] !==
+															newProfile[
+																`${skill as "web" | "rev" | "pwn" | "crypto" | "misc"}_skill_level`
+															] && "* "}
 														{skill}
 													</span>
 													<Button
 														variant="outline"
 														size="sm"
-														onClick={() => removeSkill(skill)}
+														onClick={() => {
+															// removeSkill(skill); // TODO: remove
+														}}
 														className="font-mono border-red-500/50 text-red-400 hover:bg-red-500/10"
 													>
 														<X className="h-3 w-3" />
@@ -657,164 +426,36 @@ export default function EditProfilePage() {
 														type="range"
 														min="0"
 														max="100"
-														value={profile.skillLevels[skill] || 50}
-														onChange={(e) =>
-															updateSkillLevel(skill, parseInt(e.target.value))
+														value={
+															newProfile[
+																`${skill as "web" | "rev" | "pwn" | "crypto" | "misc"}_skill_level`
+															]
 														}
+														onChange={(e) => {
+															setNewProfile((prev) => {
+																if (prev === null) {
+																	return null;
+																}
+																return {
+																	...prev,
+																	[`${skill}_skill_level`]: parseInt(
+																		e.target.value
+																	),
+																};
+															});
+														}}
 														className="flex-1 h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer slider"
 													/>
 													<span className="font-mono text-green-400 font-bold min-w-[40px] text-right">
-														{profile.skillLevels[skill] || 50}%
+														{
+															newProfile[
+																`${skill as "web" | "rev" | "pwn" | "crypto" | "misc"}_skill_level`
+															]
+														}
+														%
 													</span>
 												</div>
 											</div>
-										))}
-									</div>
-								</div>
-
-								{/* Specializations */}
-								<div className="mb-6">
-									<label className="block text-sm font-mono text-green-400 mb-3">
-										SPECIALIZATIONS
-									</label>
-									<div className="relative mb-3">
-										<Input
-											value={newSpecialization}
-											onChange={(e) => {
-												setNewSpecialization(e.target.value);
-												setShowSpecializationsDropdown(true);
-												setHighlightedSpecializationIndex(0);
-											}}
-											onFocus={() => setShowSpecializationsDropdown(true)}
-											onKeyDown={(e) => {
-												const filtered = availableSpecializations.filter(
-													(spec) =>
-														spec
-															.toLowerCase()
-															.includes(newSpecialization.toLowerCase()) &&
-														!profile.specializations.includes(spec)
-												);
-
-												if (e.key === "ArrowDown") {
-													e.preventDefault();
-													setHighlightedSpecializationIndex((prev) =>
-														prev < filtered.length - 1 ? prev + 1 : 0
-													);
-												} else if (e.key === "ArrowUp") {
-													e.preventDefault();
-													setHighlightedSpecializationIndex((prev) =>
-														prev > 0 ? prev - 1 : filtered.length - 1
-													);
-												} else if (e.key === "Enter") {
-													e.preventDefault();
-													if (
-														filtered.length > 0 &&
-														filtered[highlightedSpecializationIndex]
-													) {
-														const spec =
-															filtered[highlightedSpecializationIndex];
-														setProfile((prev) => ({
-															...prev,
-															specializations: [...prev.specializations, spec],
-														}));
-														setNewSpecialization("");
-														setShowSpecializationsDropdown(false);
-														setHighlightedSpecializationIndex(0);
-													}
-												}
-											}}
-											placeholder="Search and add specialization..."
-											className="font-mono bg-gray-800/50 border-green-500/30 text-white placeholder-gray-400"
-										/>
-										{showSpecializationsDropdown && (
-											<div className="absolute z-[200] w-full mt-1 bg-gray-800 border border-green-500/30 rounded-lg max-h-48 overflow-y-auto shadow-2xl">
-												{availableSpecializations
-													.filter(
-														(spec) =>
-															spec
-																.toLowerCase()
-																.includes(newSpecialization.toLowerCase()) &&
-															!profile.specializations.includes(spec)
-													)
-													.map((spec, index) => (
-														<button
-															key={spec}
-															type="button"
-															onMouseDown={(e) => {
-																e.preventDefault();
-																setProfile((prev) => ({
-																	...prev,
-																	specializations: [
-																		...prev.specializations,
-																		spec,
-																	],
-																}));
-																setNewSpecialization("");
-																setShowSpecializationsDropdown(false);
-																setHighlightedSpecializationIndex(0);
-															}}
-															onMouseEnter={() =>
-																setHighlightedSpecializationIndex(index)
-															}
-															className={`w-full text-left px-3 py-2 font-mono text-white first:rounded-t-lg last:rounded-b-lg ${
-																index === highlightedSpecializationIndex
-																	? "bg-green-500/30"
-																	: "hover:bg-green-500/20"
-															}`}
-														>
-															{spec}
-														</button>
-													))}
-											</div>
-										)}
-									</div>
-									<div className="flex flex-wrap gap-2">
-										{profile.specializations.map((spec) => (
-											<Badge
-												key={spec}
-												variant="outline"
-												className="font-mono text-blue-400 border-blue-500/50 cursor-pointer group"
-												onClick={() => removeSpecialization(spec)}
-											>
-												{spec}
-												<X className="h-3 w-3 ml-1 group-hover:text-red-400" />
-											</Badge>
-										))}
-									</div>
-								</div>
-
-								{/* Certifications */}
-								<div>
-									<label className="block text-sm font-mono text-green-400 mb-3">
-										CERTIFICATIONS
-									</label>
-									<div className="flex space-x-2 mb-3">
-										<Input
-											value={newCertification}
-											onChange={(e) => setNewCertification(e.target.value)}
-											placeholder="e.g. CISSP, CEH, OSCP..."
-											className="flex-1 font-mono bg-gray-800/50 border-green-500/30 text-white placeholder-gray-400"
-										/>
-										<Button
-											type="button"
-											onClick={addCertification}
-											variant="outline"
-											className="font-mono border-green-500/50 text-green-400"
-										>
-											<Plus className="h-4 w-4" />
-										</Button>
-									</div>
-									<div className="flex flex-wrap gap-2">
-										{profile.certifications.map((cert) => (
-											<Badge
-												key={cert}
-												variant="outline"
-												className="font-mono text-purple-400 border-purple-500/50 cursor-pointer group"
-												onClick={() => removeCertification(cert)}
-											>
-												{cert}
-												<X className="h-3 w-3 ml-1 group-hover:text-red-400" />
-											</Badge>
 										))}
 									</div>
 								</div>
@@ -823,89 +464,6 @@ export default function EditProfilePage() {
 
 						{/* Sidebar */}
 						<div className="space-y-6">
-							{/* External Accounts */}
-							<motion.div
-								initial={{ opacity: 0, x: 20 }}
-								animate={{ opacity: 1, x: 0 }}
-								className="bg-gray-800/30 backdrop-blur border border-green-500/30 rounded-lg p-6"
-							>
-								<h3 className="font-mono text-green-400 font-bold mb-4">
-									EXTERNAL ACCOUNTS
-								</h3>
-								<div className="space-y-4">
-									{[
-										{
-											key: "github",
-											label: "GitHub",
-											icon: Github,
-											color: "text-gray-300",
-										},
-										{
-											key: "ctftime",
-											label: "CTFtime",
-											icon: Shield,
-											color: "text-orange-400",
-										},
-										{
-											key: "discord",
-											label: "Discord",
-											icon: LinkIcon,
-											color: "text-purple-400",
-										},
-									].map(({ key, label, icon: Icon, color }) => {
-										const account =
-											profile.externalAccounts[
-												key as keyof typeof profile.externalAccounts
-											];
-										return (
-											<div
-												key={key}
-												className="flex items-center justify-between p-3 bg-gray-900/50 rounded-lg"
-											>
-												<div className="flex items-center space-x-3">
-													<Icon className={`h-5 w-5 ${color}`} />
-													<div>
-														<div className="font-mono text-white text-sm">
-															{label}
-														</div>
-														{account.connected && (
-															<div className="font-mono text-xs text-gray-400">
-																Connected{" "}
-																{(account as any).username &&
-																	`as ${(account as any).username}`}
-															</div>
-														)}
-													</div>
-												</div>
-												{account.connected ? (
-													<div className="flex items-center space-x-2">
-														<Check className="h-4 w-4 text-green-400" />
-														<Button
-															variant="outline"
-															size="sm"
-															onClick={() => handleDisconnectAccount(key)}
-															className="font-mono border-red-500/50 text-red-400 text-xs"
-														>
-															DISCONNECT
-														</Button>
-													</div>
-												) : (
-													<Button
-														variant="outline"
-														size="sm"
-														onClick={() => handleConnectAccount(key)}
-														disabled={connecting === key}
-														className="font-mono border-green-500/50 text-green-400 text-xs"
-													>
-														{connecting === key ? "CONNECTING..." : "CONNECT"}
-													</Button>
-												)}
-											</div>
-										);
-									})}
-								</div>
-							</motion.div>
-
 							{/* Privacy Settings */}
 							<motion.div
 								initial={{ opacity: 0, x: 20 }}
@@ -919,153 +477,56 @@ export default function EditProfilePage() {
 								<div className="space-y-4">
 									{[
 										{
-											key: "profileVisibility",
-											label: "Profile Visibility",
-											type: "select",
-											options: ["public", "private"],
+											key: "show_email",
+											label: "Show Email",
 										},
-										{ key: "showEmail", label: "Show Email", type: "boolean" },
 										{
-											key: "showLocation",
+											key: "show_location",
 											label: "Show Location",
-											type: "boolean",
 										},
-									].map(({ key, label, type, options }) => (
-										<div
-											key={key}
-											className="flex items-center justify-between"
-										>
-											<span className="font-mono text-gray-300 text-sm">
-												{label}
-											</span>
-											{type === "boolean" ? (
-												<Button
-													variant="outline"
-													size="sm"
-													onClick={() =>
-														setProfile((prev) => ({
-															...prev,
-															preferences: {
-																...prev.preferences,
-																[key]:
-																	!prev.preferences[
-																		key as keyof typeof prev.preferences
-																	],
-															},
-														}))
-													}
-													className={`font-mono text-xs ${
-														profile.preferences[
-															key as keyof typeof profile.preferences
-														]
-															? "border-green-500/50 text-green-400"
-															: "border-red-500/50 text-red-400"
-													}`}
-												>
-													{profile.preferences[
-														key as keyof typeof profile.preferences
-													] ? (
-														<>
-															<Eye className="h-3 w-3 mr-1" />
-															ON
-														</>
-													) : (
-														<>
-															<EyeOff className="h-3 w-3 mr-1" />
-															OFF
-														</>
-													)}
-												</Button>
-											) : (
-												<Select
-													options={
-														options?.map((option) => ({
-															value: option,
-															label: option.toUpperCase(),
-														})) || []
-													}
-													value={
-														profile.preferences[
-															key as keyof typeof profile.preferences
-														] as string
-													}
-													onChange={(value) =>
-														setProfile((prev) => ({
-															...prev,
-															preferences: {
-																...prev.preferences,
-																[key]: value,
-															},
-														}))
-													}
-													className="text-xs"
-												/>
-											)}
-										</div>
-									))}
-								</div>
-							</motion.div>
-
-							{/* Notification Settings */}
-							<motion.div
-								initial={{ opacity: 0, x: 20 }}
-								animate={{ opacity: 1, x: 0 }}
-								transition={{ delay: 0.2 }}
-								className="bg-gray-800/30 backdrop-blur border border-green-500/30 rounded-lg p-6"
-							>
-								<h3 className="font-mono text-green-400 font-bold mb-4">
-									NOTIFICATIONS
-								</h3>
-								<div className="space-y-4">
-									{[
-										{ key: "emailNotifications", label: "Email Notifications" },
-										{
-											key: "discordNotifications",
-											label: "Discord Notifications",
-										},
-										{ key: "teamInvitations", label: "Team Invitations" },
-										{ key: "contestReminders", label: "Contest Reminders" },
 									].map(({ key, label }) => (
 										<div
 											key={key}
 											className="flex items-center justify-between"
 										>
-											<span className="font-mono text-gray-300 text-sm">
+											<span
+												className={`font-mono text-gray-300 text-sm ${profile[key as "show_email" | "show_location"] !== newProfile[key as "show_email" | "show_location"] && "italic"}`}
+											>
+												{profile[key as "show_email" | "show_location"] !==
+													newProfile[key as "show_email" | "show_location"] &&
+													"* "}
 												{label}
 											</span>
+
 											<Button
 												variant="outline"
 												size="sm"
-												onClick={() =>
-													setProfile((prev) => ({
-														...prev,
-														preferences: {
-															...prev.preferences,
-															[key]:
-																!prev.preferences[
-																	key as keyof typeof prev.preferences
-																],
-														},
-													}))
-												}
+												onClick={() => {
+													setNewProfile((prev) => {
+														if (prev === null) {
+															return null;
+														}
+														return {
+															...prev,
+															[key as "show_email" | "show_location"]:
+																!prev[key as "show_email" | "show_location"],
+														};
+													});
+												}}
 												className={`font-mono text-xs ${
-													profile.preferences[
-														key as keyof typeof profile.preferences
-													]
+													newProfile[key as "show_email" | "show_location"]
 														? "border-green-500/50 text-green-400"
-														: "border-gray-500/50 text-gray-400"
+														: "border-red-500/50 text-red-400"
 												}`}
 											>
-												{profile.preferences[
-													key as keyof typeof profile.preferences
-												] ? (
+												{newProfile[key as "show_email" | "show_location"] ? (
 													<>
-														<Bell className="h-3 w-3 mr-1" />
+														<Eye className="h-3 w-3 mr-1" />
 														ON
 													</>
 												) : (
 													<>
-														<BellOff className="h-3 w-3 mr-1" />
+														<EyeOff className="h-3 w-3 mr-1" />
 														OFF
 													</>
 												)}

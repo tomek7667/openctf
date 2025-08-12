@@ -23,7 +23,6 @@ import {
 	Plus,
 	Settings,
 	Lock,
-	Bell,
 	Shield,
 	Key,
 	Link,
@@ -37,12 +36,11 @@ import {
 	Activity,
 	activityTypeToColor,
 	getUserProfile,
+	updateUserProfile,
 	UserProfileResponse,
 } from "@/api/userProfile";
 import {
 	changePassword,
-	updateNotifications,
-	updatePrivacy,
 	updateConnections,
 	connectGithub,
 } from "@/api/settings";
@@ -67,7 +65,11 @@ export default function ProfilePage() {
 		"overview" | "writeups" | "achievements" | "activity" | "settings"
 	>("overview");
 	const [settingsData, setSettingsData] = useState({
-		password: { current: "", new: "", confirm: "" },
+		password: {
+			current: "",
+			new: "",
+			confirm: "",
+		},
 		notifications: {
 			email: true,
 			browser: false,
@@ -75,7 +77,6 @@ export default function ProfilePage() {
 			writeups: true,
 		},
 		connections: { github: "", ctftime: "", discord: "" },
-		privacy: { profilePublic: true, showEmail: false, showLocation: true },
 	});
 	const [loading, setLoading] = useState({
 		password: false,
@@ -106,9 +107,8 @@ export default function ProfilePage() {
 					setUserWriteups(writeupsResponse.data || null);
 				}
 			} catch (error: any) {
-				console.error("Error loading user data:", error);
 				setToast({
-					message: error?.message ?? "error loading user data: ",
+					message: error?.message ?? "error loading user data",
 					type: "error",
 				});
 			} finally {
@@ -131,7 +131,7 @@ export default function ProfilePage() {
 		return null;
 	}
 
-	if (pageLoading || profile === null || user === null) {
+	if (pageLoading || profile === null || user === null || token === null) {
 		return (
 			<MainLayout>
 				<div className="flex justify-center items-center min-h-screen">
@@ -171,18 +171,27 @@ export default function ProfilePage() {
 										whileHover={{ scale: 1.05 }}
 										transition={{ type: "spring", stiffness: 300, damping: 30 }}
 									>
-										{user!.username.slice(0, 2).toUpperCase()}
+										{user.username.slice(0, 2).toUpperCase()}
 									</motion.div>
-									<h1
-										className="text-3xl font-bold font-mono text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-blue-400 mb-2 cursor-pointer hover:scale-105 transition-transform"
-										onClick={() => router.push("/teams")}
-									>
-										{user!.username}
-									</h1>
+									<div className="flex items-center space-x-3">
+										<h1
+											className="text-3xl font-bold font-mono text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-blue-400 mb-2 cursor-pointer hover:scale-105 transition-transform"
+											onClick={() => router.push("/teams")}
+										>
+											{user.username}
+										</h1>
+										<Button
+											onClick={() => router.push("/profile/edit")}
+											variant="outline"
+											className="font-mono border-green-500/50 text-green-400 hover:bg-green-500/10 px-3 py-1 text-sm"
+										>
+											EDIT
+										</Button>
+									</div>
 									<div className="flex items-center space-x-2 text-gray-400 font-mono text-sm mb-4">
 										<Calendar className="h-4 w-4" />
 										<span>
-											Joined {new Date(user!.created_at).toLocaleDateString()}
+											Joined {new Date(user.created_at).toLocaleDateString()}
 										</span>
 									</div>
 									{profile.userProfile.location && (
@@ -227,12 +236,6 @@ export default function ProfilePage() {
 
 								{/* Bio and Stats */}
 								<div className="flex-1">
-									<p className="text-gray-300 font-mono text-sm mb-6 leading-relaxed">
-										{user.description === ""
-											? user.description
-											: "<no bio provided>"}
-									</p>
-
 									<div className="grid grid-cols-2 md:grid-cols-4 gap-4">
 										<div className="bg-gray-900/50 rounded-lg p-4 text-center">
 											<div className="text-2xl font-bold font-mono text-green-400">
@@ -259,6 +262,13 @@ export default function ProfilePage() {
 											</div>
 										</div>
 									</div>
+									<p
+										className={`text-gray-${user.description !== "" ? 300 : 600} font-mono text-l mb-6 p-4 leading-relaxed`}
+									>
+										{user.description !== ""
+											? user.description
+											: "<no bio provided>"}{" "}
+									</p>
 								</div>
 							</div>
 						</div>
@@ -888,93 +898,18 @@ export default function ProfilePage() {
 
 								<div className="bg-gray-800/30 backdrop-blur border border-green-500/30 rounded-lg p-6">
 									<h3 className="font-mono text-green-400 font-bold mb-6 flex items-center">
-										<Bell className="h-5 w-5 mr-2" />
-										NOTIFICATIONS
-									</h3>
-									<div className="space-y-4">
-										{[
-											{
-												key: "email",
-												label: "Email Notifications",
-												desc: "Receive updates via email",
-											},
-											{
-												key: "browser",
-												label: "Browser Notifications",
-												desc: "Show desktop notifications",
-											},
-											{
-												key: "contests",
-												label: "Contest Updates",
-												desc: "New contests and reminders",
-											},
-											{
-												key: "writeups",
-												label: "Writeup Activity",
-												desc: "Comments and likes on your writeups",
-											},
-										].map((item) => (
-											<div
-												key={item.key}
-												className="flex items-center justify-between p-4 bg-gray-900/50 rounded-lg"
-											>
-												<div>
-													<div className="font-mono text-white font-bold">
-														{item.label}
-													</div>
-													<div className="font-mono text-xs text-gray-400">
-														{item.desc}
-													</div>
-												</div>
-												<label className="relative inline-flex items-center cursor-pointer">
-													<input
-														type="checkbox"
-														checked={
-															(settingsData.notifications as any)[item.key]
-														}
-														onChange={(e) =>
-															setSettingsData((prev) => ({
-																...prev,
-																notifications: {
-																	...prev.notifications,
-																	[item.key]: e.target.checked,
-																},
-															}))
-														}
-														className="sr-only"
-													/>
-													<div
-														className={`w-11 h-6 rounded-full transition-colors ${(settingsData.notifications as any)[item.key] ? "bg-green-500" : "bg-gray-600"}`}
-													>
-														<div
-															className={`w-5 h-5 bg-white rounded-full transition-transform ${(settingsData.notifications as any)[item.key] ? "translate-x-5" : "translate-x-0.5"} mt-0.5`}
-														/>
-													</div>
-												</label>
-											</div>
-										))}
-									</div>
-								</div>
-
-								<div className="bg-gray-800/30 backdrop-blur border border-green-500/30 rounded-lg p-6">
-									<h3 className="font-mono text-green-400 font-bold mb-6 flex items-center">
 										<Shield className="h-5 w-5 mr-2" />
 										PRIVACY SETTINGS
 									</h3>
 									<div className="space-y-4">
 										{[
 											{
-												key: "profilePublic",
-												label: "Public Profile",
-												desc: "Allow others to view your profile",
-											},
-											{
-												key: "showEmail",
+												key: "show_email",
 												label: "Show Email",
 												desc: "Display email on public profile",
 											},
 											{
-												key: "showLocation",
+												key: "show_location",
 												label: "Show Location",
 												desc: "Display location on profile",
 											},
@@ -994,23 +929,44 @@ export default function ProfilePage() {
 												<label className="relative inline-flex items-center cursor-pointer">
 													<input
 														type="checkbox"
-														checked={(settingsData.privacy as any)[item.key]}
-														onChange={(e) =>
-															setSettingsData((prev) => ({
-																...prev,
-																privacy: {
-																	...prev.privacy,
-																	[item.key]: e.target.checked,
-																},
-															}))
+														checked={
+															profile.userProfile[
+																item.key as "show_email" | "show_location"
+															]
 														}
+														onChange={(e) => {
+															setProfile((prev) => {
+																if (prev === null) {
+																	return null;
+																}
+																return {
+																	...prev!,
+																	userProfile: {
+																		...prev.userProfile,
+																		[item.key]: e.target.checked,
+																	},
+																};
+															});
+														}}
 														className="sr-only"
 													/>
 													<div
-														className={`w-11 h-6 rounded-full transition-colors ${(settingsData.privacy as any)[item.key] ? "bg-green-500" : "bg-gray-600"}`}
+														className={`w-11 h-6 rounded-full transition-colors ${
+															profile.userProfile[
+																item.key as "show_email" | "show_location"
+															]
+																? "bg-green-500"
+																: "bg-gray-600"
+														}`}
 													>
 														<div
-															className={`w-5 h-5 bg-white rounded-full transition-transform ${(settingsData.privacy as any)[item.key] ? "translate-x-5" : "translate-x-0.5"} mt-0.5`}
+															className={`w-5 h-5 bg-white rounded-full transition-transform ${
+																profile.userProfile[
+																	item.key as "show_email" | "show_location"
+																]
+																	? "translate-x-5"
+																	: "translate-x-0.5"
+															} mt-0.5`}
 														/>
 													</div>
 												</label>
@@ -1026,8 +982,9 @@ export default function ProfilePage() {
 											setLoading((prev) => ({ ...prev, saveAll: true }));
 											try {
 												await Promise.all([
-													updateNotifications(settingsData.notifications),
-													updatePrivacy(settingsData.privacy),
+													updateUserProfile(token!, profile.userProfile),
+													// updateNotifications(settingsData.notifications),
+													// updatePrivacy(settingsData.privacy),
 												]);
 												setToast({
 													message: "All settings saved successfully!",

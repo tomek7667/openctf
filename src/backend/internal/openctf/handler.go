@@ -45,6 +45,11 @@ type ServiceClient interface {
 		dto *service.RateContestDto,
 	) (*ent.ContestRating, error)
 	GetProfile(ctx context.Context, userId int) (*service.Profile, error)
+	UpdateProfile(
+		ctx context.Context,
+		user *ent.User,
+		dto *service.UpdateOwnDto,
+	) (*ent.UserProfile, error)
 }
 
 type CtftimeClient interface {

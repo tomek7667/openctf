@@ -201,6 +201,15 @@ export const ShieldCheck = createIcon(
 	</>
 );
 
+export const ShieldUnchecked = createIcon(
+	"ShieldUnchecked",
+	<>
+		<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+		<line x1="9" x2="15" y1="9" y2="15" />
+		<line x1="15" x2="9" y1="9" y2="15" />
+	</>
+);
+
 export const Trophy = createIcon(
 	"Trophy",
 	<>

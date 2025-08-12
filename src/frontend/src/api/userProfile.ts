@@ -40,6 +40,8 @@ export interface UserProfile {
 	show_location: boolean;
 }
 
+export type UserProfileDto = Omit<UserProfile, "id">;
+
 export enum Activity {
 	Welcome = "welcome",
 	Contest = "contest",
@@ -89,6 +91,25 @@ export const getUserProfile = async (
 			"Content-Type": "application/json",
 			Authorization: token,
 		},
+	});
+	const { data, success, message } = await response.json();
+	if (!success) {
+		throw new Error(message ?? "unknown error occurred");
+	}
+	return data;
+};
+
+export const updateUserProfile = async (
+	token: string,
+	dto: UserProfileDto
+): Promise<UserProfileResponse> => {
+	const response = await fetch(`${BASE_URL}/api/profiles/me`, {
+		method: "POST",
+		headers: {
+			"Content-Type": "application/json",
+			Authorization: token,
+		},
+		body: JSON.stringify(dto),
 	});
 	const { data, success, message } = await response.json();
 	if (!success) {
