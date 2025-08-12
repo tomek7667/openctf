@@ -12,7 +12,11 @@ interface HackerMarkdownProps {
 	setShowToast?: (show: boolean) => void;
 }
 
-export function HackerMarkdown({ content, setToastMessage, setShowToast }: HackerMarkdownProps) {
+export function HackerMarkdown({
+	content,
+	setToastMessage,
+	setShowToast,
+}: HackerMarkdownProps) {
 	return (
 		<div className="max-w-none">
 			<ReactMarkdown
@@ -58,8 +62,14 @@ export function HackerMarkdown({ content, setToastMessage, setShowToast }: Hacke
 						}
 						return (
 							<div className="relative group my-2 first:mt-0 last:mb-0">
-								<div className="relative border border-green-500/30 rounded-lg overflow-hidden shadow-xl" style={{backgroundColor: '#0d1117'}}>
-									<div className="flex items-center justify-between px-3 py-1.5 border-b border-green-500/30" style={{backgroundColor: '#0d1117'}}>
+								<div
+									className="relative border border-green-500/30 rounded-lg overflow-hidden shadow-xl"
+									style={{ backgroundColor: "#0d1117" }}
+								>
+									<div
+										className="flex items-center justify-between px-3 py-1.5 border-b border-green-500/30"
+										style={{ backgroundColor: "#0d1117" }}
+									>
 										<div className="flex items-center space-x-2">
 											<div className="w-3 h-3 rounded-full bg-red-500"></div>
 											<div className="w-3 h-3 rounded-full bg-yellow-500"></div>
@@ -80,7 +90,7 @@ export function HackerMarkdown({ content, setToastMessage, setShowToast }: Hacke
 															?.closest(".relative")
 															?.querySelector("pre code");
 
-														const codeText = codeElement?.textContent || '';
+														const codeText = codeElement?.textContent || "";
 
 														if (!codeText.trim()) {
 															setToastMessage("No code to copy");
@@ -90,13 +100,16 @@ export function HackerMarkdown({ content, setToastMessage, setShowToast }: Hacke
 														}
 
 														if (navigator.clipboard) {
-															navigator.clipboard.writeText(codeText.trim()).catch(() => {});
+															navigator.clipboard
+																.writeText(codeText.trim())
+																.catch(() => {});
 														} else {
-															const textArea = document.createElement('textarea');
+															const textArea =
+																document.createElement("textarea");
 															textArea.value = codeText.trim();
 															document.body.appendChild(textArea);
 															textArea.select();
-															document.execCommand('copy');
+															document.execCommand("copy");
 															document.body.removeChild(textArea);
 														}
 														setToastMessage("Code copied to clipboard!");
@@ -129,9 +142,19 @@ export function HackerMarkdown({ content, setToastMessage, setShowToast }: Hacke
 											)}
 										</div>
 									</div>
-									<div className="relative" style={{backgroundColor: '#0d1117'}}>
-										<pre className="p-3 overflow-x-auto text-sm leading-relaxed" style={{backgroundColor: '#0d1117'}}>
-											<code className={className} {...props} style={{backgroundColor: 'transparent'}}>
+									<div
+										className="relative"
+										style={{ backgroundColor: "#0d1117" }}
+									>
+										<pre
+											className="p-3 overflow-x-auto text-sm leading-relaxed"
+											style={{ backgroundColor: "#0d1117" }}
+										>
+											<code
+												className={className}
+												{...props}
+												style={{ backgroundColor: "transparent" }}
+											>
 												{children}
 											</code>
 										</pre>
