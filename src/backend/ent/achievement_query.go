@@ -299,7 +299,7 @@ func (aq *AchievementQuery) WithUser(opts ...func(*UserQuery)) *AchievementQuery
 // Example:
 //
 //	var v []struct {
-//		Name string `json:"name,omitempty"`
+//		Name string `json:"name"`
 //		Count int `json:"count,omitempty"`
 //	}
 //
@@ -322,7 +322,7 @@ func (aq *AchievementQuery) GroupBy(field string, fields ...string) *Achievement
 // Example:
 //
 //	var v []struct {
-//		Name string `json:"name,omitempty"`
+//		Name string `json:"name"`
 //	}
 //
 //	client.Achievement.Query().

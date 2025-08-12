@@ -370,7 +370,7 @@ func (tq *TeamQuery) WithMembers(opts ...func(*UserQuery)) *TeamQuery {
 // Example:
 //
 //	var v []struct {
-//		Name string `json:"name,omitempty"`
+//		Name string `json:"name"`
 //		Count int `json:"count,omitempty"`
 //	}
 //
@@ -393,7 +393,7 @@ func (tq *TeamQuery) GroupBy(field string, fields ...string) *TeamGroupBy {
 // Example:
 //
 //	var v []struct {
-//		Name string `json:"name,omitempty"`
+//		Name string `json:"name"`
 //	}
 //
 //	client.Team.Query().

@@ -48,3 +48,13 @@ WHERE
 	) > 0
 GROUP BY
 	c.id;
+
+-- Create "aggregated_user_statistics" view
+CREATE OR REPLACE VIEW "aggregated_user_statistics" ("total_views", "writeups_authored", "contests_participated", "user_id") AS
+SELECT
+	1 as "total_views",
+	2 as "writeups_authored",
+	3 as "contests_participated",
+	u.id as "user_id"
+FROM
+	"users" u;

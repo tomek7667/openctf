@@ -18,19 +18,19 @@ type Place struct {
 	// ID of the ent.
 	ID int `json:"id,omitempty"`
 	// TeamName holds the value of the "team_name" field.
-	TeamName string `json:"team_name,omitempty"`
+	TeamName string `json:"team_name"`
 	// Place holds the value of the "place" field.
-	Place int `json:"place,omitempty"`
+	Place int `json:"place"`
 	// CtftimeTeamID holds the value of the "ctftime_team_id" field.
-	CtftimeTeamID *int `json:"ctftime_team_id,omitempty"`
+	CtftimeTeamID *int `json:"ctftime_team_id"`
 	// the actual amount of points obtained by the place holder in the ctf
-	ContestPoints *float64 `json:"contest_points,omitempty"`
+	ContestPoints *float64 `json:"contest_points"`
 	// these points are normalized based on contest_points being max multiplied by the ctf weight
-	OpenctfPoints *float64 `json:"openctf_points,omitempty"`
+	OpenctfPoints *float64 `json:"openctf_points"`
 	// AssociatedContestID holds the value of the "associated_contest_id" field.
-	AssociatedContestID int `json:"associated_contest_id,omitempty"`
+	AssociatedContestID int `json:"associated_contest_id"`
 	// AssignedWeightPoints holds the value of the "assigned_weight_points" field.
-	AssignedWeightPoints int `json:"assigned_weight_points,omitempty"`
+	AssignedWeightPoints int `json:"assigned_weight_points"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the PlaceQuery when eager-loading is set.
 	Edges                 PlaceEdges `json:"edges"`

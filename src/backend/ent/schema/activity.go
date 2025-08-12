@@ -16,12 +16,12 @@ type Activity struct {
 
 // Fields of the Activity.
 func (Activity) Fields() []ent.Field {
-	return []ent.Field{
+	return TrimOmitEmptyTag([]ent.Field{
 		field.String("type").NotEmpty(),
 		field.String("title"),
 		field.String("description"),
 		field.Time("date").Default(time.Now()),
-	}
+	})
 }
 
 // Edges of the Activity.

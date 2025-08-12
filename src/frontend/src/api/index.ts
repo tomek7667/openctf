@@ -4,3 +4,4 @@ export * from "./contests";
 export * from "./weightPool";
 export * from "./leaderboard";
 export * from "./stats";
+export * from "./userProfile";

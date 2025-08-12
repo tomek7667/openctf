@@ -19,19 +19,19 @@ type Team struct {
 	// ID of the ent.
 	ID int `json:"id,omitempty"`
 	// Name holds the value of the "name" field.
-	Name string `json:"name,omitempty"`
+	Name string `json:"name"`
 	// Description holds the value of the "description" field.
-	Description string `json:"description,omitempty"`
+	Description *string `json:"description"`
 	// CtftimeID holds the value of the "ctftime_id" field.
-	CtftimeID *int `json:"ctftime_id,omitempty"`
+	CtftimeID *int `json:"ctftime_id"`
 	// CtftimeVerifiedAt holds the value of the "ctftime_verified_at" field.
-	CtftimeVerifiedAt *time.Time `json:"ctftime_verified_at,omitempty"`
+	CtftimeVerifiedAt *time.Time `json:"ctftime_verified_at"`
 	// Logo holds the value of the "logo" field.
-	Logo []byte `json:"logo,omitempty"`
+	Logo *[]byte `json:"logo"`
 	// VerifiedAt holds the value of the "verified_at" field.
-	VerifiedAt *time.Time `json:"verified_at,omitempty"`
+	VerifiedAt *time.Time `json:"verified_at"`
 	// CountryCode holds the value of the "country_code" field.
-	CountryCode string `json:"country_code,omitempty"`
+	CountryCode string `json:"country_code"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the TeamQuery when eager-loading is set.
 	Edges            TeamEdges `json:"edges"`
@@ -132,7 +132,8 @@ func (t *Team) assignValues(columns []string, values []any) error {
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field description", values[i])
 			} else if value.Valid {
-				t.Description = value.String
+				t.Description = new(string)
+				*t.Description = value.String
 			}
 		case team.FieldCtftimeID:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
@@ -152,7 +153,7 @@ func (t *Team) assignValues(columns []string, values []any) error {
 			if value, ok := values[i].(*[]byte); !ok {
 				return fmt.Errorf("unexpected type %T for field logo", values[i])
 			} else if value != nil {
-				t.Logo = *value
+				t.Logo = value
 			}
 		case team.FieldVerifiedAt:
 			if value, ok := values[i].(*sql.NullTime); !ok {
@@ -235,8 +236,10 @@ func (t *Team) String() string {
 	builder.WriteString("name=")
 	builder.WriteString(t.Name)
 	builder.WriteString(", ")
-	builder.WriteString("description=")
-	builder.WriteString(t.Description)
+	if v := t.Description; v != nil {
+		builder.WriteString("description=")
+		builder.WriteString(*v)
+	}
 	builder.WriteString(", ")
 	if v := t.CtftimeID; v != nil {
 		builder.WriteString("ctftime_id=")
@@ -248,8 +251,10 @@ func (t *Team) String() string {
 		builder.WriteString(v.Format(time.ANSIC))
 	}
 	builder.WriteString(", ")
-	builder.WriteString("logo=")
-	builder.WriteString(fmt.Sprintf("%v", t.Logo))
+	if v := t.Logo; v != nil {
+		builder.WriteString("logo=")
+		builder.WriteString(fmt.Sprintf("%v", *v))
+	}
 	builder.WriteString(", ")
 	if v := t.VerifiedAt; v != nil {
 		builder.WriteString("verified_at=")

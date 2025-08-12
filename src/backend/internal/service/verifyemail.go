@@ -21,7 +21,6 @@ func (c *Client) VerifyEmail(ctx context.Context, dto *VerifyEmailDto) (*ent.Use
 	}
 	u, err = u.Update().
 		ClearConfirmationCode().
-		SetNillableConfirmationCode(nil).
 		SetEmailConfirmedAt(time.Now()).
 		Save(ctx)
 	if err != nil {

@@ -336,7 +336,7 @@ func (cq *ContestQuery) WithPlaces(opts ...func(*PlaceQuery)) *ContestQuery {
 // Example:
 //
 //	var v []struct {
-//		Name string `json:"name,omitempty"`
+//		Name string `json:"name"`
 //		Count int `json:"count,omitempty"`
 //	}
 //
@@ -359,7 +359,7 @@ func (cq *ContestQuery) GroupBy(field string, fields ...string) *ContestGroupBy 
 // Example:
 //
 //	var v []struct {
-//		Name string `json:"name,omitempty"`
+//		Name string `json:"name"`
 //	}
 //
 //	client.Contest.Query().

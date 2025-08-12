@@ -16,12 +16,12 @@ type Achievement struct {
 
 // Fields of the Achievement.
 func (Achievement) Fields() []ent.Field {
-	return []ent.Field{
+	return TrimOmitEmptyTag([]ent.Field{
 		field.String("name").Unique(),
 		field.String("description"),
 		field.String("rarity"),
 		field.Time("unlocked_at").Default(time.Now()),
-	}
+	})
 }
 
 // Edges of the Achievement.

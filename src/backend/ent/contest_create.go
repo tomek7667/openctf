@@ -301,7 +301,7 @@ func (cc *ContestCreate) createSpec() (*Contest, *sqlgraph.CreateSpec) {
 	}
 	if value, ok := cc.mutation.Logo(); ok {
 		_spec.SetField(contest.FieldLogo, field.TypeBytes, value)
-		_node.Logo = value
+		_node.Logo = &value
 	}
 	if nodes := cc.mutation.OrganizersIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{

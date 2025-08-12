@@ -28,13 +28,13 @@ type User struct {
 	// PermissionLevel holds the value of the "permission_level" field.
 	PermissionLevel user.PermissionLevel `json:"permission_level,omitempty"`
 	// Description holds the value of the "description" field.
-	Description string `json:"description,omitempty"`
+	Description *string `json:"description,omitempty"`
 	// Password holds the value of the "password" field.
 	Password string `json:"-"`
 	// CreatedAt holds the value of the "created_at" field.
 	CreatedAt time.Time `json:"created_at,omitempty"`
 	// Logo holds the value of the "logo" field.
-	Logo []byte `json:"logo,omitempty"`
+	Logo *[]byte `json:"logo,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the UserQuery when eager-loading is set.
 	Edges        UserEdges `json:"edges"`
@@ -129,7 +129,8 @@ func (u *User) assignValues(columns []string, values []any) error {
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field description", values[i])
 			} else if value.Valid {
-				u.Description = value.String
+				u.Description = new(string)
+				*u.Description = value.String
 			}
 		case user.FieldPassword:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -147,7 +148,7 @@ func (u *User) assignValues(columns []string, values []any) error {
 			if value, ok := values[i].(*[]byte); !ok {
 				return fmt.Errorf("unexpected type %T for field logo", values[i])
 			} else if value != nil {
-				u.Logo = *value
+				u.Logo = value
 			}
 		default:
 			u.selectValues.Set(columns[i], values[i])
@@ -206,16 +207,20 @@ func (u *User) String() string {
 	builder.WriteString("permission_level=")
 	builder.WriteString(fmt.Sprintf("%v", u.PermissionLevel))
 	builder.WriteString(", ")
-	builder.WriteString("description=")
-	builder.WriteString(u.Description)
+	if v := u.Description; v != nil {
+		builder.WriteString("description=")
+		builder.WriteString(*v)
+	}
 	builder.WriteString(", ")
 	builder.WriteString("password=<sensitive>")
 	builder.WriteString(", ")
 	builder.WriteString("created_at=")
 	builder.WriteString(u.CreatedAt.Format(time.ANSIC))
 	builder.WriteString(", ")
-	builder.WriteString("logo=")
-	builder.WriteString(fmt.Sprintf("%v", u.Logo))
+	if v := u.Logo; v != nil {
+		builder.WriteString("logo=")
+		builder.WriteString(fmt.Sprintf("%v", *v))
+	}
 	builder.WriteByte(')')
 	return builder.String()
 }

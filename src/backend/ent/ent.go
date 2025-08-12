@@ -9,6 +9,7 @@ import (
 	"openctfbackend/ent/achievement"
 	"openctfbackend/ent/activity"
 	"openctfbackend/ent/aggregatedcontestsdifficulties"
+	"openctfbackend/ent/aggregateduserstatistics"
 	"openctfbackend/ent/contest"
 	"openctfbackend/ent/contestrating"
 	"openctfbackend/ent/place"
@@ -85,6 +86,7 @@ func checkColumn(table, column string) error {
 			achievement.Table:                    achievement.ValidColumn,
 			activity.Table:                       activity.ValidColumn,
 			aggregatedcontestsdifficulties.Table: aggregatedcontestsdifficulties.ValidColumn,
+			aggregateduserstatistics.Table:       aggregateduserstatistics.ValidColumn,
 			contest.Table:                        contest.ValidColumn,
 			contestrating.Table:                  contestrating.ValidColumn,
 			place.Table:                          place.ValidColumn,

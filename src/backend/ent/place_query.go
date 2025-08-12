@@ -299,7 +299,7 @@ func (pq *PlaceQuery) WithAssociatedTeam(opts ...func(*TeamQuery)) *PlaceQuery {
 // Example:
 //
 //	var v []struct {
-//		TeamName string `json:"team_name,omitempty"`
+//		TeamName string `json:"team_name"`
 //		Count int `json:"count,omitempty"`
 //	}
 //
@@ -322,7 +322,7 @@ func (pq *PlaceQuery) GroupBy(field string, fields ...string) *PlaceGroupBy {
 // Example:
 //
 //	var v []struct {
-//		TeamName string `json:"team_name,omitempty"`
+//		TeamName string `json:"team_name"`
 //	}
 //
 //	client.Place.Query().

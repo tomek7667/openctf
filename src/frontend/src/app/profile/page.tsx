@@ -28,9 +28,17 @@ import {
 	Key,
 	Link,
 	Save,
+	Flag,
+	Heart,
 } from "@/components/ui/icons";
 import { useAuthStore } from "@/store/authStore";
 import { getUserWriteups, WriteupListResponse } from "@/api/writeups";
+import {
+	Activity,
+	activityTypeToColor,
+	getUserProfile,
+	UserProfileResponse,
+} from "@/api/userProfile";
 import {
 	changePassword,
 	updateNotifications,
@@ -38,102 +46,7 @@ import {
 	updateConnections,
 	connectGithub,
 } from "@/api/settings";
-
-// Mock user profile data - in real app this would come from API
-const mockUserProfile = {
-	id: "1",
-	username: "CyberNinja",
-	email: "cyberninja@example.com",
-	bio: "Passionate cybersecurity researcher specializing in web application security and cryptography. CTF enthusiast with 5+ years of experience.",
-	location: "San Francisco, CA",
-	joinedDate: "2019-03-15",
-	socialLinks: {
-		github: "https://github.com/cyberninja",
-		linkedin: "https://linkedin.com/in/cyberninja",
-		twitter: "https://twitter.com/cyberninja",
-		website: "https://cyberninja.dev",
-	},
-	skills: [
-		"Web Security",
-		"Cryptography",
-		"Reverse Engineering",
-		"Python",
-		"JavaScript",
-		"Binary Exploitation",
-	],
-	skillLevels: {
-		"Web Security": 85,
-		Cryptography: 75,
-		"Reverse Engineering": 90,
-		Python: 80,
-		JavaScript: 70,
-		"Binary Exploitation": 65,
-	},
-	statistics: {
-		contestsParticipated: 42,
-		writeupsAuthored: 28,
-		currentRating: 1847,
-		maxRating: 1923,
-		totalViews: 15420,
-		totalLikes: 892,
-	},
-	achievements: [
-		{
-			id: "first-writeup",
-			name: "First Writeup",
-			description: "Published your first writeup",
-			rarity: "common",
-			unlockedAt: "2019-04-01",
-		},
-		{
-			id: "prolific-writer",
-			name: "Prolific Writer",
-			description: "Authored 25+ writeups",
-			rarity: "rare",
-			unlockedAt: "2023-08-15",
-		},
-		{
-			id: "crypto-master",
-			name: "Crypto Master",
-			description: "Solved 50+ cryptography challenges",
-			rarity: "epic",
-			unlockedAt: "2023-12-01",
-		},
-		{
-			id: "community-favorite",
-			name: "Community Favorite",
-			description: "Received 500+ likes on writeups",
-			rarity: "legendary",
-			unlockedAt: "2024-01-20",
-		},
-	],
-	preferences: {
-		profileVisibility: "public" as const,
-		emailNotifications: true,
-		showLocation: true,
-		showEmail: false,
-	},
-	recentActivity: [
-		{
-			type: "writeup",
-			title: "Breaking RSA with Small Exponent",
-			date: "2024-01-15",
-			likes: 284,
-		},
-		{
-			type: "contest",
-			title: "picoCTF 2024",
-			place: 12,
-			date: "2024-01-10",
-		},
-		{
-			type: "writeup",
-			title: "SQL Injection to RCE",
-			date: "2024-01-05",
-			likes: 198,
-		},
-	],
-};
+import { SkillRadar } from "@/components/ui/SkillRadar";
 
 const rarityColors = {
 	common: "text-gray-400 border-gray-400",
@@ -142,103 +55,14 @@ const rarityColors = {
 	legendary: "text-yellow-400 border-yellow-400",
 };
 
-function SkillRadar({
-	skills,
-	skillLevels,
-}: {
-	skills: string[];
-	skillLevels: { [skill: string]: number };
-}) {
-	const displaySkills = skills.slice(0, 6);
-	const levels = displaySkills.map((skill) => skillLevels[skill] || 50);
-
-	return (
-		<div className="relative w-48 h-48 mx-auto">
-			<svg className="absolute inset-0 w-full h-full" viewBox="0 0 200 200">
-				{[20, 40, 60, 80].map((radius) => (
-					<circle
-						key={radius}
-						cx="100"
-						cy="100"
-						r={radius}
-						fill="none"
-						stroke="rgb(34, 197, 94, 0.2)"
-						strokeWidth="1"
-					/>
-				))}
-
-				{displaySkills.map((_, i) => {
-					const angle = i * 60 - 90;
-					const radians = (angle * Math.PI) / 180;
-					const level = levels[i] || 50;
-					const x = 100 + level * Math.cos(radians);
-					const y = 100 + level * Math.sin(radians);
-					return (
-						<line
-							key={i}
-							x1="100"
-							y1="100"
-							x2={x}
-							y2={y}
-							stroke="rgb(34, 197, 94, 0.4)"
-							strokeWidth="1"
-						/>
-					);
-				})}
-
-				<polygon
-					points={displaySkills
-						.map((_, i) => {
-							const angle = i * 60 - 90;
-							const radians = (angle * Math.PI) / 180;
-							const level = levels[i] || 50;
-							const x = 100 + level * Math.cos(radians);
-							const y = 100 + level * Math.sin(radians);
-							return `${x},${y}`;
-						})
-						.join(" ")}
-					fill="rgba(34, 197, 94, 0.2)"
-					stroke="rgb(34, 197, 94)"
-					strokeWidth="2"
-				/>
-
-				{displaySkills.map((_, i) => {
-					const angle = i * 60 - 90;
-					const radians = (angle * Math.PI) / 180;
-					const level = levels[i] || 50;
-					const x = 100 + level * Math.cos(radians);
-					const y = 100 + level * Math.sin(radians);
-					return <circle key={i} cx={x} cy={y} r="3" fill="rgb(34, 197, 94)" />;
-				})}
-			</svg>
-
-			{displaySkills.map((skill, i) => {
-				const angle = i * 60 - 90;
-				const radians = (angle * Math.PI) / 180;
-				const x = 100 + 95 * Math.cos(radians);
-				const y = 100 + 95 * Math.sin(radians);
-
-				return (
-					<div
-						key={skill}
-						className="absolute text-xs font-mono text-green-400 transform -translate-x-1/2 -translate-y-1/2 whitespace-nowrap"
-						style={{ left: `${(x / 200) * 100}%`, top: `${(y / 200) * 100}%` }}
-					>
-						{skill}
-					</div>
-				);
-			})}
-		</div>
-	);
-}
-
 export default function ProfilePage() {
 	const router = useRouter();
-	const { user, isAuthenticated } = useAuthStore();
+	const { user, isAuthenticated, token } = useAuthStore();
 	const [pageLoading, setPageLoading] = useState(true);
 	const [userWriteups, setUserWriteups] = useState<WriteupListResponse | null>(
 		null
 	);
+	const [profile, setProfile] = useState<UserProfileResponse | null>(null);
 	const [activeTab, setActiveTab] = useState<
 		"overview" | "writeups" | "achievements" | "activity" | "settings"
 	>("overview");
@@ -271,7 +95,8 @@ export default function ProfilePage() {
 
 		const loadUserData = async () => {
 			try {
-				// Load user's writeups
+				const profileResponse = await getUserProfile(token!);
+				setProfile(profileResponse);
 				const writeupsResponse = await getUserWriteups(
 					user?.id?.toString() || "1",
 					1,
@@ -280,15 +105,19 @@ export default function ProfilePage() {
 				if (writeupsResponse.success) {
 					setUserWriteups(writeupsResponse.data || null);
 				}
-			} catch (error) {
+			} catch (error: any) {
 				console.error("Error loading user data:", error);
+				setToast({
+					message: error?.message ?? "error loading user data: ",
+					type: "error",
+				});
 			} finally {
 				setPageLoading(false);
 			}
 		};
 
 		loadUserData();
-	}, [isAuthenticated, user?.id, router]);
+	}, [isAuthenticated, user?.id, router, token]);
 
 	useEffect(() => {
 		if (toast) {
@@ -302,7 +131,7 @@ export default function ProfilePage() {
 		return null;
 	}
 
-	if (pageLoading) {
+	if (pageLoading || profile === null || user === null) {
 		return (
 			<MainLayout>
 				<div className="flex justify-center items-center min-h-screen">
@@ -311,8 +140,6 @@ export default function ProfilePage() {
 			</MainLayout>
 		);
 	}
-
-	const profile = mockUserProfile; // In real app, this would come from API
 
 	return (
 		<MainLayout>
@@ -344,30 +171,30 @@ export default function ProfilePage() {
 										whileHover={{ scale: 1.05 }}
 										transition={{ type: "spring", stiffness: 300, damping: 30 }}
 									>
-										{profile.username.slice(0, 2).toUpperCase()}
+										{user!.username.slice(0, 2).toUpperCase()}
 									</motion.div>
 									<h1
 										className="text-3xl font-bold font-mono text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-blue-400 mb-2 cursor-pointer hover:scale-105 transition-transform"
 										onClick={() => router.push("/teams")}
 									>
-										{profile.username}
+										{user!.username}
 									</h1>
 									<div className="flex items-center space-x-2 text-gray-400 font-mono text-sm mb-4">
 										<Calendar className="h-4 w-4" />
 										<span>
-											Joined {new Date(profile.joinedDate).toLocaleDateString()}
+											Joined {new Date(user!.created_at).toLocaleDateString()}
 										</span>
 									</div>
-									{profile.location && (
+									{profile.userProfile.location && (
 										<div className="flex items-center space-x-2 text-gray-400 font-mono text-sm mb-4">
 											<MapPin className="h-4 w-4" />
-											<span>{profile.location}</span>
+											<span>{profile.userProfile.location}</span>
 										</div>
 									)}
 									<div className="flex space-x-4">
-										{profile.socialLinks.github && (
+										{profile.userProfile.github_link && (
 											<a
-												href={profile.socialLinks.github}
+												href={profile.userProfile.github_link}
 												target="_blank"
 												rel="noopener noreferrer"
 												className="text-gray-400 hover:text-green-400 transition-colors"
@@ -375,9 +202,9 @@ export default function ProfilePage() {
 												<Github className="h-5 w-5" />
 											</a>
 										)}
-										{profile.socialLinks.linkedin && (
+										{profile.userProfile.linkedin_link && (
 											<a
-												href={profile.socialLinks.linkedin}
+												href={profile.userProfile.linkedin_link}
 												target="_blank"
 												rel="noopener noreferrer"
 												className="text-gray-400 hover:text-green-400 transition-colors"
@@ -385,9 +212,9 @@ export default function ProfilePage() {
 												<Linkedin className="h-5 w-5" />
 											</a>
 										)}
-										{profile.socialLinks.website && (
+										{profile.userProfile.website_link && (
 											<a
-												href={profile.socialLinks.website}
+												href={profile.userProfile.website_link}
 												target="_blank"
 												rel="noopener noreferrer"
 												className="text-gray-400 hover:text-green-400 transition-colors"
@@ -401,13 +228,13 @@ export default function ProfilePage() {
 								{/* Bio and Stats */}
 								<div className="flex-1">
 									<p className="text-gray-300 font-mono text-sm mb-6 leading-relaxed">
-										{profile.bio}
+										{user.description}
 									</p>
 
 									<div className="grid grid-cols-2 md:grid-cols-4 gap-4">
 										<div className="bg-gray-900/50 rounded-lg p-4 text-center">
 											<div className="text-2xl font-bold font-mono text-green-400">
-												{profile.statistics.contestsParticipated}
+												{profile.statistics.contests_participated}
 											</div>
 											<div className="text-xs text-gray-400 font-mono">
 												CONTESTS
@@ -415,23 +242,15 @@ export default function ProfilePage() {
 										</div>
 										<div className="bg-gray-900/50 rounded-lg p-4 text-center">
 											<div className="text-2xl font-bold font-mono text-blue-400">
-												{profile.statistics.writeupsAuthored}
+												{profile.statistics.writeups_authored}
 											</div>
 											<div className="text-xs text-gray-400 font-mono">
 												WRITEUPS
 											</div>
 										</div>
 										<div className="bg-gray-900/50 rounded-lg p-4 text-center">
-											<div className="text-2xl font-bold font-mono text-purple-400">
-												{profile.statistics.currentRating}
-											</div>
-											<div className="text-xs text-gray-400 font-mono">
-												RATING
-											</div>
-										</div>
-										<div className="bg-gray-900/50 rounded-lg p-4 text-center">
 											<div className="text-2xl font-bold font-mono text-yellow-400">
-												{profile.statistics.totalViews.toLocaleString()}
+												{profile.statistics.total_views.toLocaleString()}
 											</div>
 											<div className="text-xs text-gray-400 font-mono">
 												VIEWS
@@ -493,33 +312,46 @@ export default function ProfilePage() {
 										SKILL RADAR
 									</h3>
 									<SkillRadar
-										skills={profile.skills}
-										skillLevels={profile.skillLevels}
+										skillLevels={{
+											web_skill_level: profile.userProfile.web_skill_level,
+											rev_skill_level: profile.userProfile.rev_skill_level,
+											pwn_skill_level: profile.userProfile.pwn_skill_level,
+											crypto_skill_level:
+												profile.userProfile.crypto_skill_level,
+											misc_skill_level: profile.userProfile.misc_skill_level,
+										}}
 									/>
 									<div className="mt-6 space-y-2">
-										{profile.skills.map((skill) => (
-											<div
-												key={skill}
-												className="flex justify-between items-center"
-											>
-												<span className="font-mono text-sm text-gray-300">
-													{skill}
-												</span>
-												<div className="flex items-center space-x-2">
-													<div className="w-20 h-2 bg-gray-700 rounded-full overflow-hidden">
-														<div
-															className="h-full bg-gradient-to-r from-green-500 to-blue-500 rounded-full transition-all duration-500"
-															style={{
-																width: `${(profile.skillLevels as any)[skill] || 0}%`,
-															}}
-														/>
-													</div>
-													<span className="font-mono text-xs text-green-400 w-8">
-														{(profile.skillLevels as any)[skill] || 0}%
+										{Object.keys(profile.userProfile)
+											.filter((s) => s.endsWith("_skill_level"))
+											.sort((a, b) => {
+												const levelA = (profile as any).userProfile[a];
+												const levelB = (profile as any).userProfile[b];
+												return levelB - levelA; // Sort descending
+											})
+											.map((name) => (
+												<div
+													key={name}
+													className="flex justify-between items-center"
+												>
+													<span className="font-mono text-sm text-gray-300">
+														{name.split("_skill_level")[0]}
 													</span>
+													<div className="flex items-center space-x-2">
+														<div className="w-20 h-2 bg-gray-700 rounded-full overflow-hidden">
+															<div
+																className="h-full bg-gradient-to-r from-green-500 to-blue-500 rounded-full transition-all duration-500"
+																style={{
+																	width: `${(profile.userProfile as any)[name] || 0}%`,
+																}}
+															/>
+														</div>
+														<span className="font-mono text-xs text-green-400 w-8">
+															{(profile.userProfile as any)[name]}%
+														</span>
+													</div>
 												</div>
-											</div>
-										))}
+											))}
 									</div>
 								</div>
 
@@ -530,16 +362,36 @@ export default function ProfilePage() {
 										RECENT ACTIVITY
 									</h3>
 									<div className="space-y-4">
-										{profile.recentActivity.map((activity, index) => (
+										{profile.lastActivities.map((activity, index) => (
 											<div
 												key={index}
 												className="flex items-start space-x-3 p-3 bg-gray-900/50 rounded-lg"
 											>
 												<div className="flex-shrink-0">
-													{activity.type === "writeup" ? (
-														<BookOpen className="h-5 w-5 text-blue-400" />
-													) : (
-														<Trophy className="h-5 w-5 text-yellow-400" />
+													{activity.type === Activity.Writeup && (
+														<BookOpen
+															className={`h-5 w-5 text-${activityTypeToColor(activity.type)}-400`}
+														/>
+													)}
+													{activity.type === Activity.Achievement && (
+														<Trophy
+															className={`h-5 w-5 text-${activityTypeToColor(activity.type)}-400`}
+														/>
+													)}
+													{activity.type === Activity.Contest && (
+														<Flag
+															className={`h-5 w-5 text-${activityTypeToColor(activity.type)}-400`}
+														/>
+													)}
+													{activity.type === Activity.Welcome && (
+														<Heart
+															className={`h-5 w-5 text-${activityTypeToColor(activity.type)}-400`}
+														/>
+													)}
+													{activity.type === Activity.Team && (
+														<Shield
+															className={`h-5 w-5 text-${activityTypeToColor(activity.type)}-400`}
+														/>
 													)}
 												</div>
 												<div className="flex-1">
@@ -548,16 +400,12 @@ export default function ProfilePage() {
 													</div>
 													<div className="font-mono text-xs text-gray-400">
 														{new Date(activity.date).toLocaleDateString()}
-														{activity.type === "writeup" && activity.likes && (
-															<span className="ml-2 text-green-400">
-																{activity.likes} likes
-															</span>
-														)}
-														{activity.type === "contest" && activity.place && (
-															<span className="ml-2 text-yellow-400">
-																#{activity.place}
-															</span>
-														)}
+
+														<span
+															className={`ml-2 text-${activityTypeToColor(activity.type)}-400`}
+														>
+															{activity.description}
+														</span>
 													</div>
 												</div>
 											</div>
@@ -717,7 +565,7 @@ export default function ProfilePage() {
 											</p>
 											<p className="font-mono text-xs text-gray-500">
 												Unlocked:{" "}
-												{new Date(achievement.unlockedAt).toLocaleDateString()}
+												{new Date(achievement.unlocked_at).toLocaleDateString()}
 											</p>
 										</motion.div>
 									))}
@@ -733,20 +581,26 @@ export default function ProfilePage() {
 								</h3>
 
 								<div className="space-y-6">
-									{profile.recentActivity.map((activity, index) => (
+									{profile.lastActivities.map((activity, index) => (
 										<div key={index} className="flex items-start space-x-4">
 											<div className="flex-shrink-0">
 												<div
-													className={`w-10 h-10 rounded-full flex items-center justify-center ${
-														activity.type === "writeup"
-															? "bg-blue-500/20 text-blue-400"
-															: "bg-yellow-500/20 text-yellow-400"
-													}`}
+													className={`w-10 h-10 rounded-full flex items-center justify-center ${`bg-${activityTypeToColor(activity.type)}-500/20 text-${activityTypeToColor(activity.type)}-400`}`}
 												>
-													{activity.type === "writeup" ? (
-														<BookOpen className="h-5 w-5" />
-													) : (
-														<Trophy className="h-5 w-5" />
+													{activity.type === Activity.Writeup && (
+														<BookOpen className={`h-5 w-5`} />
+													)}
+													{activity.type === Activity.Achievement && (
+														<Trophy className={`h-5 w-5`} />
+													)}
+													{activity.type === Activity.Contest && (
+														<Flag className={`h-5 w-5`} />
+													)}
+													{activity.type === Activity.Welcome && (
+														<Heart className={`h-5 w-5`} />
+													)}
+													{activity.type === Activity.Team && (
+														<Shield className={`h-5 w-5`} />
 													)}
 												</div>
 											</div>
@@ -760,18 +614,9 @@ export default function ProfilePage() {
 													</span>
 												</div>
 												<div className="flex items-center space-x-4 text-sm font-mono text-gray-400">
-													{activity.type === "writeup" && activity.likes && (
-														<span className="flex items-center space-x-1">
-															<span>❤️</span>
-															<span>{activity.likes} likes</span>
-														</span>
-													)}
-													{activity.type === "contest" && activity.place && (
-														<span className="flex items-center space-x-1">
-															<Trophy className="h-4 w-4" />
-															<span>#{activity.place} place</span>
-														</span>
-													)}
+													<span className="flex items-center space-x-1">
+														<span>{activity.description}</span>
+													</span>
 												</div>
 											</div>
 										</div>

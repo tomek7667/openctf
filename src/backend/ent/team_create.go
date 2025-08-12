@@ -245,7 +245,7 @@ func (tc *TeamCreate) createSpec() (*Team, *sqlgraph.CreateSpec) {
 	}
 	if value, ok := tc.mutation.Description(); ok {
 		_spec.SetField(team.FieldDescription, field.TypeString, value)
-		_node.Description = value
+		_node.Description = &value
 	}
 	if value, ok := tc.mutation.CtftimeID(); ok {
 		_spec.SetField(team.FieldCtftimeID, field.TypeInt, value)
@@ -257,7 +257,7 @@ func (tc *TeamCreate) createSpec() (*Team, *sqlgraph.CreateSpec) {
 	}
 	if value, ok := tc.mutation.Logo(); ok {
 		_spec.SetField(team.FieldLogo, field.TypeBytes, value)
-		_node.Logo = value
+		_node.Logo = &value
 	}
 	if value, ok := tc.mutation.VerifiedAt(); ok {
 		_spec.SetField(team.FieldVerifiedAt, field.TypeTime, value)

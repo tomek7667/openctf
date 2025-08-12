@@ -35,6 +35,7 @@ const (
 	TypeAchievement                    = "Achievement"
 	TypeActivity                       = "Activity"
 	TypeAggregatedContestsDifficulties = "AggregatedContestsDifficulties"
+	TypeAggregatedUserStatistics       = "AggregatedUserStatistics"
 	TypeContest                        = "Contest"
 	TypeContestRating                  = "ContestRating"
 	TypePlace                          = "Place"
@@ -1728,7 +1729,7 @@ func (m *ContestMutation) Logo() (r []byte, exists bool) {
 // OldLogo returns the old "logo" field's value of the Contest entity.
 // If the Contest object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *ContestMutation) OldLogo(ctx context.Context) (v []byte, err error) {
+func (m *ContestMutation) OldLogo(ctx context.Context) (v *[]byte, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldLogo is only allowed on UpdateOne operations")
 	}
@@ -4006,7 +4007,7 @@ func (m *TeamMutation) Description() (r string, exists bool) {
 // OldDescription returns the old "description" field's value of the Team entity.
 // If the Team object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *TeamMutation) OldDescription(ctx context.Context) (v string, err error) {
+func (m *TeamMutation) OldDescription(ctx context.Context) (v *string, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldDescription is only allowed on UpdateOne operations")
 	}
@@ -4174,7 +4175,7 @@ func (m *TeamMutation) Logo() (r []byte, exists bool) {
 // OldLogo returns the old "logo" field's value of the Team entity.
 // If the Team object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *TeamMutation) OldLogo(ctx context.Context) (v []byte, err error) {
+func (m *TeamMutation) OldLogo(ctx context.Context) (v *[]byte, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldLogo is only allowed on UpdateOne operations")
 	}
@@ -5169,7 +5170,7 @@ func (m *UserMutation) Description() (r string, exists bool) {
 // OldDescription returns the old "description" field's value of the User entity.
 // If the User object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *UserMutation) OldDescription(ctx context.Context) (v string, err error) {
+func (m *UserMutation) OldDescription(ctx context.Context) (v *string, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldDescription is only allowed on UpdateOne operations")
 	}
@@ -5290,7 +5291,7 @@ func (m *UserMutation) Logo() (r []byte, exists bool) {
 // OldLogo returns the old "logo" field's value of the User entity.
 // If the User object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *UserMutation) OldLogo(ctx context.Context) (v []byte, err error) {
+func (m *UserMutation) OldLogo(ctx context.Context) (v *[]byte, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldLogo is only allowed on UpdateOne operations")
 	}
@@ -5900,7 +5901,7 @@ func (m *UserProfileMutation) Location() (r string, exists bool) {
 // OldLocation returns the old "location" field's value of the UserProfile entity.
 // If the UserProfile object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *UserProfileMutation) OldLocation(ctx context.Context) (v string, err error) {
+func (m *UserProfileMutation) OldLocation(ctx context.Context) (v *string, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldLocation is only allowed on UpdateOne operations")
 	}
@@ -5949,7 +5950,7 @@ func (m *UserProfileMutation) GithubLink() (r string, exists bool) {
 // OldGithubLink returns the old "github_link" field's value of the UserProfile entity.
 // If the UserProfile object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *UserProfileMutation) OldGithubLink(ctx context.Context) (v string, err error) {
+func (m *UserProfileMutation) OldGithubLink(ctx context.Context) (v *string, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldGithubLink is only allowed on UpdateOne operations")
 	}
@@ -5998,7 +5999,7 @@ func (m *UserProfileMutation) LinkedinLink() (r string, exists bool) {
 // OldLinkedinLink returns the old "linkedin_link" field's value of the UserProfile entity.
 // If the UserProfile object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *UserProfileMutation) OldLinkedinLink(ctx context.Context) (v string, err error) {
+func (m *UserProfileMutation) OldLinkedinLink(ctx context.Context) (v *string, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldLinkedinLink is only allowed on UpdateOne operations")
 	}
@@ -6047,7 +6048,7 @@ func (m *UserProfileMutation) TwitterLink() (r string, exists bool) {
 // OldTwitterLink returns the old "twitter_link" field's value of the UserProfile entity.
 // If the UserProfile object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *UserProfileMutation) OldTwitterLink(ctx context.Context) (v string, err error) {
+func (m *UserProfileMutation) OldTwitterLink(ctx context.Context) (v *string, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldTwitterLink is only allowed on UpdateOne operations")
 	}
@@ -6096,7 +6097,7 @@ func (m *UserProfileMutation) WebsiteLink() (r string, exists bool) {
 // OldWebsiteLink returns the old "website_link" field's value of the UserProfile entity.
 // If the UserProfile object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *UserProfileMutation) OldWebsiteLink(ctx context.Context) (v string, err error) {
+func (m *UserProfileMutation) OldWebsiteLink(ctx context.Context) (v *string, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldWebsiteLink is only allowed on UpdateOne operations")
 	}

@@ -14,12 +14,12 @@ type UserProfile struct {
 
 // Fields of the UserProfile.
 func (UserProfile) Fields() []ent.Field {
-	return []ent.Field{
-		field.String("location").Optional().MaxLen(30),
-		field.String("github_link").Optional(),
-		field.String("linkedin_link").Optional(),
-		field.String("twitter_link").Optional(),
-		field.String("website_link").Optional(),
+	return TrimOmitEmptyTag([]ent.Field{
+		field.String("location").Nillable().Optional().MaxLen(30),
+		field.String("github_link").Nillable().Optional(),
+		field.String("linkedin_link").Nillable().Optional(),
+		field.String("twitter_link").Nillable().Optional(),
+		field.String("website_link").Nillable().Optional(),
 		field.Int("web_skill_level").Default(0).Min(0).Max(100),
 		field.Int("rev_skill_level").Default(0).Min(0).Max(100),
 		field.Int("pwn_skill_level").Default(0).Min(0).Max(100),
@@ -27,7 +27,7 @@ func (UserProfile) Fields() []ent.Field {
 		field.Int("misc_skill_level").Default(0).Min(0).Max(100),
 		field.Bool("show_email").Default(false),
 		field.Bool("show_location").Default(false),
-	}
+	})
 }
 
 // Edges of the UserProfile.

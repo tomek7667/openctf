@@ -351,23 +351,23 @@ func (upc *UserProfileCreate) createSpec() (*UserProfile, *sqlgraph.CreateSpec) 
 	_spec.OnConflict = upc.conflict
 	if value, ok := upc.mutation.Location(); ok {
 		_spec.SetField(userprofile.FieldLocation, field.TypeString, value)
-		_node.Location = value
+		_node.Location = &value
 	}
 	if value, ok := upc.mutation.GithubLink(); ok {
 		_spec.SetField(userprofile.FieldGithubLink, field.TypeString, value)
-		_node.GithubLink = value
+		_node.GithubLink = &value
 	}
 	if value, ok := upc.mutation.LinkedinLink(); ok {
 		_spec.SetField(userprofile.FieldLinkedinLink, field.TypeString, value)
-		_node.LinkedinLink = value
+		_node.LinkedinLink = &value
 	}
 	if value, ok := upc.mutation.TwitterLink(); ok {
 		_spec.SetField(userprofile.FieldTwitterLink, field.TypeString, value)
-		_node.TwitterLink = value
+		_node.TwitterLink = &value
 	}
 	if value, ok := upc.mutation.WebsiteLink(); ok {
 		_spec.SetField(userprofile.FieldWebsiteLink, field.TypeString, value)
-		_node.WebsiteLink = value
+		_node.WebsiteLink = &value
 	}
 	if value, ok := upc.mutation.WebSkillLevel(); ok {
 		_spec.SetField(userprofile.FieldWebSkillLevel, field.TypeInt, value)

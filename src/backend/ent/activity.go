@@ -19,13 +19,13 @@ type Activity struct {
 	// ID of the ent.
 	ID int `json:"id,omitempty"`
 	// Type holds the value of the "type" field.
-	Type string `json:"type,omitempty"`
+	Type string `json:"type"`
 	// Title holds the value of the "title" field.
-	Title string `json:"title,omitempty"`
+	Title string `json:"title"`
 	// Description holds the value of the "description" field.
-	Description string `json:"description,omitempty"`
+	Description string `json:"description"`
 	// Date holds the value of the "date" field.
-	Date time.Time `json:"date,omitempty"`
+	Date time.Time `json:"date"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the ActivityQuery when eager-loading is set.
 	Edges         ActivityEdges `json:"edges"`

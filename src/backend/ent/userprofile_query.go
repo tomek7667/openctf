@@ -299,7 +299,7 @@ func (upq *UserProfileQuery) WithUser(opts ...func(*UserQuery)) *UserProfileQuer
 // Example:
 //
 //	var v []struct {
-//		Location string `json:"location,omitempty"`
+//		Location string `json:"location"`
 //		Count int `json:"count,omitempty"`
 //	}
 //
@@ -322,7 +322,7 @@ func (upq *UserProfileQuery) GroupBy(field string, fields ...string) *UserProfil
 // Example:
 //
 //	var v []struct {
-//		Location string `json:"location,omitempty"`
+//		Location string `json:"location"`
 //	}
 //
 //	client.UserProfile.Query().

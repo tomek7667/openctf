@@ -13,18 +13,18 @@ type Contest struct {
 }
 
 func (Contest) Fields() []ent.Field {
-	return []ent.Field{
+	return TrimOmitEmptyTag([]ent.Field{
 		field.String("name").Match(regexp.MustCompile("[a-z0-9 _-]+$")).Unique(),
-		field.String("description").Optional().Nillable(),
-		field.String("rules").Optional().Nillable(),
-		field.String("prizes").Optional().Nillable(),
+		field.String("description").Nillable().Optional(),
+		field.String("rules").Nillable().Optional(),
+		field.String("prizes").Nillable().Optional(),
 		field.Time("start"),
 		field.Time("end"),
-		field.String("url").Match(regexp.MustCompile(`https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)`)).Optional().Nillable(),
-		field.Int("ctftime_id").Optional().Nillable(), // automatically loaded ctftime event id if the ctf was submitted by the crawler and not an openctf user.
+		field.String("url").Match(regexp.MustCompile(`https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)`)).Nillable().Optional(),
+		field.Int("ctftime_id").Nillable().Optional(), // automatically loaded ctftime event id if the ctf was submitted by the crawler and not an openctf user.
 		field.Int("assigned_weight_points").Default(0).StructTag(`json:"assigned_weight_points"`),
-		field.Bytes("logo").MaxLen(50 * 1024 * 1024).Optional(), // Max 50 MB
-	}
+		field.Bytes("logo").MaxLen(50 * 1024 * 1024).Nillable().Optional(), // Max 50 MB
+	})
 }
 
 func (Contest) Edges() []ent.Edge {

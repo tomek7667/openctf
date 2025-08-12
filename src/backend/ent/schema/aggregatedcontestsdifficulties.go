@@ -68,12 +68,12 @@ GROUP BY
 }
 
 func (AggregatedContestsDifficulties) Fields() []ent.Field {
-	return []ent.Field{
+	return TrimOmitEmptyTag([]ent.Field{
 		field.Int("contest_id"),
 		field.String("contest_name"),
 		field.Time("end"),
 		field.Int("organizers_id"),
 		field.Float("avg_difficulty"),
 		field.Int("participants"),
-	}
+	})
 }

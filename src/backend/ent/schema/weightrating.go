@@ -12,9 +12,9 @@ type WeightRating struct {
 }
 
 func (WeightRating) Fields() []ent.Field {
-	return []ent.Field{
-		field.Int("difficulty").Min(0).Max(100).StructTag(`json:"difficulty"`),
-	}
+	return TrimOmitEmptyTag([]ent.Field{
+		field.Int("difficulty").Min(0).Max(100),
+	})
 }
 
 func (WeightRating) Edges() []ent.Edge {

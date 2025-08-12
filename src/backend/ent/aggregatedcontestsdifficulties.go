@@ -16,17 +16,17 @@ import (
 type AggregatedContestsDifficulties struct {
 	config `json:"-"`
 	// ContestID holds the value of the "contest_id" field.
-	ContestID int `json:"contest_id,omitempty"`
+	ContestID int `json:"contest_id"`
 	// ContestName holds the value of the "contest_name" field.
-	ContestName string `json:"contest_name,omitempty"`
+	ContestName string `json:"contest_name"`
 	// End holds the value of the "end" field.
-	End time.Time `json:"end,omitempty"`
+	End time.Time `json:"end"`
 	// OrganizersID holds the value of the "organizers_id" field.
-	OrganizersID int `json:"organizers_id,omitempty"`
+	OrganizersID int `json:"organizers_id"`
 	// AvgDifficulty holds the value of the "avg_difficulty" field.
-	AvgDifficulty float64 `json:"avg_difficulty,omitempty"`
+	AvgDifficulty float64 `json:"avg_difficulty"`
 	// Participants holds the value of the "participants" field.
-	Participants int `json:"participants,omitempty"`
+	Participants int `json:"participants"`
 	selectValues sql.SelectValues
 }
 

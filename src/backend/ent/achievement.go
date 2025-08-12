@@ -19,13 +19,13 @@ type Achievement struct {
 	// ID of the ent.
 	ID int `json:"id,omitempty"`
 	// Name holds the value of the "name" field.
-	Name string `json:"name,omitempty"`
+	Name string `json:"name"`
 	// Description holds the value of the "description" field.
-	Description string `json:"description,omitempty"`
+	Description string `json:"description"`
 	// Rarity holds the value of the "rarity" field.
-	Rarity string `json:"rarity,omitempty"`
+	Rarity string `json:"rarity"`
 	// UnlockedAt holds the value of the "unlocked_at" field.
-	UnlockedAt time.Time `json:"unlocked_at,omitempty"`
+	UnlockedAt time.Time `json:"unlocked_at"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the AchievementQuery when eager-loading is set.
 	Edges            AchievementEdges `json:"edges"`

@@ -299,7 +299,7 @@ func (aq *ActivityQuery) WithUser(opts ...func(*UserQuery)) *ActivityQuery {
 // Example:
 //
 //	var v []struct {
-//		Type string `json:"type,omitempty"`
+//		Type string `json:"type"`
 //		Count int `json:"count,omitempty"`
 //	}
 //
@@ -322,7 +322,7 @@ func (aq *ActivityQuery) GroupBy(field string, fields ...string) *ActivityGroupB
 // Example:
 //
 //	var v []struct {
-//		Type string `json:"type,omitempty"`
+//		Type string `json:"type"`
 //	}
 //
 //	client.Activity.Query().

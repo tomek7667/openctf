@@ -11,15 +11,15 @@ type Team struct {
 }
 
 func (Team) Fields() []ent.Field {
-	return []ent.Field{
+	return TrimOmitEmptyTag([]ent.Field{
 		field.String("name").Unique(),
-		field.String("description").Optional(),
-		field.Int("ctftime_id").Optional().Nillable(),
-		field.Time("ctftime_verified_at").Optional().Nillable(),
-		field.Bytes("logo").MaxLen(50 * 1024 * 1024).Optional(), // Max 50 MB
-		field.Time("verified_at").Optional().Nillable(),
+		field.String("description").Nillable().Optional(),
+		field.Int("ctftime_id").Nillable().Optional(),
+		field.Time("ctftime_verified_at").Nillable().Optional(),
+		field.Bytes("logo").MaxLen(50 * 1024 * 1024).Nillable().Optional(), // Max 50 MB
+		field.Time("verified_at").Nillable().Optional(),
 		field.String("country_code").Default("global"),
-	}
+	})
 }
 
 func (Team) Edges() []ent.Edge {

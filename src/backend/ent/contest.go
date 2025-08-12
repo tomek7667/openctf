@@ -19,25 +19,25 @@ type Contest struct {
 	// ID of the ent.
 	ID int `json:"id,omitempty"`
 	// Name holds the value of the "name" field.
-	Name string `json:"name,omitempty"`
+	Name string `json:"name"`
 	// Description holds the value of the "description" field.
-	Description *string `json:"description,omitempty"`
+	Description *string `json:"description"`
 	// Rules holds the value of the "rules" field.
-	Rules *string `json:"rules,omitempty"`
+	Rules *string `json:"rules"`
 	// Prizes holds the value of the "prizes" field.
-	Prizes *string `json:"prizes,omitempty"`
+	Prizes *string `json:"prizes"`
 	// Start holds the value of the "start" field.
-	Start time.Time `json:"start,omitempty"`
+	Start time.Time `json:"start"`
 	// End holds the value of the "end" field.
-	End time.Time `json:"end,omitempty"`
+	End time.Time `json:"end"`
 	// URL holds the value of the "url" field.
-	URL *string `json:"url,omitempty"`
+	URL *string `json:"url"`
 	// CtftimeID holds the value of the "ctftime_id" field.
-	CtftimeID *int `json:"ctftime_id,omitempty"`
+	CtftimeID *int `json:"ctftime_id"`
 	// AssignedWeightPoints holds the value of the "assigned_weight_points" field.
 	AssignedWeightPoints int `json:"assigned_weight_points"`
 	// Logo holds the value of the "logo" field.
-	Logo []byte `json:"logo,omitempty"`
+	Logo *[]byte `json:"logo"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the ContestQuery when eager-loading is set.
 	Edges              ContestEdges `json:"edges"`
@@ -175,7 +175,7 @@ func (c *Contest) assignValues(columns []string, values []any) error {
 			if value, ok := values[i].(*[]byte); !ok {
 				return fmt.Errorf("unexpected type %T for field logo", values[i])
 			} else if value != nil {
-				c.Logo = *value
+				c.Logo = value
 			}
 		case contest.ForeignKeys[0]:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
@@ -267,8 +267,10 @@ func (c *Contest) String() string {
 	builder.WriteString("assigned_weight_points=")
 	builder.WriteString(fmt.Sprintf("%v", c.AssignedWeightPoints))
 	builder.WriteString(", ")
-	builder.WriteString("logo=")
-	builder.WriteString(fmt.Sprintf("%v", c.Logo))
+	if v := c.Logo; v != nil {
+		builder.WriteString("logo=")
+		builder.WriteString(fmt.Sprintf("%v", *v))
+	}
 	builder.WriteByte(')')
 	return builder.String()
 }

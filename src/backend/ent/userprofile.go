@@ -18,29 +18,29 @@ type UserProfile struct {
 	// ID of the ent.
 	ID int `json:"id,omitempty"`
 	// Location holds the value of the "location" field.
-	Location string `json:"location,omitempty"`
+	Location *string `json:"location"`
 	// GithubLink holds the value of the "github_link" field.
-	GithubLink string `json:"github_link,omitempty"`
+	GithubLink *string `json:"github_link"`
 	// LinkedinLink holds the value of the "linkedin_link" field.
-	LinkedinLink string `json:"linkedin_link,omitempty"`
+	LinkedinLink *string `json:"linkedin_link"`
 	// TwitterLink holds the value of the "twitter_link" field.
-	TwitterLink string `json:"twitter_link,omitempty"`
+	TwitterLink *string `json:"twitter_link"`
 	// WebsiteLink holds the value of the "website_link" field.
-	WebsiteLink string `json:"website_link,omitempty"`
+	WebsiteLink *string `json:"website_link"`
 	// WebSkillLevel holds the value of the "web_skill_level" field.
-	WebSkillLevel int `json:"web_skill_level,omitempty"`
+	WebSkillLevel int `json:"web_skill_level"`
 	// RevSkillLevel holds the value of the "rev_skill_level" field.
-	RevSkillLevel int `json:"rev_skill_level,omitempty"`
+	RevSkillLevel int `json:"rev_skill_level"`
 	// PwnSkillLevel holds the value of the "pwn_skill_level" field.
-	PwnSkillLevel int `json:"pwn_skill_level,omitempty"`
+	PwnSkillLevel int `json:"pwn_skill_level"`
 	// CryptoSkillLevel holds the value of the "crypto_skill_level" field.
-	CryptoSkillLevel int `json:"crypto_skill_level,omitempty"`
+	CryptoSkillLevel int `json:"crypto_skill_level"`
 	// MiscSkillLevel holds the value of the "misc_skill_level" field.
-	MiscSkillLevel int `json:"misc_skill_level,omitempty"`
+	MiscSkillLevel int `json:"misc_skill_level"`
 	// ShowEmail holds the value of the "show_email" field.
-	ShowEmail bool `json:"show_email,omitempty"`
+	ShowEmail bool `json:"show_email"`
 	// ShowLocation holds the value of the "show_location" field.
-	ShowLocation bool `json:"show_location,omitempty"`
+	ShowLocation bool `json:"show_location"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the UserProfileQuery when eager-loading is set.
 	Edges             UserProfileEdges `json:"edges"`
@@ -106,31 +106,36 @@ func (up *UserProfile) assignValues(columns []string, values []any) error {
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field location", values[i])
 			} else if value.Valid {
-				up.Location = value.String
+				up.Location = new(string)
+				*up.Location = value.String
 			}
 		case userprofile.FieldGithubLink:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field github_link", values[i])
 			} else if value.Valid {
-				up.GithubLink = value.String
+				up.GithubLink = new(string)
+				*up.GithubLink = value.String
 			}
 		case userprofile.FieldLinkedinLink:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field linkedin_link", values[i])
 			} else if value.Valid {
-				up.LinkedinLink = value.String
+				up.LinkedinLink = new(string)
+				*up.LinkedinLink = value.String
 			}
 		case userprofile.FieldTwitterLink:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field twitter_link", values[i])
 			} else if value.Valid {
-				up.TwitterLink = value.String
+				up.TwitterLink = new(string)
+				*up.TwitterLink = value.String
 			}
 		case userprofile.FieldWebsiteLink:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field website_link", values[i])
 			} else if value.Valid {
-				up.WebsiteLink = value.String
+				up.WebsiteLink = new(string)
+				*up.WebsiteLink = value.String
 			}
 		case userprofile.FieldWebSkillLevel:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
@@ -222,20 +227,30 @@ func (up *UserProfile) String() string {
 	var builder strings.Builder
 	builder.WriteString("UserProfile(")
 	builder.WriteString(fmt.Sprintf("id=%v, ", up.ID))
-	builder.WriteString("location=")
-	builder.WriteString(up.Location)
+	if v := up.Location; v != nil {
+		builder.WriteString("location=")
+		builder.WriteString(*v)
+	}
 	builder.WriteString(", ")
-	builder.WriteString("github_link=")
-	builder.WriteString(up.GithubLink)
+	if v := up.GithubLink; v != nil {
+		builder.WriteString("github_link=")
+		builder.WriteString(*v)
+	}
 	builder.WriteString(", ")
-	builder.WriteString("linkedin_link=")
-	builder.WriteString(up.LinkedinLink)
+	if v := up.LinkedinLink; v != nil {
+		builder.WriteString("linkedin_link=")
+		builder.WriteString(*v)
+	}
 	builder.WriteString(", ")
-	builder.WriteString("twitter_link=")
-	builder.WriteString(up.TwitterLink)
+	if v := up.TwitterLink; v != nil {
+		builder.WriteString("twitter_link=")
+		builder.WriteString(*v)
+	}
 	builder.WriteString(", ")
-	builder.WriteString("website_link=")
-	builder.WriteString(up.WebsiteLink)
+	if v := up.WebsiteLink; v != nil {
+		builder.WriteString("website_link=")
+		builder.WriteString(*v)
+	}
 	builder.WriteString(", ")
 	builder.WriteString("web_skill_level=")
 	builder.WriteString(fmt.Sprintf("%v", up.WebSkillLevel))

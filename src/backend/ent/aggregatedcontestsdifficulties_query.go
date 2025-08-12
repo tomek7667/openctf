@@ -189,7 +189,7 @@ func (acdq *AggregatedContestsDifficultiesQuery) Clone() *AggregatedContestsDiff
 // Example:
 //
 //	var v []struct {
-//		ContestID int `json:"contest_id,omitempty"`
+//		ContestID int `json:"contest_id"`
 //		Count int `json:"count,omitempty"`
 //	}
 //
@@ -212,7 +212,7 @@ func (acdq *AggregatedContestsDifficultiesQuery) GroupBy(field string, fields ..
 // Example:
 //
 //	var v []struct {
-//		ContestID int `json:"contest_id,omitempty"`
+//		ContestID int `json:"contest_id"`
 //	}
 //
 //	client.AggregatedContestsDifficulties.Query().
