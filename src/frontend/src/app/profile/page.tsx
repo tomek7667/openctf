@@ -228,7 +228,9 @@ export default function ProfilePage() {
 								{/* Bio and Stats */}
 								<div className="flex-1">
 									<p className="text-gray-300 font-mono text-sm mb-6 leading-relaxed">
-										{user.description}
+										{user.description === ""
+											? user.description
+											: "<no bio provided>"}
 									</p>
 
 									<div className="grid grid-cols-2 md:grid-cols-4 gap-4">
