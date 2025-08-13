@@ -28,6 +28,7 @@ func (c *Client) GetUserAccessToken(ctx context.Context, code string) (*string, 
 	}
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("Accept", "application/json")
+	req.Header.Set("User-Agent", "openctf-app")
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
 		return nil, fmt.Errorf("failed to make a request: %w", err)

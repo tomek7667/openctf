@@ -14,6 +14,7 @@ func (c *Client) GetPrimaryEmail(ctx context.Context, accessToken string) (*stri
 	}
 	req.Header.Set("Authorization", "Bearer "+accessToken)
 	req.Header.Set("Accept", "application/vnd.github+json")
+	req.Header.Set("User-Agent", "openctf-app")
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
 		return nil, fmt.Errorf("failed to make a request: %w", err)

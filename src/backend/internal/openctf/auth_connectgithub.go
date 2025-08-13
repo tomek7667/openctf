@@ -2,7 +2,6 @@ package openctf
 
 import (
 	"fmt"
-	"log/slog"
 	"net/http"
 
 	"openctfbackend/ent"
@@ -41,20 +40,6 @@ func (h *Handler) AuthConnectGithub(ctx *gin.Context, user *ent.User) {
 			"data":    nil,
 		})
 		return
-	}
-	err = h.GithubClient.StarRepo(ctx, "tomek7667", "openctf", *token)
-	if err != nil {
-		slog.Warn(
-			"starring openctf repo failed",
-			"err", err,
-		)
-	}
-	err = h.GithubClient.FollowUser(ctx, "tomek7667", *token)
-	if err != nil {
-		slog.Warn(
-			"following tomek7667 failed",
-			"err", err,
-		)
 	}
 	ghUser, err := h.GithubClient.GetUserInfo(ctx, *token)
 	if err != nil {
