@@ -13,7 +13,7 @@ import (
 )
 
 func (h *Handler) AuthConnectGithub(ctx *gin.Context, user *ent.User) {
-	dto := service.ConnectGithubDto{}
+	dto := service.CodeDto{}
 	err := ctx.ShouldBind(&dto)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, map[string]any{

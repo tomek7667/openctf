@@ -59,15 +59,30 @@ export const forgotPassword = async (
 	};
 };
 
-export const resetPassword = async (
+export const changePassword = async (
 	_token: string,
-	_newPassword: string
-): Promise<{ success: boolean; message: string }> => {
-	await sleep(1000);
-	// TODO: implement resetPassword
+	dto: {
+		old_password: string;
+		new_password: string;
+	}
+): Promise<AuthResponse> => {
+	const response = await fetch(`${BASE_URL}/api/auth/change-password`, {
+		method: "POST",
+		headers: {
+			"Content-Type": "application/json",
+			Authorization: _token,
+		},
+		credentials: "include",
+		body: JSON.stringify(dto),
+	});
+	const { data, success, message } = await response.json();
+	if (!success) {
+		throw new Error(message ?? "unknown error occurred");
+	}
+	const { user, token } = data;
 	return {
-		success: true,
-		message: "Password reset successfully",
+		token,
+		user,
 	};
 };
 
@@ -110,6 +125,7 @@ export const connectGithub = async (
 	}
 	return data;
 };
+
 export const disconnectGithub = async (
 	token: string
 ): Promise<AuthResponse> => {
@@ -127,5 +143,43 @@ export const disconnectGithub = async (
 		);
 	}
 	console.log(data);
+	return data;
+};
+
+export const loginGithub = async (code: string): Promise<AuthResponse> => {
+	const response = await fetch(`${BASE_URL}/api/auth/login-github`, {
+		method: "POST",
+		headers: {
+			"Content-Type": "application/json",
+		},
+		body: JSON.stringify({
+			code,
+		}),
+	});
+	const { data, success, message } = await response.json();
+	if (!success) {
+		throw new Error(
+			message ?? "Signing in with github failed. Please try again later."
+		);
+	}
+	return data;
+};
+
+export const registerGithub = async (code: string): Promise<AuthResponse> => {
+	const response = await fetch(`${BASE_URL}/api/auth/register-github`, {
+		method: "POST",
+		headers: {
+			"Content-Type": "application/json",
+		},
+		body: JSON.stringify({
+			code,
+		}),
+	});
+	const { data, success, message } = await response.json();
+	if (!success) {
+		throw new Error(
+			message ?? "Signing in with github failed. Please try again later."
+		);
+	}
 	return data;
 };

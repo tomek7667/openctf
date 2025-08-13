@@ -25,16 +25,6 @@ export interface ConnectionSettings {
 	discord: string;
 }
 
-export const changePassword = async (
-	data: PasswordChangeDto
-): Promise<{ success: boolean; message: string }> => {
-	await sleep(1000);
-	if (data.newPassword !== data.confirmPassword) {
-		return { success: false, message: "Passwords do not match" };
-	}
-	return { success: true, message: "Password updated successfully" };
-};
-
 export const updateNotifications = async (
 	_settings: NotificationSettings
 ): Promise<{ success: boolean; message: string }> => {

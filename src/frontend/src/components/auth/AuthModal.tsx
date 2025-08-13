@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
 	X,
@@ -10,12 +10,22 @@ import {
 	Lock,
 	Mail,
 	User,
+	Loader,
+	Github,
 } from "@/components/ui/icons";
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
 import { useAuthStore } from "@/store/authStore";
-import { login, register, forgotPassword } from "@/api/auth";
-import type { LoginDto, RegisterDto } from "@/types/api";
+import {
+	login,
+	register,
+	forgotPassword,
+	loginGithub,
+	registerGithub,
+} from "@/api/auth";
+import type { AuthResponse, LoginDto, RegisterDto } from "@/types/api";
+import useToast from "@/hooks/useToast";
+import { BASE_FE_URL, GH_CLIENT_ID } from "@/api/constant";
 
 interface AuthModalProps {
 	isOpen: boolean;
@@ -25,16 +35,24 @@ interface AuthModalProps {
 
 type AuthMode = "login" | "register" | "forgot" | "success";
 
+const availableModes: AuthMode[] = ["login", "register", "forgot", "success"];
+
 export function AuthModal({
 	isOpen,
 	onClose,
 	initialMode = "login",
 }: AuthModalProps) {
-	const [mode, setMode] = useState<AuthMode>(initialMode);
+	const qp = new URL(window.location.href).searchParams;
+	const [mode, setMode] = useState<AuthMode>(
+		availableModes.includes(qp.get("tab") as AuthMode)
+			? (qp.get("tab") as AuthMode)
+			: initialMode
+	);
 	const [showPassword, setShowPassword] = useState(false);
-	const [isLoading, setIsLoading] = useState(false);
+	const [isLoading, setIsLoading] = useState(qp.get("isLoading") === "true");
 	const [error, setError] = useState("");
 	const [successMessage, setSuccessMessage] = useState("");
+	const { toast } = useToast();
 
 	const { setAuth, setLoading } = useAuthStore();
 
@@ -100,6 +118,63 @@ export function AuthModal({
 		setMode(newMode);
 		resetForm();
 	};
+
+	const signGithubHandler = async () => {
+		try {
+			setIsLoading(true);
+			const url = new URL("https://github.com/login/oauth/authorize");
+			url.searchParams.set("client_id", GH_CLIENT_ID);
+			url.searchParams.set("authModal", "true");
+			url.searchParams.set(
+				"redirect_uri",
+				BASE_FE_URL + `/weight-pool?tab=${mode}&authModal=true&isLoading=true`
+			);
+			window.open(url.toString(), "_blank");
+		} catch (err: any) {
+			toast.error(
+				"failed to authenticate",
+				err?.message ??
+					"an unknown error occurred. Please contact the administrator."
+			);
+		} finally {
+			setIsLoading(false);
+		}
+	};
+
+	useEffect(() => {
+		const ghConnect = async () => {
+			try {
+				setLoading(true);
+				setIsLoading(true);
+				let r: AuthResponse;
+				if (mode === "login") {
+					r = await loginGithub(qp.get("code")!);
+				} else {
+					r = await registerGithub(qp.get("code")!);
+				}
+				setAuth(r.user, r.token);
+				toast.success(
+					`${mode === "login" ? "Signed in " : "Registered"} with GitHub successfully!`
+				);
+				onClose();
+			} catch (error: any) {
+				toast.error(
+					"something went wrong connecting to github",
+					error?.message ?? "unknown error occurred"
+				);
+			} finally {
+				setLoading(false);
+				setIsLoading(false);
+				window.history.replaceState({}, "", "/weight-pool");
+			}
+		};
+
+		if (isLoading) {
+			ghConnect();
+		}
+
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
 	if (!isOpen) return null;
 
@@ -329,25 +404,51 @@ export function AuthModal({
 										ERROR: {error}
 									</div>
 								)}
-
-								<Button
-									type="submit"
-									disabled={isLoading}
-									className="w-full font-mono font-bold"
-								>
-									{isLoading ? (
+								<div className="flex w-full">
+									<Button
+										type="submit"
+										disabled={isLoading}
+										className={`${mode === "forgot" ? "w-full" : "w-half"} font-mono font-bold`}
+									>
+										{isLoading ? (
+											<>
+												<div className="animate-spin h-4 w-4 border-2 border-current border-t-transparent rounded-full mr-2" />
+												processing...
+											</>
+										) : (
+											<>
+												{mode === "login" && "> authenticate"}
+												{mode === "register" && "> create_account"}
+												{mode === "forgot" && "> send_reset"}
+											</>
+										)}
+									</Button>
+									{mode !== "forgot" && (
 										<>
-											<div className="animate-spin h-4 w-4 border-2 border-current border-t-transparent rounded-full mr-2" />
-											processing...
-										</>
-									) : (
-										<>
-											{mode === "login" && "> authenticate"}
-											{mode === "register" && "> create_account"}
-											{mode === "forgot" && "> send_reset"}
+											<div className="flex-1" />
+											<Button
+												onClick={signGithubHandler}
+												disabled={isLoading}
+												className="w-half font-mono font-semibold bg-[#444444] text-white border border-[#111111] hover:bg-[#000000] hover:border-[#ffffff] disabled:bg-gray-600 disabled:border-gray-600 disabled:cursor-not-allowed rounded-md px-4 py-2 transition-colors"
+											>
+												<span>
+													{isLoading ? (
+														<>
+															{/* <div className="animate-spin h-4 w-4 border-2 border-current border-t-transparent rounded-full mr-2" /> */}
+															<Loader /> processing...
+														</>
+													) : (
+														<>
+															<Github />
+															{mode === "login" && "github_sign_in"}
+															{mode === "register" && "github_sign_up"}
+														</>
+													)}
+												</span>
+											</Button>
 										</>
 									)}
-								</Button>
+								</div>
 
 								<div className="text-center space-y-2 text-sm">
 									{mode === "login" && (

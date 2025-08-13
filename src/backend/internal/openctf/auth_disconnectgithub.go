@@ -20,6 +20,14 @@ func (h *Handler) AuthDisconnectGithub(ctx *gin.Context, user *ent.User) {
 		})
 		return
 	}
+	if user.Password == "" {
+		ctx.JSON(http.StatusBadRequest, map[string]any{
+			"success": false,
+			"message": "this account was created via github integration. If you want to disconnect you need to set a password in settings",
+			"data":    nil,
+		})
+		return
+	}
 	u, err := h.ServiceClient.DisconnectGithub(ctx, user)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, map[string]any{

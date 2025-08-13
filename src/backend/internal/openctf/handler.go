@@ -61,6 +61,17 @@ type ServiceClient interface {
 		ctx context.Context,
 		_user *ent.User,
 	) (*ent.User, error)
+	RegisterGithub(
+		ctx context.Context,
+		ghEmail string,
+		ghInfo *github.User,
+	) (*ent.User, *string, error)
+	LoginGithub(
+		ctx context.Context,
+		ghEmail string,
+		ghInfo *github.User,
+	) (*ent.User, *string, error)
+	ChangePassword(ctx context.Context, _user *ent.User, dto *service.ChangePasswordDto) (*ent.User, *string, error)
 }
 
 type CtftimeClient interface {

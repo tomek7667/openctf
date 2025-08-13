@@ -3,7 +3,16 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Menu, X, Trophy, Shield, Users, User, BookOpen, LogIn } from "@/components/ui/icons";
+import {
+	Menu,
+	X,
+	Trophy,
+	Shield,
+	Users,
+	User,
+	BookOpen,
+	LogIn,
+} from "@/components/ui/icons";
 import { useAuthStore } from "@/store/authStore";
 import { AuthModal } from "@/components/auth/AuthModal";
 import { UserMenu } from "@/components/auth/UserMenu";
@@ -42,9 +51,12 @@ const navigation = [
 ];
 
 export function Header() {
+	const qp = new URL(window.location.href).searchParams;
 	const pathname = usePathname();
 	const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-	const [authModalOpen, setAuthModalOpen] = useState(false);
+	const [authModalOpen, setAuthModalOpen] = useState(
+		qp.get("authModal") === "true"
+	);
 	const { isAuthenticated } = useAuthStore();
 
 	const isActive = (href: string) => {
@@ -89,7 +101,7 @@ export function Header() {
 								);
 							})}
 						</nav>
-						
+
 						{isAuthenticated ? (
 							<UserMenu />
 						) : (
@@ -136,7 +148,7 @@ export function Header() {
 									</Link>
 								);
 							})}
-							
+
 							{!isAuthenticated && (
 								<button
 									onClick={() => {
@@ -152,7 +164,7 @@ export function Header() {
 						</nav>
 					</div>
 				)}
-				
+
 				<AuthModal
 					isOpen={authModalOpen}
 					onClose={() => setAuthModalOpen(false)}

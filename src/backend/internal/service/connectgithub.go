@@ -8,7 +8,7 @@ import (
 	"openctfbackend/internal/github"
 )
 
-type ConnectGithubDto struct {
+type CodeDto struct {
 	Code string `json:"code"`
 }
 

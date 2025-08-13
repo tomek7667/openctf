@@ -1,7 +1,6 @@
 package openctf
 
 import (
-	"fmt"
 	"net/http"
 
 	"openctfbackend/internal/rest"
@@ -10,7 +9,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func (h *Handler) AuthRegisterGithub(ctx *gin.Context) {
+func (h *Handler) AuthLoginGithub(ctx *gin.Context) {
 	dto := service.CodeDto{}
 	err := ctx.ShouldBind(&dto)
 	if err != nil {
@@ -48,7 +47,7 @@ func (h *Handler) AuthRegisterGithub(ctx *gin.Context) {
 		})
 		return
 	}
-	user, token, err := h.ServiceClient.RegisterGithub(ctx, *email, ghUser)
+	user, token, err := h.ServiceClient.LoginGithub(ctx, *email, ghUser)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, map[string]any{
 			"success": false,
@@ -56,11 +55,6 @@ func (h *Handler) AuthRegisterGithub(ctx *gin.Context) {
 			"data":    nil,
 		})
 		return
-	}
-	err = h.sendConfirmEmail(user)
-	if err != nil {
-		h.ServiceClient.DeleteUserByUsername(ctx, user.Username)
-		err = fmt.Errorf("failed to send confirmation e-mail to '%s': %w", *email, err)
 	}
 	rest.FailOrReturn(ctx, map[string]any{
 		"user":  user,

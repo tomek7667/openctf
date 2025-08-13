@@ -39,11 +39,11 @@ import {
 	updateUserProfile,
 	UserProfileResponse,
 } from "@/api/userProfile";
-import { changePassword, updateConnections } from "@/api/settings";
+import { updateConnections } from "@/api/settings";
 import { SkillRadar } from "@/components/ui/SkillRadar";
 import { GH_CLIENT_ID } from "@/api/constant";
 import useToast from "@/hooks/useToast";
-import { connectGithub, disconnectGithub } from "@/api";
+import { changePassword, connectGithub, disconnectGithub } from "@/api";
 import Image from "next/image";
 
 const rarityColors = {
@@ -219,6 +219,32 @@ export default function ProfilePage() {
 				...prev,
 				connections: false,
 			}));
+		}
+	};
+
+	const changePasswordHandler = async () => {
+		setLoading((prev) => ({ ...prev, password: true }));
+		try {
+			if (settingsData.password.new !== settingsData.password.confirm) {
+				throw new Error("passwords don't match");
+			}
+			const r = await changePassword(token!, {
+				new_password: settingsData.password.new,
+				old_password: settingsData.password.current,
+			});
+			setAuth(r.user, r.token);
+			setSettingsData((prev) => ({
+				...prev,
+				password: { current: "", new: "", confirm: "" },
+			}));
+			toast.success("password changed correctly");
+		} catch (err: any) {
+			toast.error(
+				"changing password failed",
+				err?.message ?? "something went wrong. Please contact the administrator"
+			);
+		} finally {
+			setLoading((prev) => ({ ...prev, password: false }));
 		}
 	};
 
@@ -786,25 +812,7 @@ export default function ProfilePage() {
 									</div>
 									<Button
 										className="mt-4 font-mono bg-gradient-to-r from-green-500 to-blue-500 hover:from-green-600 hover:to-blue-600 text-black font-bold"
-										onClick={async () => {
-											setLoading((prev) => ({ ...prev, password: true }));
-											try {
-												const result = await changePassword({
-													currentPassword: settingsData.password.current,
-													newPassword: settingsData.password.new,
-													confirmPassword: settingsData.password.confirm,
-												});
-												if (result.success) {
-													setSettingsData((prev) => ({
-														...prev,
-														password: { current: "", new: "", confirm: "" },
-													}));
-												}
-												// TODO: TOAST
-											} finally {
-												setLoading((prev) => ({ ...prev, password: false }));
-											}
-										}}
+										onClick={changePasswordHandler}
 										disabled={loading.password}
 									>
 										<Key className="h-4 w-4 mr-2" />
