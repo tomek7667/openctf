@@ -20,56 +20,56 @@ type AchievementDelete struct {
 }
 
 // Where appends a list predicates to the AchievementDelete builder.
-func (ad *AchievementDelete) Where(ps ...predicate.Achievement) *AchievementDelete {
-	ad.mutation.Where(ps...)
-	return ad
+func (_d *AchievementDelete) Where(ps ...predicate.Achievement) *AchievementDelete {
+	_d.mutation.Where(ps...)
+	return _d
 }
 
 // Exec executes the deletion query and returns how many vertices were deleted.
-func (ad *AchievementDelete) Exec(ctx context.Context) (int, error) {
-	return withHooks(ctx, ad.sqlExec, ad.mutation, ad.hooks)
+func (_d *AchievementDelete) Exec(ctx context.Context) (int, error) {
+	return withHooks(ctx, _d.sqlExec, _d.mutation, _d.hooks)
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (ad *AchievementDelete) ExecX(ctx context.Context) int {
-	n, err := ad.Exec(ctx)
+func (_d *AchievementDelete) ExecX(ctx context.Context) int {
+	n, err := _d.Exec(ctx)
 	if err != nil {
 		panic(err)
 	}
 	return n
 }
 
-func (ad *AchievementDelete) sqlExec(ctx context.Context) (int, error) {
+func (_d *AchievementDelete) sqlExec(ctx context.Context) (int, error) {
 	_spec := sqlgraph.NewDeleteSpec(achievement.Table, sqlgraph.NewFieldSpec(achievement.FieldID, field.TypeInt))
-	if ps := ad.mutation.predicates; len(ps) > 0 {
+	if ps := _d.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
 			for i := range ps {
 				ps[i](selector)
 			}
 		}
 	}
-	affected, err := sqlgraph.DeleteNodes(ctx, ad.driver, _spec)
+	affected, err := sqlgraph.DeleteNodes(ctx, _d.driver, _spec)
 	if err != nil && sqlgraph.IsConstraintError(err) {
 		err = &ConstraintError{msg: err.Error(), wrap: err}
 	}
-	ad.mutation.done = true
+	_d.mutation.done = true
 	return affected, err
 }
 
 // AchievementDeleteOne is the builder for deleting a single Achievement entity.
 type AchievementDeleteOne struct {
-	ad *AchievementDelete
+	_d *AchievementDelete
 }
 
 // Where appends a list predicates to the AchievementDelete builder.
-func (ado *AchievementDeleteOne) Where(ps ...predicate.Achievement) *AchievementDeleteOne {
-	ado.ad.mutation.Where(ps...)
-	return ado
+func (_d *AchievementDeleteOne) Where(ps ...predicate.Achievement) *AchievementDeleteOne {
+	_d._d.mutation.Where(ps...)
+	return _d
 }
 
 // Exec executes the deletion query.
-func (ado *AchievementDeleteOne) Exec(ctx context.Context) error {
-	n, err := ado.ad.Exec(ctx)
+func (_d *AchievementDeleteOne) Exec(ctx context.Context) error {
+	n, err := _d._d.Exec(ctx)
 	switch {
 	case err != nil:
 		return err
@@ -81,8 +81,8 @@ func (ado *AchievementDeleteOne) Exec(ctx context.Context) error {
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (ado *AchievementDeleteOne) ExecX(ctx context.Context) {
-	if err := ado.Exec(ctx); err != nil {
+func (_d *AchievementDeleteOne) ExecX(ctx context.Context) {
+	if err := _d.Exec(ctx); err != nil {
 		panic(err)
 	}
 }

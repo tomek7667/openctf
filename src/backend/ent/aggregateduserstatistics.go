@@ -41,7 +41,7 @@ func (*AggregatedUserStatistics) scanValues(columns []string) ([]any, error) {
 
 // assignValues assigns the values that were returned from sql.Rows (after scanning)
 // to the AggregatedUserStatistics fields.
-func (aus *AggregatedUserStatistics) assignValues(columns []string, values []any) error {
+func (_m *AggregatedUserStatistics) assignValues(columns []string, values []any) error {
 	if m, n := len(values), len(columns); m < n {
 		return fmt.Errorf("mismatch number of scan values: %d != %d", m, n)
 	}
@@ -51,28 +51,28 @@ func (aus *AggregatedUserStatistics) assignValues(columns []string, values []any
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field total_views", values[i])
 			} else if value.Valid {
-				aus.TotalViews = int(value.Int64)
+				_m.TotalViews = int(value.Int64)
 			}
 		case aggregateduserstatistics.FieldWriteupsAuthored:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field writeups_authored", values[i])
 			} else if value.Valid {
-				aus.WriteupsAuthored = int(value.Int64)
+				_m.WriteupsAuthored = int(value.Int64)
 			}
 		case aggregateduserstatistics.FieldContestsParticipated:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field contests_participated", values[i])
 			} else if value.Valid {
-				aus.ContestsParticipated = int(value.Int64)
+				_m.ContestsParticipated = int(value.Int64)
 			}
 		case aggregateduserstatistics.FieldUserID:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field user_id", values[i])
 			} else if value.Valid {
-				aus.UserID = int(value.Int64)
+				_m.UserID = int(value.Int64)
 			}
 		default:
-			aus.selectValues.Set(columns[i], values[i])
+			_m.selectValues.Set(columns[i], values[i])
 		}
 	}
 	return nil
@@ -80,36 +80,36 @@ func (aus *AggregatedUserStatistics) assignValues(columns []string, values []any
 
 // Value returns the ent.Value that was dynamically selected and assigned to the AggregatedUserStatistics.
 // This includes values selected through modifiers, order, etc.
-func (aus *AggregatedUserStatistics) Value(name string) (ent.Value, error) {
-	return aus.selectValues.Get(name)
+func (_m *AggregatedUserStatistics) Value(name string) (ent.Value, error) {
+	return _m.selectValues.Get(name)
 }
 
 // Unwrap unwraps the AggregatedUserStatistics entity that was returned from a transaction after it was closed,
 // so that all future queries will be executed through the driver which created the transaction.
-func (aus *AggregatedUserStatistics) Unwrap() *AggregatedUserStatistics {
-	_tx, ok := aus.config.driver.(*txDriver)
+func (_m *AggregatedUserStatistics) Unwrap() *AggregatedUserStatistics {
+	_tx, ok := _m.config.driver.(*txDriver)
 	if !ok {
 		panic("ent: AggregatedUserStatistics is not a transactional entity")
 	}
-	aus.config.driver = _tx.drv
-	return aus
+	_m.config.driver = _tx.drv
+	return _m
 }
 
 // String implements the fmt.Stringer.
-func (aus *AggregatedUserStatistics) String() string {
+func (_m *AggregatedUserStatistics) String() string {
 	var builder strings.Builder
 	builder.WriteString("AggregatedUserStatistics(")
 	builder.WriteString("total_views=")
-	builder.WriteString(fmt.Sprintf("%v", aus.TotalViews))
+	builder.WriteString(fmt.Sprintf("%v", _m.TotalViews))
 	builder.WriteString(", ")
 	builder.WriteString("writeups_authored=")
-	builder.WriteString(fmt.Sprintf("%v", aus.WriteupsAuthored))
+	builder.WriteString(fmt.Sprintf("%v", _m.WriteupsAuthored))
 	builder.WriteString(", ")
 	builder.WriteString("contests_participated=")
-	builder.WriteString(fmt.Sprintf("%v", aus.ContestsParticipated))
+	builder.WriteString(fmt.Sprintf("%v", _m.ContestsParticipated))
 	builder.WriteString(", ")
 	builder.WriteString("user_id=")
-	builder.WriteString(fmt.Sprintf("%v", aus.UserID))
+	builder.WriteString(fmt.Sprintf("%v", _m.UserID))
 	builder.WriteByte(')')
 	return builder.String()
 }

@@ -23,112 +23,112 @@ type PlaceCreate struct {
 }
 
 // SetTeamName sets the "team_name" field.
-func (pc *PlaceCreate) SetTeamName(s string) *PlaceCreate {
-	pc.mutation.SetTeamName(s)
-	return pc
+func (_c *PlaceCreate) SetTeamName(v string) *PlaceCreate {
+	_c.mutation.SetTeamName(v)
+	return _c
 }
 
 // SetPlace sets the "place" field.
-func (pc *PlaceCreate) SetPlace(i int) *PlaceCreate {
-	pc.mutation.SetPlace(i)
-	return pc
+func (_c *PlaceCreate) SetPlace(v int) *PlaceCreate {
+	_c.mutation.SetPlace(v)
+	return _c
 }
 
 // SetCtftimeTeamID sets the "ctftime_team_id" field.
-func (pc *PlaceCreate) SetCtftimeTeamID(i int) *PlaceCreate {
-	pc.mutation.SetCtftimeTeamID(i)
-	return pc
+func (_c *PlaceCreate) SetCtftimeTeamID(v int) *PlaceCreate {
+	_c.mutation.SetCtftimeTeamID(v)
+	return _c
 }
 
 // SetNillableCtftimeTeamID sets the "ctftime_team_id" field if the given value is not nil.
-func (pc *PlaceCreate) SetNillableCtftimeTeamID(i *int) *PlaceCreate {
-	if i != nil {
-		pc.SetCtftimeTeamID(*i)
+func (_c *PlaceCreate) SetNillableCtftimeTeamID(v *int) *PlaceCreate {
+	if v != nil {
+		_c.SetCtftimeTeamID(*v)
 	}
-	return pc
+	return _c
 }
 
 // SetContestPoints sets the "contest_points" field.
-func (pc *PlaceCreate) SetContestPoints(f float64) *PlaceCreate {
-	pc.mutation.SetContestPoints(f)
-	return pc
+func (_c *PlaceCreate) SetContestPoints(v float64) *PlaceCreate {
+	_c.mutation.SetContestPoints(v)
+	return _c
 }
 
 // SetNillableContestPoints sets the "contest_points" field if the given value is not nil.
-func (pc *PlaceCreate) SetNillableContestPoints(f *float64) *PlaceCreate {
-	if f != nil {
-		pc.SetContestPoints(*f)
+func (_c *PlaceCreate) SetNillableContestPoints(v *float64) *PlaceCreate {
+	if v != nil {
+		_c.SetContestPoints(*v)
 	}
-	return pc
+	return _c
 }
 
 // SetOpenctfPoints sets the "openctf_points" field.
-func (pc *PlaceCreate) SetOpenctfPoints(f float64) *PlaceCreate {
-	pc.mutation.SetOpenctfPoints(f)
-	return pc
+func (_c *PlaceCreate) SetOpenctfPoints(v float64) *PlaceCreate {
+	_c.mutation.SetOpenctfPoints(v)
+	return _c
 }
 
 // SetNillableOpenctfPoints sets the "openctf_points" field if the given value is not nil.
-func (pc *PlaceCreate) SetNillableOpenctfPoints(f *float64) *PlaceCreate {
-	if f != nil {
-		pc.SetOpenctfPoints(*f)
+func (_c *PlaceCreate) SetNillableOpenctfPoints(v *float64) *PlaceCreate {
+	if v != nil {
+		_c.SetOpenctfPoints(*v)
 	}
-	return pc
+	return _c
 }
 
 // SetAssociatedContestID sets the "associated_contest_id" field.
-func (pc *PlaceCreate) SetAssociatedContestID(i int) *PlaceCreate {
-	pc.mutation.SetAssociatedContestID(i)
-	return pc
+func (_c *PlaceCreate) SetAssociatedContestID(v int) *PlaceCreate {
+	_c.mutation.SetAssociatedContestID(v)
+	return _c
 }
 
 // SetAssignedWeightPoints sets the "assigned_weight_points" field.
-func (pc *PlaceCreate) SetAssignedWeightPoints(i int) *PlaceCreate {
-	pc.mutation.SetAssignedWeightPoints(i)
-	return pc
+func (_c *PlaceCreate) SetAssignedWeightPoints(v int) *PlaceCreate {
+	_c.mutation.SetAssignedWeightPoints(v)
+	return _c
 }
 
 // SetNillableAssignedWeightPoints sets the "assigned_weight_points" field if the given value is not nil.
-func (pc *PlaceCreate) SetNillableAssignedWeightPoints(i *int) *PlaceCreate {
-	if i != nil {
-		pc.SetAssignedWeightPoints(*i)
+func (_c *PlaceCreate) SetNillableAssignedWeightPoints(v *int) *PlaceCreate {
+	if v != nil {
+		_c.SetAssignedWeightPoints(*v)
 	}
-	return pc
+	return _c
 }
 
 // SetAssociatedTeamID sets the "associated_team" edge to the Team entity by ID.
-func (pc *PlaceCreate) SetAssociatedTeamID(id int) *PlaceCreate {
-	pc.mutation.SetAssociatedTeamID(id)
-	return pc
+func (_c *PlaceCreate) SetAssociatedTeamID(id int) *PlaceCreate {
+	_c.mutation.SetAssociatedTeamID(id)
+	return _c
 }
 
 // SetNillableAssociatedTeamID sets the "associated_team" edge to the Team entity by ID if the given value is not nil.
-func (pc *PlaceCreate) SetNillableAssociatedTeamID(id *int) *PlaceCreate {
+func (_c *PlaceCreate) SetNillableAssociatedTeamID(id *int) *PlaceCreate {
 	if id != nil {
-		pc = pc.SetAssociatedTeamID(*id)
+		_c = _c.SetAssociatedTeamID(*id)
 	}
-	return pc
+	return _c
 }
 
 // SetAssociatedTeam sets the "associated_team" edge to the Team entity.
-func (pc *PlaceCreate) SetAssociatedTeam(t *Team) *PlaceCreate {
-	return pc.SetAssociatedTeamID(t.ID)
+func (_c *PlaceCreate) SetAssociatedTeam(v *Team) *PlaceCreate {
+	return _c.SetAssociatedTeamID(v.ID)
 }
 
 // Mutation returns the PlaceMutation object of the builder.
-func (pc *PlaceCreate) Mutation() *PlaceMutation {
-	return pc.mutation
+func (_c *PlaceCreate) Mutation() *PlaceMutation {
+	return _c.mutation
 }
 
 // Save creates the Place in the database.
-func (pc *PlaceCreate) Save(ctx context.Context) (*Place, error) {
-	pc.defaults()
-	return withHooks(ctx, pc.sqlSave, pc.mutation, pc.hooks)
+func (_c *PlaceCreate) Save(ctx context.Context) (*Place, error) {
+	_c.defaults()
+	return withHooks(ctx, _c.sqlSave, _c.mutation, _c.hooks)
 }
 
 // SaveX calls Save and panics if Save returns an error.
-func (pc *PlaceCreate) SaveX(ctx context.Context) *Place {
-	v, err := pc.Save(ctx)
+func (_c *PlaceCreate) SaveX(ctx context.Context) *Place {
+	v, err := _c.Save(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -136,69 +136,69 @@ func (pc *PlaceCreate) SaveX(ctx context.Context) *Place {
 }
 
 // Exec executes the query.
-func (pc *PlaceCreate) Exec(ctx context.Context) error {
-	_, err := pc.Save(ctx)
+func (_c *PlaceCreate) Exec(ctx context.Context) error {
+	_, err := _c.Save(ctx)
 	return err
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (pc *PlaceCreate) ExecX(ctx context.Context) {
-	if err := pc.Exec(ctx); err != nil {
+func (_c *PlaceCreate) ExecX(ctx context.Context) {
+	if err := _c.Exec(ctx); err != nil {
 		panic(err)
 	}
 }
 
 // defaults sets the default values of the builder before save.
-func (pc *PlaceCreate) defaults() {
-	if _, ok := pc.mutation.AssignedWeightPoints(); !ok {
+func (_c *PlaceCreate) defaults() {
+	if _, ok := _c.mutation.AssignedWeightPoints(); !ok {
 		v := place.DefaultAssignedWeightPoints
-		pc.mutation.SetAssignedWeightPoints(v)
+		_c.mutation.SetAssignedWeightPoints(v)
 	}
 }
 
 // check runs all checks and user-defined validators on the builder.
-func (pc *PlaceCreate) check() error {
-	if _, ok := pc.mutation.TeamName(); !ok {
+func (_c *PlaceCreate) check() error {
+	if _, ok := _c.mutation.TeamName(); !ok {
 		return &ValidationError{Name: "team_name", err: errors.New(`ent: missing required field "Place.team_name"`)}
 	}
-	if v, ok := pc.mutation.TeamName(); ok {
+	if v, ok := _c.mutation.TeamName(); ok {
 		if err := place.TeamNameValidator(v); err != nil {
 			return &ValidationError{Name: "team_name", err: fmt.Errorf(`ent: validator failed for field "Place.team_name": %w`, err)}
 		}
 	}
-	if _, ok := pc.mutation.Place(); !ok {
+	if _, ok := _c.mutation.Place(); !ok {
 		return &ValidationError{Name: "place", err: errors.New(`ent: missing required field "Place.place"`)}
 	}
-	if v, ok := pc.mutation.Place(); ok {
+	if v, ok := _c.mutation.Place(); ok {
 		if err := place.PlaceValidator(v); err != nil {
 			return &ValidationError{Name: "place", err: fmt.Errorf(`ent: validator failed for field "Place.place": %w`, err)}
 		}
 	}
-	if v, ok := pc.mutation.ContestPoints(); ok {
+	if v, ok := _c.mutation.ContestPoints(); ok {
 		if err := place.ContestPointsValidator(v); err != nil {
 			return &ValidationError{Name: "contest_points", err: fmt.Errorf(`ent: validator failed for field "Place.contest_points": %w`, err)}
 		}
 	}
-	if v, ok := pc.mutation.OpenctfPoints(); ok {
+	if v, ok := _c.mutation.OpenctfPoints(); ok {
 		if err := place.OpenctfPointsValidator(v); err != nil {
 			return &ValidationError{Name: "openctf_points", err: fmt.Errorf(`ent: validator failed for field "Place.openctf_points": %w`, err)}
 		}
 	}
-	if _, ok := pc.mutation.AssociatedContestID(); !ok {
+	if _, ok := _c.mutation.AssociatedContestID(); !ok {
 		return &ValidationError{Name: "associated_contest_id", err: errors.New(`ent: missing required field "Place.associated_contest_id"`)}
 	}
-	if _, ok := pc.mutation.AssignedWeightPoints(); !ok {
+	if _, ok := _c.mutation.AssignedWeightPoints(); !ok {
 		return &ValidationError{Name: "assigned_weight_points", err: errors.New(`ent: missing required field "Place.assigned_weight_points"`)}
 	}
 	return nil
 }
 
-func (pc *PlaceCreate) sqlSave(ctx context.Context) (*Place, error) {
-	if err := pc.check(); err != nil {
+func (_c *PlaceCreate) sqlSave(ctx context.Context) (*Place, error) {
+	if err := _c.check(); err != nil {
 		return nil, err
 	}
-	_node, _spec := pc.createSpec()
-	if err := sqlgraph.CreateNode(ctx, pc.driver, _spec); err != nil {
+	_node, _spec := _c.createSpec()
+	if err := sqlgraph.CreateNode(ctx, _c.driver, _spec); err != nil {
 		if sqlgraph.IsConstraintError(err) {
 			err = &ConstraintError{msg: err.Error(), wrap: err}
 		}
@@ -206,46 +206,46 @@ func (pc *PlaceCreate) sqlSave(ctx context.Context) (*Place, error) {
 	}
 	id := _spec.ID.Value.(int64)
 	_node.ID = int(id)
-	pc.mutation.id = &_node.ID
-	pc.mutation.done = true
+	_c.mutation.id = &_node.ID
+	_c.mutation.done = true
 	return _node, nil
 }
 
-func (pc *PlaceCreate) createSpec() (*Place, *sqlgraph.CreateSpec) {
+func (_c *PlaceCreate) createSpec() (*Place, *sqlgraph.CreateSpec) {
 	var (
-		_node = &Place{config: pc.config}
+		_node = &Place{config: _c.config}
 		_spec = sqlgraph.NewCreateSpec(place.Table, sqlgraph.NewFieldSpec(place.FieldID, field.TypeInt))
 	)
-	_spec.OnConflict = pc.conflict
-	if value, ok := pc.mutation.TeamName(); ok {
+	_spec.OnConflict = _c.conflict
+	if value, ok := _c.mutation.TeamName(); ok {
 		_spec.SetField(place.FieldTeamName, field.TypeString, value)
 		_node.TeamName = value
 	}
-	if value, ok := pc.mutation.Place(); ok {
+	if value, ok := _c.mutation.Place(); ok {
 		_spec.SetField(place.FieldPlace, field.TypeInt, value)
 		_node.Place = value
 	}
-	if value, ok := pc.mutation.CtftimeTeamID(); ok {
+	if value, ok := _c.mutation.CtftimeTeamID(); ok {
 		_spec.SetField(place.FieldCtftimeTeamID, field.TypeInt, value)
 		_node.CtftimeTeamID = &value
 	}
-	if value, ok := pc.mutation.ContestPoints(); ok {
+	if value, ok := _c.mutation.ContestPoints(); ok {
 		_spec.SetField(place.FieldContestPoints, field.TypeFloat64, value)
 		_node.ContestPoints = &value
 	}
-	if value, ok := pc.mutation.OpenctfPoints(); ok {
+	if value, ok := _c.mutation.OpenctfPoints(); ok {
 		_spec.SetField(place.FieldOpenctfPoints, field.TypeFloat64, value)
 		_node.OpenctfPoints = &value
 	}
-	if value, ok := pc.mutation.AssociatedContestID(); ok {
+	if value, ok := _c.mutation.AssociatedContestID(); ok {
 		_spec.SetField(place.FieldAssociatedContestID, field.TypeInt, value)
 		_node.AssociatedContestID = value
 	}
-	if value, ok := pc.mutation.AssignedWeightPoints(); ok {
+	if value, ok := _c.mutation.AssignedWeightPoints(); ok {
 		_spec.SetField(place.FieldAssignedWeightPoints, field.TypeInt, value)
 		_node.AssignedWeightPoints = value
 	}
-	if nodes := pc.mutation.AssociatedTeamIDs(); len(nodes) > 0 {
+	if nodes := _c.mutation.AssociatedTeamIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: false,
@@ -281,10 +281,10 @@ func (pc *PlaceCreate) createSpec() (*Place, *sqlgraph.CreateSpec) {
 //			SetTeamName(v+v).
 //		}).
 //		Exec(ctx)
-func (pc *PlaceCreate) OnConflict(opts ...sql.ConflictOption) *PlaceUpsertOne {
-	pc.conflict = opts
+func (_c *PlaceCreate) OnConflict(opts ...sql.ConflictOption) *PlaceUpsertOne {
+	_c.conflict = opts
 	return &PlaceUpsertOne{
-		create: pc,
+		create: _c,
 	}
 }
 
@@ -294,10 +294,10 @@ func (pc *PlaceCreate) OnConflict(opts ...sql.ConflictOption) *PlaceUpsertOne {
 //	client.Place.Create().
 //		OnConflict(sql.ConflictColumns(columns...)).
 //		Exec(ctx)
-func (pc *PlaceCreate) OnConflictColumns(columns ...string) *PlaceUpsertOne {
-	pc.conflict = append(pc.conflict, sql.ConflictColumns(columns...))
+func (_c *PlaceCreate) OnConflictColumns(columns ...string) *PlaceUpsertOne {
+	_c.conflict = append(_c.conflict, sql.ConflictColumns(columns...))
 	return &PlaceUpsertOne{
-		create: pc,
+		create: _c,
 	}
 }
 
@@ -695,16 +695,16 @@ type PlaceCreateBulk struct {
 }
 
 // Save creates the Place entities in the database.
-func (pcb *PlaceCreateBulk) Save(ctx context.Context) ([]*Place, error) {
-	if pcb.err != nil {
-		return nil, pcb.err
+func (_c *PlaceCreateBulk) Save(ctx context.Context) ([]*Place, error) {
+	if _c.err != nil {
+		return nil, _c.err
 	}
-	specs := make([]*sqlgraph.CreateSpec, len(pcb.builders))
-	nodes := make([]*Place, len(pcb.builders))
-	mutators := make([]Mutator, len(pcb.builders))
-	for i := range pcb.builders {
+	specs := make([]*sqlgraph.CreateSpec, len(_c.builders))
+	nodes := make([]*Place, len(_c.builders))
+	mutators := make([]Mutator, len(_c.builders))
+	for i := range _c.builders {
 		func(i int, root context.Context) {
-			builder := pcb.builders[i]
+			builder := _c.builders[i]
 			builder.defaults()
 			var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
 				mutation, ok := m.(*PlaceMutation)
@@ -718,12 +718,12 @@ func (pcb *PlaceCreateBulk) Save(ctx context.Context) ([]*Place, error) {
 				var err error
 				nodes[i], specs[i] = builder.createSpec()
 				if i < len(mutators)-1 {
-					_, err = mutators[i+1].Mutate(root, pcb.builders[i+1].mutation)
+					_, err = mutators[i+1].Mutate(root, _c.builders[i+1].mutation)
 				} else {
 					spec := &sqlgraph.BatchCreateSpec{Nodes: specs}
-					spec.OnConflict = pcb.conflict
+					spec.OnConflict = _c.conflict
 					// Invoke the actual operation on the latest mutation in the chain.
-					if err = sqlgraph.BatchCreate(ctx, pcb.driver, spec); err != nil {
+					if err = sqlgraph.BatchCreate(ctx, _c.driver, spec); err != nil {
 						if sqlgraph.IsConstraintError(err) {
 							err = &ConstraintError{msg: err.Error(), wrap: err}
 						}
@@ -747,7 +747,7 @@ func (pcb *PlaceCreateBulk) Save(ctx context.Context) ([]*Place, error) {
 		}(i, ctx)
 	}
 	if len(mutators) > 0 {
-		if _, err := mutators[0].Mutate(ctx, pcb.builders[0].mutation); err != nil {
+		if _, err := mutators[0].Mutate(ctx, _c.builders[0].mutation); err != nil {
 			return nil, err
 		}
 	}
@@ -755,8 +755,8 @@ func (pcb *PlaceCreateBulk) Save(ctx context.Context) ([]*Place, error) {
 }
 
 // SaveX is like Save, but panics if an error occurs.
-func (pcb *PlaceCreateBulk) SaveX(ctx context.Context) []*Place {
-	v, err := pcb.Save(ctx)
+func (_c *PlaceCreateBulk) SaveX(ctx context.Context) []*Place {
+	v, err := _c.Save(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -764,14 +764,14 @@ func (pcb *PlaceCreateBulk) SaveX(ctx context.Context) []*Place {
 }
 
 // Exec executes the query.
-func (pcb *PlaceCreateBulk) Exec(ctx context.Context) error {
-	_, err := pcb.Save(ctx)
+func (_c *PlaceCreateBulk) Exec(ctx context.Context) error {
+	_, err := _c.Save(ctx)
 	return err
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (pcb *PlaceCreateBulk) ExecX(ctx context.Context) {
-	if err := pcb.Exec(ctx); err != nil {
+func (_c *PlaceCreateBulk) ExecX(ctx context.Context) {
+	if err := _c.Exec(ctx); err != nil {
 		panic(err)
 	}
 }
@@ -791,10 +791,10 @@ func (pcb *PlaceCreateBulk) ExecX(ctx context.Context) {
 //			SetTeamName(v+v).
 //		}).
 //		Exec(ctx)
-func (pcb *PlaceCreateBulk) OnConflict(opts ...sql.ConflictOption) *PlaceUpsertBulk {
-	pcb.conflict = opts
+func (_c *PlaceCreateBulk) OnConflict(opts ...sql.ConflictOption) *PlaceUpsertBulk {
+	_c.conflict = opts
 	return &PlaceUpsertBulk{
-		create: pcb,
+		create: _c,
 	}
 }
 
@@ -804,10 +804,10 @@ func (pcb *PlaceCreateBulk) OnConflict(opts ...sql.ConflictOption) *PlaceUpsertB
 //	client.Place.Create().
 //		OnConflict(sql.ConflictColumns(columns...)).
 //		Exec(ctx)
-func (pcb *PlaceCreateBulk) OnConflictColumns(columns ...string) *PlaceUpsertBulk {
-	pcb.conflict = append(pcb.conflict, sql.ConflictColumns(columns...))
+func (_c *PlaceCreateBulk) OnConflictColumns(columns ...string) *PlaceUpsertBulk {
+	_c.conflict = append(_c.conflict, sql.ConflictColumns(columns...))
 	return &PlaceUpsertBulk{
-		create: pcb,
+		create: _c,
 	}
 }
 

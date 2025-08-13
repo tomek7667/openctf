@@ -24,97 +24,97 @@ type AchievementUpdate struct {
 }
 
 // Where appends a list predicates to the AchievementUpdate builder.
-func (au *AchievementUpdate) Where(ps ...predicate.Achievement) *AchievementUpdate {
-	au.mutation.Where(ps...)
-	return au
+func (_u *AchievementUpdate) Where(ps ...predicate.Achievement) *AchievementUpdate {
+	_u.mutation.Where(ps...)
+	return _u
 }
 
 // SetName sets the "name" field.
-func (au *AchievementUpdate) SetName(s string) *AchievementUpdate {
-	au.mutation.SetName(s)
-	return au
+func (_u *AchievementUpdate) SetName(v string) *AchievementUpdate {
+	_u.mutation.SetName(v)
+	return _u
 }
 
 // SetNillableName sets the "name" field if the given value is not nil.
-func (au *AchievementUpdate) SetNillableName(s *string) *AchievementUpdate {
-	if s != nil {
-		au.SetName(*s)
+func (_u *AchievementUpdate) SetNillableName(v *string) *AchievementUpdate {
+	if v != nil {
+		_u.SetName(*v)
 	}
-	return au
+	return _u
 }
 
 // SetDescription sets the "description" field.
-func (au *AchievementUpdate) SetDescription(s string) *AchievementUpdate {
-	au.mutation.SetDescription(s)
-	return au
+func (_u *AchievementUpdate) SetDescription(v string) *AchievementUpdate {
+	_u.mutation.SetDescription(v)
+	return _u
 }
 
 // SetNillableDescription sets the "description" field if the given value is not nil.
-func (au *AchievementUpdate) SetNillableDescription(s *string) *AchievementUpdate {
-	if s != nil {
-		au.SetDescription(*s)
+func (_u *AchievementUpdate) SetNillableDescription(v *string) *AchievementUpdate {
+	if v != nil {
+		_u.SetDescription(*v)
 	}
-	return au
+	return _u
 }
 
 // SetRarity sets the "rarity" field.
-func (au *AchievementUpdate) SetRarity(s string) *AchievementUpdate {
-	au.mutation.SetRarity(s)
-	return au
+func (_u *AchievementUpdate) SetRarity(v string) *AchievementUpdate {
+	_u.mutation.SetRarity(v)
+	return _u
 }
 
 // SetNillableRarity sets the "rarity" field if the given value is not nil.
-func (au *AchievementUpdate) SetNillableRarity(s *string) *AchievementUpdate {
-	if s != nil {
-		au.SetRarity(*s)
+func (_u *AchievementUpdate) SetNillableRarity(v *string) *AchievementUpdate {
+	if v != nil {
+		_u.SetRarity(*v)
 	}
-	return au
+	return _u
 }
 
 // SetUnlockedAt sets the "unlocked_at" field.
-func (au *AchievementUpdate) SetUnlockedAt(t time.Time) *AchievementUpdate {
-	au.mutation.SetUnlockedAt(t)
-	return au
+func (_u *AchievementUpdate) SetUnlockedAt(v time.Time) *AchievementUpdate {
+	_u.mutation.SetUnlockedAt(v)
+	return _u
 }
 
 // SetNillableUnlockedAt sets the "unlocked_at" field if the given value is not nil.
-func (au *AchievementUpdate) SetNillableUnlockedAt(t *time.Time) *AchievementUpdate {
-	if t != nil {
-		au.SetUnlockedAt(*t)
+func (_u *AchievementUpdate) SetNillableUnlockedAt(v *time.Time) *AchievementUpdate {
+	if v != nil {
+		_u.SetUnlockedAt(*v)
 	}
-	return au
+	return _u
 }
 
 // SetUserID sets the "user" edge to the User entity by ID.
-func (au *AchievementUpdate) SetUserID(id int) *AchievementUpdate {
-	au.mutation.SetUserID(id)
-	return au
+func (_u *AchievementUpdate) SetUserID(id int) *AchievementUpdate {
+	_u.mutation.SetUserID(id)
+	return _u
 }
 
 // SetUser sets the "user" edge to the User entity.
-func (au *AchievementUpdate) SetUser(u *User) *AchievementUpdate {
-	return au.SetUserID(u.ID)
+func (_u *AchievementUpdate) SetUser(v *User) *AchievementUpdate {
+	return _u.SetUserID(v.ID)
 }
 
 // Mutation returns the AchievementMutation object of the builder.
-func (au *AchievementUpdate) Mutation() *AchievementMutation {
-	return au.mutation
+func (_u *AchievementUpdate) Mutation() *AchievementMutation {
+	return _u.mutation
 }
 
 // ClearUser clears the "user" edge to the User entity.
-func (au *AchievementUpdate) ClearUser() *AchievementUpdate {
-	au.mutation.ClearUser()
-	return au
+func (_u *AchievementUpdate) ClearUser() *AchievementUpdate {
+	_u.mutation.ClearUser()
+	return _u
 }
 
 // Save executes the query and returns the number of nodes affected by the update operation.
-func (au *AchievementUpdate) Save(ctx context.Context) (int, error) {
-	return withHooks(ctx, au.sqlSave, au.mutation, au.hooks)
+func (_u *AchievementUpdate) Save(ctx context.Context) (int, error) {
+	return withHooks(ctx, _u.sqlSave, _u.mutation, _u.hooks)
 }
 
 // SaveX is like Save, but panics if an error occurs.
-func (au *AchievementUpdate) SaveX(ctx context.Context) int {
-	affected, err := au.Save(ctx)
+func (_u *AchievementUpdate) SaveX(ctx context.Context) int {
+	affected, err := _u.Save(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -122,51 +122,51 @@ func (au *AchievementUpdate) SaveX(ctx context.Context) int {
 }
 
 // Exec executes the query.
-func (au *AchievementUpdate) Exec(ctx context.Context) error {
-	_, err := au.Save(ctx)
+func (_u *AchievementUpdate) Exec(ctx context.Context) error {
+	_, err := _u.Save(ctx)
 	return err
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (au *AchievementUpdate) ExecX(ctx context.Context) {
-	if err := au.Exec(ctx); err != nil {
+func (_u *AchievementUpdate) ExecX(ctx context.Context) {
+	if err := _u.Exec(ctx); err != nil {
 		panic(err)
 	}
 }
 
 // check runs all checks and user-defined validators on the builder.
-func (au *AchievementUpdate) check() error {
-	if au.mutation.UserCleared() && len(au.mutation.UserIDs()) > 0 {
+func (_u *AchievementUpdate) check() error {
+	if _u.mutation.UserCleared() && len(_u.mutation.UserIDs()) > 0 {
 		return errors.New(`ent: clearing a required unique edge "Achievement.user"`)
 	}
 	return nil
 }
 
-func (au *AchievementUpdate) sqlSave(ctx context.Context) (n int, err error) {
-	if err := au.check(); err != nil {
-		return n, err
+func (_u *AchievementUpdate) sqlSave(ctx context.Context) (_node int, err error) {
+	if err := _u.check(); err != nil {
+		return _node, err
 	}
 	_spec := sqlgraph.NewUpdateSpec(achievement.Table, achievement.Columns, sqlgraph.NewFieldSpec(achievement.FieldID, field.TypeInt))
-	if ps := au.mutation.predicates; len(ps) > 0 {
+	if ps := _u.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
 			for i := range ps {
 				ps[i](selector)
 			}
 		}
 	}
-	if value, ok := au.mutation.Name(); ok {
+	if value, ok := _u.mutation.Name(); ok {
 		_spec.SetField(achievement.FieldName, field.TypeString, value)
 	}
-	if value, ok := au.mutation.Description(); ok {
+	if value, ok := _u.mutation.Description(); ok {
 		_spec.SetField(achievement.FieldDescription, field.TypeString, value)
 	}
-	if value, ok := au.mutation.Rarity(); ok {
+	if value, ok := _u.mutation.Rarity(); ok {
 		_spec.SetField(achievement.FieldRarity, field.TypeString, value)
 	}
-	if value, ok := au.mutation.UnlockedAt(); ok {
+	if value, ok := _u.mutation.UnlockedAt(); ok {
 		_spec.SetField(achievement.FieldUnlockedAt, field.TypeTime, value)
 	}
-	if au.mutation.UserCleared() {
+	if _u.mutation.UserCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: false,
@@ -179,7 +179,7 @@ func (au *AchievementUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := au.mutation.UserIDs(); len(nodes) > 0 {
+	if nodes := _u.mutation.UserIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: false,
@@ -195,7 +195,7 @@ func (au *AchievementUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	if n, err = sqlgraph.UpdateNodes(ctx, au.driver, _spec); err != nil {
+	if _node, err = sqlgraph.UpdateNodes(ctx, _u.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{achievement.Label}
 		} else if sqlgraph.IsConstraintError(err) {
@@ -203,8 +203,8 @@ func (au *AchievementUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		return 0, err
 	}
-	au.mutation.done = true
-	return n, nil
+	_u.mutation.done = true
+	return _node, nil
 }
 
 // AchievementUpdateOne is the builder for updating a single Achievement entity.
@@ -216,104 +216,104 @@ type AchievementUpdateOne struct {
 }
 
 // SetName sets the "name" field.
-func (auo *AchievementUpdateOne) SetName(s string) *AchievementUpdateOne {
-	auo.mutation.SetName(s)
-	return auo
+func (_u *AchievementUpdateOne) SetName(v string) *AchievementUpdateOne {
+	_u.mutation.SetName(v)
+	return _u
 }
 
 // SetNillableName sets the "name" field if the given value is not nil.
-func (auo *AchievementUpdateOne) SetNillableName(s *string) *AchievementUpdateOne {
-	if s != nil {
-		auo.SetName(*s)
+func (_u *AchievementUpdateOne) SetNillableName(v *string) *AchievementUpdateOne {
+	if v != nil {
+		_u.SetName(*v)
 	}
-	return auo
+	return _u
 }
 
 // SetDescription sets the "description" field.
-func (auo *AchievementUpdateOne) SetDescription(s string) *AchievementUpdateOne {
-	auo.mutation.SetDescription(s)
-	return auo
+func (_u *AchievementUpdateOne) SetDescription(v string) *AchievementUpdateOne {
+	_u.mutation.SetDescription(v)
+	return _u
 }
 
 // SetNillableDescription sets the "description" field if the given value is not nil.
-func (auo *AchievementUpdateOne) SetNillableDescription(s *string) *AchievementUpdateOne {
-	if s != nil {
-		auo.SetDescription(*s)
+func (_u *AchievementUpdateOne) SetNillableDescription(v *string) *AchievementUpdateOne {
+	if v != nil {
+		_u.SetDescription(*v)
 	}
-	return auo
+	return _u
 }
 
 // SetRarity sets the "rarity" field.
-func (auo *AchievementUpdateOne) SetRarity(s string) *AchievementUpdateOne {
-	auo.mutation.SetRarity(s)
-	return auo
+func (_u *AchievementUpdateOne) SetRarity(v string) *AchievementUpdateOne {
+	_u.mutation.SetRarity(v)
+	return _u
 }
 
 // SetNillableRarity sets the "rarity" field if the given value is not nil.
-func (auo *AchievementUpdateOne) SetNillableRarity(s *string) *AchievementUpdateOne {
-	if s != nil {
-		auo.SetRarity(*s)
+func (_u *AchievementUpdateOne) SetNillableRarity(v *string) *AchievementUpdateOne {
+	if v != nil {
+		_u.SetRarity(*v)
 	}
-	return auo
+	return _u
 }
 
 // SetUnlockedAt sets the "unlocked_at" field.
-func (auo *AchievementUpdateOne) SetUnlockedAt(t time.Time) *AchievementUpdateOne {
-	auo.mutation.SetUnlockedAt(t)
-	return auo
+func (_u *AchievementUpdateOne) SetUnlockedAt(v time.Time) *AchievementUpdateOne {
+	_u.mutation.SetUnlockedAt(v)
+	return _u
 }
 
 // SetNillableUnlockedAt sets the "unlocked_at" field if the given value is not nil.
-func (auo *AchievementUpdateOne) SetNillableUnlockedAt(t *time.Time) *AchievementUpdateOne {
-	if t != nil {
-		auo.SetUnlockedAt(*t)
+func (_u *AchievementUpdateOne) SetNillableUnlockedAt(v *time.Time) *AchievementUpdateOne {
+	if v != nil {
+		_u.SetUnlockedAt(*v)
 	}
-	return auo
+	return _u
 }
 
 // SetUserID sets the "user" edge to the User entity by ID.
-func (auo *AchievementUpdateOne) SetUserID(id int) *AchievementUpdateOne {
-	auo.mutation.SetUserID(id)
-	return auo
+func (_u *AchievementUpdateOne) SetUserID(id int) *AchievementUpdateOne {
+	_u.mutation.SetUserID(id)
+	return _u
 }
 
 // SetUser sets the "user" edge to the User entity.
-func (auo *AchievementUpdateOne) SetUser(u *User) *AchievementUpdateOne {
-	return auo.SetUserID(u.ID)
+func (_u *AchievementUpdateOne) SetUser(v *User) *AchievementUpdateOne {
+	return _u.SetUserID(v.ID)
 }
 
 // Mutation returns the AchievementMutation object of the builder.
-func (auo *AchievementUpdateOne) Mutation() *AchievementMutation {
-	return auo.mutation
+func (_u *AchievementUpdateOne) Mutation() *AchievementMutation {
+	return _u.mutation
 }
 
 // ClearUser clears the "user" edge to the User entity.
-func (auo *AchievementUpdateOne) ClearUser() *AchievementUpdateOne {
-	auo.mutation.ClearUser()
-	return auo
+func (_u *AchievementUpdateOne) ClearUser() *AchievementUpdateOne {
+	_u.mutation.ClearUser()
+	return _u
 }
 
 // Where appends a list predicates to the AchievementUpdate builder.
-func (auo *AchievementUpdateOne) Where(ps ...predicate.Achievement) *AchievementUpdateOne {
-	auo.mutation.Where(ps...)
-	return auo
+func (_u *AchievementUpdateOne) Where(ps ...predicate.Achievement) *AchievementUpdateOne {
+	_u.mutation.Where(ps...)
+	return _u
 }
 
 // Select allows selecting one or more fields (columns) of the returned entity.
 // The default is selecting all fields defined in the entity schema.
-func (auo *AchievementUpdateOne) Select(field string, fields ...string) *AchievementUpdateOne {
-	auo.fields = append([]string{field}, fields...)
-	return auo
+func (_u *AchievementUpdateOne) Select(field string, fields ...string) *AchievementUpdateOne {
+	_u.fields = append([]string{field}, fields...)
+	return _u
 }
 
 // Save executes the query and returns the updated Achievement entity.
-func (auo *AchievementUpdateOne) Save(ctx context.Context) (*Achievement, error) {
-	return withHooks(ctx, auo.sqlSave, auo.mutation, auo.hooks)
+func (_u *AchievementUpdateOne) Save(ctx context.Context) (*Achievement, error) {
+	return withHooks(ctx, _u.sqlSave, _u.mutation, _u.hooks)
 }
 
 // SaveX is like Save, but panics if an error occurs.
-func (auo *AchievementUpdateOne) SaveX(ctx context.Context) *Achievement {
-	node, err := auo.Save(ctx)
+func (_u *AchievementUpdateOne) SaveX(ctx context.Context) *Achievement {
+	node, err := _u.Save(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -321,37 +321,37 @@ func (auo *AchievementUpdateOne) SaveX(ctx context.Context) *Achievement {
 }
 
 // Exec executes the query on the entity.
-func (auo *AchievementUpdateOne) Exec(ctx context.Context) error {
-	_, err := auo.Save(ctx)
+func (_u *AchievementUpdateOne) Exec(ctx context.Context) error {
+	_, err := _u.Save(ctx)
 	return err
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (auo *AchievementUpdateOne) ExecX(ctx context.Context) {
-	if err := auo.Exec(ctx); err != nil {
+func (_u *AchievementUpdateOne) ExecX(ctx context.Context) {
+	if err := _u.Exec(ctx); err != nil {
 		panic(err)
 	}
 }
 
 // check runs all checks and user-defined validators on the builder.
-func (auo *AchievementUpdateOne) check() error {
-	if auo.mutation.UserCleared() && len(auo.mutation.UserIDs()) > 0 {
+func (_u *AchievementUpdateOne) check() error {
+	if _u.mutation.UserCleared() && len(_u.mutation.UserIDs()) > 0 {
 		return errors.New(`ent: clearing a required unique edge "Achievement.user"`)
 	}
 	return nil
 }
 
-func (auo *AchievementUpdateOne) sqlSave(ctx context.Context) (_node *Achievement, err error) {
-	if err := auo.check(); err != nil {
+func (_u *AchievementUpdateOne) sqlSave(ctx context.Context) (_node *Achievement, err error) {
+	if err := _u.check(); err != nil {
 		return _node, err
 	}
 	_spec := sqlgraph.NewUpdateSpec(achievement.Table, achievement.Columns, sqlgraph.NewFieldSpec(achievement.FieldID, field.TypeInt))
-	id, ok := auo.mutation.ID()
+	id, ok := _u.mutation.ID()
 	if !ok {
 		return nil, &ValidationError{Name: "id", err: errors.New(`ent: missing "Achievement.id" for update`)}
 	}
 	_spec.Node.ID.Value = id
-	if fields := auo.fields; len(fields) > 0 {
+	if fields := _u.fields; len(fields) > 0 {
 		_spec.Node.Columns = make([]string, 0, len(fields))
 		_spec.Node.Columns = append(_spec.Node.Columns, achievement.FieldID)
 		for _, f := range fields {
@@ -363,26 +363,26 @@ func (auo *AchievementUpdateOne) sqlSave(ctx context.Context) (_node *Achievemen
 			}
 		}
 	}
-	if ps := auo.mutation.predicates; len(ps) > 0 {
+	if ps := _u.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
 			for i := range ps {
 				ps[i](selector)
 			}
 		}
 	}
-	if value, ok := auo.mutation.Name(); ok {
+	if value, ok := _u.mutation.Name(); ok {
 		_spec.SetField(achievement.FieldName, field.TypeString, value)
 	}
-	if value, ok := auo.mutation.Description(); ok {
+	if value, ok := _u.mutation.Description(); ok {
 		_spec.SetField(achievement.FieldDescription, field.TypeString, value)
 	}
-	if value, ok := auo.mutation.Rarity(); ok {
+	if value, ok := _u.mutation.Rarity(); ok {
 		_spec.SetField(achievement.FieldRarity, field.TypeString, value)
 	}
-	if value, ok := auo.mutation.UnlockedAt(); ok {
+	if value, ok := _u.mutation.UnlockedAt(); ok {
 		_spec.SetField(achievement.FieldUnlockedAt, field.TypeTime, value)
 	}
-	if auo.mutation.UserCleared() {
+	if _u.mutation.UserCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: false,
@@ -395,7 +395,7 @@ func (auo *AchievementUpdateOne) sqlSave(ctx context.Context) (_node *Achievemen
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := auo.mutation.UserIDs(); len(nodes) > 0 {
+	if nodes := _u.mutation.UserIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: false,
@@ -411,10 +411,10 @@ func (auo *AchievementUpdateOne) sqlSave(ctx context.Context) (_node *Achievemen
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	_node = &Achievement{config: auo.config}
+	_node = &Achievement{config: _u.config}
 	_spec.Assign = _node.assignValues
 	_spec.ScanValues = _node.scanValues
-	if err = sqlgraph.UpdateNode(ctx, auo.driver, _spec); err != nil {
+	if err = sqlgraph.UpdateNode(ctx, _u.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{achievement.Label}
 		} else if sqlgraph.IsConstraintError(err) {
@@ -422,6 +422,6 @@ func (auo *AchievementUpdateOne) sqlSave(ctx context.Context) (_node *Achievemen
 		}
 		return nil, err
 	}
-	auo.mutation.done = true
+	_u.mutation.done = true
 	return _node, nil
 }

@@ -75,7 +75,7 @@ func (*Activity) scanValues(columns []string) ([]any, error) {
 
 // assignValues assigns the values that were returned from sql.Rows (after scanning)
 // to the Activity fields.
-func (a *Activity) assignValues(columns []string, values []any) error {
+func (_m *Activity) assignValues(columns []string, values []any) error {
 	if m, n := len(values), len(columns); m < n {
 		return fmt.Errorf("mismatch number of scan values: %d != %d", m, n)
 	}
@@ -86,40 +86,40 @@ func (a *Activity) assignValues(columns []string, values []any) error {
 			if !ok {
 				return fmt.Errorf("unexpected type %T for field id", value)
 			}
-			a.ID = int(value.Int64)
+			_m.ID = int(value.Int64)
 		case activity.FieldType:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field type", values[i])
 			} else if value.Valid {
-				a.Type = value.String
+				_m.Type = value.String
 			}
 		case activity.FieldTitle:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field title", values[i])
 			} else if value.Valid {
-				a.Title = value.String
+				_m.Title = value.String
 			}
 		case activity.FieldDescription:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field description", values[i])
 			} else if value.Valid {
-				a.Description = value.String
+				_m.Description = value.String
 			}
 		case activity.FieldDate:
 			if value, ok := values[i].(*sql.NullTime); !ok {
 				return fmt.Errorf("unexpected type %T for field date", values[i])
 			} else if value.Valid {
-				a.Date = value.Time
+				_m.Date = value.Time
 			}
 		case activity.ForeignKeys[0]:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for edge-field activity_user", value)
 			} else if value.Valid {
-				a.activity_user = new(int)
-				*a.activity_user = int(value.Int64)
+				_m.activity_user = new(int)
+				*_m.activity_user = int(value.Int64)
 			}
 		default:
-			a.selectValues.Set(columns[i], values[i])
+			_m.selectValues.Set(columns[i], values[i])
 		}
 	}
 	return nil
@@ -127,49 +127,49 @@ func (a *Activity) assignValues(columns []string, values []any) error {
 
 // Value returns the ent.Value that was dynamically selected and assigned to the Activity.
 // This includes values selected through modifiers, order, etc.
-func (a *Activity) Value(name string) (ent.Value, error) {
-	return a.selectValues.Get(name)
+func (_m *Activity) Value(name string) (ent.Value, error) {
+	return _m.selectValues.Get(name)
 }
 
 // QueryUser queries the "user" edge of the Activity entity.
-func (a *Activity) QueryUser() *UserQuery {
-	return NewActivityClient(a.config).QueryUser(a)
+func (_m *Activity) QueryUser() *UserQuery {
+	return NewActivityClient(_m.config).QueryUser(_m)
 }
 
 // Update returns a builder for updating this Activity.
 // Note that you need to call Activity.Unwrap() before calling this method if this Activity
 // was returned from a transaction, and the transaction was committed or rolled back.
-func (a *Activity) Update() *ActivityUpdateOne {
-	return NewActivityClient(a.config).UpdateOne(a)
+func (_m *Activity) Update() *ActivityUpdateOne {
+	return NewActivityClient(_m.config).UpdateOne(_m)
 }
 
 // Unwrap unwraps the Activity entity that was returned from a transaction after it was closed,
 // so that all future queries will be executed through the driver which created the transaction.
-func (a *Activity) Unwrap() *Activity {
-	_tx, ok := a.config.driver.(*txDriver)
+func (_m *Activity) Unwrap() *Activity {
+	_tx, ok := _m.config.driver.(*txDriver)
 	if !ok {
 		panic("ent: Activity is not a transactional entity")
 	}
-	a.config.driver = _tx.drv
-	return a
+	_m.config.driver = _tx.drv
+	return _m
 }
 
 // String implements the fmt.Stringer.
-func (a *Activity) String() string {
+func (_m *Activity) String() string {
 	var builder strings.Builder
 	builder.WriteString("Activity(")
-	builder.WriteString(fmt.Sprintf("id=%v, ", a.ID))
+	builder.WriteString(fmt.Sprintf("id=%v, ", _m.ID))
 	builder.WriteString("type=")
-	builder.WriteString(a.Type)
+	builder.WriteString(_m.Type)
 	builder.WriteString(", ")
 	builder.WriteString("title=")
-	builder.WriteString(a.Title)
+	builder.WriteString(_m.Title)
 	builder.WriteString(", ")
 	builder.WriteString("description=")
-	builder.WriteString(a.Description)
+	builder.WriteString(_m.Description)
 	builder.WriteString(", ")
 	builder.WriteString("date=")
-	builder.WriteString(a.Date.Format(time.ANSIC))
+	builder.WriteString(_m.Date.Format(time.ANSIC))
 	builder.WriteByte(')')
 	return builder.String()
 }

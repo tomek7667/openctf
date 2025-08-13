@@ -5,6 +5,7 @@ import (
 
 	"openctfbackend/ent"
 	"openctfbackend/internal/ctftime"
+	"openctfbackend/internal/github"
 	"openctfbackend/internal/service"
 
 	ratelimit "github.com/JGLTechnologies/gin-rate-limit"
@@ -50,6 +51,16 @@ type ServiceClient interface {
 		user *ent.User,
 		dto *service.UpdateOwnDto,
 	) (*ent.UserProfile, error)
+	ConnectGithub(
+		ctx context.Context,
+		_user *ent.User,
+		ghEmail string,
+		ghInfo *github.User,
+	) (*ent.User, error)
+	DisconnectGithub(
+		ctx context.Context,
+		_user *ent.User,
+	) (*ent.User, error)
 }
 
 type CtftimeClient interface {
@@ -60,11 +71,20 @@ type MailerClient interface {
 	SendMail(subject, body string, options *icloud.SendMailOptions, to ...string) error
 }
 
+type GithubClient interface {
+	GetUserAccessToken(ctx context.Context, code string) (*string, error)
+	StarRepo(ctx context.Context, owner, repo, accessToken string) error
+	GetPrimaryEmail(ctx context.Context, accessToken string) (*string, error)
+	FollowUser(ctx context.Context, username, accessToken string) error
+	GetUserInfo(ctx context.Context, accessToken string) (*github.User, error)
+}
+
 type Handler struct {
 	RestClient    RestClient
 	ServiceClient ServiceClient
 	CtftimeClient CtftimeClient
 	MailerClient  MailerClient
+	GithubClient  GithubClient
 }
 
 func New(
@@ -72,12 +92,14 @@ func New(
 	serviceClient ServiceClient,
 	ctftimeClient CtftimeClient,
 	mailerClient MailerClient,
+	githubClient GithubClient,
 ) *Handler {
 	return &Handler{
 		RestClient:    restClient,
 		ServiceClient: serviceClient,
 		CtftimeClient: ctftimeClient,
 		MailerClient:  mailerClient,
+		GithubClient:  githubClient,
 	}
 }
 

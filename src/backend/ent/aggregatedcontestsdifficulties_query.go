@@ -27,40 +27,40 @@ type AggregatedContestsDifficultiesQuery struct {
 }
 
 // Where adds a new predicate for the AggregatedContestsDifficultiesQuery builder.
-func (acdq *AggregatedContestsDifficultiesQuery) Where(ps ...predicate.AggregatedContestsDifficulties) *AggregatedContestsDifficultiesQuery {
-	acdq.predicates = append(acdq.predicates, ps...)
-	return acdq
+func (_q *AggregatedContestsDifficultiesQuery) Where(ps ...predicate.AggregatedContestsDifficulties) *AggregatedContestsDifficultiesQuery {
+	_q.predicates = append(_q.predicates, ps...)
+	return _q
 }
 
 // Limit the number of records to be returned by this query.
-func (acdq *AggregatedContestsDifficultiesQuery) Limit(limit int) *AggregatedContestsDifficultiesQuery {
-	acdq.ctx.Limit = &limit
-	return acdq
+func (_q *AggregatedContestsDifficultiesQuery) Limit(limit int) *AggregatedContestsDifficultiesQuery {
+	_q.ctx.Limit = &limit
+	return _q
 }
 
 // Offset to start from.
-func (acdq *AggregatedContestsDifficultiesQuery) Offset(offset int) *AggregatedContestsDifficultiesQuery {
-	acdq.ctx.Offset = &offset
-	return acdq
+func (_q *AggregatedContestsDifficultiesQuery) Offset(offset int) *AggregatedContestsDifficultiesQuery {
+	_q.ctx.Offset = &offset
+	return _q
 }
 
 // Unique configures the query builder to filter duplicate records on query.
 // By default, unique is set to true, and can be disabled using this method.
-func (acdq *AggregatedContestsDifficultiesQuery) Unique(unique bool) *AggregatedContestsDifficultiesQuery {
-	acdq.ctx.Unique = &unique
-	return acdq
+func (_q *AggregatedContestsDifficultiesQuery) Unique(unique bool) *AggregatedContestsDifficultiesQuery {
+	_q.ctx.Unique = &unique
+	return _q
 }
 
 // Order specifies how the records should be ordered.
-func (acdq *AggregatedContestsDifficultiesQuery) Order(o ...aggregatedcontestsdifficulties.OrderOption) *AggregatedContestsDifficultiesQuery {
-	acdq.order = append(acdq.order, o...)
-	return acdq
+func (_q *AggregatedContestsDifficultiesQuery) Order(o ...aggregatedcontestsdifficulties.OrderOption) *AggregatedContestsDifficultiesQuery {
+	_q.order = append(_q.order, o...)
+	return _q
 }
 
 // First returns the first AggregatedContestsDifficulties entity from the query.
 // Returns a *NotFoundError when no AggregatedContestsDifficulties was found.
-func (acdq *AggregatedContestsDifficultiesQuery) First(ctx context.Context) (*AggregatedContestsDifficulties, error) {
-	nodes, err := acdq.Limit(1).All(setContextOp(ctx, acdq.ctx, ent.OpQueryFirst))
+func (_q *AggregatedContestsDifficultiesQuery) First(ctx context.Context) (*AggregatedContestsDifficulties, error) {
+	nodes, err := _q.Limit(1).All(setContextOp(ctx, _q.ctx, ent.OpQueryFirst))
 	if err != nil {
 		return nil, err
 	}
@@ -71,8 +71,8 @@ func (acdq *AggregatedContestsDifficultiesQuery) First(ctx context.Context) (*Ag
 }
 
 // FirstX is like First, but panics if an error occurs.
-func (acdq *AggregatedContestsDifficultiesQuery) FirstX(ctx context.Context) *AggregatedContestsDifficulties {
-	node, err := acdq.First(ctx)
+func (_q *AggregatedContestsDifficultiesQuery) FirstX(ctx context.Context) *AggregatedContestsDifficulties {
+	node, err := _q.First(ctx)
 	if err != nil && !IsNotFound(err) {
 		panic(err)
 	}
@@ -82,8 +82,8 @@ func (acdq *AggregatedContestsDifficultiesQuery) FirstX(ctx context.Context) *Ag
 // Only returns a single AggregatedContestsDifficulties entity found by the query, ensuring it only returns one.
 // Returns a *NotSingularError when more than one AggregatedContestsDifficulties entity is found.
 // Returns a *NotFoundError when no AggregatedContestsDifficulties entities are found.
-func (acdq *AggregatedContestsDifficultiesQuery) Only(ctx context.Context) (*AggregatedContestsDifficulties, error) {
-	nodes, err := acdq.Limit(2).All(setContextOp(ctx, acdq.ctx, ent.OpQueryOnly))
+func (_q *AggregatedContestsDifficultiesQuery) Only(ctx context.Context) (*AggregatedContestsDifficulties, error) {
+	nodes, err := _q.Limit(2).All(setContextOp(ctx, _q.ctx, ent.OpQueryOnly))
 	if err != nil {
 		return nil, err
 	}
@@ -98,8 +98,8 @@ func (acdq *AggregatedContestsDifficultiesQuery) Only(ctx context.Context) (*Agg
 }
 
 // OnlyX is like Only, but panics if an error occurs.
-func (acdq *AggregatedContestsDifficultiesQuery) OnlyX(ctx context.Context) *AggregatedContestsDifficulties {
-	node, err := acdq.Only(ctx)
+func (_q *AggregatedContestsDifficultiesQuery) OnlyX(ctx context.Context) *AggregatedContestsDifficulties {
+	node, err := _q.Only(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -107,18 +107,18 @@ func (acdq *AggregatedContestsDifficultiesQuery) OnlyX(ctx context.Context) *Agg
 }
 
 // All executes the query and returns a list of AggregatedContestsDifficultiesSlice.
-func (acdq *AggregatedContestsDifficultiesQuery) All(ctx context.Context) ([]*AggregatedContestsDifficulties, error) {
-	ctx = setContextOp(ctx, acdq.ctx, ent.OpQueryAll)
-	if err := acdq.prepareQuery(ctx); err != nil {
+func (_q *AggregatedContestsDifficultiesQuery) All(ctx context.Context) ([]*AggregatedContestsDifficulties, error) {
+	ctx = setContextOp(ctx, _q.ctx, ent.OpQueryAll)
+	if err := _q.prepareQuery(ctx); err != nil {
 		return nil, err
 	}
 	qr := querierAll[[]*AggregatedContestsDifficulties, *AggregatedContestsDifficultiesQuery]()
-	return withInterceptors[[]*AggregatedContestsDifficulties](ctx, acdq, qr, acdq.inters)
+	return withInterceptors[[]*AggregatedContestsDifficulties](ctx, _q, qr, _q.inters)
 }
 
 // AllX is like All, but panics if an error occurs.
-func (acdq *AggregatedContestsDifficultiesQuery) AllX(ctx context.Context) []*AggregatedContestsDifficulties {
-	nodes, err := acdq.All(ctx)
+func (_q *AggregatedContestsDifficultiesQuery) AllX(ctx context.Context) []*AggregatedContestsDifficulties {
+	nodes, err := _q.All(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -126,17 +126,17 @@ func (acdq *AggregatedContestsDifficultiesQuery) AllX(ctx context.Context) []*Ag
 }
 
 // Count returns the count of the given query.
-func (acdq *AggregatedContestsDifficultiesQuery) Count(ctx context.Context) (int, error) {
-	ctx = setContextOp(ctx, acdq.ctx, ent.OpQueryCount)
-	if err := acdq.prepareQuery(ctx); err != nil {
+func (_q *AggregatedContestsDifficultiesQuery) Count(ctx context.Context) (int, error) {
+	ctx = setContextOp(ctx, _q.ctx, ent.OpQueryCount)
+	if err := _q.prepareQuery(ctx); err != nil {
 		return 0, err
 	}
-	return withInterceptors[int](ctx, acdq, querierCount[*AggregatedContestsDifficultiesQuery](), acdq.inters)
+	return withInterceptors[int](ctx, _q, querierCount[*AggregatedContestsDifficultiesQuery](), _q.inters)
 }
 
 // CountX is like Count, but panics if an error occurs.
-func (acdq *AggregatedContestsDifficultiesQuery) CountX(ctx context.Context) int {
-	count, err := acdq.Count(ctx)
+func (_q *AggregatedContestsDifficultiesQuery) CountX(ctx context.Context) int {
+	count, err := _q.Count(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -144,9 +144,9 @@ func (acdq *AggregatedContestsDifficultiesQuery) CountX(ctx context.Context) int
 }
 
 // Exist returns true if the query has elements in the graph.
-func (acdq *AggregatedContestsDifficultiesQuery) Exist(ctx context.Context) (bool, error) {
-	ctx = setContextOp(ctx, acdq.ctx, ent.OpQueryExist)
-	switch _, err := acdq.First(ctx); {
+func (_q *AggregatedContestsDifficultiesQuery) Exist(ctx context.Context) (bool, error) {
+	ctx = setContextOp(ctx, _q.ctx, ent.OpQueryExist)
+	switch _, err := _q.First(ctx); {
 	case IsNotFound(err):
 		return false, nil
 	case err != nil:
@@ -157,8 +157,8 @@ func (acdq *AggregatedContestsDifficultiesQuery) Exist(ctx context.Context) (boo
 }
 
 // ExistX is like Exist, but panics if an error occurs.
-func (acdq *AggregatedContestsDifficultiesQuery) ExistX(ctx context.Context) bool {
-	exist, err := acdq.Exist(ctx)
+func (_q *AggregatedContestsDifficultiesQuery) ExistX(ctx context.Context) bool {
+	exist, err := _q.Exist(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -167,19 +167,19 @@ func (acdq *AggregatedContestsDifficultiesQuery) ExistX(ctx context.Context) boo
 
 // Clone returns a duplicate of the AggregatedContestsDifficultiesQuery builder, including all associated steps. It can be
 // used to prepare common query builders and use them differently after the clone is made.
-func (acdq *AggregatedContestsDifficultiesQuery) Clone() *AggregatedContestsDifficultiesQuery {
-	if acdq == nil {
+func (_q *AggregatedContestsDifficultiesQuery) Clone() *AggregatedContestsDifficultiesQuery {
+	if _q == nil {
 		return nil
 	}
 	return &AggregatedContestsDifficultiesQuery{
-		config:     acdq.config,
-		ctx:        acdq.ctx.Clone(),
-		order:      append([]aggregatedcontestsdifficulties.OrderOption{}, acdq.order...),
-		inters:     append([]Interceptor{}, acdq.inters...),
-		predicates: append([]predicate.AggregatedContestsDifficulties{}, acdq.predicates...),
+		config:     _q.config,
+		ctx:        _q.ctx.Clone(),
+		order:      append([]aggregatedcontestsdifficulties.OrderOption{}, _q.order...),
+		inters:     append([]Interceptor{}, _q.inters...),
+		predicates: append([]predicate.AggregatedContestsDifficulties{}, _q.predicates...),
 		// clone intermediate query.
-		sql:  acdq.sql.Clone(),
-		path: acdq.path,
+		sql:  _q.sql.Clone(),
+		path: _q.path,
 	}
 }
 
@@ -197,10 +197,10 @@ func (acdq *AggregatedContestsDifficultiesQuery) Clone() *AggregatedContestsDiff
 //		GroupBy(aggregatedcontestsdifficulties.FieldContestID).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
-func (acdq *AggregatedContestsDifficultiesQuery) GroupBy(field string, fields ...string) *AggregatedContestsDifficultiesGroupBy {
-	acdq.ctx.Fields = append([]string{field}, fields...)
-	grbuild := &AggregatedContestsDifficultiesGroupBy{build: acdq}
-	grbuild.flds = &acdq.ctx.Fields
+func (_q *AggregatedContestsDifficultiesQuery) GroupBy(field string, fields ...string) *AggregatedContestsDifficultiesGroupBy {
+	_q.ctx.Fields = append([]string{field}, fields...)
+	grbuild := &AggregatedContestsDifficultiesGroupBy{build: _q}
+	grbuild.flds = &_q.ctx.Fields
 	grbuild.label = aggregatedcontestsdifficulties.Label
 	grbuild.scan = grbuild.Scan
 	return grbuild
@@ -218,62 +218,62 @@ func (acdq *AggregatedContestsDifficultiesQuery) GroupBy(field string, fields ..
 //	client.AggregatedContestsDifficulties.Query().
 //		Select(aggregatedcontestsdifficulties.FieldContestID).
 //		Scan(ctx, &v)
-func (acdq *AggregatedContestsDifficultiesQuery) Select(fields ...string) *AggregatedContestsDifficultiesSelect {
-	acdq.ctx.Fields = append(acdq.ctx.Fields, fields...)
-	sbuild := &AggregatedContestsDifficultiesSelect{AggregatedContestsDifficultiesQuery: acdq}
+func (_q *AggregatedContestsDifficultiesQuery) Select(fields ...string) *AggregatedContestsDifficultiesSelect {
+	_q.ctx.Fields = append(_q.ctx.Fields, fields...)
+	sbuild := &AggregatedContestsDifficultiesSelect{AggregatedContestsDifficultiesQuery: _q}
 	sbuild.label = aggregatedcontestsdifficulties.Label
-	sbuild.flds, sbuild.scan = &acdq.ctx.Fields, sbuild.Scan
+	sbuild.flds, sbuild.scan = &_q.ctx.Fields, sbuild.Scan
 	return sbuild
 }
 
 // Aggregate returns a AggregatedContestsDifficultiesSelect configured with the given aggregations.
-func (acdq *AggregatedContestsDifficultiesQuery) Aggregate(fns ...AggregateFunc) *AggregatedContestsDifficultiesSelect {
-	return acdq.Select().Aggregate(fns...)
+func (_q *AggregatedContestsDifficultiesQuery) Aggregate(fns ...AggregateFunc) *AggregatedContestsDifficultiesSelect {
+	return _q.Select().Aggregate(fns...)
 }
 
-func (acdq *AggregatedContestsDifficultiesQuery) prepareQuery(ctx context.Context) error {
-	for _, inter := range acdq.inters {
+func (_q *AggregatedContestsDifficultiesQuery) prepareQuery(ctx context.Context) error {
+	for _, inter := range _q.inters {
 		if inter == nil {
 			return fmt.Errorf("ent: uninitialized interceptor (forgotten import ent/runtime?)")
 		}
 		if trv, ok := inter.(Traverser); ok {
-			if err := trv.Traverse(ctx, acdq); err != nil {
+			if err := trv.Traverse(ctx, _q); err != nil {
 				return err
 			}
 		}
 	}
-	for _, f := range acdq.ctx.Fields {
+	for _, f := range _q.ctx.Fields {
 		if !aggregatedcontestsdifficulties.ValidColumn(f) {
 			return &ValidationError{Name: f, err: fmt.Errorf("ent: invalid field %q for query", f)}
 		}
 	}
-	if acdq.path != nil {
-		prev, err := acdq.path(ctx)
+	if _q.path != nil {
+		prev, err := _q.path(ctx)
 		if err != nil {
 			return err
 		}
-		acdq.sql = prev
+		_q.sql = prev
 	}
 	return nil
 }
 
-func (acdq *AggregatedContestsDifficultiesQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*AggregatedContestsDifficulties, error) {
+func (_q *AggregatedContestsDifficultiesQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*AggregatedContestsDifficulties, error) {
 	var (
 		nodes = []*AggregatedContestsDifficulties{}
-		_spec = acdq.querySpec()
+		_spec = _q.querySpec()
 	)
 	_spec.ScanValues = func(columns []string) ([]any, error) {
 		return (*AggregatedContestsDifficulties).scanValues(nil, columns)
 	}
 	_spec.Assign = func(columns []string, values []any) error {
-		node := &AggregatedContestsDifficulties{config: acdq.config}
+		node := &AggregatedContestsDifficulties{config: _q.config}
 		nodes = append(nodes, node)
 		return node.assignValues(columns, values)
 	}
 	for i := range hooks {
 		hooks[i](ctx, _spec)
 	}
-	if err := sqlgraph.QueryNodes(ctx, acdq.driver, _spec); err != nil {
+	if err := sqlgraph.QueryNodes(ctx, _q.driver, _spec); err != nil {
 		return nil, err
 	}
 	if len(nodes) == 0 {
@@ -282,43 +282,43 @@ func (acdq *AggregatedContestsDifficultiesQuery) sqlAll(ctx context.Context, hoo
 	return nodes, nil
 }
 
-func (acdq *AggregatedContestsDifficultiesQuery) sqlCount(ctx context.Context) (int, error) {
-	_spec := acdq.querySpec()
-	_spec.Node.Columns = acdq.ctx.Fields
-	if len(acdq.ctx.Fields) > 0 {
-		_spec.Unique = acdq.ctx.Unique != nil && *acdq.ctx.Unique
+func (_q *AggregatedContestsDifficultiesQuery) sqlCount(ctx context.Context) (int, error) {
+	_spec := _q.querySpec()
+	_spec.Node.Columns = _q.ctx.Fields
+	if len(_q.ctx.Fields) > 0 {
+		_spec.Unique = _q.ctx.Unique != nil && *_q.ctx.Unique
 	}
-	return sqlgraph.CountNodes(ctx, acdq.driver, _spec)
+	return sqlgraph.CountNodes(ctx, _q.driver, _spec)
 }
 
-func (acdq *AggregatedContestsDifficultiesQuery) querySpec() *sqlgraph.QuerySpec {
+func (_q *AggregatedContestsDifficultiesQuery) querySpec() *sqlgraph.QuerySpec {
 	_spec := sqlgraph.NewQuerySpec(aggregatedcontestsdifficulties.Table, aggregatedcontestsdifficulties.Columns, nil)
-	_spec.From = acdq.sql
-	if unique := acdq.ctx.Unique; unique != nil {
+	_spec.From = _q.sql
+	if unique := _q.ctx.Unique; unique != nil {
 		_spec.Unique = *unique
-	} else if acdq.path != nil {
+	} else if _q.path != nil {
 		_spec.Unique = true
 	}
-	if fields := acdq.ctx.Fields; len(fields) > 0 {
+	if fields := _q.ctx.Fields; len(fields) > 0 {
 		_spec.Node.Columns = make([]string, 0, len(fields))
 		for i := range fields {
 			_spec.Node.Columns = append(_spec.Node.Columns, fields[i])
 		}
 	}
-	if ps := acdq.predicates; len(ps) > 0 {
+	if ps := _q.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
 			for i := range ps {
 				ps[i](selector)
 			}
 		}
 	}
-	if limit := acdq.ctx.Limit; limit != nil {
+	if limit := _q.ctx.Limit; limit != nil {
 		_spec.Limit = *limit
 	}
-	if offset := acdq.ctx.Offset; offset != nil {
+	if offset := _q.ctx.Offset; offset != nil {
 		_spec.Offset = *offset
 	}
-	if ps := acdq.order; len(ps) > 0 {
+	if ps := _q.order; len(ps) > 0 {
 		_spec.Order = func(selector *sql.Selector) {
 			for i := range ps {
 				ps[i](selector)
@@ -328,33 +328,33 @@ func (acdq *AggregatedContestsDifficultiesQuery) querySpec() *sqlgraph.QuerySpec
 	return _spec
 }
 
-func (acdq *AggregatedContestsDifficultiesQuery) sqlQuery(ctx context.Context) *sql.Selector {
-	builder := sql.Dialect(acdq.driver.Dialect())
+func (_q *AggregatedContestsDifficultiesQuery) sqlQuery(ctx context.Context) *sql.Selector {
+	builder := sql.Dialect(_q.driver.Dialect())
 	t1 := builder.Table(aggregatedcontestsdifficulties.Table)
-	columns := acdq.ctx.Fields
+	columns := _q.ctx.Fields
 	if len(columns) == 0 {
 		columns = aggregatedcontestsdifficulties.Columns
 	}
 	selector := builder.Select(t1.Columns(columns...)...).From(t1)
-	if acdq.sql != nil {
-		selector = acdq.sql
+	if _q.sql != nil {
+		selector = _q.sql
 		selector.Select(selector.Columns(columns...)...)
 	}
-	if acdq.ctx.Unique != nil && *acdq.ctx.Unique {
+	if _q.ctx.Unique != nil && *_q.ctx.Unique {
 		selector.Distinct()
 	}
-	for _, p := range acdq.predicates {
+	for _, p := range _q.predicates {
 		p(selector)
 	}
-	for _, p := range acdq.order {
+	for _, p := range _q.order {
 		p(selector)
 	}
-	if offset := acdq.ctx.Offset; offset != nil {
+	if offset := _q.ctx.Offset; offset != nil {
 		// limit is mandatory for offset clause. We start
 		// with default value, and override it below if needed.
 		selector.Offset(*offset).Limit(math.MaxInt32)
 	}
-	if limit := acdq.ctx.Limit; limit != nil {
+	if limit := _q.ctx.Limit; limit != nil {
 		selector.Limit(*limit)
 	}
 	return selector
@@ -367,41 +367,41 @@ type AggregatedContestsDifficultiesGroupBy struct {
 }
 
 // Aggregate adds the given aggregation functions to the group-by query.
-func (acdgb *AggregatedContestsDifficultiesGroupBy) Aggregate(fns ...AggregateFunc) *AggregatedContestsDifficultiesGroupBy {
-	acdgb.fns = append(acdgb.fns, fns...)
-	return acdgb
+func (_g *AggregatedContestsDifficultiesGroupBy) Aggregate(fns ...AggregateFunc) *AggregatedContestsDifficultiesGroupBy {
+	_g.fns = append(_g.fns, fns...)
+	return _g
 }
 
 // Scan applies the selector query and scans the result into the given value.
-func (acdgb *AggregatedContestsDifficultiesGroupBy) Scan(ctx context.Context, v any) error {
-	ctx = setContextOp(ctx, acdgb.build.ctx, ent.OpQueryGroupBy)
-	if err := acdgb.build.prepareQuery(ctx); err != nil {
+func (_g *AggregatedContestsDifficultiesGroupBy) Scan(ctx context.Context, v any) error {
+	ctx = setContextOp(ctx, _g.build.ctx, ent.OpQueryGroupBy)
+	if err := _g.build.prepareQuery(ctx); err != nil {
 		return err
 	}
-	return scanWithInterceptors[*AggregatedContestsDifficultiesQuery, *AggregatedContestsDifficultiesGroupBy](ctx, acdgb.build, acdgb, acdgb.build.inters, v)
+	return scanWithInterceptors[*AggregatedContestsDifficultiesQuery, *AggregatedContestsDifficultiesGroupBy](ctx, _g.build, _g, _g.build.inters, v)
 }
 
-func (acdgb *AggregatedContestsDifficultiesGroupBy) sqlScan(ctx context.Context, root *AggregatedContestsDifficultiesQuery, v any) error {
+func (_g *AggregatedContestsDifficultiesGroupBy) sqlScan(ctx context.Context, root *AggregatedContestsDifficultiesQuery, v any) error {
 	selector := root.sqlQuery(ctx).Select()
-	aggregation := make([]string, 0, len(acdgb.fns))
-	for _, fn := range acdgb.fns {
+	aggregation := make([]string, 0, len(_g.fns))
+	for _, fn := range _g.fns {
 		aggregation = append(aggregation, fn(selector))
 	}
 	if len(selector.SelectedColumns()) == 0 {
-		columns := make([]string, 0, len(*acdgb.flds)+len(acdgb.fns))
-		for _, f := range *acdgb.flds {
+		columns := make([]string, 0, len(*_g.flds)+len(_g.fns))
+		for _, f := range *_g.flds {
 			columns = append(columns, selector.C(f))
 		}
 		columns = append(columns, aggregation...)
 		selector.Select(columns...)
 	}
-	selector.GroupBy(selector.Columns(*acdgb.flds...)...)
+	selector.GroupBy(selector.Columns(*_g.flds...)...)
 	if err := selector.Err(); err != nil {
 		return err
 	}
 	rows := &sql.Rows{}
 	query, args := selector.Query()
-	if err := acdgb.build.driver.Query(ctx, query, args, rows); err != nil {
+	if err := _g.build.driver.Query(ctx, query, args, rows); err != nil {
 		return err
 	}
 	defer rows.Close()
@@ -415,27 +415,27 @@ type AggregatedContestsDifficultiesSelect struct {
 }
 
 // Aggregate adds the given aggregation functions to the selector query.
-func (acds *AggregatedContestsDifficultiesSelect) Aggregate(fns ...AggregateFunc) *AggregatedContestsDifficultiesSelect {
-	acds.fns = append(acds.fns, fns...)
-	return acds
+func (_s *AggregatedContestsDifficultiesSelect) Aggregate(fns ...AggregateFunc) *AggregatedContestsDifficultiesSelect {
+	_s.fns = append(_s.fns, fns...)
+	return _s
 }
 
 // Scan applies the selector query and scans the result into the given value.
-func (acds *AggregatedContestsDifficultiesSelect) Scan(ctx context.Context, v any) error {
-	ctx = setContextOp(ctx, acds.ctx, ent.OpQuerySelect)
-	if err := acds.prepareQuery(ctx); err != nil {
+func (_s *AggregatedContestsDifficultiesSelect) Scan(ctx context.Context, v any) error {
+	ctx = setContextOp(ctx, _s.ctx, ent.OpQuerySelect)
+	if err := _s.prepareQuery(ctx); err != nil {
 		return err
 	}
-	return scanWithInterceptors[*AggregatedContestsDifficultiesQuery, *AggregatedContestsDifficultiesSelect](ctx, acds.AggregatedContestsDifficultiesQuery, acds, acds.inters, v)
+	return scanWithInterceptors[*AggregatedContestsDifficultiesQuery, *AggregatedContestsDifficultiesSelect](ctx, _s.AggregatedContestsDifficultiesQuery, _s, _s.inters, v)
 }
 
-func (acds *AggregatedContestsDifficultiesSelect) sqlScan(ctx context.Context, root *AggregatedContestsDifficultiesQuery, v any) error {
+func (_s *AggregatedContestsDifficultiesSelect) sqlScan(ctx context.Context, root *AggregatedContestsDifficultiesQuery, v any) error {
 	selector := root.sqlQuery(ctx)
-	aggregation := make([]string, 0, len(acds.fns))
-	for _, fn := range acds.fns {
+	aggregation := make([]string, 0, len(_s.fns))
+	for _, fn := range _s.fns {
 		aggregation = append(aggregation, fn(selector))
 	}
-	switch n := len(*acds.selector.flds); {
+	switch n := len(*_s.selector.flds); {
 	case n == 0 && len(aggregation) > 0:
 		selector.Select(aggregation...)
 	case n != 0 && len(aggregation) > 0:
@@ -443,7 +443,7 @@ func (acds *AggregatedContestsDifficultiesSelect) sqlScan(ctx context.Context, r
 	}
 	rows := &sql.Rows{}
 	query, args := selector.Query()
-	if err := acds.driver.Query(ctx, query, args, rows); err != nil {
+	if err := _s.driver.Query(ctx, query, args, rows); err != nil {
 		return err
 	}
 	defer rows.Close()

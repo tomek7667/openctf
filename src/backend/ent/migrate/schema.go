@@ -203,6 +203,11 @@ var (
 		{Name: "password", Type: field.TypeString},
 		{Name: "created_at", Type: field.TypeTime},
 		{Name: "logo", Type: field.TypeBytes, Nullable: true, Size: 52428800},
+		{Name: "github_account_id", Type: field.TypeInt64, Nullable: true},
+		{Name: "github_username", Type: field.TypeString, Nullable: true},
+		{Name: "github_name", Type: field.TypeString, Nullable: true},
+		{Name: "github_email", Type: field.TypeString, Nullable: true},
+		{Name: "github_avatar_url", Type: field.TypeString, Nullable: true},
 	}
 	// UsersTable holds the schema information for the "users" table.
 	UsersTable = &schema.Table{

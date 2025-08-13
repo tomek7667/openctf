@@ -87,3 +87,45 @@ export const verifyEmail = async (code: string): Promise<AuthResponse> => {
 	const { user, token } = data;
 	return { token, user };
 };
+
+export const connectGithub = async (
+	token: string,
+	code: string
+): Promise<AuthResponse> => {
+	const response = await fetch(`${BASE_URL}/api/auth/connect-github`, {
+		method: "POST",
+		headers: {
+			"Content-Type": "application/json",
+			Authorization: token,
+		},
+		body: JSON.stringify({
+			code,
+		}),
+	});
+	const { data, success, message } = await response.json();
+	if (!success) {
+		throw new Error(
+			message ?? "Connecting with github failed. Please try again later."
+		);
+	}
+	return data;
+};
+export const disconnectGithub = async (
+	token: string
+): Promise<AuthResponse> => {
+	const response = await fetch(`${BASE_URL}/api/auth/disconnect-github`, {
+		method: "POST",
+		headers: {
+			"Content-Type": "application/json",
+			Authorization: token,
+		},
+	});
+	const { data, success, message } = await response.json();
+	if (!success) {
+		throw new Error(
+			message ?? "Disconnecting with github failed. Please try again later."
+		);
+	}
+	console.log(data);
+	return data;
+};

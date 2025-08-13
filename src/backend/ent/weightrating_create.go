@@ -24,46 +24,46 @@ type WeightRatingCreate struct {
 }
 
 // SetDifficulty sets the "difficulty" field.
-func (wrc *WeightRatingCreate) SetDifficulty(i int) *WeightRatingCreate {
-	wrc.mutation.SetDifficulty(i)
-	return wrc
+func (_c *WeightRatingCreate) SetDifficulty(v int) *WeightRatingCreate {
+	_c.mutation.SetDifficulty(v)
+	return _c
 }
 
 // SetCaptainsTeamID sets the "captains_team" edge to the Team entity by ID.
-func (wrc *WeightRatingCreate) SetCaptainsTeamID(id int) *WeightRatingCreate {
-	wrc.mutation.SetCaptainsTeamID(id)
-	return wrc
+func (_c *WeightRatingCreate) SetCaptainsTeamID(id int) *WeightRatingCreate {
+	_c.mutation.SetCaptainsTeamID(id)
+	return _c
 }
 
 // SetCaptainsTeam sets the "captains_team" edge to the Team entity.
-func (wrc *WeightRatingCreate) SetCaptainsTeam(t *Team) *WeightRatingCreate {
-	return wrc.SetCaptainsTeamID(t.ID)
+func (_c *WeightRatingCreate) SetCaptainsTeam(v *Team) *WeightRatingCreate {
+	return _c.SetCaptainsTeamID(v.ID)
 }
 
 // SetContestID sets the "contest" edge to the Contest entity by ID.
-func (wrc *WeightRatingCreate) SetContestID(id int) *WeightRatingCreate {
-	wrc.mutation.SetContestID(id)
-	return wrc
+func (_c *WeightRatingCreate) SetContestID(id int) *WeightRatingCreate {
+	_c.mutation.SetContestID(id)
+	return _c
 }
 
 // SetContest sets the "contest" edge to the Contest entity.
-func (wrc *WeightRatingCreate) SetContest(c *Contest) *WeightRatingCreate {
-	return wrc.SetContestID(c.ID)
+func (_c *WeightRatingCreate) SetContest(v *Contest) *WeightRatingCreate {
+	return _c.SetContestID(v.ID)
 }
 
 // Mutation returns the WeightRatingMutation object of the builder.
-func (wrc *WeightRatingCreate) Mutation() *WeightRatingMutation {
-	return wrc.mutation
+func (_c *WeightRatingCreate) Mutation() *WeightRatingMutation {
+	return _c.mutation
 }
 
 // Save creates the WeightRating in the database.
-func (wrc *WeightRatingCreate) Save(ctx context.Context) (*WeightRating, error) {
-	return withHooks(ctx, wrc.sqlSave, wrc.mutation, wrc.hooks)
+func (_c *WeightRatingCreate) Save(ctx context.Context) (*WeightRating, error) {
+	return withHooks(ctx, _c.sqlSave, _c.mutation, _c.hooks)
 }
 
 // SaveX calls Save and panics if Save returns an error.
-func (wrc *WeightRatingCreate) SaveX(ctx context.Context) *WeightRating {
-	v, err := wrc.Save(ctx)
+func (_c *WeightRatingCreate) SaveX(ctx context.Context) *WeightRating {
+	v, err := _c.Save(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -71,43 +71,43 @@ func (wrc *WeightRatingCreate) SaveX(ctx context.Context) *WeightRating {
 }
 
 // Exec executes the query.
-func (wrc *WeightRatingCreate) Exec(ctx context.Context) error {
-	_, err := wrc.Save(ctx)
+func (_c *WeightRatingCreate) Exec(ctx context.Context) error {
+	_, err := _c.Save(ctx)
 	return err
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (wrc *WeightRatingCreate) ExecX(ctx context.Context) {
-	if err := wrc.Exec(ctx); err != nil {
+func (_c *WeightRatingCreate) ExecX(ctx context.Context) {
+	if err := _c.Exec(ctx); err != nil {
 		panic(err)
 	}
 }
 
 // check runs all checks and user-defined validators on the builder.
-func (wrc *WeightRatingCreate) check() error {
-	if _, ok := wrc.mutation.Difficulty(); !ok {
+func (_c *WeightRatingCreate) check() error {
+	if _, ok := _c.mutation.Difficulty(); !ok {
 		return &ValidationError{Name: "difficulty", err: errors.New(`ent: missing required field "WeightRating.difficulty"`)}
 	}
-	if v, ok := wrc.mutation.Difficulty(); ok {
+	if v, ok := _c.mutation.Difficulty(); ok {
 		if err := weightrating.DifficultyValidator(v); err != nil {
 			return &ValidationError{Name: "difficulty", err: fmt.Errorf(`ent: validator failed for field "WeightRating.difficulty": %w`, err)}
 		}
 	}
-	if len(wrc.mutation.CaptainsTeamIDs()) == 0 {
+	if len(_c.mutation.CaptainsTeamIDs()) == 0 {
 		return &ValidationError{Name: "captains_team", err: errors.New(`ent: missing required edge "WeightRating.captains_team"`)}
 	}
-	if len(wrc.mutation.ContestIDs()) == 0 {
+	if len(_c.mutation.ContestIDs()) == 0 {
 		return &ValidationError{Name: "contest", err: errors.New(`ent: missing required edge "WeightRating.contest"`)}
 	}
 	return nil
 }
 
-func (wrc *WeightRatingCreate) sqlSave(ctx context.Context) (*WeightRating, error) {
-	if err := wrc.check(); err != nil {
+func (_c *WeightRatingCreate) sqlSave(ctx context.Context) (*WeightRating, error) {
+	if err := _c.check(); err != nil {
 		return nil, err
 	}
-	_node, _spec := wrc.createSpec()
-	if err := sqlgraph.CreateNode(ctx, wrc.driver, _spec); err != nil {
+	_node, _spec := _c.createSpec()
+	if err := sqlgraph.CreateNode(ctx, _c.driver, _spec); err != nil {
 		if sqlgraph.IsConstraintError(err) {
 			err = &ConstraintError{msg: err.Error(), wrap: err}
 		}
@@ -115,22 +115,22 @@ func (wrc *WeightRatingCreate) sqlSave(ctx context.Context) (*WeightRating, erro
 	}
 	id := _spec.ID.Value.(int64)
 	_node.ID = int(id)
-	wrc.mutation.id = &_node.ID
-	wrc.mutation.done = true
+	_c.mutation.id = &_node.ID
+	_c.mutation.done = true
 	return _node, nil
 }
 
-func (wrc *WeightRatingCreate) createSpec() (*WeightRating, *sqlgraph.CreateSpec) {
+func (_c *WeightRatingCreate) createSpec() (*WeightRating, *sqlgraph.CreateSpec) {
 	var (
-		_node = &WeightRating{config: wrc.config}
+		_node = &WeightRating{config: _c.config}
 		_spec = sqlgraph.NewCreateSpec(weightrating.Table, sqlgraph.NewFieldSpec(weightrating.FieldID, field.TypeInt))
 	)
-	_spec.OnConflict = wrc.conflict
-	if value, ok := wrc.mutation.Difficulty(); ok {
+	_spec.OnConflict = _c.conflict
+	if value, ok := _c.mutation.Difficulty(); ok {
 		_spec.SetField(weightrating.FieldDifficulty, field.TypeInt, value)
 		_node.Difficulty = value
 	}
-	if nodes := wrc.mutation.CaptainsTeamIDs(); len(nodes) > 0 {
+	if nodes := _c.mutation.CaptainsTeamIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: false,
@@ -147,7 +147,7 @@ func (wrc *WeightRatingCreate) createSpec() (*WeightRating, *sqlgraph.CreateSpec
 		_node.weight_rating_captains_team = &nodes[0]
 		_spec.Edges = append(_spec.Edges, edge)
 	}
-	if nodes := wrc.mutation.ContestIDs(); len(nodes) > 0 {
+	if nodes := _c.mutation.ContestIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: false,
@@ -183,10 +183,10 @@ func (wrc *WeightRatingCreate) createSpec() (*WeightRating, *sqlgraph.CreateSpec
 //			SetDifficulty(v+v).
 //		}).
 //		Exec(ctx)
-func (wrc *WeightRatingCreate) OnConflict(opts ...sql.ConflictOption) *WeightRatingUpsertOne {
-	wrc.conflict = opts
+func (_c *WeightRatingCreate) OnConflict(opts ...sql.ConflictOption) *WeightRatingUpsertOne {
+	_c.conflict = opts
 	return &WeightRatingUpsertOne{
-		create: wrc,
+		create: _c,
 	}
 }
 
@@ -196,10 +196,10 @@ func (wrc *WeightRatingCreate) OnConflict(opts ...sql.ConflictOption) *WeightRat
 //	client.WeightRating.Create().
 //		OnConflict(sql.ConflictColumns(columns...)).
 //		Exec(ctx)
-func (wrc *WeightRatingCreate) OnConflictColumns(columns ...string) *WeightRatingUpsertOne {
-	wrc.conflict = append(wrc.conflict, sql.ConflictColumns(columns...))
+func (_c *WeightRatingCreate) OnConflictColumns(columns ...string) *WeightRatingUpsertOne {
+	_c.conflict = append(_c.conflict, sql.ConflictColumns(columns...))
 	return &WeightRatingUpsertOne{
-		create: wrc,
+		create: _c,
 	}
 }
 
@@ -337,16 +337,16 @@ type WeightRatingCreateBulk struct {
 }
 
 // Save creates the WeightRating entities in the database.
-func (wrcb *WeightRatingCreateBulk) Save(ctx context.Context) ([]*WeightRating, error) {
-	if wrcb.err != nil {
-		return nil, wrcb.err
+func (_c *WeightRatingCreateBulk) Save(ctx context.Context) ([]*WeightRating, error) {
+	if _c.err != nil {
+		return nil, _c.err
 	}
-	specs := make([]*sqlgraph.CreateSpec, len(wrcb.builders))
-	nodes := make([]*WeightRating, len(wrcb.builders))
-	mutators := make([]Mutator, len(wrcb.builders))
-	for i := range wrcb.builders {
+	specs := make([]*sqlgraph.CreateSpec, len(_c.builders))
+	nodes := make([]*WeightRating, len(_c.builders))
+	mutators := make([]Mutator, len(_c.builders))
+	for i := range _c.builders {
 		func(i int, root context.Context) {
-			builder := wrcb.builders[i]
+			builder := _c.builders[i]
 			var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
 				mutation, ok := m.(*WeightRatingMutation)
 				if !ok {
@@ -359,12 +359,12 @@ func (wrcb *WeightRatingCreateBulk) Save(ctx context.Context) ([]*WeightRating, 
 				var err error
 				nodes[i], specs[i] = builder.createSpec()
 				if i < len(mutators)-1 {
-					_, err = mutators[i+1].Mutate(root, wrcb.builders[i+1].mutation)
+					_, err = mutators[i+1].Mutate(root, _c.builders[i+1].mutation)
 				} else {
 					spec := &sqlgraph.BatchCreateSpec{Nodes: specs}
-					spec.OnConflict = wrcb.conflict
+					spec.OnConflict = _c.conflict
 					// Invoke the actual operation on the latest mutation in the chain.
-					if err = sqlgraph.BatchCreate(ctx, wrcb.driver, spec); err != nil {
+					if err = sqlgraph.BatchCreate(ctx, _c.driver, spec); err != nil {
 						if sqlgraph.IsConstraintError(err) {
 							err = &ConstraintError{msg: err.Error(), wrap: err}
 						}
@@ -388,7 +388,7 @@ func (wrcb *WeightRatingCreateBulk) Save(ctx context.Context) ([]*WeightRating, 
 		}(i, ctx)
 	}
 	if len(mutators) > 0 {
-		if _, err := mutators[0].Mutate(ctx, wrcb.builders[0].mutation); err != nil {
+		if _, err := mutators[0].Mutate(ctx, _c.builders[0].mutation); err != nil {
 			return nil, err
 		}
 	}
@@ -396,8 +396,8 @@ func (wrcb *WeightRatingCreateBulk) Save(ctx context.Context) ([]*WeightRating, 
 }
 
 // SaveX is like Save, but panics if an error occurs.
-func (wrcb *WeightRatingCreateBulk) SaveX(ctx context.Context) []*WeightRating {
-	v, err := wrcb.Save(ctx)
+func (_c *WeightRatingCreateBulk) SaveX(ctx context.Context) []*WeightRating {
+	v, err := _c.Save(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -405,14 +405,14 @@ func (wrcb *WeightRatingCreateBulk) SaveX(ctx context.Context) []*WeightRating {
 }
 
 // Exec executes the query.
-func (wrcb *WeightRatingCreateBulk) Exec(ctx context.Context) error {
-	_, err := wrcb.Save(ctx)
+func (_c *WeightRatingCreateBulk) Exec(ctx context.Context) error {
+	_, err := _c.Save(ctx)
 	return err
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (wrcb *WeightRatingCreateBulk) ExecX(ctx context.Context) {
-	if err := wrcb.Exec(ctx); err != nil {
+func (_c *WeightRatingCreateBulk) ExecX(ctx context.Context) {
+	if err := _c.Exec(ctx); err != nil {
 		panic(err)
 	}
 }
@@ -432,10 +432,10 @@ func (wrcb *WeightRatingCreateBulk) ExecX(ctx context.Context) {
 //			SetDifficulty(v+v).
 //		}).
 //		Exec(ctx)
-func (wrcb *WeightRatingCreateBulk) OnConflict(opts ...sql.ConflictOption) *WeightRatingUpsertBulk {
-	wrcb.conflict = opts
+func (_c *WeightRatingCreateBulk) OnConflict(opts ...sql.ConflictOption) *WeightRatingUpsertBulk {
+	_c.conflict = opts
 	return &WeightRatingUpsertBulk{
-		create: wrcb,
+		create: _c,
 	}
 }
 
@@ -445,10 +445,10 @@ func (wrcb *WeightRatingCreateBulk) OnConflict(opts ...sql.ConflictOption) *Weig
 //	client.WeightRating.Create().
 //		OnConflict(sql.ConflictColumns(columns...)).
 //		Exec(ctx)
-func (wrcb *WeightRatingCreateBulk) OnConflictColumns(columns ...string) *WeightRatingUpsertBulk {
-	wrcb.conflict = append(wrcb.conflict, sql.ConflictColumns(columns...))
+func (_c *WeightRatingCreateBulk) OnConflictColumns(columns ...string) *WeightRatingUpsertBulk {
+	_c.conflict = append(_c.conflict, sql.ConflictColumns(columns...))
 	return &WeightRatingUpsertBulk{
-		create: wrcb,
+		create: _c,
 	}
 }
 

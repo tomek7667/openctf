@@ -52,7 +52,7 @@ func (*AggregatedContestsDifficulties) scanValues(columns []string) ([]any, erro
 
 // assignValues assigns the values that were returned from sql.Rows (after scanning)
 // to the AggregatedContestsDifficulties fields.
-func (acd *AggregatedContestsDifficulties) assignValues(columns []string, values []any) error {
+func (_m *AggregatedContestsDifficulties) assignValues(columns []string, values []any) error {
 	if m, n := len(values), len(columns); m < n {
 		return fmt.Errorf("mismatch number of scan values: %d != %d", m, n)
 	}
@@ -62,40 +62,40 @@ func (acd *AggregatedContestsDifficulties) assignValues(columns []string, values
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field contest_id", values[i])
 			} else if value.Valid {
-				acd.ContestID = int(value.Int64)
+				_m.ContestID = int(value.Int64)
 			}
 		case aggregatedcontestsdifficulties.FieldContestName:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field contest_name", values[i])
 			} else if value.Valid {
-				acd.ContestName = value.String
+				_m.ContestName = value.String
 			}
 		case aggregatedcontestsdifficulties.FieldEnd:
 			if value, ok := values[i].(*sql.NullTime); !ok {
 				return fmt.Errorf("unexpected type %T for field end", values[i])
 			} else if value.Valid {
-				acd.End = value.Time
+				_m.End = value.Time
 			}
 		case aggregatedcontestsdifficulties.FieldOrganizersID:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field organizers_id", values[i])
 			} else if value.Valid {
-				acd.OrganizersID = int(value.Int64)
+				_m.OrganizersID = int(value.Int64)
 			}
 		case aggregatedcontestsdifficulties.FieldAvgDifficulty:
 			if value, ok := values[i].(*sql.NullFloat64); !ok {
 				return fmt.Errorf("unexpected type %T for field avg_difficulty", values[i])
 			} else if value.Valid {
-				acd.AvgDifficulty = value.Float64
+				_m.AvgDifficulty = value.Float64
 			}
 		case aggregatedcontestsdifficulties.FieldParticipants:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field participants", values[i])
 			} else if value.Valid {
-				acd.Participants = int(value.Int64)
+				_m.Participants = int(value.Int64)
 			}
 		default:
-			acd.selectValues.Set(columns[i], values[i])
+			_m.selectValues.Set(columns[i], values[i])
 		}
 	}
 	return nil
@@ -103,42 +103,42 @@ func (acd *AggregatedContestsDifficulties) assignValues(columns []string, values
 
 // Value returns the ent.Value that was dynamically selected and assigned to the AggregatedContestsDifficulties.
 // This includes values selected through modifiers, order, etc.
-func (acd *AggregatedContestsDifficulties) Value(name string) (ent.Value, error) {
-	return acd.selectValues.Get(name)
+func (_m *AggregatedContestsDifficulties) Value(name string) (ent.Value, error) {
+	return _m.selectValues.Get(name)
 }
 
 // Unwrap unwraps the AggregatedContestsDifficulties entity that was returned from a transaction after it was closed,
 // so that all future queries will be executed through the driver which created the transaction.
-func (acd *AggregatedContestsDifficulties) Unwrap() *AggregatedContestsDifficulties {
-	_tx, ok := acd.config.driver.(*txDriver)
+func (_m *AggregatedContestsDifficulties) Unwrap() *AggregatedContestsDifficulties {
+	_tx, ok := _m.config.driver.(*txDriver)
 	if !ok {
 		panic("ent: AggregatedContestsDifficulties is not a transactional entity")
 	}
-	acd.config.driver = _tx.drv
-	return acd
+	_m.config.driver = _tx.drv
+	return _m
 }
 
 // String implements the fmt.Stringer.
-func (acd *AggregatedContestsDifficulties) String() string {
+func (_m *AggregatedContestsDifficulties) String() string {
 	var builder strings.Builder
 	builder.WriteString("AggregatedContestsDifficulties(")
 	builder.WriteString("contest_id=")
-	builder.WriteString(fmt.Sprintf("%v", acd.ContestID))
+	builder.WriteString(fmt.Sprintf("%v", _m.ContestID))
 	builder.WriteString(", ")
 	builder.WriteString("contest_name=")
-	builder.WriteString(acd.ContestName)
+	builder.WriteString(_m.ContestName)
 	builder.WriteString(", ")
 	builder.WriteString("end=")
-	builder.WriteString(acd.End.Format(time.ANSIC))
+	builder.WriteString(_m.End.Format(time.ANSIC))
 	builder.WriteString(", ")
 	builder.WriteString("organizers_id=")
-	builder.WriteString(fmt.Sprintf("%v", acd.OrganizersID))
+	builder.WriteString(fmt.Sprintf("%v", _m.OrganizersID))
 	builder.WriteString(", ")
 	builder.WriteString("avg_difficulty=")
-	builder.WriteString(fmt.Sprintf("%v", acd.AvgDifficulty))
+	builder.WriteString(fmt.Sprintf("%v", _m.AvgDifficulty))
 	builder.WriteString(", ")
 	builder.WriteString("participants=")
-	builder.WriteString(fmt.Sprintf("%v", acd.Participants))
+	builder.WriteString(fmt.Sprintf("%v", _m.Participants))
 	builder.WriteByte(')')
 	return builder.String()
 }

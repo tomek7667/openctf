@@ -85,7 +85,7 @@ func (*ContestRating) scanValues(columns []string) ([]any, error) {
 
 // assignValues assigns the values that were returned from sql.Rows (after scanning)
 // to the ContestRating fields.
-func (cr *ContestRating) assignValues(columns []string, values []any) error {
+func (_m *ContestRating) assignValues(columns []string, values []any) error {
 	if m, n := len(values), len(columns); m < n {
 		return fmt.Errorf("mismatch number of scan values: %d != %d", m, n)
 	}
@@ -96,35 +96,35 @@ func (cr *ContestRating) assignValues(columns []string, values []any) error {
 			if !ok {
 				return fmt.Errorf("unexpected type %T for field id", value)
 			}
-			cr.ID = int(value.Int64)
+			_m.ID = int(value.Int64)
 		case contestrating.FieldRating:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field rating", values[i])
 			} else if value.Valid {
-				cr.Rating = int(value.Int64)
+				_m.Rating = int(value.Int64)
 			}
 		case contestrating.FieldRelevant:
 			if value, ok := values[i].(*sql.NullBool); !ok {
 				return fmt.Errorf("unexpected type %T for field relevant", values[i])
 			} else if value.Valid {
-				cr.Relevant = value.Bool
+				_m.Relevant = value.Bool
 			}
 		case contestrating.ForeignKeys[0]:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for edge-field contest_rating_user", value)
 			} else if value.Valid {
-				cr.contest_rating_user = new(int)
-				*cr.contest_rating_user = int(value.Int64)
+				_m.contest_rating_user = new(int)
+				*_m.contest_rating_user = int(value.Int64)
 			}
 		case contestrating.ForeignKeys[1]:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for edge-field contest_rating_contest", value)
 			} else if value.Valid {
-				cr.contest_rating_contest = new(int)
-				*cr.contest_rating_contest = int(value.Int64)
+				_m.contest_rating_contest = new(int)
+				*_m.contest_rating_contest = int(value.Int64)
 			}
 		default:
-			cr.selectValues.Set(columns[i], values[i])
+			_m.selectValues.Set(columns[i], values[i])
 		}
 	}
 	return nil
@@ -132,48 +132,48 @@ func (cr *ContestRating) assignValues(columns []string, values []any) error {
 
 // Value returns the ent.Value that was dynamically selected and assigned to the ContestRating.
 // This includes values selected through modifiers, order, etc.
-func (cr *ContestRating) Value(name string) (ent.Value, error) {
-	return cr.selectValues.Get(name)
+func (_m *ContestRating) Value(name string) (ent.Value, error) {
+	return _m.selectValues.Get(name)
 }
 
 // QueryUser queries the "user" edge of the ContestRating entity.
-func (cr *ContestRating) QueryUser() *UserQuery {
-	return NewContestRatingClient(cr.config).QueryUser(cr)
+func (_m *ContestRating) QueryUser() *UserQuery {
+	return NewContestRatingClient(_m.config).QueryUser(_m)
 }
 
 // QueryContest queries the "contest" edge of the ContestRating entity.
-func (cr *ContestRating) QueryContest() *ContestQuery {
-	return NewContestRatingClient(cr.config).QueryContest(cr)
+func (_m *ContestRating) QueryContest() *ContestQuery {
+	return NewContestRatingClient(_m.config).QueryContest(_m)
 }
 
 // Update returns a builder for updating this ContestRating.
 // Note that you need to call ContestRating.Unwrap() before calling this method if this ContestRating
 // was returned from a transaction, and the transaction was committed or rolled back.
-func (cr *ContestRating) Update() *ContestRatingUpdateOne {
-	return NewContestRatingClient(cr.config).UpdateOne(cr)
+func (_m *ContestRating) Update() *ContestRatingUpdateOne {
+	return NewContestRatingClient(_m.config).UpdateOne(_m)
 }
 
 // Unwrap unwraps the ContestRating entity that was returned from a transaction after it was closed,
 // so that all future queries will be executed through the driver which created the transaction.
-func (cr *ContestRating) Unwrap() *ContestRating {
-	_tx, ok := cr.config.driver.(*txDriver)
+func (_m *ContestRating) Unwrap() *ContestRating {
+	_tx, ok := _m.config.driver.(*txDriver)
 	if !ok {
 		panic("ent: ContestRating is not a transactional entity")
 	}
-	cr.config.driver = _tx.drv
-	return cr
+	_m.config.driver = _tx.drv
+	return _m
 }
 
 // String implements the fmt.Stringer.
-func (cr *ContestRating) String() string {
+func (_m *ContestRating) String() string {
 	var builder strings.Builder
 	builder.WriteString("ContestRating(")
-	builder.WriteString(fmt.Sprintf("id=%v, ", cr.ID))
+	builder.WriteString(fmt.Sprintf("id=%v, ", _m.ID))
 	builder.WriteString("rating=")
-	builder.WriteString(fmt.Sprintf("%v", cr.Rating))
+	builder.WriteString(fmt.Sprintf("%v", _m.Rating))
 	builder.WriteString(", ")
 	builder.WriteString("relevant=")
-	builder.WriteString(fmt.Sprintf("%v", cr.Relevant))
+	builder.WriteString(fmt.Sprintf("%v", _m.Relevant))
 	builder.WriteByte(')')
 	return builder.String()
 }

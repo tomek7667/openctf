@@ -75,7 +75,7 @@ func (*Achievement) scanValues(columns []string) ([]any, error) {
 
 // assignValues assigns the values that were returned from sql.Rows (after scanning)
 // to the Achievement fields.
-func (a *Achievement) assignValues(columns []string, values []any) error {
+func (_m *Achievement) assignValues(columns []string, values []any) error {
 	if m, n := len(values), len(columns); m < n {
 		return fmt.Errorf("mismatch number of scan values: %d != %d", m, n)
 	}
@@ -86,40 +86,40 @@ func (a *Achievement) assignValues(columns []string, values []any) error {
 			if !ok {
 				return fmt.Errorf("unexpected type %T for field id", value)
 			}
-			a.ID = int(value.Int64)
+			_m.ID = int(value.Int64)
 		case achievement.FieldName:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field name", values[i])
 			} else if value.Valid {
-				a.Name = value.String
+				_m.Name = value.String
 			}
 		case achievement.FieldDescription:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field description", values[i])
 			} else if value.Valid {
-				a.Description = value.String
+				_m.Description = value.String
 			}
 		case achievement.FieldRarity:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field rarity", values[i])
 			} else if value.Valid {
-				a.Rarity = value.String
+				_m.Rarity = value.String
 			}
 		case achievement.FieldUnlockedAt:
 			if value, ok := values[i].(*sql.NullTime); !ok {
 				return fmt.Errorf("unexpected type %T for field unlocked_at", values[i])
 			} else if value.Valid {
-				a.UnlockedAt = value.Time
+				_m.UnlockedAt = value.Time
 			}
 		case achievement.ForeignKeys[0]:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for edge-field achievement_user", value)
 			} else if value.Valid {
-				a.achievement_user = new(int)
-				*a.achievement_user = int(value.Int64)
+				_m.achievement_user = new(int)
+				*_m.achievement_user = int(value.Int64)
 			}
 		default:
-			a.selectValues.Set(columns[i], values[i])
+			_m.selectValues.Set(columns[i], values[i])
 		}
 	}
 	return nil
@@ -127,49 +127,49 @@ func (a *Achievement) assignValues(columns []string, values []any) error {
 
 // Value returns the ent.Value that was dynamically selected and assigned to the Achievement.
 // This includes values selected through modifiers, order, etc.
-func (a *Achievement) Value(name string) (ent.Value, error) {
-	return a.selectValues.Get(name)
+func (_m *Achievement) Value(name string) (ent.Value, error) {
+	return _m.selectValues.Get(name)
 }
 
 // QueryUser queries the "user" edge of the Achievement entity.
-func (a *Achievement) QueryUser() *UserQuery {
-	return NewAchievementClient(a.config).QueryUser(a)
+func (_m *Achievement) QueryUser() *UserQuery {
+	return NewAchievementClient(_m.config).QueryUser(_m)
 }
 
 // Update returns a builder for updating this Achievement.
 // Note that you need to call Achievement.Unwrap() before calling this method if this Achievement
 // was returned from a transaction, and the transaction was committed or rolled back.
-func (a *Achievement) Update() *AchievementUpdateOne {
-	return NewAchievementClient(a.config).UpdateOne(a)
+func (_m *Achievement) Update() *AchievementUpdateOne {
+	return NewAchievementClient(_m.config).UpdateOne(_m)
 }
 
 // Unwrap unwraps the Achievement entity that was returned from a transaction after it was closed,
 // so that all future queries will be executed through the driver which created the transaction.
-func (a *Achievement) Unwrap() *Achievement {
-	_tx, ok := a.config.driver.(*txDriver)
+func (_m *Achievement) Unwrap() *Achievement {
+	_tx, ok := _m.config.driver.(*txDriver)
 	if !ok {
 		panic("ent: Achievement is not a transactional entity")
 	}
-	a.config.driver = _tx.drv
-	return a
+	_m.config.driver = _tx.drv
+	return _m
 }
 
 // String implements the fmt.Stringer.
-func (a *Achievement) String() string {
+func (_m *Achievement) String() string {
 	var builder strings.Builder
 	builder.WriteString("Achievement(")
-	builder.WriteString(fmt.Sprintf("id=%v, ", a.ID))
+	builder.WriteString(fmt.Sprintf("id=%v, ", _m.ID))
 	builder.WriteString("name=")
-	builder.WriteString(a.Name)
+	builder.WriteString(_m.Name)
 	builder.WriteString(", ")
 	builder.WriteString("description=")
-	builder.WriteString(a.Description)
+	builder.WriteString(_m.Description)
 	builder.WriteString(", ")
 	builder.WriteString("rarity=")
-	builder.WriteString(a.Rarity)
+	builder.WriteString(_m.Rarity)
 	builder.WriteString(", ")
 	builder.WriteString("unlocked_at=")
-	builder.WriteString(a.UnlockedAt.Format(time.ANSIC))
+	builder.WriteString(_m.UnlockedAt.Format(time.ANSIC))
 	builder.WriteByte(')')
 	return builder.String()
 }

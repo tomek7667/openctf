@@ -27,40 +27,40 @@ type AggregatedUserStatisticsQuery struct {
 }
 
 // Where adds a new predicate for the AggregatedUserStatisticsQuery builder.
-func (ausq *AggregatedUserStatisticsQuery) Where(ps ...predicate.AggregatedUserStatistics) *AggregatedUserStatisticsQuery {
-	ausq.predicates = append(ausq.predicates, ps...)
-	return ausq
+func (_q *AggregatedUserStatisticsQuery) Where(ps ...predicate.AggregatedUserStatistics) *AggregatedUserStatisticsQuery {
+	_q.predicates = append(_q.predicates, ps...)
+	return _q
 }
 
 // Limit the number of records to be returned by this query.
-func (ausq *AggregatedUserStatisticsQuery) Limit(limit int) *AggregatedUserStatisticsQuery {
-	ausq.ctx.Limit = &limit
-	return ausq
+func (_q *AggregatedUserStatisticsQuery) Limit(limit int) *AggregatedUserStatisticsQuery {
+	_q.ctx.Limit = &limit
+	return _q
 }
 
 // Offset to start from.
-func (ausq *AggregatedUserStatisticsQuery) Offset(offset int) *AggregatedUserStatisticsQuery {
-	ausq.ctx.Offset = &offset
-	return ausq
+func (_q *AggregatedUserStatisticsQuery) Offset(offset int) *AggregatedUserStatisticsQuery {
+	_q.ctx.Offset = &offset
+	return _q
 }
 
 // Unique configures the query builder to filter duplicate records on query.
 // By default, unique is set to true, and can be disabled using this method.
-func (ausq *AggregatedUserStatisticsQuery) Unique(unique bool) *AggregatedUserStatisticsQuery {
-	ausq.ctx.Unique = &unique
-	return ausq
+func (_q *AggregatedUserStatisticsQuery) Unique(unique bool) *AggregatedUserStatisticsQuery {
+	_q.ctx.Unique = &unique
+	return _q
 }
 
 // Order specifies how the records should be ordered.
-func (ausq *AggregatedUserStatisticsQuery) Order(o ...aggregateduserstatistics.OrderOption) *AggregatedUserStatisticsQuery {
-	ausq.order = append(ausq.order, o...)
-	return ausq
+func (_q *AggregatedUserStatisticsQuery) Order(o ...aggregateduserstatistics.OrderOption) *AggregatedUserStatisticsQuery {
+	_q.order = append(_q.order, o...)
+	return _q
 }
 
 // First returns the first AggregatedUserStatistics entity from the query.
 // Returns a *NotFoundError when no AggregatedUserStatistics was found.
-func (ausq *AggregatedUserStatisticsQuery) First(ctx context.Context) (*AggregatedUserStatistics, error) {
-	nodes, err := ausq.Limit(1).All(setContextOp(ctx, ausq.ctx, ent.OpQueryFirst))
+func (_q *AggregatedUserStatisticsQuery) First(ctx context.Context) (*AggregatedUserStatistics, error) {
+	nodes, err := _q.Limit(1).All(setContextOp(ctx, _q.ctx, ent.OpQueryFirst))
 	if err != nil {
 		return nil, err
 	}
@@ -71,8 +71,8 @@ func (ausq *AggregatedUserStatisticsQuery) First(ctx context.Context) (*Aggregat
 }
 
 // FirstX is like First, but panics if an error occurs.
-func (ausq *AggregatedUserStatisticsQuery) FirstX(ctx context.Context) *AggregatedUserStatistics {
-	node, err := ausq.First(ctx)
+func (_q *AggregatedUserStatisticsQuery) FirstX(ctx context.Context) *AggregatedUserStatistics {
+	node, err := _q.First(ctx)
 	if err != nil && !IsNotFound(err) {
 		panic(err)
 	}
@@ -82,8 +82,8 @@ func (ausq *AggregatedUserStatisticsQuery) FirstX(ctx context.Context) *Aggregat
 // Only returns a single AggregatedUserStatistics entity found by the query, ensuring it only returns one.
 // Returns a *NotSingularError when more than one AggregatedUserStatistics entity is found.
 // Returns a *NotFoundError when no AggregatedUserStatistics entities are found.
-func (ausq *AggregatedUserStatisticsQuery) Only(ctx context.Context) (*AggregatedUserStatistics, error) {
-	nodes, err := ausq.Limit(2).All(setContextOp(ctx, ausq.ctx, ent.OpQueryOnly))
+func (_q *AggregatedUserStatisticsQuery) Only(ctx context.Context) (*AggregatedUserStatistics, error) {
+	nodes, err := _q.Limit(2).All(setContextOp(ctx, _q.ctx, ent.OpQueryOnly))
 	if err != nil {
 		return nil, err
 	}
@@ -98,8 +98,8 @@ func (ausq *AggregatedUserStatisticsQuery) Only(ctx context.Context) (*Aggregate
 }
 
 // OnlyX is like Only, but panics if an error occurs.
-func (ausq *AggregatedUserStatisticsQuery) OnlyX(ctx context.Context) *AggregatedUserStatistics {
-	node, err := ausq.Only(ctx)
+func (_q *AggregatedUserStatisticsQuery) OnlyX(ctx context.Context) *AggregatedUserStatistics {
+	node, err := _q.Only(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -107,18 +107,18 @@ func (ausq *AggregatedUserStatisticsQuery) OnlyX(ctx context.Context) *Aggregate
 }
 
 // All executes the query and returns a list of AggregatedUserStatisticsSlice.
-func (ausq *AggregatedUserStatisticsQuery) All(ctx context.Context) ([]*AggregatedUserStatistics, error) {
-	ctx = setContextOp(ctx, ausq.ctx, ent.OpQueryAll)
-	if err := ausq.prepareQuery(ctx); err != nil {
+func (_q *AggregatedUserStatisticsQuery) All(ctx context.Context) ([]*AggregatedUserStatistics, error) {
+	ctx = setContextOp(ctx, _q.ctx, ent.OpQueryAll)
+	if err := _q.prepareQuery(ctx); err != nil {
 		return nil, err
 	}
 	qr := querierAll[[]*AggregatedUserStatistics, *AggregatedUserStatisticsQuery]()
-	return withInterceptors[[]*AggregatedUserStatistics](ctx, ausq, qr, ausq.inters)
+	return withInterceptors[[]*AggregatedUserStatistics](ctx, _q, qr, _q.inters)
 }
 
 // AllX is like All, but panics if an error occurs.
-func (ausq *AggregatedUserStatisticsQuery) AllX(ctx context.Context) []*AggregatedUserStatistics {
-	nodes, err := ausq.All(ctx)
+func (_q *AggregatedUserStatisticsQuery) AllX(ctx context.Context) []*AggregatedUserStatistics {
+	nodes, err := _q.All(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -126,17 +126,17 @@ func (ausq *AggregatedUserStatisticsQuery) AllX(ctx context.Context) []*Aggregat
 }
 
 // Count returns the count of the given query.
-func (ausq *AggregatedUserStatisticsQuery) Count(ctx context.Context) (int, error) {
-	ctx = setContextOp(ctx, ausq.ctx, ent.OpQueryCount)
-	if err := ausq.prepareQuery(ctx); err != nil {
+func (_q *AggregatedUserStatisticsQuery) Count(ctx context.Context) (int, error) {
+	ctx = setContextOp(ctx, _q.ctx, ent.OpQueryCount)
+	if err := _q.prepareQuery(ctx); err != nil {
 		return 0, err
 	}
-	return withInterceptors[int](ctx, ausq, querierCount[*AggregatedUserStatisticsQuery](), ausq.inters)
+	return withInterceptors[int](ctx, _q, querierCount[*AggregatedUserStatisticsQuery](), _q.inters)
 }
 
 // CountX is like Count, but panics if an error occurs.
-func (ausq *AggregatedUserStatisticsQuery) CountX(ctx context.Context) int {
-	count, err := ausq.Count(ctx)
+func (_q *AggregatedUserStatisticsQuery) CountX(ctx context.Context) int {
+	count, err := _q.Count(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -144,9 +144,9 @@ func (ausq *AggregatedUserStatisticsQuery) CountX(ctx context.Context) int {
 }
 
 // Exist returns true if the query has elements in the graph.
-func (ausq *AggregatedUserStatisticsQuery) Exist(ctx context.Context) (bool, error) {
-	ctx = setContextOp(ctx, ausq.ctx, ent.OpQueryExist)
-	switch _, err := ausq.First(ctx); {
+func (_q *AggregatedUserStatisticsQuery) Exist(ctx context.Context) (bool, error) {
+	ctx = setContextOp(ctx, _q.ctx, ent.OpQueryExist)
+	switch _, err := _q.First(ctx); {
 	case IsNotFound(err):
 		return false, nil
 	case err != nil:
@@ -157,8 +157,8 @@ func (ausq *AggregatedUserStatisticsQuery) Exist(ctx context.Context) (bool, err
 }
 
 // ExistX is like Exist, but panics if an error occurs.
-func (ausq *AggregatedUserStatisticsQuery) ExistX(ctx context.Context) bool {
-	exist, err := ausq.Exist(ctx)
+func (_q *AggregatedUserStatisticsQuery) ExistX(ctx context.Context) bool {
+	exist, err := _q.Exist(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -167,19 +167,19 @@ func (ausq *AggregatedUserStatisticsQuery) ExistX(ctx context.Context) bool {
 
 // Clone returns a duplicate of the AggregatedUserStatisticsQuery builder, including all associated steps. It can be
 // used to prepare common query builders and use them differently after the clone is made.
-func (ausq *AggregatedUserStatisticsQuery) Clone() *AggregatedUserStatisticsQuery {
-	if ausq == nil {
+func (_q *AggregatedUserStatisticsQuery) Clone() *AggregatedUserStatisticsQuery {
+	if _q == nil {
 		return nil
 	}
 	return &AggregatedUserStatisticsQuery{
-		config:     ausq.config,
-		ctx:        ausq.ctx.Clone(),
-		order:      append([]aggregateduserstatistics.OrderOption{}, ausq.order...),
-		inters:     append([]Interceptor{}, ausq.inters...),
-		predicates: append([]predicate.AggregatedUserStatistics{}, ausq.predicates...),
+		config:     _q.config,
+		ctx:        _q.ctx.Clone(),
+		order:      append([]aggregateduserstatistics.OrderOption{}, _q.order...),
+		inters:     append([]Interceptor{}, _q.inters...),
+		predicates: append([]predicate.AggregatedUserStatistics{}, _q.predicates...),
 		// clone intermediate query.
-		sql:  ausq.sql.Clone(),
-		path: ausq.path,
+		sql:  _q.sql.Clone(),
+		path: _q.path,
 	}
 }
 
@@ -197,10 +197,10 @@ func (ausq *AggregatedUserStatisticsQuery) Clone() *AggregatedUserStatisticsQuer
 //		GroupBy(aggregateduserstatistics.FieldTotalViews).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
-func (ausq *AggregatedUserStatisticsQuery) GroupBy(field string, fields ...string) *AggregatedUserStatisticsGroupBy {
-	ausq.ctx.Fields = append([]string{field}, fields...)
-	grbuild := &AggregatedUserStatisticsGroupBy{build: ausq}
-	grbuild.flds = &ausq.ctx.Fields
+func (_q *AggregatedUserStatisticsQuery) GroupBy(field string, fields ...string) *AggregatedUserStatisticsGroupBy {
+	_q.ctx.Fields = append([]string{field}, fields...)
+	grbuild := &AggregatedUserStatisticsGroupBy{build: _q}
+	grbuild.flds = &_q.ctx.Fields
 	grbuild.label = aggregateduserstatistics.Label
 	grbuild.scan = grbuild.Scan
 	return grbuild
@@ -218,62 +218,62 @@ func (ausq *AggregatedUserStatisticsQuery) GroupBy(field string, fields ...strin
 //	client.AggregatedUserStatistics.Query().
 //		Select(aggregateduserstatistics.FieldTotalViews).
 //		Scan(ctx, &v)
-func (ausq *AggregatedUserStatisticsQuery) Select(fields ...string) *AggregatedUserStatisticsSelect {
-	ausq.ctx.Fields = append(ausq.ctx.Fields, fields...)
-	sbuild := &AggregatedUserStatisticsSelect{AggregatedUserStatisticsQuery: ausq}
+func (_q *AggregatedUserStatisticsQuery) Select(fields ...string) *AggregatedUserStatisticsSelect {
+	_q.ctx.Fields = append(_q.ctx.Fields, fields...)
+	sbuild := &AggregatedUserStatisticsSelect{AggregatedUserStatisticsQuery: _q}
 	sbuild.label = aggregateduserstatistics.Label
-	sbuild.flds, sbuild.scan = &ausq.ctx.Fields, sbuild.Scan
+	sbuild.flds, sbuild.scan = &_q.ctx.Fields, sbuild.Scan
 	return sbuild
 }
 
 // Aggregate returns a AggregatedUserStatisticsSelect configured with the given aggregations.
-func (ausq *AggregatedUserStatisticsQuery) Aggregate(fns ...AggregateFunc) *AggregatedUserStatisticsSelect {
-	return ausq.Select().Aggregate(fns...)
+func (_q *AggregatedUserStatisticsQuery) Aggregate(fns ...AggregateFunc) *AggregatedUserStatisticsSelect {
+	return _q.Select().Aggregate(fns...)
 }
 
-func (ausq *AggregatedUserStatisticsQuery) prepareQuery(ctx context.Context) error {
-	for _, inter := range ausq.inters {
+func (_q *AggregatedUserStatisticsQuery) prepareQuery(ctx context.Context) error {
+	for _, inter := range _q.inters {
 		if inter == nil {
 			return fmt.Errorf("ent: uninitialized interceptor (forgotten import ent/runtime?)")
 		}
 		if trv, ok := inter.(Traverser); ok {
-			if err := trv.Traverse(ctx, ausq); err != nil {
+			if err := trv.Traverse(ctx, _q); err != nil {
 				return err
 			}
 		}
 	}
-	for _, f := range ausq.ctx.Fields {
+	for _, f := range _q.ctx.Fields {
 		if !aggregateduserstatistics.ValidColumn(f) {
 			return &ValidationError{Name: f, err: fmt.Errorf("ent: invalid field %q for query", f)}
 		}
 	}
-	if ausq.path != nil {
-		prev, err := ausq.path(ctx)
+	if _q.path != nil {
+		prev, err := _q.path(ctx)
 		if err != nil {
 			return err
 		}
-		ausq.sql = prev
+		_q.sql = prev
 	}
 	return nil
 }
 
-func (ausq *AggregatedUserStatisticsQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*AggregatedUserStatistics, error) {
+func (_q *AggregatedUserStatisticsQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*AggregatedUserStatistics, error) {
 	var (
 		nodes = []*AggregatedUserStatistics{}
-		_spec = ausq.querySpec()
+		_spec = _q.querySpec()
 	)
 	_spec.ScanValues = func(columns []string) ([]any, error) {
 		return (*AggregatedUserStatistics).scanValues(nil, columns)
 	}
 	_spec.Assign = func(columns []string, values []any) error {
-		node := &AggregatedUserStatistics{config: ausq.config}
+		node := &AggregatedUserStatistics{config: _q.config}
 		nodes = append(nodes, node)
 		return node.assignValues(columns, values)
 	}
 	for i := range hooks {
 		hooks[i](ctx, _spec)
 	}
-	if err := sqlgraph.QueryNodes(ctx, ausq.driver, _spec); err != nil {
+	if err := sqlgraph.QueryNodes(ctx, _q.driver, _spec); err != nil {
 		return nil, err
 	}
 	if len(nodes) == 0 {
@@ -282,43 +282,43 @@ func (ausq *AggregatedUserStatisticsQuery) sqlAll(ctx context.Context, hooks ...
 	return nodes, nil
 }
 
-func (ausq *AggregatedUserStatisticsQuery) sqlCount(ctx context.Context) (int, error) {
-	_spec := ausq.querySpec()
-	_spec.Node.Columns = ausq.ctx.Fields
-	if len(ausq.ctx.Fields) > 0 {
-		_spec.Unique = ausq.ctx.Unique != nil && *ausq.ctx.Unique
+func (_q *AggregatedUserStatisticsQuery) sqlCount(ctx context.Context) (int, error) {
+	_spec := _q.querySpec()
+	_spec.Node.Columns = _q.ctx.Fields
+	if len(_q.ctx.Fields) > 0 {
+		_spec.Unique = _q.ctx.Unique != nil && *_q.ctx.Unique
 	}
-	return sqlgraph.CountNodes(ctx, ausq.driver, _spec)
+	return sqlgraph.CountNodes(ctx, _q.driver, _spec)
 }
 
-func (ausq *AggregatedUserStatisticsQuery) querySpec() *sqlgraph.QuerySpec {
+func (_q *AggregatedUserStatisticsQuery) querySpec() *sqlgraph.QuerySpec {
 	_spec := sqlgraph.NewQuerySpec(aggregateduserstatistics.Table, aggregateduserstatistics.Columns, nil)
-	_spec.From = ausq.sql
-	if unique := ausq.ctx.Unique; unique != nil {
+	_spec.From = _q.sql
+	if unique := _q.ctx.Unique; unique != nil {
 		_spec.Unique = *unique
-	} else if ausq.path != nil {
+	} else if _q.path != nil {
 		_spec.Unique = true
 	}
-	if fields := ausq.ctx.Fields; len(fields) > 0 {
+	if fields := _q.ctx.Fields; len(fields) > 0 {
 		_spec.Node.Columns = make([]string, 0, len(fields))
 		for i := range fields {
 			_spec.Node.Columns = append(_spec.Node.Columns, fields[i])
 		}
 	}
-	if ps := ausq.predicates; len(ps) > 0 {
+	if ps := _q.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
 			for i := range ps {
 				ps[i](selector)
 			}
 		}
 	}
-	if limit := ausq.ctx.Limit; limit != nil {
+	if limit := _q.ctx.Limit; limit != nil {
 		_spec.Limit = *limit
 	}
-	if offset := ausq.ctx.Offset; offset != nil {
+	if offset := _q.ctx.Offset; offset != nil {
 		_spec.Offset = *offset
 	}
-	if ps := ausq.order; len(ps) > 0 {
+	if ps := _q.order; len(ps) > 0 {
 		_spec.Order = func(selector *sql.Selector) {
 			for i := range ps {
 				ps[i](selector)
@@ -328,33 +328,33 @@ func (ausq *AggregatedUserStatisticsQuery) querySpec() *sqlgraph.QuerySpec {
 	return _spec
 }
 
-func (ausq *AggregatedUserStatisticsQuery) sqlQuery(ctx context.Context) *sql.Selector {
-	builder := sql.Dialect(ausq.driver.Dialect())
+func (_q *AggregatedUserStatisticsQuery) sqlQuery(ctx context.Context) *sql.Selector {
+	builder := sql.Dialect(_q.driver.Dialect())
 	t1 := builder.Table(aggregateduserstatistics.Table)
-	columns := ausq.ctx.Fields
+	columns := _q.ctx.Fields
 	if len(columns) == 0 {
 		columns = aggregateduserstatistics.Columns
 	}
 	selector := builder.Select(t1.Columns(columns...)...).From(t1)
-	if ausq.sql != nil {
-		selector = ausq.sql
+	if _q.sql != nil {
+		selector = _q.sql
 		selector.Select(selector.Columns(columns...)...)
 	}
-	if ausq.ctx.Unique != nil && *ausq.ctx.Unique {
+	if _q.ctx.Unique != nil && *_q.ctx.Unique {
 		selector.Distinct()
 	}
-	for _, p := range ausq.predicates {
+	for _, p := range _q.predicates {
 		p(selector)
 	}
-	for _, p := range ausq.order {
+	for _, p := range _q.order {
 		p(selector)
 	}
-	if offset := ausq.ctx.Offset; offset != nil {
+	if offset := _q.ctx.Offset; offset != nil {
 		// limit is mandatory for offset clause. We start
 		// with default value, and override it below if needed.
 		selector.Offset(*offset).Limit(math.MaxInt32)
 	}
-	if limit := ausq.ctx.Limit; limit != nil {
+	if limit := _q.ctx.Limit; limit != nil {
 		selector.Limit(*limit)
 	}
 	return selector
@@ -367,41 +367,41 @@ type AggregatedUserStatisticsGroupBy struct {
 }
 
 // Aggregate adds the given aggregation functions to the group-by query.
-func (ausgb *AggregatedUserStatisticsGroupBy) Aggregate(fns ...AggregateFunc) *AggregatedUserStatisticsGroupBy {
-	ausgb.fns = append(ausgb.fns, fns...)
-	return ausgb
+func (_g *AggregatedUserStatisticsGroupBy) Aggregate(fns ...AggregateFunc) *AggregatedUserStatisticsGroupBy {
+	_g.fns = append(_g.fns, fns...)
+	return _g
 }
 
 // Scan applies the selector query and scans the result into the given value.
-func (ausgb *AggregatedUserStatisticsGroupBy) Scan(ctx context.Context, v any) error {
-	ctx = setContextOp(ctx, ausgb.build.ctx, ent.OpQueryGroupBy)
-	if err := ausgb.build.prepareQuery(ctx); err != nil {
+func (_g *AggregatedUserStatisticsGroupBy) Scan(ctx context.Context, v any) error {
+	ctx = setContextOp(ctx, _g.build.ctx, ent.OpQueryGroupBy)
+	if err := _g.build.prepareQuery(ctx); err != nil {
 		return err
 	}
-	return scanWithInterceptors[*AggregatedUserStatisticsQuery, *AggregatedUserStatisticsGroupBy](ctx, ausgb.build, ausgb, ausgb.build.inters, v)
+	return scanWithInterceptors[*AggregatedUserStatisticsQuery, *AggregatedUserStatisticsGroupBy](ctx, _g.build, _g, _g.build.inters, v)
 }
 
-func (ausgb *AggregatedUserStatisticsGroupBy) sqlScan(ctx context.Context, root *AggregatedUserStatisticsQuery, v any) error {
+func (_g *AggregatedUserStatisticsGroupBy) sqlScan(ctx context.Context, root *AggregatedUserStatisticsQuery, v any) error {
 	selector := root.sqlQuery(ctx).Select()
-	aggregation := make([]string, 0, len(ausgb.fns))
-	for _, fn := range ausgb.fns {
+	aggregation := make([]string, 0, len(_g.fns))
+	for _, fn := range _g.fns {
 		aggregation = append(aggregation, fn(selector))
 	}
 	if len(selector.SelectedColumns()) == 0 {
-		columns := make([]string, 0, len(*ausgb.flds)+len(ausgb.fns))
-		for _, f := range *ausgb.flds {
+		columns := make([]string, 0, len(*_g.flds)+len(_g.fns))
+		for _, f := range *_g.flds {
 			columns = append(columns, selector.C(f))
 		}
 		columns = append(columns, aggregation...)
 		selector.Select(columns...)
 	}
-	selector.GroupBy(selector.Columns(*ausgb.flds...)...)
+	selector.GroupBy(selector.Columns(*_g.flds...)...)
 	if err := selector.Err(); err != nil {
 		return err
 	}
 	rows := &sql.Rows{}
 	query, args := selector.Query()
-	if err := ausgb.build.driver.Query(ctx, query, args, rows); err != nil {
+	if err := _g.build.driver.Query(ctx, query, args, rows); err != nil {
 		return err
 	}
 	defer rows.Close()
@@ -415,27 +415,27 @@ type AggregatedUserStatisticsSelect struct {
 }
 
 // Aggregate adds the given aggregation functions to the selector query.
-func (auss *AggregatedUserStatisticsSelect) Aggregate(fns ...AggregateFunc) *AggregatedUserStatisticsSelect {
-	auss.fns = append(auss.fns, fns...)
-	return auss
+func (_s *AggregatedUserStatisticsSelect) Aggregate(fns ...AggregateFunc) *AggregatedUserStatisticsSelect {
+	_s.fns = append(_s.fns, fns...)
+	return _s
 }
 
 // Scan applies the selector query and scans the result into the given value.
-func (auss *AggregatedUserStatisticsSelect) Scan(ctx context.Context, v any) error {
-	ctx = setContextOp(ctx, auss.ctx, ent.OpQuerySelect)
-	if err := auss.prepareQuery(ctx); err != nil {
+func (_s *AggregatedUserStatisticsSelect) Scan(ctx context.Context, v any) error {
+	ctx = setContextOp(ctx, _s.ctx, ent.OpQuerySelect)
+	if err := _s.prepareQuery(ctx); err != nil {
 		return err
 	}
-	return scanWithInterceptors[*AggregatedUserStatisticsQuery, *AggregatedUserStatisticsSelect](ctx, auss.AggregatedUserStatisticsQuery, auss, auss.inters, v)
+	return scanWithInterceptors[*AggregatedUserStatisticsQuery, *AggregatedUserStatisticsSelect](ctx, _s.AggregatedUserStatisticsQuery, _s, _s.inters, v)
 }
 
-func (auss *AggregatedUserStatisticsSelect) sqlScan(ctx context.Context, root *AggregatedUserStatisticsQuery, v any) error {
+func (_s *AggregatedUserStatisticsSelect) sqlScan(ctx context.Context, root *AggregatedUserStatisticsQuery, v any) error {
 	selector := root.sqlQuery(ctx)
-	aggregation := make([]string, 0, len(auss.fns))
-	for _, fn := range auss.fns {
+	aggregation := make([]string, 0, len(_s.fns))
+	for _, fn := range _s.fns {
 		aggregation = append(aggregation, fn(selector))
 	}
-	switch n := len(*auss.selector.flds); {
+	switch n := len(*_s.selector.flds); {
 	case n == 0 && len(aggregation) > 0:
 		selector.Select(aggregation...)
 	case n != 0 && len(aggregation) > 0:
@@ -443,7 +443,7 @@ func (auss *AggregatedUserStatisticsSelect) sqlScan(ctx context.Context, root *A
 	}
 	rows := &sql.Rows{}
 	query, args := selector.Query()
-	if err := auss.driver.Query(ctx, query, args, rows); err != nil {
+	if err := _s.driver.Query(ctx, query, args, rows); err != nil {
 		return err
 	}
 	defer rows.Close()

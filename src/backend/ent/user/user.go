@@ -33,6 +33,16 @@ const (
 	FieldCreatedAt = "created_at"
 	// FieldLogo holds the string denoting the logo field in the database.
 	FieldLogo = "logo"
+	// FieldGithubAccountID holds the string denoting the github_account_id field in the database.
+	FieldGithubAccountID = "github_account_id"
+	// FieldGithubUsername holds the string denoting the github_username field in the database.
+	FieldGithubUsername = "github_username"
+	// FieldGithubName holds the string denoting the github_name field in the database.
+	FieldGithubName = "github_name"
+	// FieldGithubEmail holds the string denoting the github_email field in the database.
+	FieldGithubEmail = "github_email"
+	// FieldGithubAvatarURL holds the string denoting the github_avatar_url field in the database.
+	FieldGithubAvatarURL = "github_avatar_url"
 	// EdgeTeams holds the string denoting the teams edge name in mutations.
 	EdgeTeams = "teams"
 	// Table holds the table name of the user in the database.
@@ -56,6 +66,11 @@ var Columns = []string{
 	FieldPassword,
 	FieldCreatedAt,
 	FieldLogo,
+	FieldGithubAccountID,
+	FieldGithubUsername,
+	FieldGithubName,
+	FieldGithubEmail,
+	FieldGithubAvatarURL,
 }
 
 var (
@@ -158,6 +173,31 @@ func ByPassword(opts ...sql.OrderTermOption) OrderOption {
 // ByCreatedAt orders the results by the created_at field.
 func ByCreatedAt(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldCreatedAt, opts...).ToFunc()
+}
+
+// ByGithubAccountID orders the results by the github_account_id field.
+func ByGithubAccountID(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldGithubAccountID, opts...).ToFunc()
+}
+
+// ByGithubUsername orders the results by the github_username field.
+func ByGithubUsername(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldGithubUsername, opts...).ToFunc()
+}
+
+// ByGithubName orders the results by the github_name field.
+func ByGithubName(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldGithubName, opts...).ToFunc()
+}
+
+// ByGithubEmail orders the results by the github_email field.
+func ByGithubEmail(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldGithubEmail, opts...).ToFunc()
+}
+
+// ByGithubAvatarURL orders the results by the github_avatar_url field.
+func ByGithubAvatarURL(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldGithubAvatarURL, opts...).ToFunc()
 }
 
 // ByTeamsCount orders the results by teams count.

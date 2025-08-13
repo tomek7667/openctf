@@ -24,62 +24,62 @@ type AchievementCreate struct {
 }
 
 // SetName sets the "name" field.
-func (ac *AchievementCreate) SetName(s string) *AchievementCreate {
-	ac.mutation.SetName(s)
-	return ac
+func (_c *AchievementCreate) SetName(v string) *AchievementCreate {
+	_c.mutation.SetName(v)
+	return _c
 }
 
 // SetDescription sets the "description" field.
-func (ac *AchievementCreate) SetDescription(s string) *AchievementCreate {
-	ac.mutation.SetDescription(s)
-	return ac
+func (_c *AchievementCreate) SetDescription(v string) *AchievementCreate {
+	_c.mutation.SetDescription(v)
+	return _c
 }
 
 // SetRarity sets the "rarity" field.
-func (ac *AchievementCreate) SetRarity(s string) *AchievementCreate {
-	ac.mutation.SetRarity(s)
-	return ac
+func (_c *AchievementCreate) SetRarity(v string) *AchievementCreate {
+	_c.mutation.SetRarity(v)
+	return _c
 }
 
 // SetUnlockedAt sets the "unlocked_at" field.
-func (ac *AchievementCreate) SetUnlockedAt(t time.Time) *AchievementCreate {
-	ac.mutation.SetUnlockedAt(t)
-	return ac
+func (_c *AchievementCreate) SetUnlockedAt(v time.Time) *AchievementCreate {
+	_c.mutation.SetUnlockedAt(v)
+	return _c
 }
 
 // SetNillableUnlockedAt sets the "unlocked_at" field if the given value is not nil.
-func (ac *AchievementCreate) SetNillableUnlockedAt(t *time.Time) *AchievementCreate {
-	if t != nil {
-		ac.SetUnlockedAt(*t)
+func (_c *AchievementCreate) SetNillableUnlockedAt(v *time.Time) *AchievementCreate {
+	if v != nil {
+		_c.SetUnlockedAt(*v)
 	}
-	return ac
+	return _c
 }
 
 // SetUserID sets the "user" edge to the User entity by ID.
-func (ac *AchievementCreate) SetUserID(id int) *AchievementCreate {
-	ac.mutation.SetUserID(id)
-	return ac
+func (_c *AchievementCreate) SetUserID(id int) *AchievementCreate {
+	_c.mutation.SetUserID(id)
+	return _c
 }
 
 // SetUser sets the "user" edge to the User entity.
-func (ac *AchievementCreate) SetUser(u *User) *AchievementCreate {
-	return ac.SetUserID(u.ID)
+func (_c *AchievementCreate) SetUser(v *User) *AchievementCreate {
+	return _c.SetUserID(v.ID)
 }
 
 // Mutation returns the AchievementMutation object of the builder.
-func (ac *AchievementCreate) Mutation() *AchievementMutation {
-	return ac.mutation
+func (_c *AchievementCreate) Mutation() *AchievementMutation {
+	return _c.mutation
 }
 
 // Save creates the Achievement in the database.
-func (ac *AchievementCreate) Save(ctx context.Context) (*Achievement, error) {
-	ac.defaults()
-	return withHooks(ctx, ac.sqlSave, ac.mutation, ac.hooks)
+func (_c *AchievementCreate) Save(ctx context.Context) (*Achievement, error) {
+	_c.defaults()
+	return withHooks(ctx, _c.sqlSave, _c.mutation, _c.hooks)
 }
 
 // SaveX calls Save and panics if Save returns an error.
-func (ac *AchievementCreate) SaveX(ctx context.Context) *Achievement {
-	v, err := ac.Save(ctx)
+func (_c *AchievementCreate) SaveX(ctx context.Context) *Achievement {
+	v, err := _c.Save(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -87,52 +87,52 @@ func (ac *AchievementCreate) SaveX(ctx context.Context) *Achievement {
 }
 
 // Exec executes the query.
-func (ac *AchievementCreate) Exec(ctx context.Context) error {
-	_, err := ac.Save(ctx)
+func (_c *AchievementCreate) Exec(ctx context.Context) error {
+	_, err := _c.Save(ctx)
 	return err
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (ac *AchievementCreate) ExecX(ctx context.Context) {
-	if err := ac.Exec(ctx); err != nil {
+func (_c *AchievementCreate) ExecX(ctx context.Context) {
+	if err := _c.Exec(ctx); err != nil {
 		panic(err)
 	}
 }
 
 // defaults sets the default values of the builder before save.
-func (ac *AchievementCreate) defaults() {
-	if _, ok := ac.mutation.UnlockedAt(); !ok {
+func (_c *AchievementCreate) defaults() {
+	if _, ok := _c.mutation.UnlockedAt(); !ok {
 		v := achievement.DefaultUnlockedAt
-		ac.mutation.SetUnlockedAt(v)
+		_c.mutation.SetUnlockedAt(v)
 	}
 }
 
 // check runs all checks and user-defined validators on the builder.
-func (ac *AchievementCreate) check() error {
-	if _, ok := ac.mutation.Name(); !ok {
+func (_c *AchievementCreate) check() error {
+	if _, ok := _c.mutation.Name(); !ok {
 		return &ValidationError{Name: "name", err: errors.New(`ent: missing required field "Achievement.name"`)}
 	}
-	if _, ok := ac.mutation.Description(); !ok {
+	if _, ok := _c.mutation.Description(); !ok {
 		return &ValidationError{Name: "description", err: errors.New(`ent: missing required field "Achievement.description"`)}
 	}
-	if _, ok := ac.mutation.Rarity(); !ok {
+	if _, ok := _c.mutation.Rarity(); !ok {
 		return &ValidationError{Name: "rarity", err: errors.New(`ent: missing required field "Achievement.rarity"`)}
 	}
-	if _, ok := ac.mutation.UnlockedAt(); !ok {
+	if _, ok := _c.mutation.UnlockedAt(); !ok {
 		return &ValidationError{Name: "unlocked_at", err: errors.New(`ent: missing required field "Achievement.unlocked_at"`)}
 	}
-	if len(ac.mutation.UserIDs()) == 0 {
+	if len(_c.mutation.UserIDs()) == 0 {
 		return &ValidationError{Name: "user", err: errors.New(`ent: missing required edge "Achievement.user"`)}
 	}
 	return nil
 }
 
-func (ac *AchievementCreate) sqlSave(ctx context.Context) (*Achievement, error) {
-	if err := ac.check(); err != nil {
+func (_c *AchievementCreate) sqlSave(ctx context.Context) (*Achievement, error) {
+	if err := _c.check(); err != nil {
 		return nil, err
 	}
-	_node, _spec := ac.createSpec()
-	if err := sqlgraph.CreateNode(ctx, ac.driver, _spec); err != nil {
+	_node, _spec := _c.createSpec()
+	if err := sqlgraph.CreateNode(ctx, _c.driver, _spec); err != nil {
 		if sqlgraph.IsConstraintError(err) {
 			err = &ConstraintError{msg: err.Error(), wrap: err}
 		}
@@ -140,34 +140,34 @@ func (ac *AchievementCreate) sqlSave(ctx context.Context) (*Achievement, error) 
 	}
 	id := _spec.ID.Value.(int64)
 	_node.ID = int(id)
-	ac.mutation.id = &_node.ID
-	ac.mutation.done = true
+	_c.mutation.id = &_node.ID
+	_c.mutation.done = true
 	return _node, nil
 }
 
-func (ac *AchievementCreate) createSpec() (*Achievement, *sqlgraph.CreateSpec) {
+func (_c *AchievementCreate) createSpec() (*Achievement, *sqlgraph.CreateSpec) {
 	var (
-		_node = &Achievement{config: ac.config}
+		_node = &Achievement{config: _c.config}
 		_spec = sqlgraph.NewCreateSpec(achievement.Table, sqlgraph.NewFieldSpec(achievement.FieldID, field.TypeInt))
 	)
-	_spec.OnConflict = ac.conflict
-	if value, ok := ac.mutation.Name(); ok {
+	_spec.OnConflict = _c.conflict
+	if value, ok := _c.mutation.Name(); ok {
 		_spec.SetField(achievement.FieldName, field.TypeString, value)
 		_node.Name = value
 	}
-	if value, ok := ac.mutation.Description(); ok {
+	if value, ok := _c.mutation.Description(); ok {
 		_spec.SetField(achievement.FieldDescription, field.TypeString, value)
 		_node.Description = value
 	}
-	if value, ok := ac.mutation.Rarity(); ok {
+	if value, ok := _c.mutation.Rarity(); ok {
 		_spec.SetField(achievement.FieldRarity, field.TypeString, value)
 		_node.Rarity = value
 	}
-	if value, ok := ac.mutation.UnlockedAt(); ok {
+	if value, ok := _c.mutation.UnlockedAt(); ok {
 		_spec.SetField(achievement.FieldUnlockedAt, field.TypeTime, value)
 		_node.UnlockedAt = value
 	}
-	if nodes := ac.mutation.UserIDs(); len(nodes) > 0 {
+	if nodes := _c.mutation.UserIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: false,
@@ -203,10 +203,10 @@ func (ac *AchievementCreate) createSpec() (*Achievement, *sqlgraph.CreateSpec) {
 //			SetName(v+v).
 //		}).
 //		Exec(ctx)
-func (ac *AchievementCreate) OnConflict(opts ...sql.ConflictOption) *AchievementUpsertOne {
-	ac.conflict = opts
+func (_c *AchievementCreate) OnConflict(opts ...sql.ConflictOption) *AchievementUpsertOne {
+	_c.conflict = opts
 	return &AchievementUpsertOne{
-		create: ac,
+		create: _c,
 	}
 }
 
@@ -216,10 +216,10 @@ func (ac *AchievementCreate) OnConflict(opts ...sql.ConflictOption) *Achievement
 //	client.Achievement.Create().
 //		OnConflict(sql.ConflictColumns(columns...)).
 //		Exec(ctx)
-func (ac *AchievementCreate) OnConflictColumns(columns ...string) *AchievementUpsertOne {
-	ac.conflict = append(ac.conflict, sql.ConflictColumns(columns...))
+func (_c *AchievementCreate) OnConflictColumns(columns ...string) *AchievementUpsertOne {
+	_c.conflict = append(_c.conflict, sql.ConflictColumns(columns...))
 	return &AchievementUpsertOne{
-		create: ac,
+		create: _c,
 	}
 }
 
@@ -422,16 +422,16 @@ type AchievementCreateBulk struct {
 }
 
 // Save creates the Achievement entities in the database.
-func (acb *AchievementCreateBulk) Save(ctx context.Context) ([]*Achievement, error) {
-	if acb.err != nil {
-		return nil, acb.err
+func (_c *AchievementCreateBulk) Save(ctx context.Context) ([]*Achievement, error) {
+	if _c.err != nil {
+		return nil, _c.err
 	}
-	specs := make([]*sqlgraph.CreateSpec, len(acb.builders))
-	nodes := make([]*Achievement, len(acb.builders))
-	mutators := make([]Mutator, len(acb.builders))
-	for i := range acb.builders {
+	specs := make([]*sqlgraph.CreateSpec, len(_c.builders))
+	nodes := make([]*Achievement, len(_c.builders))
+	mutators := make([]Mutator, len(_c.builders))
+	for i := range _c.builders {
 		func(i int, root context.Context) {
-			builder := acb.builders[i]
+			builder := _c.builders[i]
 			builder.defaults()
 			var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
 				mutation, ok := m.(*AchievementMutation)
@@ -445,12 +445,12 @@ func (acb *AchievementCreateBulk) Save(ctx context.Context) ([]*Achievement, err
 				var err error
 				nodes[i], specs[i] = builder.createSpec()
 				if i < len(mutators)-1 {
-					_, err = mutators[i+1].Mutate(root, acb.builders[i+1].mutation)
+					_, err = mutators[i+1].Mutate(root, _c.builders[i+1].mutation)
 				} else {
 					spec := &sqlgraph.BatchCreateSpec{Nodes: specs}
-					spec.OnConflict = acb.conflict
+					spec.OnConflict = _c.conflict
 					// Invoke the actual operation on the latest mutation in the chain.
-					if err = sqlgraph.BatchCreate(ctx, acb.driver, spec); err != nil {
+					if err = sqlgraph.BatchCreate(ctx, _c.driver, spec); err != nil {
 						if sqlgraph.IsConstraintError(err) {
 							err = &ConstraintError{msg: err.Error(), wrap: err}
 						}
@@ -474,7 +474,7 @@ func (acb *AchievementCreateBulk) Save(ctx context.Context) ([]*Achievement, err
 		}(i, ctx)
 	}
 	if len(mutators) > 0 {
-		if _, err := mutators[0].Mutate(ctx, acb.builders[0].mutation); err != nil {
+		if _, err := mutators[0].Mutate(ctx, _c.builders[0].mutation); err != nil {
 			return nil, err
 		}
 	}
@@ -482,8 +482,8 @@ func (acb *AchievementCreateBulk) Save(ctx context.Context) ([]*Achievement, err
 }
 
 // SaveX is like Save, but panics if an error occurs.
-func (acb *AchievementCreateBulk) SaveX(ctx context.Context) []*Achievement {
-	v, err := acb.Save(ctx)
+func (_c *AchievementCreateBulk) SaveX(ctx context.Context) []*Achievement {
+	v, err := _c.Save(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -491,14 +491,14 @@ func (acb *AchievementCreateBulk) SaveX(ctx context.Context) []*Achievement {
 }
 
 // Exec executes the query.
-func (acb *AchievementCreateBulk) Exec(ctx context.Context) error {
-	_, err := acb.Save(ctx)
+func (_c *AchievementCreateBulk) Exec(ctx context.Context) error {
+	_, err := _c.Save(ctx)
 	return err
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (acb *AchievementCreateBulk) ExecX(ctx context.Context) {
-	if err := acb.Exec(ctx); err != nil {
+func (_c *AchievementCreateBulk) ExecX(ctx context.Context) {
+	if err := _c.Exec(ctx); err != nil {
 		panic(err)
 	}
 }
@@ -518,10 +518,10 @@ func (acb *AchievementCreateBulk) ExecX(ctx context.Context) {
 //			SetName(v+v).
 //		}).
 //		Exec(ctx)
-func (acb *AchievementCreateBulk) OnConflict(opts ...sql.ConflictOption) *AchievementUpsertBulk {
-	acb.conflict = opts
+func (_c *AchievementCreateBulk) OnConflict(opts ...sql.ConflictOption) *AchievementUpsertBulk {
+	_c.conflict = opts
 	return &AchievementUpsertBulk{
-		create: acb,
+		create: _c,
 	}
 }
 
@@ -531,10 +531,10 @@ func (acb *AchievementCreateBulk) OnConflict(opts ...sql.ConflictOption) *Achiev
 //	client.Achievement.Create().
 //		OnConflict(sql.ConflictColumns(columns...)).
 //		Exec(ctx)
-func (acb *AchievementCreateBulk) OnConflictColumns(columns ...string) *AchievementUpsertBulk {
-	acb.conflict = append(acb.conflict, sql.ConflictColumns(columns...))
+func (_c *AchievementCreateBulk) OnConflictColumns(columns ...string) *AchievementUpsertBulk {
+	_c.conflict = append(_c.conflict, sql.ConflictColumns(columns...))
 	return &AchievementUpsertBulk{
-		create: acb,
+		create: _c,
 	}
 }
 

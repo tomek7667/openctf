@@ -25,267 +25,267 @@ type ContestUpdate struct {
 }
 
 // Where appends a list predicates to the ContestUpdate builder.
-func (cu *ContestUpdate) Where(ps ...predicate.Contest) *ContestUpdate {
-	cu.mutation.Where(ps...)
-	return cu
+func (_u *ContestUpdate) Where(ps ...predicate.Contest) *ContestUpdate {
+	_u.mutation.Where(ps...)
+	return _u
 }
 
 // SetName sets the "name" field.
-func (cu *ContestUpdate) SetName(s string) *ContestUpdate {
-	cu.mutation.SetName(s)
-	return cu
+func (_u *ContestUpdate) SetName(v string) *ContestUpdate {
+	_u.mutation.SetName(v)
+	return _u
 }
 
 // SetNillableName sets the "name" field if the given value is not nil.
-func (cu *ContestUpdate) SetNillableName(s *string) *ContestUpdate {
-	if s != nil {
-		cu.SetName(*s)
+func (_u *ContestUpdate) SetNillableName(v *string) *ContestUpdate {
+	if v != nil {
+		_u.SetName(*v)
 	}
-	return cu
+	return _u
 }
 
 // SetDescription sets the "description" field.
-func (cu *ContestUpdate) SetDescription(s string) *ContestUpdate {
-	cu.mutation.SetDescription(s)
-	return cu
+func (_u *ContestUpdate) SetDescription(v string) *ContestUpdate {
+	_u.mutation.SetDescription(v)
+	return _u
 }
 
 // SetNillableDescription sets the "description" field if the given value is not nil.
-func (cu *ContestUpdate) SetNillableDescription(s *string) *ContestUpdate {
-	if s != nil {
-		cu.SetDescription(*s)
+func (_u *ContestUpdate) SetNillableDescription(v *string) *ContestUpdate {
+	if v != nil {
+		_u.SetDescription(*v)
 	}
-	return cu
+	return _u
 }
 
 // ClearDescription clears the value of the "description" field.
-func (cu *ContestUpdate) ClearDescription() *ContestUpdate {
-	cu.mutation.ClearDescription()
-	return cu
+func (_u *ContestUpdate) ClearDescription() *ContestUpdate {
+	_u.mutation.ClearDescription()
+	return _u
 }
 
 // SetRules sets the "rules" field.
-func (cu *ContestUpdate) SetRules(s string) *ContestUpdate {
-	cu.mutation.SetRules(s)
-	return cu
+func (_u *ContestUpdate) SetRules(v string) *ContestUpdate {
+	_u.mutation.SetRules(v)
+	return _u
 }
 
 // SetNillableRules sets the "rules" field if the given value is not nil.
-func (cu *ContestUpdate) SetNillableRules(s *string) *ContestUpdate {
-	if s != nil {
-		cu.SetRules(*s)
+func (_u *ContestUpdate) SetNillableRules(v *string) *ContestUpdate {
+	if v != nil {
+		_u.SetRules(*v)
 	}
-	return cu
+	return _u
 }
 
 // ClearRules clears the value of the "rules" field.
-func (cu *ContestUpdate) ClearRules() *ContestUpdate {
-	cu.mutation.ClearRules()
-	return cu
+func (_u *ContestUpdate) ClearRules() *ContestUpdate {
+	_u.mutation.ClearRules()
+	return _u
 }
 
 // SetPrizes sets the "prizes" field.
-func (cu *ContestUpdate) SetPrizes(s string) *ContestUpdate {
-	cu.mutation.SetPrizes(s)
-	return cu
+func (_u *ContestUpdate) SetPrizes(v string) *ContestUpdate {
+	_u.mutation.SetPrizes(v)
+	return _u
 }
 
 // SetNillablePrizes sets the "prizes" field if the given value is not nil.
-func (cu *ContestUpdate) SetNillablePrizes(s *string) *ContestUpdate {
-	if s != nil {
-		cu.SetPrizes(*s)
+func (_u *ContestUpdate) SetNillablePrizes(v *string) *ContestUpdate {
+	if v != nil {
+		_u.SetPrizes(*v)
 	}
-	return cu
+	return _u
 }
 
 // ClearPrizes clears the value of the "prizes" field.
-func (cu *ContestUpdate) ClearPrizes() *ContestUpdate {
-	cu.mutation.ClearPrizes()
-	return cu
+func (_u *ContestUpdate) ClearPrizes() *ContestUpdate {
+	_u.mutation.ClearPrizes()
+	return _u
 }
 
 // SetStart sets the "start" field.
-func (cu *ContestUpdate) SetStart(t time.Time) *ContestUpdate {
-	cu.mutation.SetStart(t)
-	return cu
+func (_u *ContestUpdate) SetStart(v time.Time) *ContestUpdate {
+	_u.mutation.SetStart(v)
+	return _u
 }
 
 // SetNillableStart sets the "start" field if the given value is not nil.
-func (cu *ContestUpdate) SetNillableStart(t *time.Time) *ContestUpdate {
-	if t != nil {
-		cu.SetStart(*t)
+func (_u *ContestUpdate) SetNillableStart(v *time.Time) *ContestUpdate {
+	if v != nil {
+		_u.SetStart(*v)
 	}
-	return cu
+	return _u
 }
 
 // SetEnd sets the "end" field.
-func (cu *ContestUpdate) SetEnd(t time.Time) *ContestUpdate {
-	cu.mutation.SetEnd(t)
-	return cu
+func (_u *ContestUpdate) SetEnd(v time.Time) *ContestUpdate {
+	_u.mutation.SetEnd(v)
+	return _u
 }
 
 // SetNillableEnd sets the "end" field if the given value is not nil.
-func (cu *ContestUpdate) SetNillableEnd(t *time.Time) *ContestUpdate {
-	if t != nil {
-		cu.SetEnd(*t)
+func (_u *ContestUpdate) SetNillableEnd(v *time.Time) *ContestUpdate {
+	if v != nil {
+		_u.SetEnd(*v)
 	}
-	return cu
+	return _u
 }
 
 // SetURL sets the "url" field.
-func (cu *ContestUpdate) SetURL(s string) *ContestUpdate {
-	cu.mutation.SetURL(s)
-	return cu
+func (_u *ContestUpdate) SetURL(v string) *ContestUpdate {
+	_u.mutation.SetURL(v)
+	return _u
 }
 
 // SetNillableURL sets the "url" field if the given value is not nil.
-func (cu *ContestUpdate) SetNillableURL(s *string) *ContestUpdate {
-	if s != nil {
-		cu.SetURL(*s)
+func (_u *ContestUpdate) SetNillableURL(v *string) *ContestUpdate {
+	if v != nil {
+		_u.SetURL(*v)
 	}
-	return cu
+	return _u
 }
 
 // ClearURL clears the value of the "url" field.
-func (cu *ContestUpdate) ClearURL() *ContestUpdate {
-	cu.mutation.ClearURL()
-	return cu
+func (_u *ContestUpdate) ClearURL() *ContestUpdate {
+	_u.mutation.ClearURL()
+	return _u
 }
 
 // SetCtftimeID sets the "ctftime_id" field.
-func (cu *ContestUpdate) SetCtftimeID(i int) *ContestUpdate {
-	cu.mutation.ResetCtftimeID()
-	cu.mutation.SetCtftimeID(i)
-	return cu
+func (_u *ContestUpdate) SetCtftimeID(v int) *ContestUpdate {
+	_u.mutation.ResetCtftimeID()
+	_u.mutation.SetCtftimeID(v)
+	return _u
 }
 
 // SetNillableCtftimeID sets the "ctftime_id" field if the given value is not nil.
-func (cu *ContestUpdate) SetNillableCtftimeID(i *int) *ContestUpdate {
-	if i != nil {
-		cu.SetCtftimeID(*i)
+func (_u *ContestUpdate) SetNillableCtftimeID(v *int) *ContestUpdate {
+	if v != nil {
+		_u.SetCtftimeID(*v)
 	}
-	return cu
+	return _u
 }
 
-// AddCtftimeID adds i to the "ctftime_id" field.
-func (cu *ContestUpdate) AddCtftimeID(i int) *ContestUpdate {
-	cu.mutation.AddCtftimeID(i)
-	return cu
+// AddCtftimeID adds value to the "ctftime_id" field.
+func (_u *ContestUpdate) AddCtftimeID(v int) *ContestUpdate {
+	_u.mutation.AddCtftimeID(v)
+	return _u
 }
 
 // ClearCtftimeID clears the value of the "ctftime_id" field.
-func (cu *ContestUpdate) ClearCtftimeID() *ContestUpdate {
-	cu.mutation.ClearCtftimeID()
-	return cu
+func (_u *ContestUpdate) ClearCtftimeID() *ContestUpdate {
+	_u.mutation.ClearCtftimeID()
+	return _u
 }
 
 // SetAssignedWeightPoints sets the "assigned_weight_points" field.
-func (cu *ContestUpdate) SetAssignedWeightPoints(i int) *ContestUpdate {
-	cu.mutation.ResetAssignedWeightPoints()
-	cu.mutation.SetAssignedWeightPoints(i)
-	return cu
+func (_u *ContestUpdate) SetAssignedWeightPoints(v int) *ContestUpdate {
+	_u.mutation.ResetAssignedWeightPoints()
+	_u.mutation.SetAssignedWeightPoints(v)
+	return _u
 }
 
 // SetNillableAssignedWeightPoints sets the "assigned_weight_points" field if the given value is not nil.
-func (cu *ContestUpdate) SetNillableAssignedWeightPoints(i *int) *ContestUpdate {
-	if i != nil {
-		cu.SetAssignedWeightPoints(*i)
+func (_u *ContestUpdate) SetNillableAssignedWeightPoints(v *int) *ContestUpdate {
+	if v != nil {
+		_u.SetAssignedWeightPoints(*v)
 	}
-	return cu
+	return _u
 }
 
-// AddAssignedWeightPoints adds i to the "assigned_weight_points" field.
-func (cu *ContestUpdate) AddAssignedWeightPoints(i int) *ContestUpdate {
-	cu.mutation.AddAssignedWeightPoints(i)
-	return cu
+// AddAssignedWeightPoints adds value to the "assigned_weight_points" field.
+func (_u *ContestUpdate) AddAssignedWeightPoints(v int) *ContestUpdate {
+	_u.mutation.AddAssignedWeightPoints(v)
+	return _u
 }
 
 // SetLogo sets the "logo" field.
-func (cu *ContestUpdate) SetLogo(b []byte) *ContestUpdate {
-	cu.mutation.SetLogo(b)
-	return cu
+func (_u *ContestUpdate) SetLogo(v []byte) *ContestUpdate {
+	_u.mutation.SetLogo(v)
+	return _u
 }
 
 // ClearLogo clears the value of the "logo" field.
-func (cu *ContestUpdate) ClearLogo() *ContestUpdate {
-	cu.mutation.ClearLogo()
-	return cu
+func (_u *ContestUpdate) ClearLogo() *ContestUpdate {
+	_u.mutation.ClearLogo()
+	return _u
 }
 
 // SetOrganizersID sets the "organizers" edge to the Team entity by ID.
-func (cu *ContestUpdate) SetOrganizersID(id int) *ContestUpdate {
-	cu.mutation.SetOrganizersID(id)
-	return cu
+func (_u *ContestUpdate) SetOrganizersID(id int) *ContestUpdate {
+	_u.mutation.SetOrganizersID(id)
+	return _u
 }
 
 // SetNillableOrganizersID sets the "organizers" edge to the Team entity by ID if the given value is not nil.
-func (cu *ContestUpdate) SetNillableOrganizersID(id *int) *ContestUpdate {
+func (_u *ContestUpdate) SetNillableOrganizersID(id *int) *ContestUpdate {
 	if id != nil {
-		cu = cu.SetOrganizersID(*id)
+		_u = _u.SetOrganizersID(*id)
 	}
-	return cu
+	return _u
 }
 
 // SetOrganizers sets the "organizers" edge to the Team entity.
-func (cu *ContestUpdate) SetOrganizers(t *Team) *ContestUpdate {
-	return cu.SetOrganizersID(t.ID)
+func (_u *ContestUpdate) SetOrganizers(v *Team) *ContestUpdate {
+	return _u.SetOrganizersID(v.ID)
 }
 
 // AddPlaceIDs adds the "places" edge to the Place entity by IDs.
-func (cu *ContestUpdate) AddPlaceIDs(ids ...int) *ContestUpdate {
-	cu.mutation.AddPlaceIDs(ids...)
-	return cu
+func (_u *ContestUpdate) AddPlaceIDs(ids ...int) *ContestUpdate {
+	_u.mutation.AddPlaceIDs(ids...)
+	return _u
 }
 
 // AddPlaces adds the "places" edges to the Place entity.
-func (cu *ContestUpdate) AddPlaces(p ...*Place) *ContestUpdate {
-	ids := make([]int, len(p))
-	for i := range p {
-		ids[i] = p[i].ID
+func (_u *ContestUpdate) AddPlaces(v ...*Place) *ContestUpdate {
+	ids := make([]int, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
 	}
-	return cu.AddPlaceIDs(ids...)
+	return _u.AddPlaceIDs(ids...)
 }
 
 // Mutation returns the ContestMutation object of the builder.
-func (cu *ContestUpdate) Mutation() *ContestMutation {
-	return cu.mutation
+func (_u *ContestUpdate) Mutation() *ContestMutation {
+	return _u.mutation
 }
 
 // ClearOrganizers clears the "organizers" edge to the Team entity.
-func (cu *ContestUpdate) ClearOrganizers() *ContestUpdate {
-	cu.mutation.ClearOrganizers()
-	return cu
+func (_u *ContestUpdate) ClearOrganizers() *ContestUpdate {
+	_u.mutation.ClearOrganizers()
+	return _u
 }
 
 // ClearPlaces clears all "places" edges to the Place entity.
-func (cu *ContestUpdate) ClearPlaces() *ContestUpdate {
-	cu.mutation.ClearPlaces()
-	return cu
+func (_u *ContestUpdate) ClearPlaces() *ContestUpdate {
+	_u.mutation.ClearPlaces()
+	return _u
 }
 
 // RemovePlaceIDs removes the "places" edge to Place entities by IDs.
-func (cu *ContestUpdate) RemovePlaceIDs(ids ...int) *ContestUpdate {
-	cu.mutation.RemovePlaceIDs(ids...)
-	return cu
+func (_u *ContestUpdate) RemovePlaceIDs(ids ...int) *ContestUpdate {
+	_u.mutation.RemovePlaceIDs(ids...)
+	return _u
 }
 
 // RemovePlaces removes "places" edges to Place entities.
-func (cu *ContestUpdate) RemovePlaces(p ...*Place) *ContestUpdate {
-	ids := make([]int, len(p))
-	for i := range p {
-		ids[i] = p[i].ID
+func (_u *ContestUpdate) RemovePlaces(v ...*Place) *ContestUpdate {
+	ids := make([]int, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
 	}
-	return cu.RemovePlaceIDs(ids...)
+	return _u.RemovePlaceIDs(ids...)
 }
 
 // Save executes the query and returns the number of nodes affected by the update operation.
-func (cu *ContestUpdate) Save(ctx context.Context) (int, error) {
-	return withHooks(ctx, cu.sqlSave, cu.mutation, cu.hooks)
+func (_u *ContestUpdate) Save(ctx context.Context) (int, error) {
+	return withHooks(ctx, _u.sqlSave, _u.mutation, _u.hooks)
 }
 
 // SaveX is like Save, but panics if an error occurs.
-func (cu *ContestUpdate) SaveX(ctx context.Context) int {
-	affected, err := cu.Save(ctx)
+func (_u *ContestUpdate) SaveX(ctx context.Context) int {
+	affected, err := _u.Save(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -293,31 +293,31 @@ func (cu *ContestUpdate) SaveX(ctx context.Context) int {
 }
 
 // Exec executes the query.
-func (cu *ContestUpdate) Exec(ctx context.Context) error {
-	_, err := cu.Save(ctx)
+func (_u *ContestUpdate) Exec(ctx context.Context) error {
+	_, err := _u.Save(ctx)
 	return err
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (cu *ContestUpdate) ExecX(ctx context.Context) {
-	if err := cu.Exec(ctx); err != nil {
+func (_u *ContestUpdate) ExecX(ctx context.Context) {
+	if err := _u.Exec(ctx); err != nil {
 		panic(err)
 	}
 }
 
 // check runs all checks and user-defined validators on the builder.
-func (cu *ContestUpdate) check() error {
-	if v, ok := cu.mutation.Name(); ok {
+func (_u *ContestUpdate) check() error {
+	if v, ok := _u.mutation.Name(); ok {
 		if err := contest.NameValidator(v); err != nil {
 			return &ValidationError{Name: "name", err: fmt.Errorf(`ent: validator failed for field "Contest.name": %w`, err)}
 		}
 	}
-	if v, ok := cu.mutation.URL(); ok {
+	if v, ok := _u.mutation.URL(); ok {
 		if err := contest.URLValidator(v); err != nil {
 			return &ValidationError{Name: "url", err: fmt.Errorf(`ent: validator failed for field "Contest.url": %w`, err)}
 		}
 	}
-	if v, ok := cu.mutation.Logo(); ok {
+	if v, ok := _u.mutation.Logo(); ok {
 		if err := contest.LogoValidator(v); err != nil {
 			return &ValidationError{Name: "logo", err: fmt.Errorf(`ent: validator failed for field "Contest.logo": %w`, err)}
 		}
@@ -325,73 +325,73 @@ func (cu *ContestUpdate) check() error {
 	return nil
 }
 
-func (cu *ContestUpdate) sqlSave(ctx context.Context) (n int, err error) {
-	if err := cu.check(); err != nil {
-		return n, err
+func (_u *ContestUpdate) sqlSave(ctx context.Context) (_node int, err error) {
+	if err := _u.check(); err != nil {
+		return _node, err
 	}
 	_spec := sqlgraph.NewUpdateSpec(contest.Table, contest.Columns, sqlgraph.NewFieldSpec(contest.FieldID, field.TypeInt))
-	if ps := cu.mutation.predicates; len(ps) > 0 {
+	if ps := _u.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
 			for i := range ps {
 				ps[i](selector)
 			}
 		}
 	}
-	if value, ok := cu.mutation.Name(); ok {
+	if value, ok := _u.mutation.Name(); ok {
 		_spec.SetField(contest.FieldName, field.TypeString, value)
 	}
-	if value, ok := cu.mutation.Description(); ok {
+	if value, ok := _u.mutation.Description(); ok {
 		_spec.SetField(contest.FieldDescription, field.TypeString, value)
 	}
-	if cu.mutation.DescriptionCleared() {
+	if _u.mutation.DescriptionCleared() {
 		_spec.ClearField(contest.FieldDescription, field.TypeString)
 	}
-	if value, ok := cu.mutation.Rules(); ok {
+	if value, ok := _u.mutation.Rules(); ok {
 		_spec.SetField(contest.FieldRules, field.TypeString, value)
 	}
-	if cu.mutation.RulesCleared() {
+	if _u.mutation.RulesCleared() {
 		_spec.ClearField(contest.FieldRules, field.TypeString)
 	}
-	if value, ok := cu.mutation.Prizes(); ok {
+	if value, ok := _u.mutation.Prizes(); ok {
 		_spec.SetField(contest.FieldPrizes, field.TypeString, value)
 	}
-	if cu.mutation.PrizesCleared() {
+	if _u.mutation.PrizesCleared() {
 		_spec.ClearField(contest.FieldPrizes, field.TypeString)
 	}
-	if value, ok := cu.mutation.Start(); ok {
+	if value, ok := _u.mutation.Start(); ok {
 		_spec.SetField(contest.FieldStart, field.TypeTime, value)
 	}
-	if value, ok := cu.mutation.End(); ok {
+	if value, ok := _u.mutation.End(); ok {
 		_spec.SetField(contest.FieldEnd, field.TypeTime, value)
 	}
-	if value, ok := cu.mutation.URL(); ok {
+	if value, ok := _u.mutation.URL(); ok {
 		_spec.SetField(contest.FieldURL, field.TypeString, value)
 	}
-	if cu.mutation.URLCleared() {
+	if _u.mutation.URLCleared() {
 		_spec.ClearField(contest.FieldURL, field.TypeString)
 	}
-	if value, ok := cu.mutation.CtftimeID(); ok {
+	if value, ok := _u.mutation.CtftimeID(); ok {
 		_spec.SetField(contest.FieldCtftimeID, field.TypeInt, value)
 	}
-	if value, ok := cu.mutation.AddedCtftimeID(); ok {
+	if value, ok := _u.mutation.AddedCtftimeID(); ok {
 		_spec.AddField(contest.FieldCtftimeID, field.TypeInt, value)
 	}
-	if cu.mutation.CtftimeIDCleared() {
+	if _u.mutation.CtftimeIDCleared() {
 		_spec.ClearField(contest.FieldCtftimeID, field.TypeInt)
 	}
-	if value, ok := cu.mutation.AssignedWeightPoints(); ok {
+	if value, ok := _u.mutation.AssignedWeightPoints(); ok {
 		_spec.SetField(contest.FieldAssignedWeightPoints, field.TypeInt, value)
 	}
-	if value, ok := cu.mutation.AddedAssignedWeightPoints(); ok {
+	if value, ok := _u.mutation.AddedAssignedWeightPoints(); ok {
 		_spec.AddField(contest.FieldAssignedWeightPoints, field.TypeInt, value)
 	}
-	if value, ok := cu.mutation.Logo(); ok {
+	if value, ok := _u.mutation.Logo(); ok {
 		_spec.SetField(contest.FieldLogo, field.TypeBytes, value)
 	}
-	if cu.mutation.LogoCleared() {
+	if _u.mutation.LogoCleared() {
 		_spec.ClearField(contest.FieldLogo, field.TypeBytes)
 	}
-	if cu.mutation.OrganizersCleared() {
+	if _u.mutation.OrganizersCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: false,
@@ -404,7 +404,7 @@ func (cu *ContestUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := cu.mutation.OrganizersIDs(); len(nodes) > 0 {
+	if nodes := _u.mutation.OrganizersIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: false,
@@ -420,7 +420,7 @@ func (cu *ContestUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	if cu.mutation.PlacesCleared() {
+	if _u.mutation.PlacesCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
@@ -433,7 +433,7 @@ func (cu *ContestUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := cu.mutation.RemovedPlacesIDs(); len(nodes) > 0 && !cu.mutation.PlacesCleared() {
+	if nodes := _u.mutation.RemovedPlacesIDs(); len(nodes) > 0 && !_u.mutation.PlacesCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
@@ -449,7 +449,7 @@ func (cu *ContestUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := cu.mutation.PlacesIDs(); len(nodes) > 0 {
+	if nodes := _u.mutation.PlacesIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
@@ -465,7 +465,7 @@ func (cu *ContestUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	if n, err = sqlgraph.UpdateNodes(ctx, cu.driver, _spec); err != nil {
+	if _node, err = sqlgraph.UpdateNodes(ctx, _u.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{contest.Label}
 		} else if sqlgraph.IsConstraintError(err) {
@@ -473,8 +473,8 @@ func (cu *ContestUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		return 0, err
 	}
-	cu.mutation.done = true
-	return n, nil
+	_u.mutation.done = true
+	return _node, nil
 }
 
 // ContestUpdateOne is the builder for updating a single Contest entity.
@@ -486,274 +486,274 @@ type ContestUpdateOne struct {
 }
 
 // SetName sets the "name" field.
-func (cuo *ContestUpdateOne) SetName(s string) *ContestUpdateOne {
-	cuo.mutation.SetName(s)
-	return cuo
+func (_u *ContestUpdateOne) SetName(v string) *ContestUpdateOne {
+	_u.mutation.SetName(v)
+	return _u
 }
 
 // SetNillableName sets the "name" field if the given value is not nil.
-func (cuo *ContestUpdateOne) SetNillableName(s *string) *ContestUpdateOne {
-	if s != nil {
-		cuo.SetName(*s)
+func (_u *ContestUpdateOne) SetNillableName(v *string) *ContestUpdateOne {
+	if v != nil {
+		_u.SetName(*v)
 	}
-	return cuo
+	return _u
 }
 
 // SetDescription sets the "description" field.
-func (cuo *ContestUpdateOne) SetDescription(s string) *ContestUpdateOne {
-	cuo.mutation.SetDescription(s)
-	return cuo
+func (_u *ContestUpdateOne) SetDescription(v string) *ContestUpdateOne {
+	_u.mutation.SetDescription(v)
+	return _u
 }
 
 // SetNillableDescription sets the "description" field if the given value is not nil.
-func (cuo *ContestUpdateOne) SetNillableDescription(s *string) *ContestUpdateOne {
-	if s != nil {
-		cuo.SetDescription(*s)
+func (_u *ContestUpdateOne) SetNillableDescription(v *string) *ContestUpdateOne {
+	if v != nil {
+		_u.SetDescription(*v)
 	}
-	return cuo
+	return _u
 }
 
 // ClearDescription clears the value of the "description" field.
-func (cuo *ContestUpdateOne) ClearDescription() *ContestUpdateOne {
-	cuo.mutation.ClearDescription()
-	return cuo
+func (_u *ContestUpdateOne) ClearDescription() *ContestUpdateOne {
+	_u.mutation.ClearDescription()
+	return _u
 }
 
 // SetRules sets the "rules" field.
-func (cuo *ContestUpdateOne) SetRules(s string) *ContestUpdateOne {
-	cuo.mutation.SetRules(s)
-	return cuo
+func (_u *ContestUpdateOne) SetRules(v string) *ContestUpdateOne {
+	_u.mutation.SetRules(v)
+	return _u
 }
 
 // SetNillableRules sets the "rules" field if the given value is not nil.
-func (cuo *ContestUpdateOne) SetNillableRules(s *string) *ContestUpdateOne {
-	if s != nil {
-		cuo.SetRules(*s)
+func (_u *ContestUpdateOne) SetNillableRules(v *string) *ContestUpdateOne {
+	if v != nil {
+		_u.SetRules(*v)
 	}
-	return cuo
+	return _u
 }
 
 // ClearRules clears the value of the "rules" field.
-func (cuo *ContestUpdateOne) ClearRules() *ContestUpdateOne {
-	cuo.mutation.ClearRules()
-	return cuo
+func (_u *ContestUpdateOne) ClearRules() *ContestUpdateOne {
+	_u.mutation.ClearRules()
+	return _u
 }
 
 // SetPrizes sets the "prizes" field.
-func (cuo *ContestUpdateOne) SetPrizes(s string) *ContestUpdateOne {
-	cuo.mutation.SetPrizes(s)
-	return cuo
+func (_u *ContestUpdateOne) SetPrizes(v string) *ContestUpdateOne {
+	_u.mutation.SetPrizes(v)
+	return _u
 }
 
 // SetNillablePrizes sets the "prizes" field if the given value is not nil.
-func (cuo *ContestUpdateOne) SetNillablePrizes(s *string) *ContestUpdateOne {
-	if s != nil {
-		cuo.SetPrizes(*s)
+func (_u *ContestUpdateOne) SetNillablePrizes(v *string) *ContestUpdateOne {
+	if v != nil {
+		_u.SetPrizes(*v)
 	}
-	return cuo
+	return _u
 }
 
 // ClearPrizes clears the value of the "prizes" field.
-func (cuo *ContestUpdateOne) ClearPrizes() *ContestUpdateOne {
-	cuo.mutation.ClearPrizes()
-	return cuo
+func (_u *ContestUpdateOne) ClearPrizes() *ContestUpdateOne {
+	_u.mutation.ClearPrizes()
+	return _u
 }
 
 // SetStart sets the "start" field.
-func (cuo *ContestUpdateOne) SetStart(t time.Time) *ContestUpdateOne {
-	cuo.mutation.SetStart(t)
-	return cuo
+func (_u *ContestUpdateOne) SetStart(v time.Time) *ContestUpdateOne {
+	_u.mutation.SetStart(v)
+	return _u
 }
 
 // SetNillableStart sets the "start" field if the given value is not nil.
-func (cuo *ContestUpdateOne) SetNillableStart(t *time.Time) *ContestUpdateOne {
-	if t != nil {
-		cuo.SetStart(*t)
+func (_u *ContestUpdateOne) SetNillableStart(v *time.Time) *ContestUpdateOne {
+	if v != nil {
+		_u.SetStart(*v)
 	}
-	return cuo
+	return _u
 }
 
 // SetEnd sets the "end" field.
-func (cuo *ContestUpdateOne) SetEnd(t time.Time) *ContestUpdateOne {
-	cuo.mutation.SetEnd(t)
-	return cuo
+func (_u *ContestUpdateOne) SetEnd(v time.Time) *ContestUpdateOne {
+	_u.mutation.SetEnd(v)
+	return _u
 }
 
 // SetNillableEnd sets the "end" field if the given value is not nil.
-func (cuo *ContestUpdateOne) SetNillableEnd(t *time.Time) *ContestUpdateOne {
-	if t != nil {
-		cuo.SetEnd(*t)
+func (_u *ContestUpdateOne) SetNillableEnd(v *time.Time) *ContestUpdateOne {
+	if v != nil {
+		_u.SetEnd(*v)
 	}
-	return cuo
+	return _u
 }
 
 // SetURL sets the "url" field.
-func (cuo *ContestUpdateOne) SetURL(s string) *ContestUpdateOne {
-	cuo.mutation.SetURL(s)
-	return cuo
+func (_u *ContestUpdateOne) SetURL(v string) *ContestUpdateOne {
+	_u.mutation.SetURL(v)
+	return _u
 }
 
 // SetNillableURL sets the "url" field if the given value is not nil.
-func (cuo *ContestUpdateOne) SetNillableURL(s *string) *ContestUpdateOne {
-	if s != nil {
-		cuo.SetURL(*s)
+func (_u *ContestUpdateOne) SetNillableURL(v *string) *ContestUpdateOne {
+	if v != nil {
+		_u.SetURL(*v)
 	}
-	return cuo
+	return _u
 }
 
 // ClearURL clears the value of the "url" field.
-func (cuo *ContestUpdateOne) ClearURL() *ContestUpdateOne {
-	cuo.mutation.ClearURL()
-	return cuo
+func (_u *ContestUpdateOne) ClearURL() *ContestUpdateOne {
+	_u.mutation.ClearURL()
+	return _u
 }
 
 // SetCtftimeID sets the "ctftime_id" field.
-func (cuo *ContestUpdateOne) SetCtftimeID(i int) *ContestUpdateOne {
-	cuo.mutation.ResetCtftimeID()
-	cuo.mutation.SetCtftimeID(i)
-	return cuo
+func (_u *ContestUpdateOne) SetCtftimeID(v int) *ContestUpdateOne {
+	_u.mutation.ResetCtftimeID()
+	_u.mutation.SetCtftimeID(v)
+	return _u
 }
 
 // SetNillableCtftimeID sets the "ctftime_id" field if the given value is not nil.
-func (cuo *ContestUpdateOne) SetNillableCtftimeID(i *int) *ContestUpdateOne {
-	if i != nil {
-		cuo.SetCtftimeID(*i)
+func (_u *ContestUpdateOne) SetNillableCtftimeID(v *int) *ContestUpdateOne {
+	if v != nil {
+		_u.SetCtftimeID(*v)
 	}
-	return cuo
+	return _u
 }
 
-// AddCtftimeID adds i to the "ctftime_id" field.
-func (cuo *ContestUpdateOne) AddCtftimeID(i int) *ContestUpdateOne {
-	cuo.mutation.AddCtftimeID(i)
-	return cuo
+// AddCtftimeID adds value to the "ctftime_id" field.
+func (_u *ContestUpdateOne) AddCtftimeID(v int) *ContestUpdateOne {
+	_u.mutation.AddCtftimeID(v)
+	return _u
 }
 
 // ClearCtftimeID clears the value of the "ctftime_id" field.
-func (cuo *ContestUpdateOne) ClearCtftimeID() *ContestUpdateOne {
-	cuo.mutation.ClearCtftimeID()
-	return cuo
+func (_u *ContestUpdateOne) ClearCtftimeID() *ContestUpdateOne {
+	_u.mutation.ClearCtftimeID()
+	return _u
 }
 
 // SetAssignedWeightPoints sets the "assigned_weight_points" field.
-func (cuo *ContestUpdateOne) SetAssignedWeightPoints(i int) *ContestUpdateOne {
-	cuo.mutation.ResetAssignedWeightPoints()
-	cuo.mutation.SetAssignedWeightPoints(i)
-	return cuo
+func (_u *ContestUpdateOne) SetAssignedWeightPoints(v int) *ContestUpdateOne {
+	_u.mutation.ResetAssignedWeightPoints()
+	_u.mutation.SetAssignedWeightPoints(v)
+	return _u
 }
 
 // SetNillableAssignedWeightPoints sets the "assigned_weight_points" field if the given value is not nil.
-func (cuo *ContestUpdateOne) SetNillableAssignedWeightPoints(i *int) *ContestUpdateOne {
-	if i != nil {
-		cuo.SetAssignedWeightPoints(*i)
+func (_u *ContestUpdateOne) SetNillableAssignedWeightPoints(v *int) *ContestUpdateOne {
+	if v != nil {
+		_u.SetAssignedWeightPoints(*v)
 	}
-	return cuo
+	return _u
 }
 
-// AddAssignedWeightPoints adds i to the "assigned_weight_points" field.
-func (cuo *ContestUpdateOne) AddAssignedWeightPoints(i int) *ContestUpdateOne {
-	cuo.mutation.AddAssignedWeightPoints(i)
-	return cuo
+// AddAssignedWeightPoints adds value to the "assigned_weight_points" field.
+func (_u *ContestUpdateOne) AddAssignedWeightPoints(v int) *ContestUpdateOne {
+	_u.mutation.AddAssignedWeightPoints(v)
+	return _u
 }
 
 // SetLogo sets the "logo" field.
-func (cuo *ContestUpdateOne) SetLogo(b []byte) *ContestUpdateOne {
-	cuo.mutation.SetLogo(b)
-	return cuo
+func (_u *ContestUpdateOne) SetLogo(v []byte) *ContestUpdateOne {
+	_u.mutation.SetLogo(v)
+	return _u
 }
 
 // ClearLogo clears the value of the "logo" field.
-func (cuo *ContestUpdateOne) ClearLogo() *ContestUpdateOne {
-	cuo.mutation.ClearLogo()
-	return cuo
+func (_u *ContestUpdateOne) ClearLogo() *ContestUpdateOne {
+	_u.mutation.ClearLogo()
+	return _u
 }
 
 // SetOrganizersID sets the "organizers" edge to the Team entity by ID.
-func (cuo *ContestUpdateOne) SetOrganizersID(id int) *ContestUpdateOne {
-	cuo.mutation.SetOrganizersID(id)
-	return cuo
+func (_u *ContestUpdateOne) SetOrganizersID(id int) *ContestUpdateOne {
+	_u.mutation.SetOrganizersID(id)
+	return _u
 }
 
 // SetNillableOrganizersID sets the "organizers" edge to the Team entity by ID if the given value is not nil.
-func (cuo *ContestUpdateOne) SetNillableOrganizersID(id *int) *ContestUpdateOne {
+func (_u *ContestUpdateOne) SetNillableOrganizersID(id *int) *ContestUpdateOne {
 	if id != nil {
-		cuo = cuo.SetOrganizersID(*id)
+		_u = _u.SetOrganizersID(*id)
 	}
-	return cuo
+	return _u
 }
 
 // SetOrganizers sets the "organizers" edge to the Team entity.
-func (cuo *ContestUpdateOne) SetOrganizers(t *Team) *ContestUpdateOne {
-	return cuo.SetOrganizersID(t.ID)
+func (_u *ContestUpdateOne) SetOrganizers(v *Team) *ContestUpdateOne {
+	return _u.SetOrganizersID(v.ID)
 }
 
 // AddPlaceIDs adds the "places" edge to the Place entity by IDs.
-func (cuo *ContestUpdateOne) AddPlaceIDs(ids ...int) *ContestUpdateOne {
-	cuo.mutation.AddPlaceIDs(ids...)
-	return cuo
+func (_u *ContestUpdateOne) AddPlaceIDs(ids ...int) *ContestUpdateOne {
+	_u.mutation.AddPlaceIDs(ids...)
+	return _u
 }
 
 // AddPlaces adds the "places" edges to the Place entity.
-func (cuo *ContestUpdateOne) AddPlaces(p ...*Place) *ContestUpdateOne {
-	ids := make([]int, len(p))
-	for i := range p {
-		ids[i] = p[i].ID
+func (_u *ContestUpdateOne) AddPlaces(v ...*Place) *ContestUpdateOne {
+	ids := make([]int, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
 	}
-	return cuo.AddPlaceIDs(ids...)
+	return _u.AddPlaceIDs(ids...)
 }
 
 // Mutation returns the ContestMutation object of the builder.
-func (cuo *ContestUpdateOne) Mutation() *ContestMutation {
-	return cuo.mutation
+func (_u *ContestUpdateOne) Mutation() *ContestMutation {
+	return _u.mutation
 }
 
 // ClearOrganizers clears the "organizers" edge to the Team entity.
-func (cuo *ContestUpdateOne) ClearOrganizers() *ContestUpdateOne {
-	cuo.mutation.ClearOrganizers()
-	return cuo
+func (_u *ContestUpdateOne) ClearOrganizers() *ContestUpdateOne {
+	_u.mutation.ClearOrganizers()
+	return _u
 }
 
 // ClearPlaces clears all "places" edges to the Place entity.
-func (cuo *ContestUpdateOne) ClearPlaces() *ContestUpdateOne {
-	cuo.mutation.ClearPlaces()
-	return cuo
+func (_u *ContestUpdateOne) ClearPlaces() *ContestUpdateOne {
+	_u.mutation.ClearPlaces()
+	return _u
 }
 
 // RemovePlaceIDs removes the "places" edge to Place entities by IDs.
-func (cuo *ContestUpdateOne) RemovePlaceIDs(ids ...int) *ContestUpdateOne {
-	cuo.mutation.RemovePlaceIDs(ids...)
-	return cuo
+func (_u *ContestUpdateOne) RemovePlaceIDs(ids ...int) *ContestUpdateOne {
+	_u.mutation.RemovePlaceIDs(ids...)
+	return _u
 }
 
 // RemovePlaces removes "places" edges to Place entities.
-func (cuo *ContestUpdateOne) RemovePlaces(p ...*Place) *ContestUpdateOne {
-	ids := make([]int, len(p))
-	for i := range p {
-		ids[i] = p[i].ID
+func (_u *ContestUpdateOne) RemovePlaces(v ...*Place) *ContestUpdateOne {
+	ids := make([]int, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
 	}
-	return cuo.RemovePlaceIDs(ids...)
+	return _u.RemovePlaceIDs(ids...)
 }
 
 // Where appends a list predicates to the ContestUpdate builder.
-func (cuo *ContestUpdateOne) Where(ps ...predicate.Contest) *ContestUpdateOne {
-	cuo.mutation.Where(ps...)
-	return cuo
+func (_u *ContestUpdateOne) Where(ps ...predicate.Contest) *ContestUpdateOne {
+	_u.mutation.Where(ps...)
+	return _u
 }
 
 // Select allows selecting one or more fields (columns) of the returned entity.
 // The default is selecting all fields defined in the entity schema.
-func (cuo *ContestUpdateOne) Select(field string, fields ...string) *ContestUpdateOne {
-	cuo.fields = append([]string{field}, fields...)
-	return cuo
+func (_u *ContestUpdateOne) Select(field string, fields ...string) *ContestUpdateOne {
+	_u.fields = append([]string{field}, fields...)
+	return _u
 }
 
 // Save executes the query and returns the updated Contest entity.
-func (cuo *ContestUpdateOne) Save(ctx context.Context) (*Contest, error) {
-	return withHooks(ctx, cuo.sqlSave, cuo.mutation, cuo.hooks)
+func (_u *ContestUpdateOne) Save(ctx context.Context) (*Contest, error) {
+	return withHooks(ctx, _u.sqlSave, _u.mutation, _u.hooks)
 }
 
 // SaveX is like Save, but panics if an error occurs.
-func (cuo *ContestUpdateOne) SaveX(ctx context.Context) *Contest {
-	node, err := cuo.Save(ctx)
+func (_u *ContestUpdateOne) SaveX(ctx context.Context) *Contest {
+	node, err := _u.Save(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -761,31 +761,31 @@ func (cuo *ContestUpdateOne) SaveX(ctx context.Context) *Contest {
 }
 
 // Exec executes the query on the entity.
-func (cuo *ContestUpdateOne) Exec(ctx context.Context) error {
-	_, err := cuo.Save(ctx)
+func (_u *ContestUpdateOne) Exec(ctx context.Context) error {
+	_, err := _u.Save(ctx)
 	return err
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (cuo *ContestUpdateOne) ExecX(ctx context.Context) {
-	if err := cuo.Exec(ctx); err != nil {
+func (_u *ContestUpdateOne) ExecX(ctx context.Context) {
+	if err := _u.Exec(ctx); err != nil {
 		panic(err)
 	}
 }
 
 // check runs all checks and user-defined validators on the builder.
-func (cuo *ContestUpdateOne) check() error {
-	if v, ok := cuo.mutation.Name(); ok {
+func (_u *ContestUpdateOne) check() error {
+	if v, ok := _u.mutation.Name(); ok {
 		if err := contest.NameValidator(v); err != nil {
 			return &ValidationError{Name: "name", err: fmt.Errorf(`ent: validator failed for field "Contest.name": %w`, err)}
 		}
 	}
-	if v, ok := cuo.mutation.URL(); ok {
+	if v, ok := _u.mutation.URL(); ok {
 		if err := contest.URLValidator(v); err != nil {
 			return &ValidationError{Name: "url", err: fmt.Errorf(`ent: validator failed for field "Contest.url": %w`, err)}
 		}
 	}
-	if v, ok := cuo.mutation.Logo(); ok {
+	if v, ok := _u.mutation.Logo(); ok {
 		if err := contest.LogoValidator(v); err != nil {
 			return &ValidationError{Name: "logo", err: fmt.Errorf(`ent: validator failed for field "Contest.logo": %w`, err)}
 		}
@@ -793,17 +793,17 @@ func (cuo *ContestUpdateOne) check() error {
 	return nil
 }
 
-func (cuo *ContestUpdateOne) sqlSave(ctx context.Context) (_node *Contest, err error) {
-	if err := cuo.check(); err != nil {
+func (_u *ContestUpdateOne) sqlSave(ctx context.Context) (_node *Contest, err error) {
+	if err := _u.check(); err != nil {
 		return _node, err
 	}
 	_spec := sqlgraph.NewUpdateSpec(contest.Table, contest.Columns, sqlgraph.NewFieldSpec(contest.FieldID, field.TypeInt))
-	id, ok := cuo.mutation.ID()
+	id, ok := _u.mutation.ID()
 	if !ok {
 		return nil, &ValidationError{Name: "id", err: errors.New(`ent: missing "Contest.id" for update`)}
 	}
 	_spec.Node.ID.Value = id
-	if fields := cuo.fields; len(fields) > 0 {
+	if fields := _u.fields; len(fields) > 0 {
 		_spec.Node.Columns = make([]string, 0, len(fields))
 		_spec.Node.Columns = append(_spec.Node.Columns, contest.FieldID)
 		for _, f := range fields {
@@ -815,68 +815,68 @@ func (cuo *ContestUpdateOne) sqlSave(ctx context.Context) (_node *Contest, err e
 			}
 		}
 	}
-	if ps := cuo.mutation.predicates; len(ps) > 0 {
+	if ps := _u.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
 			for i := range ps {
 				ps[i](selector)
 			}
 		}
 	}
-	if value, ok := cuo.mutation.Name(); ok {
+	if value, ok := _u.mutation.Name(); ok {
 		_spec.SetField(contest.FieldName, field.TypeString, value)
 	}
-	if value, ok := cuo.mutation.Description(); ok {
+	if value, ok := _u.mutation.Description(); ok {
 		_spec.SetField(contest.FieldDescription, field.TypeString, value)
 	}
-	if cuo.mutation.DescriptionCleared() {
+	if _u.mutation.DescriptionCleared() {
 		_spec.ClearField(contest.FieldDescription, field.TypeString)
 	}
-	if value, ok := cuo.mutation.Rules(); ok {
+	if value, ok := _u.mutation.Rules(); ok {
 		_spec.SetField(contest.FieldRules, field.TypeString, value)
 	}
-	if cuo.mutation.RulesCleared() {
+	if _u.mutation.RulesCleared() {
 		_spec.ClearField(contest.FieldRules, field.TypeString)
 	}
-	if value, ok := cuo.mutation.Prizes(); ok {
+	if value, ok := _u.mutation.Prizes(); ok {
 		_spec.SetField(contest.FieldPrizes, field.TypeString, value)
 	}
-	if cuo.mutation.PrizesCleared() {
+	if _u.mutation.PrizesCleared() {
 		_spec.ClearField(contest.FieldPrizes, field.TypeString)
 	}
-	if value, ok := cuo.mutation.Start(); ok {
+	if value, ok := _u.mutation.Start(); ok {
 		_spec.SetField(contest.FieldStart, field.TypeTime, value)
 	}
-	if value, ok := cuo.mutation.End(); ok {
+	if value, ok := _u.mutation.End(); ok {
 		_spec.SetField(contest.FieldEnd, field.TypeTime, value)
 	}
-	if value, ok := cuo.mutation.URL(); ok {
+	if value, ok := _u.mutation.URL(); ok {
 		_spec.SetField(contest.FieldURL, field.TypeString, value)
 	}
-	if cuo.mutation.URLCleared() {
+	if _u.mutation.URLCleared() {
 		_spec.ClearField(contest.FieldURL, field.TypeString)
 	}
-	if value, ok := cuo.mutation.CtftimeID(); ok {
+	if value, ok := _u.mutation.CtftimeID(); ok {
 		_spec.SetField(contest.FieldCtftimeID, field.TypeInt, value)
 	}
-	if value, ok := cuo.mutation.AddedCtftimeID(); ok {
+	if value, ok := _u.mutation.AddedCtftimeID(); ok {
 		_spec.AddField(contest.FieldCtftimeID, field.TypeInt, value)
 	}
-	if cuo.mutation.CtftimeIDCleared() {
+	if _u.mutation.CtftimeIDCleared() {
 		_spec.ClearField(contest.FieldCtftimeID, field.TypeInt)
 	}
-	if value, ok := cuo.mutation.AssignedWeightPoints(); ok {
+	if value, ok := _u.mutation.AssignedWeightPoints(); ok {
 		_spec.SetField(contest.FieldAssignedWeightPoints, field.TypeInt, value)
 	}
-	if value, ok := cuo.mutation.AddedAssignedWeightPoints(); ok {
+	if value, ok := _u.mutation.AddedAssignedWeightPoints(); ok {
 		_spec.AddField(contest.FieldAssignedWeightPoints, field.TypeInt, value)
 	}
-	if value, ok := cuo.mutation.Logo(); ok {
+	if value, ok := _u.mutation.Logo(); ok {
 		_spec.SetField(contest.FieldLogo, field.TypeBytes, value)
 	}
-	if cuo.mutation.LogoCleared() {
+	if _u.mutation.LogoCleared() {
 		_spec.ClearField(contest.FieldLogo, field.TypeBytes)
 	}
-	if cuo.mutation.OrganizersCleared() {
+	if _u.mutation.OrganizersCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: false,
@@ -889,7 +889,7 @@ func (cuo *ContestUpdateOne) sqlSave(ctx context.Context) (_node *Contest, err e
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := cuo.mutation.OrganizersIDs(); len(nodes) > 0 {
+	if nodes := _u.mutation.OrganizersIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: false,
@@ -905,7 +905,7 @@ func (cuo *ContestUpdateOne) sqlSave(ctx context.Context) (_node *Contest, err e
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	if cuo.mutation.PlacesCleared() {
+	if _u.mutation.PlacesCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
@@ -918,7 +918,7 @@ func (cuo *ContestUpdateOne) sqlSave(ctx context.Context) (_node *Contest, err e
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := cuo.mutation.RemovedPlacesIDs(); len(nodes) > 0 && !cuo.mutation.PlacesCleared() {
+	if nodes := _u.mutation.RemovedPlacesIDs(); len(nodes) > 0 && !_u.mutation.PlacesCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
@@ -934,7 +934,7 @@ func (cuo *ContestUpdateOne) sqlSave(ctx context.Context) (_node *Contest, err e
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := cuo.mutation.PlacesIDs(); len(nodes) > 0 {
+	if nodes := _u.mutation.PlacesIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
@@ -950,10 +950,10 @@ func (cuo *ContestUpdateOne) sqlSave(ctx context.Context) (_node *Contest, err e
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	_node = &Contest{config: cuo.config}
+	_node = &Contest{config: _u.config}
 	_spec.Assign = _node.assignValues
 	_spec.ScanValues = _node.scanValues
-	if err = sqlgraph.UpdateNode(ctx, cuo.driver, _spec); err != nil {
+	if err = sqlgraph.UpdateNode(ctx, _u.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{contest.Label}
 		} else if sqlgraph.IsConstraintError(err) {
@@ -961,6 +961,6 @@ func (cuo *ContestUpdateOne) sqlSave(ctx context.Context) (_node *Contest, err e
 		}
 		return nil, err
 	}
-	cuo.mutation.done = true
+	_u.mutation.done = true
 	return _node, nil
 }

@@ -2,13 +2,20 @@ export interface User {
 	id: number;
 	username: string;
 	email: string;
-	email_confirmed_at?: string;
+	email_confirmed_at: string | null;
 	confirmation_code?: string;
 	permission_level: "player" | "moderator" | "administrator";
 	description?: string;
 	password: string;
 	created_at: string;
 	logo?: string;
+
+	// optional after gh connection
+	github_account_id?: number;
+	github_username?: string;
+	github_name?: string;
+	github_email?: string;
+	github_avatar_url?: string;
 }
 
 export interface Team {

@@ -340,8 +340,8 @@ func (c *AchievementClient) Update() *AchievementUpdate {
 }
 
 // UpdateOne returns an update builder for the given entity.
-func (c *AchievementClient) UpdateOne(a *Achievement) *AchievementUpdateOne {
-	mutation := newAchievementMutation(c.config, OpUpdateOne, withAchievement(a))
+func (c *AchievementClient) UpdateOne(_m *Achievement) *AchievementUpdateOne {
+	mutation := newAchievementMutation(c.config, OpUpdateOne, withAchievement(_m))
 	return &AchievementUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
@@ -358,8 +358,8 @@ func (c *AchievementClient) Delete() *AchievementDelete {
 }
 
 // DeleteOne returns a builder for deleting the given entity.
-func (c *AchievementClient) DeleteOne(a *Achievement) *AchievementDeleteOne {
-	return c.DeleteOneID(a.ID)
+func (c *AchievementClient) DeleteOne(_m *Achievement) *AchievementDeleteOne {
+	return c.DeleteOneID(_m.ID)
 }
 
 // DeleteOneID returns a builder for deleting the given entity by its id.
@@ -394,16 +394,16 @@ func (c *AchievementClient) GetX(ctx context.Context, id int) *Achievement {
 }
 
 // QueryUser queries the user edge of a Achievement.
-func (c *AchievementClient) QueryUser(a *Achievement) *UserQuery {
+func (c *AchievementClient) QueryUser(_m *Achievement) *UserQuery {
 	query := (&UserClient{config: c.config}).Query()
 	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
-		id := a.ID
+		id := _m.ID
 		step := sqlgraph.NewStep(
 			sqlgraph.From(achievement.Table, achievement.FieldID, id),
 			sqlgraph.To(user.Table, user.FieldID),
 			sqlgraph.Edge(sqlgraph.M2O, false, achievement.UserTable, achievement.UserColumn),
 		)
-		fromV = sqlgraph.Neighbors(a.driver.Dialect(), step)
+		fromV = sqlgraph.Neighbors(_m.driver.Dialect(), step)
 		return fromV, nil
 	}
 	return query
@@ -489,8 +489,8 @@ func (c *ActivityClient) Update() *ActivityUpdate {
 }
 
 // UpdateOne returns an update builder for the given entity.
-func (c *ActivityClient) UpdateOne(a *Activity) *ActivityUpdateOne {
-	mutation := newActivityMutation(c.config, OpUpdateOne, withActivity(a))
+func (c *ActivityClient) UpdateOne(_m *Activity) *ActivityUpdateOne {
+	mutation := newActivityMutation(c.config, OpUpdateOne, withActivity(_m))
 	return &ActivityUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
@@ -507,8 +507,8 @@ func (c *ActivityClient) Delete() *ActivityDelete {
 }
 
 // DeleteOne returns a builder for deleting the given entity.
-func (c *ActivityClient) DeleteOne(a *Activity) *ActivityDeleteOne {
-	return c.DeleteOneID(a.ID)
+func (c *ActivityClient) DeleteOne(_m *Activity) *ActivityDeleteOne {
+	return c.DeleteOneID(_m.ID)
 }
 
 // DeleteOneID returns a builder for deleting the given entity by its id.
@@ -543,16 +543,16 @@ func (c *ActivityClient) GetX(ctx context.Context, id int) *Activity {
 }
 
 // QueryUser queries the user edge of a Activity.
-func (c *ActivityClient) QueryUser(a *Activity) *UserQuery {
+func (c *ActivityClient) QueryUser(_m *Activity) *UserQuery {
 	query := (&UserClient{config: c.config}).Query()
 	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
-		id := a.ID
+		id := _m.ID
 		step := sqlgraph.NewStep(
 			sqlgraph.From(activity.Table, activity.FieldID, id),
 			sqlgraph.To(user.Table, user.FieldID),
 			sqlgraph.Edge(sqlgraph.M2O, false, activity.UserTable, activity.UserColumn),
 		)
-		fromV = sqlgraph.Neighbors(a.driver.Dialect(), step)
+		fromV = sqlgraph.Neighbors(_m.driver.Dialect(), step)
 		return fromV, nil
 	}
 	return query
@@ -698,8 +698,8 @@ func (c *ContestClient) Update() *ContestUpdate {
 }
 
 // UpdateOne returns an update builder for the given entity.
-func (c *ContestClient) UpdateOne(co *Contest) *ContestUpdateOne {
-	mutation := newContestMutation(c.config, OpUpdateOne, withContest(co))
+func (c *ContestClient) UpdateOne(_m *Contest) *ContestUpdateOne {
+	mutation := newContestMutation(c.config, OpUpdateOne, withContest(_m))
 	return &ContestUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
@@ -716,8 +716,8 @@ func (c *ContestClient) Delete() *ContestDelete {
 }
 
 // DeleteOne returns a builder for deleting the given entity.
-func (c *ContestClient) DeleteOne(co *Contest) *ContestDeleteOne {
-	return c.DeleteOneID(co.ID)
+func (c *ContestClient) DeleteOne(_m *Contest) *ContestDeleteOne {
+	return c.DeleteOneID(_m.ID)
 }
 
 // DeleteOneID returns a builder for deleting the given entity by its id.
@@ -752,32 +752,32 @@ func (c *ContestClient) GetX(ctx context.Context, id int) *Contest {
 }
 
 // QueryOrganizers queries the organizers edge of a Contest.
-func (c *ContestClient) QueryOrganizers(co *Contest) *TeamQuery {
+func (c *ContestClient) QueryOrganizers(_m *Contest) *TeamQuery {
 	query := (&TeamClient{config: c.config}).Query()
 	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
-		id := co.ID
+		id := _m.ID
 		step := sqlgraph.NewStep(
 			sqlgraph.From(contest.Table, contest.FieldID, id),
 			sqlgraph.To(team.Table, team.FieldID),
 			sqlgraph.Edge(sqlgraph.M2O, false, contest.OrganizersTable, contest.OrganizersColumn),
 		)
-		fromV = sqlgraph.Neighbors(co.driver.Dialect(), step)
+		fromV = sqlgraph.Neighbors(_m.driver.Dialect(), step)
 		return fromV, nil
 	}
 	return query
 }
 
 // QueryPlaces queries the places edge of a Contest.
-func (c *ContestClient) QueryPlaces(co *Contest) *PlaceQuery {
+func (c *ContestClient) QueryPlaces(_m *Contest) *PlaceQuery {
 	query := (&PlaceClient{config: c.config}).Query()
 	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
-		id := co.ID
+		id := _m.ID
 		step := sqlgraph.NewStep(
 			sqlgraph.From(contest.Table, contest.FieldID, id),
 			sqlgraph.To(place.Table, place.FieldID),
 			sqlgraph.Edge(sqlgraph.O2M, false, contest.PlacesTable, contest.PlacesColumn),
 		)
-		fromV = sqlgraph.Neighbors(co.driver.Dialect(), step)
+		fromV = sqlgraph.Neighbors(_m.driver.Dialect(), step)
 		return fromV, nil
 	}
 	return query
@@ -863,8 +863,8 @@ func (c *ContestRatingClient) Update() *ContestRatingUpdate {
 }
 
 // UpdateOne returns an update builder for the given entity.
-func (c *ContestRatingClient) UpdateOne(cr *ContestRating) *ContestRatingUpdateOne {
-	mutation := newContestRatingMutation(c.config, OpUpdateOne, withContestRating(cr))
+func (c *ContestRatingClient) UpdateOne(_m *ContestRating) *ContestRatingUpdateOne {
+	mutation := newContestRatingMutation(c.config, OpUpdateOne, withContestRating(_m))
 	return &ContestRatingUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
@@ -881,8 +881,8 @@ func (c *ContestRatingClient) Delete() *ContestRatingDelete {
 }
 
 // DeleteOne returns a builder for deleting the given entity.
-func (c *ContestRatingClient) DeleteOne(cr *ContestRating) *ContestRatingDeleteOne {
-	return c.DeleteOneID(cr.ID)
+func (c *ContestRatingClient) DeleteOne(_m *ContestRating) *ContestRatingDeleteOne {
+	return c.DeleteOneID(_m.ID)
 }
 
 // DeleteOneID returns a builder for deleting the given entity by its id.
@@ -917,32 +917,32 @@ func (c *ContestRatingClient) GetX(ctx context.Context, id int) *ContestRating {
 }
 
 // QueryUser queries the user edge of a ContestRating.
-func (c *ContestRatingClient) QueryUser(cr *ContestRating) *UserQuery {
+func (c *ContestRatingClient) QueryUser(_m *ContestRating) *UserQuery {
 	query := (&UserClient{config: c.config}).Query()
 	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
-		id := cr.ID
+		id := _m.ID
 		step := sqlgraph.NewStep(
 			sqlgraph.From(contestrating.Table, contestrating.FieldID, id),
 			sqlgraph.To(user.Table, user.FieldID),
 			sqlgraph.Edge(sqlgraph.M2O, false, contestrating.UserTable, contestrating.UserColumn),
 		)
-		fromV = sqlgraph.Neighbors(cr.driver.Dialect(), step)
+		fromV = sqlgraph.Neighbors(_m.driver.Dialect(), step)
 		return fromV, nil
 	}
 	return query
 }
 
 // QueryContest queries the contest edge of a ContestRating.
-func (c *ContestRatingClient) QueryContest(cr *ContestRating) *ContestQuery {
+func (c *ContestRatingClient) QueryContest(_m *ContestRating) *ContestQuery {
 	query := (&ContestClient{config: c.config}).Query()
 	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
-		id := cr.ID
+		id := _m.ID
 		step := sqlgraph.NewStep(
 			sqlgraph.From(contestrating.Table, contestrating.FieldID, id),
 			sqlgraph.To(contest.Table, contest.FieldID),
 			sqlgraph.Edge(sqlgraph.M2O, false, contestrating.ContestTable, contestrating.ContestColumn),
 		)
-		fromV = sqlgraph.Neighbors(cr.driver.Dialect(), step)
+		fromV = sqlgraph.Neighbors(_m.driver.Dialect(), step)
 		return fromV, nil
 	}
 	return query
@@ -1028,8 +1028,8 @@ func (c *PlaceClient) Update() *PlaceUpdate {
 }
 
 // UpdateOne returns an update builder for the given entity.
-func (c *PlaceClient) UpdateOne(pl *Place) *PlaceUpdateOne {
-	mutation := newPlaceMutation(c.config, OpUpdateOne, withPlace(pl))
+func (c *PlaceClient) UpdateOne(_m *Place) *PlaceUpdateOne {
+	mutation := newPlaceMutation(c.config, OpUpdateOne, withPlace(_m))
 	return &PlaceUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
@@ -1046,8 +1046,8 @@ func (c *PlaceClient) Delete() *PlaceDelete {
 }
 
 // DeleteOne returns a builder for deleting the given entity.
-func (c *PlaceClient) DeleteOne(pl *Place) *PlaceDeleteOne {
-	return c.DeleteOneID(pl.ID)
+func (c *PlaceClient) DeleteOne(_m *Place) *PlaceDeleteOne {
+	return c.DeleteOneID(_m.ID)
 }
 
 // DeleteOneID returns a builder for deleting the given entity by its id.
@@ -1082,16 +1082,16 @@ func (c *PlaceClient) GetX(ctx context.Context, id int) *Place {
 }
 
 // QueryAssociatedTeam queries the associated_team edge of a Place.
-func (c *PlaceClient) QueryAssociatedTeam(pl *Place) *TeamQuery {
+func (c *PlaceClient) QueryAssociatedTeam(_m *Place) *TeamQuery {
 	query := (&TeamClient{config: c.config}).Query()
 	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
-		id := pl.ID
+		id := _m.ID
 		step := sqlgraph.NewStep(
 			sqlgraph.From(place.Table, place.FieldID, id),
 			sqlgraph.To(team.Table, team.FieldID),
 			sqlgraph.Edge(sqlgraph.M2O, false, place.AssociatedTeamTable, place.AssociatedTeamColumn),
 		)
-		fromV = sqlgraph.Neighbors(pl.driver.Dialect(), step)
+		fromV = sqlgraph.Neighbors(_m.driver.Dialect(), step)
 		return fromV, nil
 	}
 	return query
@@ -1177,8 +1177,8 @@ func (c *TeamClient) Update() *TeamUpdate {
 }
 
 // UpdateOne returns an update builder for the given entity.
-func (c *TeamClient) UpdateOne(t *Team) *TeamUpdateOne {
-	mutation := newTeamMutation(c.config, OpUpdateOne, withTeam(t))
+func (c *TeamClient) UpdateOne(_m *Team) *TeamUpdateOne {
+	mutation := newTeamMutation(c.config, OpUpdateOne, withTeam(_m))
 	return &TeamUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
@@ -1195,8 +1195,8 @@ func (c *TeamClient) Delete() *TeamDelete {
 }
 
 // DeleteOne returns a builder for deleting the given entity.
-func (c *TeamClient) DeleteOne(t *Team) *TeamDeleteOne {
-	return c.DeleteOneID(t.ID)
+func (c *TeamClient) DeleteOne(_m *Team) *TeamDeleteOne {
+	return c.DeleteOneID(_m.ID)
 }
 
 // DeleteOneID returns a builder for deleting the given entity by its id.
@@ -1231,48 +1231,48 @@ func (c *TeamClient) GetX(ctx context.Context, id int) *Team {
 }
 
 // QueryCaptain queries the captain edge of a Team.
-func (c *TeamClient) QueryCaptain(t *Team) *UserQuery {
+func (c *TeamClient) QueryCaptain(_m *Team) *UserQuery {
 	query := (&UserClient{config: c.config}).Query()
 	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
-		id := t.ID
+		id := _m.ID
 		step := sqlgraph.NewStep(
 			sqlgraph.From(team.Table, team.FieldID, id),
 			sqlgraph.To(user.Table, user.FieldID),
 			sqlgraph.Edge(sqlgraph.M2O, false, team.CaptainTable, team.CaptainColumn),
 		)
-		fromV = sqlgraph.Neighbors(t.driver.Dialect(), step)
+		fromV = sqlgraph.Neighbors(_m.driver.Dialect(), step)
 		return fromV, nil
 	}
 	return query
 }
 
 // QueryVerifiedBy queries the verified_by edge of a Team.
-func (c *TeamClient) QueryVerifiedBy(t *Team) *UserQuery {
+func (c *TeamClient) QueryVerifiedBy(_m *Team) *UserQuery {
 	query := (&UserClient{config: c.config}).Query()
 	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
-		id := t.ID
+		id := _m.ID
 		step := sqlgraph.NewStep(
 			sqlgraph.From(team.Table, team.FieldID, id),
 			sqlgraph.To(user.Table, user.FieldID),
 			sqlgraph.Edge(sqlgraph.M2O, false, team.VerifiedByTable, team.VerifiedByColumn),
 		)
-		fromV = sqlgraph.Neighbors(t.driver.Dialect(), step)
+		fromV = sqlgraph.Neighbors(_m.driver.Dialect(), step)
 		return fromV, nil
 	}
 	return query
 }
 
 // QueryMembers queries the members edge of a Team.
-func (c *TeamClient) QueryMembers(t *Team) *UserQuery {
+func (c *TeamClient) QueryMembers(_m *Team) *UserQuery {
 	query := (&UserClient{config: c.config}).Query()
 	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
-		id := t.ID
+		id := _m.ID
 		step := sqlgraph.NewStep(
 			sqlgraph.From(team.Table, team.FieldID, id),
 			sqlgraph.To(user.Table, user.FieldID),
 			sqlgraph.Edge(sqlgraph.M2M, false, team.MembersTable, team.MembersPrimaryKey...),
 		)
-		fromV = sqlgraph.Neighbors(t.driver.Dialect(), step)
+		fromV = sqlgraph.Neighbors(_m.driver.Dialect(), step)
 		return fromV, nil
 	}
 	return query
@@ -1358,8 +1358,8 @@ func (c *UserClient) Update() *UserUpdate {
 }
 
 // UpdateOne returns an update builder for the given entity.
-func (c *UserClient) UpdateOne(u *User) *UserUpdateOne {
-	mutation := newUserMutation(c.config, OpUpdateOne, withUser(u))
+func (c *UserClient) UpdateOne(_m *User) *UserUpdateOne {
+	mutation := newUserMutation(c.config, OpUpdateOne, withUser(_m))
 	return &UserUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
@@ -1376,8 +1376,8 @@ func (c *UserClient) Delete() *UserDelete {
 }
 
 // DeleteOne returns a builder for deleting the given entity.
-func (c *UserClient) DeleteOne(u *User) *UserDeleteOne {
-	return c.DeleteOneID(u.ID)
+func (c *UserClient) DeleteOne(_m *User) *UserDeleteOne {
+	return c.DeleteOneID(_m.ID)
 }
 
 // DeleteOneID returns a builder for deleting the given entity by its id.
@@ -1412,16 +1412,16 @@ func (c *UserClient) GetX(ctx context.Context, id int) *User {
 }
 
 // QueryTeams queries the teams edge of a User.
-func (c *UserClient) QueryTeams(u *User) *TeamQuery {
+func (c *UserClient) QueryTeams(_m *User) *TeamQuery {
 	query := (&TeamClient{config: c.config}).Query()
 	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
-		id := u.ID
+		id := _m.ID
 		step := sqlgraph.NewStep(
 			sqlgraph.From(user.Table, user.FieldID, id),
 			sqlgraph.To(team.Table, team.FieldID),
 			sqlgraph.Edge(sqlgraph.M2M, true, user.TeamsTable, user.TeamsPrimaryKey...),
 		)
-		fromV = sqlgraph.Neighbors(u.driver.Dialect(), step)
+		fromV = sqlgraph.Neighbors(_m.driver.Dialect(), step)
 		return fromV, nil
 	}
 	return query
@@ -1507,8 +1507,8 @@ func (c *UserProfileClient) Update() *UserProfileUpdate {
 }
 
 // UpdateOne returns an update builder for the given entity.
-func (c *UserProfileClient) UpdateOne(up *UserProfile) *UserProfileUpdateOne {
-	mutation := newUserProfileMutation(c.config, OpUpdateOne, withUserProfile(up))
+func (c *UserProfileClient) UpdateOne(_m *UserProfile) *UserProfileUpdateOne {
+	mutation := newUserProfileMutation(c.config, OpUpdateOne, withUserProfile(_m))
 	return &UserProfileUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
@@ -1525,8 +1525,8 @@ func (c *UserProfileClient) Delete() *UserProfileDelete {
 }
 
 // DeleteOne returns a builder for deleting the given entity.
-func (c *UserProfileClient) DeleteOne(up *UserProfile) *UserProfileDeleteOne {
-	return c.DeleteOneID(up.ID)
+func (c *UserProfileClient) DeleteOne(_m *UserProfile) *UserProfileDeleteOne {
+	return c.DeleteOneID(_m.ID)
 }
 
 // DeleteOneID returns a builder for deleting the given entity by its id.
@@ -1561,16 +1561,16 @@ func (c *UserProfileClient) GetX(ctx context.Context, id int) *UserProfile {
 }
 
 // QueryUser queries the user edge of a UserProfile.
-func (c *UserProfileClient) QueryUser(up *UserProfile) *UserQuery {
+func (c *UserProfileClient) QueryUser(_m *UserProfile) *UserQuery {
 	query := (&UserClient{config: c.config}).Query()
 	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
-		id := up.ID
+		id := _m.ID
 		step := sqlgraph.NewStep(
 			sqlgraph.From(userprofile.Table, userprofile.FieldID, id),
 			sqlgraph.To(user.Table, user.FieldID),
 			sqlgraph.Edge(sqlgraph.M2O, false, userprofile.UserTable, userprofile.UserColumn),
 		)
-		fromV = sqlgraph.Neighbors(up.driver.Dialect(), step)
+		fromV = sqlgraph.Neighbors(_m.driver.Dialect(), step)
 		return fromV, nil
 	}
 	return query
@@ -1656,8 +1656,8 @@ func (c *WeightRatingClient) Update() *WeightRatingUpdate {
 }
 
 // UpdateOne returns an update builder for the given entity.
-func (c *WeightRatingClient) UpdateOne(wr *WeightRating) *WeightRatingUpdateOne {
-	mutation := newWeightRatingMutation(c.config, OpUpdateOne, withWeightRating(wr))
+func (c *WeightRatingClient) UpdateOne(_m *WeightRating) *WeightRatingUpdateOne {
+	mutation := newWeightRatingMutation(c.config, OpUpdateOne, withWeightRating(_m))
 	return &WeightRatingUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
@@ -1674,8 +1674,8 @@ func (c *WeightRatingClient) Delete() *WeightRatingDelete {
 }
 
 // DeleteOne returns a builder for deleting the given entity.
-func (c *WeightRatingClient) DeleteOne(wr *WeightRating) *WeightRatingDeleteOne {
-	return c.DeleteOneID(wr.ID)
+func (c *WeightRatingClient) DeleteOne(_m *WeightRating) *WeightRatingDeleteOne {
+	return c.DeleteOneID(_m.ID)
 }
 
 // DeleteOneID returns a builder for deleting the given entity by its id.
@@ -1710,32 +1710,32 @@ func (c *WeightRatingClient) GetX(ctx context.Context, id int) *WeightRating {
 }
 
 // QueryCaptainsTeam queries the captains_team edge of a WeightRating.
-func (c *WeightRatingClient) QueryCaptainsTeam(wr *WeightRating) *TeamQuery {
+func (c *WeightRatingClient) QueryCaptainsTeam(_m *WeightRating) *TeamQuery {
 	query := (&TeamClient{config: c.config}).Query()
 	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
-		id := wr.ID
+		id := _m.ID
 		step := sqlgraph.NewStep(
 			sqlgraph.From(weightrating.Table, weightrating.FieldID, id),
 			sqlgraph.To(team.Table, team.FieldID),
 			sqlgraph.Edge(sqlgraph.M2O, false, weightrating.CaptainsTeamTable, weightrating.CaptainsTeamColumn),
 		)
-		fromV = sqlgraph.Neighbors(wr.driver.Dialect(), step)
+		fromV = sqlgraph.Neighbors(_m.driver.Dialect(), step)
 		return fromV, nil
 	}
 	return query
 }
 
 // QueryContest queries the contest edge of a WeightRating.
-func (c *WeightRatingClient) QueryContest(wr *WeightRating) *ContestQuery {
+func (c *WeightRatingClient) QueryContest(_m *WeightRating) *ContestQuery {
 	query := (&ContestClient{config: c.config}).Query()
 	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
-		id := wr.ID
+		id := _m.ID
 		step := sqlgraph.NewStep(
 			sqlgraph.From(weightrating.Table, weightrating.FieldID, id),
 			sqlgraph.To(contest.Table, contest.FieldID),
 			sqlgraph.Edge(sqlgraph.M2O, false, weightrating.ContestTable, weightrating.ContestColumn),
 		)
-		fromV = sqlgraph.Neighbors(wr.driver.Dialect(), step)
+		fromV = sqlgraph.Neighbors(_m.driver.Dialect(), step)
 		return fromV, nil
 	}
 	return query

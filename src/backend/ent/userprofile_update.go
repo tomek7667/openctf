@@ -23,274 +23,274 @@ type UserProfileUpdate struct {
 }
 
 // Where appends a list predicates to the UserProfileUpdate builder.
-func (upu *UserProfileUpdate) Where(ps ...predicate.UserProfile) *UserProfileUpdate {
-	upu.mutation.Where(ps...)
-	return upu
+func (_u *UserProfileUpdate) Where(ps ...predicate.UserProfile) *UserProfileUpdate {
+	_u.mutation.Where(ps...)
+	return _u
 }
 
 // SetLocation sets the "location" field.
-func (upu *UserProfileUpdate) SetLocation(s string) *UserProfileUpdate {
-	upu.mutation.SetLocation(s)
-	return upu
+func (_u *UserProfileUpdate) SetLocation(v string) *UserProfileUpdate {
+	_u.mutation.SetLocation(v)
+	return _u
 }
 
 // SetNillableLocation sets the "location" field if the given value is not nil.
-func (upu *UserProfileUpdate) SetNillableLocation(s *string) *UserProfileUpdate {
-	if s != nil {
-		upu.SetLocation(*s)
+func (_u *UserProfileUpdate) SetNillableLocation(v *string) *UserProfileUpdate {
+	if v != nil {
+		_u.SetLocation(*v)
 	}
-	return upu
+	return _u
 }
 
 // ClearLocation clears the value of the "location" field.
-func (upu *UserProfileUpdate) ClearLocation() *UserProfileUpdate {
-	upu.mutation.ClearLocation()
-	return upu
+func (_u *UserProfileUpdate) ClearLocation() *UserProfileUpdate {
+	_u.mutation.ClearLocation()
+	return _u
 }
 
 // SetGithubLink sets the "github_link" field.
-func (upu *UserProfileUpdate) SetGithubLink(s string) *UserProfileUpdate {
-	upu.mutation.SetGithubLink(s)
-	return upu
+func (_u *UserProfileUpdate) SetGithubLink(v string) *UserProfileUpdate {
+	_u.mutation.SetGithubLink(v)
+	return _u
 }
 
 // SetNillableGithubLink sets the "github_link" field if the given value is not nil.
-func (upu *UserProfileUpdate) SetNillableGithubLink(s *string) *UserProfileUpdate {
-	if s != nil {
-		upu.SetGithubLink(*s)
+func (_u *UserProfileUpdate) SetNillableGithubLink(v *string) *UserProfileUpdate {
+	if v != nil {
+		_u.SetGithubLink(*v)
 	}
-	return upu
+	return _u
 }
 
 // ClearGithubLink clears the value of the "github_link" field.
-func (upu *UserProfileUpdate) ClearGithubLink() *UserProfileUpdate {
-	upu.mutation.ClearGithubLink()
-	return upu
+func (_u *UserProfileUpdate) ClearGithubLink() *UserProfileUpdate {
+	_u.mutation.ClearGithubLink()
+	return _u
 }
 
 // SetLinkedinLink sets the "linkedin_link" field.
-func (upu *UserProfileUpdate) SetLinkedinLink(s string) *UserProfileUpdate {
-	upu.mutation.SetLinkedinLink(s)
-	return upu
+func (_u *UserProfileUpdate) SetLinkedinLink(v string) *UserProfileUpdate {
+	_u.mutation.SetLinkedinLink(v)
+	return _u
 }
 
 // SetNillableLinkedinLink sets the "linkedin_link" field if the given value is not nil.
-func (upu *UserProfileUpdate) SetNillableLinkedinLink(s *string) *UserProfileUpdate {
-	if s != nil {
-		upu.SetLinkedinLink(*s)
+func (_u *UserProfileUpdate) SetNillableLinkedinLink(v *string) *UserProfileUpdate {
+	if v != nil {
+		_u.SetLinkedinLink(*v)
 	}
-	return upu
+	return _u
 }
 
 // ClearLinkedinLink clears the value of the "linkedin_link" field.
-func (upu *UserProfileUpdate) ClearLinkedinLink() *UserProfileUpdate {
-	upu.mutation.ClearLinkedinLink()
-	return upu
+func (_u *UserProfileUpdate) ClearLinkedinLink() *UserProfileUpdate {
+	_u.mutation.ClearLinkedinLink()
+	return _u
 }
 
 // SetTwitterLink sets the "twitter_link" field.
-func (upu *UserProfileUpdate) SetTwitterLink(s string) *UserProfileUpdate {
-	upu.mutation.SetTwitterLink(s)
-	return upu
+func (_u *UserProfileUpdate) SetTwitterLink(v string) *UserProfileUpdate {
+	_u.mutation.SetTwitterLink(v)
+	return _u
 }
 
 // SetNillableTwitterLink sets the "twitter_link" field if the given value is not nil.
-func (upu *UserProfileUpdate) SetNillableTwitterLink(s *string) *UserProfileUpdate {
-	if s != nil {
-		upu.SetTwitterLink(*s)
+func (_u *UserProfileUpdate) SetNillableTwitterLink(v *string) *UserProfileUpdate {
+	if v != nil {
+		_u.SetTwitterLink(*v)
 	}
-	return upu
+	return _u
 }
 
 // ClearTwitterLink clears the value of the "twitter_link" field.
-func (upu *UserProfileUpdate) ClearTwitterLink() *UserProfileUpdate {
-	upu.mutation.ClearTwitterLink()
-	return upu
+func (_u *UserProfileUpdate) ClearTwitterLink() *UserProfileUpdate {
+	_u.mutation.ClearTwitterLink()
+	return _u
 }
 
 // SetWebsiteLink sets the "website_link" field.
-func (upu *UserProfileUpdate) SetWebsiteLink(s string) *UserProfileUpdate {
-	upu.mutation.SetWebsiteLink(s)
-	return upu
+func (_u *UserProfileUpdate) SetWebsiteLink(v string) *UserProfileUpdate {
+	_u.mutation.SetWebsiteLink(v)
+	return _u
 }
 
 // SetNillableWebsiteLink sets the "website_link" field if the given value is not nil.
-func (upu *UserProfileUpdate) SetNillableWebsiteLink(s *string) *UserProfileUpdate {
-	if s != nil {
-		upu.SetWebsiteLink(*s)
+func (_u *UserProfileUpdate) SetNillableWebsiteLink(v *string) *UserProfileUpdate {
+	if v != nil {
+		_u.SetWebsiteLink(*v)
 	}
-	return upu
+	return _u
 }
 
 // ClearWebsiteLink clears the value of the "website_link" field.
-func (upu *UserProfileUpdate) ClearWebsiteLink() *UserProfileUpdate {
-	upu.mutation.ClearWebsiteLink()
-	return upu
+func (_u *UserProfileUpdate) ClearWebsiteLink() *UserProfileUpdate {
+	_u.mutation.ClearWebsiteLink()
+	return _u
 }
 
 // SetWebSkillLevel sets the "web_skill_level" field.
-func (upu *UserProfileUpdate) SetWebSkillLevel(i int) *UserProfileUpdate {
-	upu.mutation.ResetWebSkillLevel()
-	upu.mutation.SetWebSkillLevel(i)
-	return upu
+func (_u *UserProfileUpdate) SetWebSkillLevel(v int) *UserProfileUpdate {
+	_u.mutation.ResetWebSkillLevel()
+	_u.mutation.SetWebSkillLevel(v)
+	return _u
 }
 
 // SetNillableWebSkillLevel sets the "web_skill_level" field if the given value is not nil.
-func (upu *UserProfileUpdate) SetNillableWebSkillLevel(i *int) *UserProfileUpdate {
-	if i != nil {
-		upu.SetWebSkillLevel(*i)
+func (_u *UserProfileUpdate) SetNillableWebSkillLevel(v *int) *UserProfileUpdate {
+	if v != nil {
+		_u.SetWebSkillLevel(*v)
 	}
-	return upu
+	return _u
 }
 
-// AddWebSkillLevel adds i to the "web_skill_level" field.
-func (upu *UserProfileUpdate) AddWebSkillLevel(i int) *UserProfileUpdate {
-	upu.mutation.AddWebSkillLevel(i)
-	return upu
+// AddWebSkillLevel adds value to the "web_skill_level" field.
+func (_u *UserProfileUpdate) AddWebSkillLevel(v int) *UserProfileUpdate {
+	_u.mutation.AddWebSkillLevel(v)
+	return _u
 }
 
 // SetRevSkillLevel sets the "rev_skill_level" field.
-func (upu *UserProfileUpdate) SetRevSkillLevel(i int) *UserProfileUpdate {
-	upu.mutation.ResetRevSkillLevel()
-	upu.mutation.SetRevSkillLevel(i)
-	return upu
+func (_u *UserProfileUpdate) SetRevSkillLevel(v int) *UserProfileUpdate {
+	_u.mutation.ResetRevSkillLevel()
+	_u.mutation.SetRevSkillLevel(v)
+	return _u
 }
 
 // SetNillableRevSkillLevel sets the "rev_skill_level" field if the given value is not nil.
-func (upu *UserProfileUpdate) SetNillableRevSkillLevel(i *int) *UserProfileUpdate {
-	if i != nil {
-		upu.SetRevSkillLevel(*i)
+func (_u *UserProfileUpdate) SetNillableRevSkillLevel(v *int) *UserProfileUpdate {
+	if v != nil {
+		_u.SetRevSkillLevel(*v)
 	}
-	return upu
+	return _u
 }
 
-// AddRevSkillLevel adds i to the "rev_skill_level" field.
-func (upu *UserProfileUpdate) AddRevSkillLevel(i int) *UserProfileUpdate {
-	upu.mutation.AddRevSkillLevel(i)
-	return upu
+// AddRevSkillLevel adds value to the "rev_skill_level" field.
+func (_u *UserProfileUpdate) AddRevSkillLevel(v int) *UserProfileUpdate {
+	_u.mutation.AddRevSkillLevel(v)
+	return _u
 }
 
 // SetPwnSkillLevel sets the "pwn_skill_level" field.
-func (upu *UserProfileUpdate) SetPwnSkillLevel(i int) *UserProfileUpdate {
-	upu.mutation.ResetPwnSkillLevel()
-	upu.mutation.SetPwnSkillLevel(i)
-	return upu
+func (_u *UserProfileUpdate) SetPwnSkillLevel(v int) *UserProfileUpdate {
+	_u.mutation.ResetPwnSkillLevel()
+	_u.mutation.SetPwnSkillLevel(v)
+	return _u
 }
 
 // SetNillablePwnSkillLevel sets the "pwn_skill_level" field if the given value is not nil.
-func (upu *UserProfileUpdate) SetNillablePwnSkillLevel(i *int) *UserProfileUpdate {
-	if i != nil {
-		upu.SetPwnSkillLevel(*i)
+func (_u *UserProfileUpdate) SetNillablePwnSkillLevel(v *int) *UserProfileUpdate {
+	if v != nil {
+		_u.SetPwnSkillLevel(*v)
 	}
-	return upu
+	return _u
 }
 
-// AddPwnSkillLevel adds i to the "pwn_skill_level" field.
-func (upu *UserProfileUpdate) AddPwnSkillLevel(i int) *UserProfileUpdate {
-	upu.mutation.AddPwnSkillLevel(i)
-	return upu
+// AddPwnSkillLevel adds value to the "pwn_skill_level" field.
+func (_u *UserProfileUpdate) AddPwnSkillLevel(v int) *UserProfileUpdate {
+	_u.mutation.AddPwnSkillLevel(v)
+	return _u
 }
 
 // SetCryptoSkillLevel sets the "crypto_skill_level" field.
-func (upu *UserProfileUpdate) SetCryptoSkillLevel(i int) *UserProfileUpdate {
-	upu.mutation.ResetCryptoSkillLevel()
-	upu.mutation.SetCryptoSkillLevel(i)
-	return upu
+func (_u *UserProfileUpdate) SetCryptoSkillLevel(v int) *UserProfileUpdate {
+	_u.mutation.ResetCryptoSkillLevel()
+	_u.mutation.SetCryptoSkillLevel(v)
+	return _u
 }
 
 // SetNillableCryptoSkillLevel sets the "crypto_skill_level" field if the given value is not nil.
-func (upu *UserProfileUpdate) SetNillableCryptoSkillLevel(i *int) *UserProfileUpdate {
-	if i != nil {
-		upu.SetCryptoSkillLevel(*i)
+func (_u *UserProfileUpdate) SetNillableCryptoSkillLevel(v *int) *UserProfileUpdate {
+	if v != nil {
+		_u.SetCryptoSkillLevel(*v)
 	}
-	return upu
+	return _u
 }
 
-// AddCryptoSkillLevel adds i to the "crypto_skill_level" field.
-func (upu *UserProfileUpdate) AddCryptoSkillLevel(i int) *UserProfileUpdate {
-	upu.mutation.AddCryptoSkillLevel(i)
-	return upu
+// AddCryptoSkillLevel adds value to the "crypto_skill_level" field.
+func (_u *UserProfileUpdate) AddCryptoSkillLevel(v int) *UserProfileUpdate {
+	_u.mutation.AddCryptoSkillLevel(v)
+	return _u
 }
 
 // SetMiscSkillLevel sets the "misc_skill_level" field.
-func (upu *UserProfileUpdate) SetMiscSkillLevel(i int) *UserProfileUpdate {
-	upu.mutation.ResetMiscSkillLevel()
-	upu.mutation.SetMiscSkillLevel(i)
-	return upu
+func (_u *UserProfileUpdate) SetMiscSkillLevel(v int) *UserProfileUpdate {
+	_u.mutation.ResetMiscSkillLevel()
+	_u.mutation.SetMiscSkillLevel(v)
+	return _u
 }
 
 // SetNillableMiscSkillLevel sets the "misc_skill_level" field if the given value is not nil.
-func (upu *UserProfileUpdate) SetNillableMiscSkillLevel(i *int) *UserProfileUpdate {
-	if i != nil {
-		upu.SetMiscSkillLevel(*i)
+func (_u *UserProfileUpdate) SetNillableMiscSkillLevel(v *int) *UserProfileUpdate {
+	if v != nil {
+		_u.SetMiscSkillLevel(*v)
 	}
-	return upu
+	return _u
 }
 
-// AddMiscSkillLevel adds i to the "misc_skill_level" field.
-func (upu *UserProfileUpdate) AddMiscSkillLevel(i int) *UserProfileUpdate {
-	upu.mutation.AddMiscSkillLevel(i)
-	return upu
+// AddMiscSkillLevel adds value to the "misc_skill_level" field.
+func (_u *UserProfileUpdate) AddMiscSkillLevel(v int) *UserProfileUpdate {
+	_u.mutation.AddMiscSkillLevel(v)
+	return _u
 }
 
 // SetShowEmail sets the "show_email" field.
-func (upu *UserProfileUpdate) SetShowEmail(b bool) *UserProfileUpdate {
-	upu.mutation.SetShowEmail(b)
-	return upu
+func (_u *UserProfileUpdate) SetShowEmail(v bool) *UserProfileUpdate {
+	_u.mutation.SetShowEmail(v)
+	return _u
 }
 
 // SetNillableShowEmail sets the "show_email" field if the given value is not nil.
-func (upu *UserProfileUpdate) SetNillableShowEmail(b *bool) *UserProfileUpdate {
-	if b != nil {
-		upu.SetShowEmail(*b)
+func (_u *UserProfileUpdate) SetNillableShowEmail(v *bool) *UserProfileUpdate {
+	if v != nil {
+		_u.SetShowEmail(*v)
 	}
-	return upu
+	return _u
 }
 
 // SetShowLocation sets the "show_location" field.
-func (upu *UserProfileUpdate) SetShowLocation(b bool) *UserProfileUpdate {
-	upu.mutation.SetShowLocation(b)
-	return upu
+func (_u *UserProfileUpdate) SetShowLocation(v bool) *UserProfileUpdate {
+	_u.mutation.SetShowLocation(v)
+	return _u
 }
 
 // SetNillableShowLocation sets the "show_location" field if the given value is not nil.
-func (upu *UserProfileUpdate) SetNillableShowLocation(b *bool) *UserProfileUpdate {
-	if b != nil {
-		upu.SetShowLocation(*b)
+func (_u *UserProfileUpdate) SetNillableShowLocation(v *bool) *UserProfileUpdate {
+	if v != nil {
+		_u.SetShowLocation(*v)
 	}
-	return upu
+	return _u
 }
 
 // SetUserID sets the "user" edge to the User entity by ID.
-func (upu *UserProfileUpdate) SetUserID(id int) *UserProfileUpdate {
-	upu.mutation.SetUserID(id)
-	return upu
+func (_u *UserProfileUpdate) SetUserID(id int) *UserProfileUpdate {
+	_u.mutation.SetUserID(id)
+	return _u
 }
 
 // SetUser sets the "user" edge to the User entity.
-func (upu *UserProfileUpdate) SetUser(u *User) *UserProfileUpdate {
-	return upu.SetUserID(u.ID)
+func (_u *UserProfileUpdate) SetUser(v *User) *UserProfileUpdate {
+	return _u.SetUserID(v.ID)
 }
 
 // Mutation returns the UserProfileMutation object of the builder.
-func (upu *UserProfileUpdate) Mutation() *UserProfileMutation {
-	return upu.mutation
+func (_u *UserProfileUpdate) Mutation() *UserProfileMutation {
+	return _u.mutation
 }
 
 // ClearUser clears the "user" edge to the User entity.
-func (upu *UserProfileUpdate) ClearUser() *UserProfileUpdate {
-	upu.mutation.ClearUser()
-	return upu
+func (_u *UserProfileUpdate) ClearUser() *UserProfileUpdate {
+	_u.mutation.ClearUser()
+	return _u
 }
 
 // Save executes the query and returns the number of nodes affected by the update operation.
-func (upu *UserProfileUpdate) Save(ctx context.Context) (int, error) {
-	return withHooks(ctx, upu.sqlSave, upu.mutation, upu.hooks)
+func (_u *UserProfileUpdate) Save(ctx context.Context) (int, error) {
+	return withHooks(ctx, _u.sqlSave, _u.mutation, _u.hooks)
 }
 
 // SaveX is like Save, but panics if an error occurs.
-func (upu *UserProfileUpdate) SaveX(ctx context.Context) int {
-	affected, err := upu.Save(ctx)
+func (_u *UserProfileUpdate) SaveX(ctx context.Context) int {
+	affected, err := _u.Save(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -298,135 +298,135 @@ func (upu *UserProfileUpdate) SaveX(ctx context.Context) int {
 }
 
 // Exec executes the query.
-func (upu *UserProfileUpdate) Exec(ctx context.Context) error {
-	_, err := upu.Save(ctx)
+func (_u *UserProfileUpdate) Exec(ctx context.Context) error {
+	_, err := _u.Save(ctx)
 	return err
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (upu *UserProfileUpdate) ExecX(ctx context.Context) {
-	if err := upu.Exec(ctx); err != nil {
+func (_u *UserProfileUpdate) ExecX(ctx context.Context) {
+	if err := _u.Exec(ctx); err != nil {
 		panic(err)
 	}
 }
 
 // check runs all checks and user-defined validators on the builder.
-func (upu *UserProfileUpdate) check() error {
-	if v, ok := upu.mutation.Location(); ok {
+func (_u *UserProfileUpdate) check() error {
+	if v, ok := _u.mutation.Location(); ok {
 		if err := userprofile.LocationValidator(v); err != nil {
 			return &ValidationError{Name: "location", err: fmt.Errorf(`ent: validator failed for field "UserProfile.location": %w`, err)}
 		}
 	}
-	if v, ok := upu.mutation.WebSkillLevel(); ok {
+	if v, ok := _u.mutation.WebSkillLevel(); ok {
 		if err := userprofile.WebSkillLevelValidator(v); err != nil {
 			return &ValidationError{Name: "web_skill_level", err: fmt.Errorf(`ent: validator failed for field "UserProfile.web_skill_level": %w`, err)}
 		}
 	}
-	if v, ok := upu.mutation.RevSkillLevel(); ok {
+	if v, ok := _u.mutation.RevSkillLevel(); ok {
 		if err := userprofile.RevSkillLevelValidator(v); err != nil {
 			return &ValidationError{Name: "rev_skill_level", err: fmt.Errorf(`ent: validator failed for field "UserProfile.rev_skill_level": %w`, err)}
 		}
 	}
-	if v, ok := upu.mutation.PwnSkillLevel(); ok {
+	if v, ok := _u.mutation.PwnSkillLevel(); ok {
 		if err := userprofile.PwnSkillLevelValidator(v); err != nil {
 			return &ValidationError{Name: "pwn_skill_level", err: fmt.Errorf(`ent: validator failed for field "UserProfile.pwn_skill_level": %w`, err)}
 		}
 	}
-	if v, ok := upu.mutation.CryptoSkillLevel(); ok {
+	if v, ok := _u.mutation.CryptoSkillLevel(); ok {
 		if err := userprofile.CryptoSkillLevelValidator(v); err != nil {
 			return &ValidationError{Name: "crypto_skill_level", err: fmt.Errorf(`ent: validator failed for field "UserProfile.crypto_skill_level": %w`, err)}
 		}
 	}
-	if v, ok := upu.mutation.MiscSkillLevel(); ok {
+	if v, ok := _u.mutation.MiscSkillLevel(); ok {
 		if err := userprofile.MiscSkillLevelValidator(v); err != nil {
 			return &ValidationError{Name: "misc_skill_level", err: fmt.Errorf(`ent: validator failed for field "UserProfile.misc_skill_level": %w`, err)}
 		}
 	}
-	if upu.mutation.UserCleared() && len(upu.mutation.UserIDs()) > 0 {
+	if _u.mutation.UserCleared() && len(_u.mutation.UserIDs()) > 0 {
 		return errors.New(`ent: clearing a required unique edge "UserProfile.user"`)
 	}
 	return nil
 }
 
-func (upu *UserProfileUpdate) sqlSave(ctx context.Context) (n int, err error) {
-	if err := upu.check(); err != nil {
-		return n, err
+func (_u *UserProfileUpdate) sqlSave(ctx context.Context) (_node int, err error) {
+	if err := _u.check(); err != nil {
+		return _node, err
 	}
 	_spec := sqlgraph.NewUpdateSpec(userprofile.Table, userprofile.Columns, sqlgraph.NewFieldSpec(userprofile.FieldID, field.TypeInt))
-	if ps := upu.mutation.predicates; len(ps) > 0 {
+	if ps := _u.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
 			for i := range ps {
 				ps[i](selector)
 			}
 		}
 	}
-	if value, ok := upu.mutation.Location(); ok {
+	if value, ok := _u.mutation.Location(); ok {
 		_spec.SetField(userprofile.FieldLocation, field.TypeString, value)
 	}
-	if upu.mutation.LocationCleared() {
+	if _u.mutation.LocationCleared() {
 		_spec.ClearField(userprofile.FieldLocation, field.TypeString)
 	}
-	if value, ok := upu.mutation.GithubLink(); ok {
+	if value, ok := _u.mutation.GithubLink(); ok {
 		_spec.SetField(userprofile.FieldGithubLink, field.TypeString, value)
 	}
-	if upu.mutation.GithubLinkCleared() {
+	if _u.mutation.GithubLinkCleared() {
 		_spec.ClearField(userprofile.FieldGithubLink, field.TypeString)
 	}
-	if value, ok := upu.mutation.LinkedinLink(); ok {
+	if value, ok := _u.mutation.LinkedinLink(); ok {
 		_spec.SetField(userprofile.FieldLinkedinLink, field.TypeString, value)
 	}
-	if upu.mutation.LinkedinLinkCleared() {
+	if _u.mutation.LinkedinLinkCleared() {
 		_spec.ClearField(userprofile.FieldLinkedinLink, field.TypeString)
 	}
-	if value, ok := upu.mutation.TwitterLink(); ok {
+	if value, ok := _u.mutation.TwitterLink(); ok {
 		_spec.SetField(userprofile.FieldTwitterLink, field.TypeString, value)
 	}
-	if upu.mutation.TwitterLinkCleared() {
+	if _u.mutation.TwitterLinkCleared() {
 		_spec.ClearField(userprofile.FieldTwitterLink, field.TypeString)
 	}
-	if value, ok := upu.mutation.WebsiteLink(); ok {
+	if value, ok := _u.mutation.WebsiteLink(); ok {
 		_spec.SetField(userprofile.FieldWebsiteLink, field.TypeString, value)
 	}
-	if upu.mutation.WebsiteLinkCleared() {
+	if _u.mutation.WebsiteLinkCleared() {
 		_spec.ClearField(userprofile.FieldWebsiteLink, field.TypeString)
 	}
-	if value, ok := upu.mutation.WebSkillLevel(); ok {
+	if value, ok := _u.mutation.WebSkillLevel(); ok {
 		_spec.SetField(userprofile.FieldWebSkillLevel, field.TypeInt, value)
 	}
-	if value, ok := upu.mutation.AddedWebSkillLevel(); ok {
+	if value, ok := _u.mutation.AddedWebSkillLevel(); ok {
 		_spec.AddField(userprofile.FieldWebSkillLevel, field.TypeInt, value)
 	}
-	if value, ok := upu.mutation.RevSkillLevel(); ok {
+	if value, ok := _u.mutation.RevSkillLevel(); ok {
 		_spec.SetField(userprofile.FieldRevSkillLevel, field.TypeInt, value)
 	}
-	if value, ok := upu.mutation.AddedRevSkillLevel(); ok {
+	if value, ok := _u.mutation.AddedRevSkillLevel(); ok {
 		_spec.AddField(userprofile.FieldRevSkillLevel, field.TypeInt, value)
 	}
-	if value, ok := upu.mutation.PwnSkillLevel(); ok {
+	if value, ok := _u.mutation.PwnSkillLevel(); ok {
 		_spec.SetField(userprofile.FieldPwnSkillLevel, field.TypeInt, value)
 	}
-	if value, ok := upu.mutation.AddedPwnSkillLevel(); ok {
+	if value, ok := _u.mutation.AddedPwnSkillLevel(); ok {
 		_spec.AddField(userprofile.FieldPwnSkillLevel, field.TypeInt, value)
 	}
-	if value, ok := upu.mutation.CryptoSkillLevel(); ok {
+	if value, ok := _u.mutation.CryptoSkillLevel(); ok {
 		_spec.SetField(userprofile.FieldCryptoSkillLevel, field.TypeInt, value)
 	}
-	if value, ok := upu.mutation.AddedCryptoSkillLevel(); ok {
+	if value, ok := _u.mutation.AddedCryptoSkillLevel(); ok {
 		_spec.AddField(userprofile.FieldCryptoSkillLevel, field.TypeInt, value)
 	}
-	if value, ok := upu.mutation.MiscSkillLevel(); ok {
+	if value, ok := _u.mutation.MiscSkillLevel(); ok {
 		_spec.SetField(userprofile.FieldMiscSkillLevel, field.TypeInt, value)
 	}
-	if value, ok := upu.mutation.AddedMiscSkillLevel(); ok {
+	if value, ok := _u.mutation.AddedMiscSkillLevel(); ok {
 		_spec.AddField(userprofile.FieldMiscSkillLevel, field.TypeInt, value)
 	}
-	if value, ok := upu.mutation.ShowEmail(); ok {
+	if value, ok := _u.mutation.ShowEmail(); ok {
 		_spec.SetField(userprofile.FieldShowEmail, field.TypeBool, value)
 	}
-	if value, ok := upu.mutation.ShowLocation(); ok {
+	if value, ok := _u.mutation.ShowLocation(); ok {
 		_spec.SetField(userprofile.FieldShowLocation, field.TypeBool, value)
 	}
-	if upu.mutation.UserCleared() {
+	if _u.mutation.UserCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: false,
@@ -439,7 +439,7 @@ func (upu *UserProfileUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := upu.mutation.UserIDs(); len(nodes) > 0 {
+	if nodes := _u.mutation.UserIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: false,
@@ -455,7 +455,7 @@ func (upu *UserProfileUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	if n, err = sqlgraph.UpdateNodes(ctx, upu.driver, _spec); err != nil {
+	if _node, err = sqlgraph.UpdateNodes(ctx, _u.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{userprofile.Label}
 		} else if sqlgraph.IsConstraintError(err) {
@@ -463,8 +463,8 @@ func (upu *UserProfileUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		return 0, err
 	}
-	upu.mutation.done = true
-	return n, nil
+	_u.mutation.done = true
+	return _node, nil
 }
 
 // UserProfileUpdateOne is the builder for updating a single UserProfile entity.
@@ -476,281 +476,281 @@ type UserProfileUpdateOne struct {
 }
 
 // SetLocation sets the "location" field.
-func (upuo *UserProfileUpdateOne) SetLocation(s string) *UserProfileUpdateOne {
-	upuo.mutation.SetLocation(s)
-	return upuo
+func (_u *UserProfileUpdateOne) SetLocation(v string) *UserProfileUpdateOne {
+	_u.mutation.SetLocation(v)
+	return _u
 }
 
 // SetNillableLocation sets the "location" field if the given value is not nil.
-func (upuo *UserProfileUpdateOne) SetNillableLocation(s *string) *UserProfileUpdateOne {
-	if s != nil {
-		upuo.SetLocation(*s)
+func (_u *UserProfileUpdateOne) SetNillableLocation(v *string) *UserProfileUpdateOne {
+	if v != nil {
+		_u.SetLocation(*v)
 	}
-	return upuo
+	return _u
 }
 
 // ClearLocation clears the value of the "location" field.
-func (upuo *UserProfileUpdateOne) ClearLocation() *UserProfileUpdateOne {
-	upuo.mutation.ClearLocation()
-	return upuo
+func (_u *UserProfileUpdateOne) ClearLocation() *UserProfileUpdateOne {
+	_u.mutation.ClearLocation()
+	return _u
 }
 
 // SetGithubLink sets the "github_link" field.
-func (upuo *UserProfileUpdateOne) SetGithubLink(s string) *UserProfileUpdateOne {
-	upuo.mutation.SetGithubLink(s)
-	return upuo
+func (_u *UserProfileUpdateOne) SetGithubLink(v string) *UserProfileUpdateOne {
+	_u.mutation.SetGithubLink(v)
+	return _u
 }
 
 // SetNillableGithubLink sets the "github_link" field if the given value is not nil.
-func (upuo *UserProfileUpdateOne) SetNillableGithubLink(s *string) *UserProfileUpdateOne {
-	if s != nil {
-		upuo.SetGithubLink(*s)
+func (_u *UserProfileUpdateOne) SetNillableGithubLink(v *string) *UserProfileUpdateOne {
+	if v != nil {
+		_u.SetGithubLink(*v)
 	}
-	return upuo
+	return _u
 }
 
 // ClearGithubLink clears the value of the "github_link" field.
-func (upuo *UserProfileUpdateOne) ClearGithubLink() *UserProfileUpdateOne {
-	upuo.mutation.ClearGithubLink()
-	return upuo
+func (_u *UserProfileUpdateOne) ClearGithubLink() *UserProfileUpdateOne {
+	_u.mutation.ClearGithubLink()
+	return _u
 }
 
 // SetLinkedinLink sets the "linkedin_link" field.
-func (upuo *UserProfileUpdateOne) SetLinkedinLink(s string) *UserProfileUpdateOne {
-	upuo.mutation.SetLinkedinLink(s)
-	return upuo
+func (_u *UserProfileUpdateOne) SetLinkedinLink(v string) *UserProfileUpdateOne {
+	_u.mutation.SetLinkedinLink(v)
+	return _u
 }
 
 // SetNillableLinkedinLink sets the "linkedin_link" field if the given value is not nil.
-func (upuo *UserProfileUpdateOne) SetNillableLinkedinLink(s *string) *UserProfileUpdateOne {
-	if s != nil {
-		upuo.SetLinkedinLink(*s)
+func (_u *UserProfileUpdateOne) SetNillableLinkedinLink(v *string) *UserProfileUpdateOne {
+	if v != nil {
+		_u.SetLinkedinLink(*v)
 	}
-	return upuo
+	return _u
 }
 
 // ClearLinkedinLink clears the value of the "linkedin_link" field.
-func (upuo *UserProfileUpdateOne) ClearLinkedinLink() *UserProfileUpdateOne {
-	upuo.mutation.ClearLinkedinLink()
-	return upuo
+func (_u *UserProfileUpdateOne) ClearLinkedinLink() *UserProfileUpdateOne {
+	_u.mutation.ClearLinkedinLink()
+	return _u
 }
 
 // SetTwitterLink sets the "twitter_link" field.
-func (upuo *UserProfileUpdateOne) SetTwitterLink(s string) *UserProfileUpdateOne {
-	upuo.mutation.SetTwitterLink(s)
-	return upuo
+func (_u *UserProfileUpdateOne) SetTwitterLink(v string) *UserProfileUpdateOne {
+	_u.mutation.SetTwitterLink(v)
+	return _u
 }
 
 // SetNillableTwitterLink sets the "twitter_link" field if the given value is not nil.
-func (upuo *UserProfileUpdateOne) SetNillableTwitterLink(s *string) *UserProfileUpdateOne {
-	if s != nil {
-		upuo.SetTwitterLink(*s)
+func (_u *UserProfileUpdateOne) SetNillableTwitterLink(v *string) *UserProfileUpdateOne {
+	if v != nil {
+		_u.SetTwitterLink(*v)
 	}
-	return upuo
+	return _u
 }
 
 // ClearTwitterLink clears the value of the "twitter_link" field.
-func (upuo *UserProfileUpdateOne) ClearTwitterLink() *UserProfileUpdateOne {
-	upuo.mutation.ClearTwitterLink()
-	return upuo
+func (_u *UserProfileUpdateOne) ClearTwitterLink() *UserProfileUpdateOne {
+	_u.mutation.ClearTwitterLink()
+	return _u
 }
 
 // SetWebsiteLink sets the "website_link" field.
-func (upuo *UserProfileUpdateOne) SetWebsiteLink(s string) *UserProfileUpdateOne {
-	upuo.mutation.SetWebsiteLink(s)
-	return upuo
+func (_u *UserProfileUpdateOne) SetWebsiteLink(v string) *UserProfileUpdateOne {
+	_u.mutation.SetWebsiteLink(v)
+	return _u
 }
 
 // SetNillableWebsiteLink sets the "website_link" field if the given value is not nil.
-func (upuo *UserProfileUpdateOne) SetNillableWebsiteLink(s *string) *UserProfileUpdateOne {
-	if s != nil {
-		upuo.SetWebsiteLink(*s)
+func (_u *UserProfileUpdateOne) SetNillableWebsiteLink(v *string) *UserProfileUpdateOne {
+	if v != nil {
+		_u.SetWebsiteLink(*v)
 	}
-	return upuo
+	return _u
 }
 
 // ClearWebsiteLink clears the value of the "website_link" field.
-func (upuo *UserProfileUpdateOne) ClearWebsiteLink() *UserProfileUpdateOne {
-	upuo.mutation.ClearWebsiteLink()
-	return upuo
+func (_u *UserProfileUpdateOne) ClearWebsiteLink() *UserProfileUpdateOne {
+	_u.mutation.ClearWebsiteLink()
+	return _u
 }
 
 // SetWebSkillLevel sets the "web_skill_level" field.
-func (upuo *UserProfileUpdateOne) SetWebSkillLevel(i int) *UserProfileUpdateOne {
-	upuo.mutation.ResetWebSkillLevel()
-	upuo.mutation.SetWebSkillLevel(i)
-	return upuo
+func (_u *UserProfileUpdateOne) SetWebSkillLevel(v int) *UserProfileUpdateOne {
+	_u.mutation.ResetWebSkillLevel()
+	_u.mutation.SetWebSkillLevel(v)
+	return _u
 }
 
 // SetNillableWebSkillLevel sets the "web_skill_level" field if the given value is not nil.
-func (upuo *UserProfileUpdateOne) SetNillableWebSkillLevel(i *int) *UserProfileUpdateOne {
-	if i != nil {
-		upuo.SetWebSkillLevel(*i)
+func (_u *UserProfileUpdateOne) SetNillableWebSkillLevel(v *int) *UserProfileUpdateOne {
+	if v != nil {
+		_u.SetWebSkillLevel(*v)
 	}
-	return upuo
+	return _u
 }
 
-// AddWebSkillLevel adds i to the "web_skill_level" field.
-func (upuo *UserProfileUpdateOne) AddWebSkillLevel(i int) *UserProfileUpdateOne {
-	upuo.mutation.AddWebSkillLevel(i)
-	return upuo
+// AddWebSkillLevel adds value to the "web_skill_level" field.
+func (_u *UserProfileUpdateOne) AddWebSkillLevel(v int) *UserProfileUpdateOne {
+	_u.mutation.AddWebSkillLevel(v)
+	return _u
 }
 
 // SetRevSkillLevel sets the "rev_skill_level" field.
-func (upuo *UserProfileUpdateOne) SetRevSkillLevel(i int) *UserProfileUpdateOne {
-	upuo.mutation.ResetRevSkillLevel()
-	upuo.mutation.SetRevSkillLevel(i)
-	return upuo
+func (_u *UserProfileUpdateOne) SetRevSkillLevel(v int) *UserProfileUpdateOne {
+	_u.mutation.ResetRevSkillLevel()
+	_u.mutation.SetRevSkillLevel(v)
+	return _u
 }
 
 // SetNillableRevSkillLevel sets the "rev_skill_level" field if the given value is not nil.
-func (upuo *UserProfileUpdateOne) SetNillableRevSkillLevel(i *int) *UserProfileUpdateOne {
-	if i != nil {
-		upuo.SetRevSkillLevel(*i)
+func (_u *UserProfileUpdateOne) SetNillableRevSkillLevel(v *int) *UserProfileUpdateOne {
+	if v != nil {
+		_u.SetRevSkillLevel(*v)
 	}
-	return upuo
+	return _u
 }
 
-// AddRevSkillLevel adds i to the "rev_skill_level" field.
-func (upuo *UserProfileUpdateOne) AddRevSkillLevel(i int) *UserProfileUpdateOne {
-	upuo.mutation.AddRevSkillLevel(i)
-	return upuo
+// AddRevSkillLevel adds value to the "rev_skill_level" field.
+func (_u *UserProfileUpdateOne) AddRevSkillLevel(v int) *UserProfileUpdateOne {
+	_u.mutation.AddRevSkillLevel(v)
+	return _u
 }
 
 // SetPwnSkillLevel sets the "pwn_skill_level" field.
-func (upuo *UserProfileUpdateOne) SetPwnSkillLevel(i int) *UserProfileUpdateOne {
-	upuo.mutation.ResetPwnSkillLevel()
-	upuo.mutation.SetPwnSkillLevel(i)
-	return upuo
+func (_u *UserProfileUpdateOne) SetPwnSkillLevel(v int) *UserProfileUpdateOne {
+	_u.mutation.ResetPwnSkillLevel()
+	_u.mutation.SetPwnSkillLevel(v)
+	return _u
 }
 
 // SetNillablePwnSkillLevel sets the "pwn_skill_level" field if the given value is not nil.
-func (upuo *UserProfileUpdateOne) SetNillablePwnSkillLevel(i *int) *UserProfileUpdateOne {
-	if i != nil {
-		upuo.SetPwnSkillLevel(*i)
+func (_u *UserProfileUpdateOne) SetNillablePwnSkillLevel(v *int) *UserProfileUpdateOne {
+	if v != nil {
+		_u.SetPwnSkillLevel(*v)
 	}
-	return upuo
+	return _u
 }
 
-// AddPwnSkillLevel adds i to the "pwn_skill_level" field.
-func (upuo *UserProfileUpdateOne) AddPwnSkillLevel(i int) *UserProfileUpdateOne {
-	upuo.mutation.AddPwnSkillLevel(i)
-	return upuo
+// AddPwnSkillLevel adds value to the "pwn_skill_level" field.
+func (_u *UserProfileUpdateOne) AddPwnSkillLevel(v int) *UserProfileUpdateOne {
+	_u.mutation.AddPwnSkillLevel(v)
+	return _u
 }
 
 // SetCryptoSkillLevel sets the "crypto_skill_level" field.
-func (upuo *UserProfileUpdateOne) SetCryptoSkillLevel(i int) *UserProfileUpdateOne {
-	upuo.mutation.ResetCryptoSkillLevel()
-	upuo.mutation.SetCryptoSkillLevel(i)
-	return upuo
+func (_u *UserProfileUpdateOne) SetCryptoSkillLevel(v int) *UserProfileUpdateOne {
+	_u.mutation.ResetCryptoSkillLevel()
+	_u.mutation.SetCryptoSkillLevel(v)
+	return _u
 }
 
 // SetNillableCryptoSkillLevel sets the "crypto_skill_level" field if the given value is not nil.
-func (upuo *UserProfileUpdateOne) SetNillableCryptoSkillLevel(i *int) *UserProfileUpdateOne {
-	if i != nil {
-		upuo.SetCryptoSkillLevel(*i)
+func (_u *UserProfileUpdateOne) SetNillableCryptoSkillLevel(v *int) *UserProfileUpdateOne {
+	if v != nil {
+		_u.SetCryptoSkillLevel(*v)
 	}
-	return upuo
+	return _u
 }
 
-// AddCryptoSkillLevel adds i to the "crypto_skill_level" field.
-func (upuo *UserProfileUpdateOne) AddCryptoSkillLevel(i int) *UserProfileUpdateOne {
-	upuo.mutation.AddCryptoSkillLevel(i)
-	return upuo
+// AddCryptoSkillLevel adds value to the "crypto_skill_level" field.
+func (_u *UserProfileUpdateOne) AddCryptoSkillLevel(v int) *UserProfileUpdateOne {
+	_u.mutation.AddCryptoSkillLevel(v)
+	return _u
 }
 
 // SetMiscSkillLevel sets the "misc_skill_level" field.
-func (upuo *UserProfileUpdateOne) SetMiscSkillLevel(i int) *UserProfileUpdateOne {
-	upuo.mutation.ResetMiscSkillLevel()
-	upuo.mutation.SetMiscSkillLevel(i)
-	return upuo
+func (_u *UserProfileUpdateOne) SetMiscSkillLevel(v int) *UserProfileUpdateOne {
+	_u.mutation.ResetMiscSkillLevel()
+	_u.mutation.SetMiscSkillLevel(v)
+	return _u
 }
 
 // SetNillableMiscSkillLevel sets the "misc_skill_level" field if the given value is not nil.
-func (upuo *UserProfileUpdateOne) SetNillableMiscSkillLevel(i *int) *UserProfileUpdateOne {
-	if i != nil {
-		upuo.SetMiscSkillLevel(*i)
+func (_u *UserProfileUpdateOne) SetNillableMiscSkillLevel(v *int) *UserProfileUpdateOne {
+	if v != nil {
+		_u.SetMiscSkillLevel(*v)
 	}
-	return upuo
+	return _u
 }
 
-// AddMiscSkillLevel adds i to the "misc_skill_level" field.
-func (upuo *UserProfileUpdateOne) AddMiscSkillLevel(i int) *UserProfileUpdateOne {
-	upuo.mutation.AddMiscSkillLevel(i)
-	return upuo
+// AddMiscSkillLevel adds value to the "misc_skill_level" field.
+func (_u *UserProfileUpdateOne) AddMiscSkillLevel(v int) *UserProfileUpdateOne {
+	_u.mutation.AddMiscSkillLevel(v)
+	return _u
 }
 
 // SetShowEmail sets the "show_email" field.
-func (upuo *UserProfileUpdateOne) SetShowEmail(b bool) *UserProfileUpdateOne {
-	upuo.mutation.SetShowEmail(b)
-	return upuo
+func (_u *UserProfileUpdateOne) SetShowEmail(v bool) *UserProfileUpdateOne {
+	_u.mutation.SetShowEmail(v)
+	return _u
 }
 
 // SetNillableShowEmail sets the "show_email" field if the given value is not nil.
-func (upuo *UserProfileUpdateOne) SetNillableShowEmail(b *bool) *UserProfileUpdateOne {
-	if b != nil {
-		upuo.SetShowEmail(*b)
+func (_u *UserProfileUpdateOne) SetNillableShowEmail(v *bool) *UserProfileUpdateOne {
+	if v != nil {
+		_u.SetShowEmail(*v)
 	}
-	return upuo
+	return _u
 }
 
 // SetShowLocation sets the "show_location" field.
-func (upuo *UserProfileUpdateOne) SetShowLocation(b bool) *UserProfileUpdateOne {
-	upuo.mutation.SetShowLocation(b)
-	return upuo
+func (_u *UserProfileUpdateOne) SetShowLocation(v bool) *UserProfileUpdateOne {
+	_u.mutation.SetShowLocation(v)
+	return _u
 }
 
 // SetNillableShowLocation sets the "show_location" field if the given value is not nil.
-func (upuo *UserProfileUpdateOne) SetNillableShowLocation(b *bool) *UserProfileUpdateOne {
-	if b != nil {
-		upuo.SetShowLocation(*b)
+func (_u *UserProfileUpdateOne) SetNillableShowLocation(v *bool) *UserProfileUpdateOne {
+	if v != nil {
+		_u.SetShowLocation(*v)
 	}
-	return upuo
+	return _u
 }
 
 // SetUserID sets the "user" edge to the User entity by ID.
-func (upuo *UserProfileUpdateOne) SetUserID(id int) *UserProfileUpdateOne {
-	upuo.mutation.SetUserID(id)
-	return upuo
+func (_u *UserProfileUpdateOne) SetUserID(id int) *UserProfileUpdateOne {
+	_u.mutation.SetUserID(id)
+	return _u
 }
 
 // SetUser sets the "user" edge to the User entity.
-func (upuo *UserProfileUpdateOne) SetUser(u *User) *UserProfileUpdateOne {
-	return upuo.SetUserID(u.ID)
+func (_u *UserProfileUpdateOne) SetUser(v *User) *UserProfileUpdateOne {
+	return _u.SetUserID(v.ID)
 }
 
 // Mutation returns the UserProfileMutation object of the builder.
-func (upuo *UserProfileUpdateOne) Mutation() *UserProfileMutation {
-	return upuo.mutation
+func (_u *UserProfileUpdateOne) Mutation() *UserProfileMutation {
+	return _u.mutation
 }
 
 // ClearUser clears the "user" edge to the User entity.
-func (upuo *UserProfileUpdateOne) ClearUser() *UserProfileUpdateOne {
-	upuo.mutation.ClearUser()
-	return upuo
+func (_u *UserProfileUpdateOne) ClearUser() *UserProfileUpdateOne {
+	_u.mutation.ClearUser()
+	return _u
 }
 
 // Where appends a list predicates to the UserProfileUpdate builder.
-func (upuo *UserProfileUpdateOne) Where(ps ...predicate.UserProfile) *UserProfileUpdateOne {
-	upuo.mutation.Where(ps...)
-	return upuo
+func (_u *UserProfileUpdateOne) Where(ps ...predicate.UserProfile) *UserProfileUpdateOne {
+	_u.mutation.Where(ps...)
+	return _u
 }
 
 // Select allows selecting one or more fields (columns) of the returned entity.
 // The default is selecting all fields defined in the entity schema.
-func (upuo *UserProfileUpdateOne) Select(field string, fields ...string) *UserProfileUpdateOne {
-	upuo.fields = append([]string{field}, fields...)
-	return upuo
+func (_u *UserProfileUpdateOne) Select(field string, fields ...string) *UserProfileUpdateOne {
+	_u.fields = append([]string{field}, fields...)
+	return _u
 }
 
 // Save executes the query and returns the updated UserProfile entity.
-func (upuo *UserProfileUpdateOne) Save(ctx context.Context) (*UserProfile, error) {
-	return withHooks(ctx, upuo.sqlSave, upuo.mutation, upuo.hooks)
+func (_u *UserProfileUpdateOne) Save(ctx context.Context) (*UserProfile, error) {
+	return withHooks(ctx, _u.sqlSave, _u.mutation, _u.hooks)
 }
 
 // SaveX is like Save, but panics if an error occurs.
-func (upuo *UserProfileUpdateOne) SaveX(ctx context.Context) *UserProfile {
-	node, err := upuo.Save(ctx)
+func (_u *UserProfileUpdateOne) SaveX(ctx context.Context) *UserProfile {
+	node, err := _u.Save(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -758,67 +758,67 @@ func (upuo *UserProfileUpdateOne) SaveX(ctx context.Context) *UserProfile {
 }
 
 // Exec executes the query on the entity.
-func (upuo *UserProfileUpdateOne) Exec(ctx context.Context) error {
-	_, err := upuo.Save(ctx)
+func (_u *UserProfileUpdateOne) Exec(ctx context.Context) error {
+	_, err := _u.Save(ctx)
 	return err
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (upuo *UserProfileUpdateOne) ExecX(ctx context.Context) {
-	if err := upuo.Exec(ctx); err != nil {
+func (_u *UserProfileUpdateOne) ExecX(ctx context.Context) {
+	if err := _u.Exec(ctx); err != nil {
 		panic(err)
 	}
 }
 
 // check runs all checks and user-defined validators on the builder.
-func (upuo *UserProfileUpdateOne) check() error {
-	if v, ok := upuo.mutation.Location(); ok {
+func (_u *UserProfileUpdateOne) check() error {
+	if v, ok := _u.mutation.Location(); ok {
 		if err := userprofile.LocationValidator(v); err != nil {
 			return &ValidationError{Name: "location", err: fmt.Errorf(`ent: validator failed for field "UserProfile.location": %w`, err)}
 		}
 	}
-	if v, ok := upuo.mutation.WebSkillLevel(); ok {
+	if v, ok := _u.mutation.WebSkillLevel(); ok {
 		if err := userprofile.WebSkillLevelValidator(v); err != nil {
 			return &ValidationError{Name: "web_skill_level", err: fmt.Errorf(`ent: validator failed for field "UserProfile.web_skill_level": %w`, err)}
 		}
 	}
-	if v, ok := upuo.mutation.RevSkillLevel(); ok {
+	if v, ok := _u.mutation.RevSkillLevel(); ok {
 		if err := userprofile.RevSkillLevelValidator(v); err != nil {
 			return &ValidationError{Name: "rev_skill_level", err: fmt.Errorf(`ent: validator failed for field "UserProfile.rev_skill_level": %w`, err)}
 		}
 	}
-	if v, ok := upuo.mutation.PwnSkillLevel(); ok {
+	if v, ok := _u.mutation.PwnSkillLevel(); ok {
 		if err := userprofile.PwnSkillLevelValidator(v); err != nil {
 			return &ValidationError{Name: "pwn_skill_level", err: fmt.Errorf(`ent: validator failed for field "UserProfile.pwn_skill_level": %w`, err)}
 		}
 	}
-	if v, ok := upuo.mutation.CryptoSkillLevel(); ok {
+	if v, ok := _u.mutation.CryptoSkillLevel(); ok {
 		if err := userprofile.CryptoSkillLevelValidator(v); err != nil {
 			return &ValidationError{Name: "crypto_skill_level", err: fmt.Errorf(`ent: validator failed for field "UserProfile.crypto_skill_level": %w`, err)}
 		}
 	}
-	if v, ok := upuo.mutation.MiscSkillLevel(); ok {
+	if v, ok := _u.mutation.MiscSkillLevel(); ok {
 		if err := userprofile.MiscSkillLevelValidator(v); err != nil {
 			return &ValidationError{Name: "misc_skill_level", err: fmt.Errorf(`ent: validator failed for field "UserProfile.misc_skill_level": %w`, err)}
 		}
 	}
-	if upuo.mutation.UserCleared() && len(upuo.mutation.UserIDs()) > 0 {
+	if _u.mutation.UserCleared() && len(_u.mutation.UserIDs()) > 0 {
 		return errors.New(`ent: clearing a required unique edge "UserProfile.user"`)
 	}
 	return nil
 }
 
-func (upuo *UserProfileUpdateOne) sqlSave(ctx context.Context) (_node *UserProfile, err error) {
-	if err := upuo.check(); err != nil {
+func (_u *UserProfileUpdateOne) sqlSave(ctx context.Context) (_node *UserProfile, err error) {
+	if err := _u.check(); err != nil {
 		return _node, err
 	}
 	_spec := sqlgraph.NewUpdateSpec(userprofile.Table, userprofile.Columns, sqlgraph.NewFieldSpec(userprofile.FieldID, field.TypeInt))
-	id, ok := upuo.mutation.ID()
+	id, ok := _u.mutation.ID()
 	if !ok {
 		return nil, &ValidationError{Name: "id", err: errors.New(`ent: missing "UserProfile.id" for update`)}
 	}
 	_spec.Node.ID.Value = id
-	if fields := upuo.fields; len(fields) > 0 {
+	if fields := _u.fields; len(fields) > 0 {
 		_spec.Node.Columns = make([]string, 0, len(fields))
 		_spec.Node.Columns = append(_spec.Node.Columns, userprofile.FieldID)
 		for _, f := range fields {
@@ -830,80 +830,80 @@ func (upuo *UserProfileUpdateOne) sqlSave(ctx context.Context) (_node *UserProfi
 			}
 		}
 	}
-	if ps := upuo.mutation.predicates; len(ps) > 0 {
+	if ps := _u.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
 			for i := range ps {
 				ps[i](selector)
 			}
 		}
 	}
-	if value, ok := upuo.mutation.Location(); ok {
+	if value, ok := _u.mutation.Location(); ok {
 		_spec.SetField(userprofile.FieldLocation, field.TypeString, value)
 	}
-	if upuo.mutation.LocationCleared() {
+	if _u.mutation.LocationCleared() {
 		_spec.ClearField(userprofile.FieldLocation, field.TypeString)
 	}
-	if value, ok := upuo.mutation.GithubLink(); ok {
+	if value, ok := _u.mutation.GithubLink(); ok {
 		_spec.SetField(userprofile.FieldGithubLink, field.TypeString, value)
 	}
-	if upuo.mutation.GithubLinkCleared() {
+	if _u.mutation.GithubLinkCleared() {
 		_spec.ClearField(userprofile.FieldGithubLink, field.TypeString)
 	}
-	if value, ok := upuo.mutation.LinkedinLink(); ok {
+	if value, ok := _u.mutation.LinkedinLink(); ok {
 		_spec.SetField(userprofile.FieldLinkedinLink, field.TypeString, value)
 	}
-	if upuo.mutation.LinkedinLinkCleared() {
+	if _u.mutation.LinkedinLinkCleared() {
 		_spec.ClearField(userprofile.FieldLinkedinLink, field.TypeString)
 	}
-	if value, ok := upuo.mutation.TwitterLink(); ok {
+	if value, ok := _u.mutation.TwitterLink(); ok {
 		_spec.SetField(userprofile.FieldTwitterLink, field.TypeString, value)
 	}
-	if upuo.mutation.TwitterLinkCleared() {
+	if _u.mutation.TwitterLinkCleared() {
 		_spec.ClearField(userprofile.FieldTwitterLink, field.TypeString)
 	}
-	if value, ok := upuo.mutation.WebsiteLink(); ok {
+	if value, ok := _u.mutation.WebsiteLink(); ok {
 		_spec.SetField(userprofile.FieldWebsiteLink, field.TypeString, value)
 	}
-	if upuo.mutation.WebsiteLinkCleared() {
+	if _u.mutation.WebsiteLinkCleared() {
 		_spec.ClearField(userprofile.FieldWebsiteLink, field.TypeString)
 	}
-	if value, ok := upuo.mutation.WebSkillLevel(); ok {
+	if value, ok := _u.mutation.WebSkillLevel(); ok {
 		_spec.SetField(userprofile.FieldWebSkillLevel, field.TypeInt, value)
 	}
-	if value, ok := upuo.mutation.AddedWebSkillLevel(); ok {
+	if value, ok := _u.mutation.AddedWebSkillLevel(); ok {
 		_spec.AddField(userprofile.FieldWebSkillLevel, field.TypeInt, value)
 	}
-	if value, ok := upuo.mutation.RevSkillLevel(); ok {
+	if value, ok := _u.mutation.RevSkillLevel(); ok {
 		_spec.SetField(userprofile.FieldRevSkillLevel, field.TypeInt, value)
 	}
-	if value, ok := upuo.mutation.AddedRevSkillLevel(); ok {
+	if value, ok := _u.mutation.AddedRevSkillLevel(); ok {
 		_spec.AddField(userprofile.FieldRevSkillLevel, field.TypeInt, value)
 	}
-	if value, ok := upuo.mutation.PwnSkillLevel(); ok {
+	if value, ok := _u.mutation.PwnSkillLevel(); ok {
 		_spec.SetField(userprofile.FieldPwnSkillLevel, field.TypeInt, value)
 	}
-	if value, ok := upuo.mutation.AddedPwnSkillLevel(); ok {
+	if value, ok := _u.mutation.AddedPwnSkillLevel(); ok {
 		_spec.AddField(userprofile.FieldPwnSkillLevel, field.TypeInt, value)
 	}
-	if value, ok := upuo.mutation.CryptoSkillLevel(); ok {
+	if value, ok := _u.mutation.CryptoSkillLevel(); ok {
 		_spec.SetField(userprofile.FieldCryptoSkillLevel, field.TypeInt, value)
 	}
-	if value, ok := upuo.mutation.AddedCryptoSkillLevel(); ok {
+	if value, ok := _u.mutation.AddedCryptoSkillLevel(); ok {
 		_spec.AddField(userprofile.FieldCryptoSkillLevel, field.TypeInt, value)
 	}
-	if value, ok := upuo.mutation.MiscSkillLevel(); ok {
+	if value, ok := _u.mutation.MiscSkillLevel(); ok {
 		_spec.SetField(userprofile.FieldMiscSkillLevel, field.TypeInt, value)
 	}
-	if value, ok := upuo.mutation.AddedMiscSkillLevel(); ok {
+	if value, ok := _u.mutation.AddedMiscSkillLevel(); ok {
 		_spec.AddField(userprofile.FieldMiscSkillLevel, field.TypeInt, value)
 	}
-	if value, ok := upuo.mutation.ShowEmail(); ok {
+	if value, ok := _u.mutation.ShowEmail(); ok {
 		_spec.SetField(userprofile.FieldShowEmail, field.TypeBool, value)
 	}
-	if value, ok := upuo.mutation.ShowLocation(); ok {
+	if value, ok := _u.mutation.ShowLocation(); ok {
 		_spec.SetField(userprofile.FieldShowLocation, field.TypeBool, value)
 	}
-	if upuo.mutation.UserCleared() {
+	if _u.mutation.UserCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: false,
@@ -916,7 +916,7 @@ func (upuo *UserProfileUpdateOne) sqlSave(ctx context.Context) (_node *UserProfi
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := upuo.mutation.UserIDs(); len(nodes) > 0 {
+	if nodes := _u.mutation.UserIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: false,
@@ -932,10 +932,10 @@ func (upuo *UserProfileUpdateOne) sqlSave(ctx context.Context) (_node *UserProfi
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	_node = &UserProfile{config: upuo.config}
+	_node = &UserProfile{config: _u.config}
 	_spec.Assign = _node.assignValues
 	_spec.ScanValues = _node.scanValues
-	if err = sqlgraph.UpdateNode(ctx, upuo.driver, _spec); err != nil {
+	if err = sqlgraph.UpdateNode(ctx, _u.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{userprofile.Label}
 		} else if sqlgraph.IsConstraintError(err) {
@@ -943,6 +943,6 @@ func (upuo *UserProfileUpdateOne) sqlSave(ctx context.Context) (_node *UserProfi
 		}
 		return nil, err
 	}
-	upuo.mutation.done = true
+	_u.mutation.done = true
 	return _node, nil
 }

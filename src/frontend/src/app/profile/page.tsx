@@ -39,12 +39,11 @@ import {
 	updateUserProfile,
 	UserProfileResponse,
 } from "@/api/userProfile";
-import {
-	changePassword,
-	updateConnections,
-	connectGithub,
-} from "@/api/settings";
+import { changePassword, updateConnections } from "@/api/settings";
 import { SkillRadar } from "@/components/ui/SkillRadar";
+import { GH_CLIENT_ID } from "@/api/constant";
+import useToast from "@/hooks/useToast";
+import { connectGithub, disconnectGithub } from "@/api";
 
 const rarityColors = {
 	common: "text-gray-400 border-gray-400",
@@ -53,40 +52,53 @@ const rarityColors = {
 	legendary: "text-yellow-400 border-yellow-400",
 };
 
+type availableTab =
+	| "overview"
+	| "writeups"
+	| "achievements"
+	| "activity"
+	| "settings";
+
+const availableTabs: availableTab[] = [
+	"overview",
+	"writeups",
+	"achievements",
+	"activity",
+	"settings",
+];
+
 export default function ProfilePage() {
+	const qp = new URL(window.location.href).searchParams;
 	const router = useRouter();
-	const { user, isAuthenticated, token } = useAuthStore();
+	const { user, isAuthenticated, token, setAuth } = useAuthStore();
 	const [pageLoading, setPageLoading] = useState(true);
 	const [userWriteups, setUserWriteups] = useState<WriteupListResponse | null>(
 		null
 	);
 	const [profile, setProfile] = useState<UserProfileResponse | null>(null);
-	const [activeTab, setActiveTab] = useState<
-		"overview" | "writeups" | "achievements" | "activity" | "settings"
-	>("overview");
+	const [activeTab, setActiveTab] = useState<availableTab>(
+		availableTabs.includes(qp.get("tab") as availableTab)
+			? (qp.get("tab") as availableTab)
+			: "overview"
+	);
+	const { toast } = useToast();
 	const [settingsData, setSettingsData] = useState({
 		password: {
 			current: "",
 			new: "",
 			confirm: "",
 		},
-		notifications: {
-			email: true,
-			browser: false,
-			contests: true,
-			writeups: true,
+		connections: {
+			github: "",
+			ctftime: "",
+			discord: "",
 		},
-		connections: { github: "", ctftime: "", discord: "" },
 	});
 	const [loading, setLoading] = useState({
 		password: false,
-		connections: false,
+		connections: qp.get("connections_loading") === "true",
 		saveAll: false,
 	});
-	const [toast, setToast] = useState<{
-		message: string;
-		type: "success" | "error";
-	} | null>(null);
 
 	useEffect(() => {
 		if (!isAuthenticated) {
@@ -107,25 +119,40 @@ export default function ProfilePage() {
 					setUserWriteups(writeupsResponse.data || null);
 				}
 			} catch (error: any) {
-				setToast({
-					message: error?.message ?? "error loading user data",
-					type: "error",
-				});
+				toast.error(
+					"something went wrong loading your data",
+					error?.message ?? "unknown error occurred"
+				);
 			} finally {
 				setPageLoading(false);
 			}
 		};
 
-		loadUserData();
-	}, [isAuthenticated, user?.id, router, token]);
+		const ghConnect = async () => {
+			try {
+				const r = await connectGithub(token!, qp.get("code")!);
+				setAuth(r.user, r.token);
+				toast.success("GitHub connected successfully!");
+			} catch (error: any) {
+				toast.error(
+					"something went wrong connecting to github",
+					error?.message ?? "unknown error occurred"
+				);
+			} finally {
+				setLoading((prev) => ({
+					...prev,
+					connections: false,
+				}));
+				window.history.replaceState({}, "", "/profile");
+			}
+		};
 
-	useEffect(() => {
-		if (toast) {
-			const timer = setTimeout(() => setToast(null), 3000);
-			return () => clearTimeout(timer);
+		loadUserData();
+		if (loading.connections) {
+			ghConnect();
 		}
-		return undefined;
-	}, [toast]);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [isAuthenticated, user?.id, router]);
 
 	if (!isAuthenticated) {
 		return null;
@@ -140,6 +167,53 @@ export default function ProfilePage() {
 			</MainLayout>
 		);
 	}
+
+	const connectGithubHandler = async () => {
+		setLoading((prev) => ({
+			...prev,
+			connections: true,
+		}));
+		try {
+			const result = {
+				success: true,
+				url: `https://github.com/login/oauth/authorize?client_id=${GH_CLIENT_ID}`,
+				message: "Redirecting to GitHub...",
+			};
+			window.open(result.url, "_self");
+		} catch (err: any) {
+			toast.error(
+				"connecting github failed",
+				err?.message ?? "something went wrong. Please contact the administrator"
+			);
+		} finally {
+			setLoading((prev) => ({
+				...prev,
+				connections: false,
+			}));
+		}
+	};
+
+	const disconnectGithubHandler = async () => {
+		setLoading((prev) => ({
+			...prev,
+			connections: true,
+		}));
+		try {
+			const r = await disconnectGithub(token!);
+			setAuth(r.user, r.token);
+			toast.success("GitHub disconnected successfully!");
+		} catch (error: any) {
+			toast.error(
+				"something went wrong connecting to github",
+				error?.message ?? "unknown error occurred"
+			);
+		} finally {
+			setLoading((prev) => ({
+				...prev,
+				connections: false,
+			}));
+		}
+	};
 
 	return (
 		<MainLayout>
@@ -719,10 +793,7 @@ export default function ProfilePage() {
 														password: { current: "", new: "", confirm: "" },
 													}));
 												}
-												setToast({
-													message: result.message,
-													type: result.success ? "success" : "error",
-												});
+												// TODO: TOAST
 											} finally {
 												setLoading((prev) => ({ ...prev, password: false }));
 											}
@@ -752,30 +823,36 @@ export default function ProfilePage() {
 													</div>
 												</div>
 											</div>
-											<Button
-												variant="outline"
-												className="font-mono border-green-500/50 text-green-400 hover:bg-green-500/10"
-												onClick={async () => {
-													setLoading((prev) => ({
-														...prev,
-														connections: true,
-													}));
-													try {
-														const result = await connectGithub();
-														if (result.success && result.url) {
-															window.open(result.url, "_blank");
-														}
-													} finally {
-														setLoading((prev) => ({
-															...prev,
-															connections: false,
-														}));
-													}
-												}}
-												disabled={loading.connections}
-											>
-												{loading.connections ? "CONNECTING..." : "CONNECT"}
-											</Button>
+											{user.github_account_id ? (
+												<div className="flex items-center space-x-3">
+													<img
+														src={user.github_avatar_url}
+														alt={`${user.github_username}'s avatar`}
+														className="w-8 h-8 rounded border border-green-500/50"
+													/>
+													<span className="font-mono text-green-400 text-sm">
+														Connected as {user.github_username}
+													</span>
+													<Button
+														variant="outline"
+														className="font-mono border-red-500/50 text-red-400 hover:bg-red-500/10 text-sm"
+														onClick={disconnectGithubHandler}
+													>
+														{loading.connections
+															? "DISCONNECTING..."
+															: "DISCONNECT"}
+													</Button>
+												</div>
+											) : (
+												<Button
+													variant="outline"
+													className="font-mono border-green-500/50 text-green-400 hover:bg-green-500/10"
+													onClick={connectGithubHandler}
+													disabled={loading.connections}
+												>
+													{loading.connections ? "CONNECTING..." : "CONNECT"}
+												</Button>
+											)}
 										</div>
 										<div className="flex items-center justify-between p-4 bg-gray-900/50 rounded-lg border border-gray-700">
 											<div className="flex items-center space-x-3">
@@ -817,10 +894,10 @@ export default function ProfilePage() {
 															const result = await updateConnections(
 																settingsData.connections
 															);
-															setToast({
-																message: result.message,
-																type: result.success ? "success" : "error",
-															});
+															toast.success(
+																"CTFTime connected",
+																result.message
+															);
 														} finally {
 															setLoading((prev) => ({
 																...prev,
@@ -876,10 +953,10 @@ export default function ProfilePage() {
 															const result = await updateConnections(
 																settingsData.connections
 															);
-															setToast({
-																message: result.message,
-																type: result.success ? "success" : "error",
-															});
+															toast.success(
+																"Discord connected",
+																result.message
+															);
 														} finally {
 															setLoading((prev) => ({
 																...prev,
@@ -986,10 +1063,11 @@ export default function ProfilePage() {
 													// updateNotifications(settingsData.notifications),
 													// updatePrivacy(settingsData.privacy),
 												]);
-												setToast({
-													message: "All settings saved successfully!",
-													type: "success",
-												});
+												// TODO: TOAST
+												// setToast({
+												// 	message: "All settings saved successfully!",
+												// 	type: "success",
+												// });
 											} finally {
 												setLoading((prev) => ({ ...prev, saveAll: false }));
 											}
@@ -1005,22 +1083,6 @@ export default function ProfilePage() {
 					</motion.div>
 				</div>
 			</div>
-			{toast && (
-				<div className="fixed bottom-4 right-4 z-50">
-					<motion.div
-						initial={{ opacity: 0, y: 50 }}
-						animate={{ opacity: 1, y: 0 }}
-						exit={{ opacity: 0, y: 50 }}
-						className={`px-6 py-3 rounded-lg font-mono text-sm border ${
-							toast.type === "success"
-								? "bg-green-500/20 text-green-400 border-green-500/50"
-								: "bg-red-500/20 text-red-400 border-red-500/50"
-						}`}
-					>
-						{toast.message}
-					</motion.div>
-				</div>
-			)}
 		</MainLayout>
 	);
 }

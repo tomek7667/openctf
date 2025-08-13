@@ -110,7 +110,7 @@ func (*Team) scanValues(columns []string) ([]any, error) {
 
 // assignValues assigns the values that were returned from sql.Rows (after scanning)
 // to the Team fields.
-func (t *Team) assignValues(columns []string, values []any) error {
+func (_m *Team) assignValues(columns []string, values []any) error {
 	if m, n := len(values), len(columns); m < n {
 		return fmt.Errorf("mismatch number of scan values: %d != %d", m, n)
 	}
@@ -121,69 +121,69 @@ func (t *Team) assignValues(columns []string, values []any) error {
 			if !ok {
 				return fmt.Errorf("unexpected type %T for field id", value)
 			}
-			t.ID = int(value.Int64)
+			_m.ID = int(value.Int64)
 		case team.FieldName:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field name", values[i])
 			} else if value.Valid {
-				t.Name = value.String
+				_m.Name = value.String
 			}
 		case team.FieldDescription:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field description", values[i])
 			} else if value.Valid {
-				t.Description = new(string)
-				*t.Description = value.String
+				_m.Description = new(string)
+				*_m.Description = value.String
 			}
 		case team.FieldCtftimeID:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field ctftime_id", values[i])
 			} else if value.Valid {
-				t.CtftimeID = new(int)
-				*t.CtftimeID = int(value.Int64)
+				_m.CtftimeID = new(int)
+				*_m.CtftimeID = int(value.Int64)
 			}
 		case team.FieldCtftimeVerifiedAt:
 			if value, ok := values[i].(*sql.NullTime); !ok {
 				return fmt.Errorf("unexpected type %T for field ctftime_verified_at", values[i])
 			} else if value.Valid {
-				t.CtftimeVerifiedAt = new(time.Time)
-				*t.CtftimeVerifiedAt = value.Time
+				_m.CtftimeVerifiedAt = new(time.Time)
+				*_m.CtftimeVerifiedAt = value.Time
 			}
 		case team.FieldLogo:
 			if value, ok := values[i].(*[]byte); !ok {
 				return fmt.Errorf("unexpected type %T for field logo", values[i])
 			} else if value != nil {
-				t.Logo = value
+				_m.Logo = value
 			}
 		case team.FieldVerifiedAt:
 			if value, ok := values[i].(*sql.NullTime); !ok {
 				return fmt.Errorf("unexpected type %T for field verified_at", values[i])
 			} else if value.Valid {
-				t.VerifiedAt = new(time.Time)
-				*t.VerifiedAt = value.Time
+				_m.VerifiedAt = new(time.Time)
+				*_m.VerifiedAt = value.Time
 			}
 		case team.FieldCountryCode:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field country_code", values[i])
 			} else if value.Valid {
-				t.CountryCode = value.String
+				_m.CountryCode = value.String
 			}
 		case team.ForeignKeys[0]:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for edge-field team_captain", value)
 			} else if value.Valid {
-				t.team_captain = new(int)
-				*t.team_captain = int(value.Int64)
+				_m.team_captain = new(int)
+				*_m.team_captain = int(value.Int64)
 			}
 		case team.ForeignKeys[1]:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for edge-field team_verified_by", value)
 			} else if value.Valid {
-				t.team_verified_by = new(int)
-				*t.team_verified_by = int(value.Int64)
+				_m.team_verified_by = new(int)
+				*_m.team_verified_by = int(value.Int64)
 			}
 		default:
-			t.selectValues.Set(columns[i], values[i])
+			_m.selectValues.Set(columns[i], values[i])
 		}
 	}
 	return nil
@@ -191,78 +191,78 @@ func (t *Team) assignValues(columns []string, values []any) error {
 
 // Value returns the ent.Value that was dynamically selected and assigned to the Team.
 // This includes values selected through modifiers, order, etc.
-func (t *Team) Value(name string) (ent.Value, error) {
-	return t.selectValues.Get(name)
+func (_m *Team) Value(name string) (ent.Value, error) {
+	return _m.selectValues.Get(name)
 }
 
 // QueryCaptain queries the "captain" edge of the Team entity.
-func (t *Team) QueryCaptain() *UserQuery {
-	return NewTeamClient(t.config).QueryCaptain(t)
+func (_m *Team) QueryCaptain() *UserQuery {
+	return NewTeamClient(_m.config).QueryCaptain(_m)
 }
 
 // QueryVerifiedBy queries the "verified_by" edge of the Team entity.
-func (t *Team) QueryVerifiedBy() *UserQuery {
-	return NewTeamClient(t.config).QueryVerifiedBy(t)
+func (_m *Team) QueryVerifiedBy() *UserQuery {
+	return NewTeamClient(_m.config).QueryVerifiedBy(_m)
 }
 
 // QueryMembers queries the "members" edge of the Team entity.
-func (t *Team) QueryMembers() *UserQuery {
-	return NewTeamClient(t.config).QueryMembers(t)
+func (_m *Team) QueryMembers() *UserQuery {
+	return NewTeamClient(_m.config).QueryMembers(_m)
 }
 
 // Update returns a builder for updating this Team.
 // Note that you need to call Team.Unwrap() before calling this method if this Team
 // was returned from a transaction, and the transaction was committed or rolled back.
-func (t *Team) Update() *TeamUpdateOne {
-	return NewTeamClient(t.config).UpdateOne(t)
+func (_m *Team) Update() *TeamUpdateOne {
+	return NewTeamClient(_m.config).UpdateOne(_m)
 }
 
 // Unwrap unwraps the Team entity that was returned from a transaction after it was closed,
 // so that all future queries will be executed through the driver which created the transaction.
-func (t *Team) Unwrap() *Team {
-	_tx, ok := t.config.driver.(*txDriver)
+func (_m *Team) Unwrap() *Team {
+	_tx, ok := _m.config.driver.(*txDriver)
 	if !ok {
 		panic("ent: Team is not a transactional entity")
 	}
-	t.config.driver = _tx.drv
-	return t
+	_m.config.driver = _tx.drv
+	return _m
 }
 
 // String implements the fmt.Stringer.
-func (t *Team) String() string {
+func (_m *Team) String() string {
 	var builder strings.Builder
 	builder.WriteString("Team(")
-	builder.WriteString(fmt.Sprintf("id=%v, ", t.ID))
+	builder.WriteString(fmt.Sprintf("id=%v, ", _m.ID))
 	builder.WriteString("name=")
-	builder.WriteString(t.Name)
+	builder.WriteString(_m.Name)
 	builder.WriteString(", ")
-	if v := t.Description; v != nil {
+	if v := _m.Description; v != nil {
 		builder.WriteString("description=")
 		builder.WriteString(*v)
 	}
 	builder.WriteString(", ")
-	if v := t.CtftimeID; v != nil {
+	if v := _m.CtftimeID; v != nil {
 		builder.WriteString("ctftime_id=")
 		builder.WriteString(fmt.Sprintf("%v", *v))
 	}
 	builder.WriteString(", ")
-	if v := t.CtftimeVerifiedAt; v != nil {
+	if v := _m.CtftimeVerifiedAt; v != nil {
 		builder.WriteString("ctftime_verified_at=")
 		builder.WriteString(v.Format(time.ANSIC))
 	}
 	builder.WriteString(", ")
-	if v := t.Logo; v != nil {
+	if v := _m.Logo; v != nil {
 		builder.WriteString("logo=")
 		builder.WriteString(fmt.Sprintf("%v", *v))
 	}
 	builder.WriteString(", ")
-	if v := t.VerifiedAt; v != nil {
+	if v := _m.VerifiedAt; v != nil {
 		builder.WriteString("verified_at=")
 		builder.WriteString(v.Format(time.ANSIC))
 	}
 	builder.WriteString(", ")
 	builder.WriteString("country_code=")
-	builder.WriteString(t.CountryCode)
+	builder.WriteString(_m.CountryCode)
 	builder.WriteByte(')')
 	return builder.String()
 }

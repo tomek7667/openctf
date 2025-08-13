@@ -33,44 +33,44 @@ type WeightRatingQuery struct {
 }
 
 // Where adds a new predicate for the WeightRatingQuery builder.
-func (wrq *WeightRatingQuery) Where(ps ...predicate.WeightRating) *WeightRatingQuery {
-	wrq.predicates = append(wrq.predicates, ps...)
-	return wrq
+func (_q *WeightRatingQuery) Where(ps ...predicate.WeightRating) *WeightRatingQuery {
+	_q.predicates = append(_q.predicates, ps...)
+	return _q
 }
 
 // Limit the number of records to be returned by this query.
-func (wrq *WeightRatingQuery) Limit(limit int) *WeightRatingQuery {
-	wrq.ctx.Limit = &limit
-	return wrq
+func (_q *WeightRatingQuery) Limit(limit int) *WeightRatingQuery {
+	_q.ctx.Limit = &limit
+	return _q
 }
 
 // Offset to start from.
-func (wrq *WeightRatingQuery) Offset(offset int) *WeightRatingQuery {
-	wrq.ctx.Offset = &offset
-	return wrq
+func (_q *WeightRatingQuery) Offset(offset int) *WeightRatingQuery {
+	_q.ctx.Offset = &offset
+	return _q
 }
 
 // Unique configures the query builder to filter duplicate records on query.
 // By default, unique is set to true, and can be disabled using this method.
-func (wrq *WeightRatingQuery) Unique(unique bool) *WeightRatingQuery {
-	wrq.ctx.Unique = &unique
-	return wrq
+func (_q *WeightRatingQuery) Unique(unique bool) *WeightRatingQuery {
+	_q.ctx.Unique = &unique
+	return _q
 }
 
 // Order specifies how the records should be ordered.
-func (wrq *WeightRatingQuery) Order(o ...weightrating.OrderOption) *WeightRatingQuery {
-	wrq.order = append(wrq.order, o...)
-	return wrq
+func (_q *WeightRatingQuery) Order(o ...weightrating.OrderOption) *WeightRatingQuery {
+	_q.order = append(_q.order, o...)
+	return _q
 }
 
 // QueryCaptainsTeam chains the current query on the "captains_team" edge.
-func (wrq *WeightRatingQuery) QueryCaptainsTeam() *TeamQuery {
-	query := (&TeamClient{config: wrq.config}).Query()
+func (_q *WeightRatingQuery) QueryCaptainsTeam() *TeamQuery {
+	query := (&TeamClient{config: _q.config}).Query()
 	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
-		if err := wrq.prepareQuery(ctx); err != nil {
+		if err := _q.prepareQuery(ctx); err != nil {
 			return nil, err
 		}
-		selector := wrq.sqlQuery(ctx)
+		selector := _q.sqlQuery(ctx)
 		if err := selector.Err(); err != nil {
 			return nil, err
 		}
@@ -79,20 +79,20 @@ func (wrq *WeightRatingQuery) QueryCaptainsTeam() *TeamQuery {
 			sqlgraph.To(team.Table, team.FieldID),
 			sqlgraph.Edge(sqlgraph.M2O, false, weightrating.CaptainsTeamTable, weightrating.CaptainsTeamColumn),
 		)
-		fromU = sqlgraph.SetNeighbors(wrq.driver.Dialect(), step)
+		fromU = sqlgraph.SetNeighbors(_q.driver.Dialect(), step)
 		return fromU, nil
 	}
 	return query
 }
 
 // QueryContest chains the current query on the "contest" edge.
-func (wrq *WeightRatingQuery) QueryContest() *ContestQuery {
-	query := (&ContestClient{config: wrq.config}).Query()
+func (_q *WeightRatingQuery) QueryContest() *ContestQuery {
+	query := (&ContestClient{config: _q.config}).Query()
 	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
-		if err := wrq.prepareQuery(ctx); err != nil {
+		if err := _q.prepareQuery(ctx); err != nil {
 			return nil, err
 		}
-		selector := wrq.sqlQuery(ctx)
+		selector := _q.sqlQuery(ctx)
 		if err := selector.Err(); err != nil {
 			return nil, err
 		}
@@ -101,7 +101,7 @@ func (wrq *WeightRatingQuery) QueryContest() *ContestQuery {
 			sqlgraph.To(contest.Table, contest.FieldID),
 			sqlgraph.Edge(sqlgraph.M2O, false, weightrating.ContestTable, weightrating.ContestColumn),
 		)
-		fromU = sqlgraph.SetNeighbors(wrq.driver.Dialect(), step)
+		fromU = sqlgraph.SetNeighbors(_q.driver.Dialect(), step)
 		return fromU, nil
 	}
 	return query
@@ -109,8 +109,8 @@ func (wrq *WeightRatingQuery) QueryContest() *ContestQuery {
 
 // First returns the first WeightRating entity from the query.
 // Returns a *NotFoundError when no WeightRating was found.
-func (wrq *WeightRatingQuery) First(ctx context.Context) (*WeightRating, error) {
-	nodes, err := wrq.Limit(1).All(setContextOp(ctx, wrq.ctx, ent.OpQueryFirst))
+func (_q *WeightRatingQuery) First(ctx context.Context) (*WeightRating, error) {
+	nodes, err := _q.Limit(1).All(setContextOp(ctx, _q.ctx, ent.OpQueryFirst))
 	if err != nil {
 		return nil, err
 	}
@@ -121,8 +121,8 @@ func (wrq *WeightRatingQuery) First(ctx context.Context) (*WeightRating, error) 
 }
 
 // FirstX is like First, but panics if an error occurs.
-func (wrq *WeightRatingQuery) FirstX(ctx context.Context) *WeightRating {
-	node, err := wrq.First(ctx)
+func (_q *WeightRatingQuery) FirstX(ctx context.Context) *WeightRating {
+	node, err := _q.First(ctx)
 	if err != nil && !IsNotFound(err) {
 		panic(err)
 	}
@@ -131,9 +131,9 @@ func (wrq *WeightRatingQuery) FirstX(ctx context.Context) *WeightRating {
 
 // FirstID returns the first WeightRating ID from the query.
 // Returns a *NotFoundError when no WeightRating ID was found.
-func (wrq *WeightRatingQuery) FirstID(ctx context.Context) (id int, err error) {
+func (_q *WeightRatingQuery) FirstID(ctx context.Context) (id int, err error) {
 	var ids []int
-	if ids, err = wrq.Limit(1).IDs(setContextOp(ctx, wrq.ctx, ent.OpQueryFirstID)); err != nil {
+	if ids, err = _q.Limit(1).IDs(setContextOp(ctx, _q.ctx, ent.OpQueryFirstID)); err != nil {
 		return
 	}
 	if len(ids) == 0 {
@@ -144,8 +144,8 @@ func (wrq *WeightRatingQuery) FirstID(ctx context.Context) (id int, err error) {
 }
 
 // FirstIDX is like FirstID, but panics if an error occurs.
-func (wrq *WeightRatingQuery) FirstIDX(ctx context.Context) int {
-	id, err := wrq.FirstID(ctx)
+func (_q *WeightRatingQuery) FirstIDX(ctx context.Context) int {
+	id, err := _q.FirstID(ctx)
 	if err != nil && !IsNotFound(err) {
 		panic(err)
 	}
@@ -155,8 +155,8 @@ func (wrq *WeightRatingQuery) FirstIDX(ctx context.Context) int {
 // Only returns a single WeightRating entity found by the query, ensuring it only returns one.
 // Returns a *NotSingularError when more than one WeightRating entity is found.
 // Returns a *NotFoundError when no WeightRating entities are found.
-func (wrq *WeightRatingQuery) Only(ctx context.Context) (*WeightRating, error) {
-	nodes, err := wrq.Limit(2).All(setContextOp(ctx, wrq.ctx, ent.OpQueryOnly))
+func (_q *WeightRatingQuery) Only(ctx context.Context) (*WeightRating, error) {
+	nodes, err := _q.Limit(2).All(setContextOp(ctx, _q.ctx, ent.OpQueryOnly))
 	if err != nil {
 		return nil, err
 	}
@@ -171,8 +171,8 @@ func (wrq *WeightRatingQuery) Only(ctx context.Context) (*WeightRating, error) {
 }
 
 // OnlyX is like Only, but panics if an error occurs.
-func (wrq *WeightRatingQuery) OnlyX(ctx context.Context) *WeightRating {
-	node, err := wrq.Only(ctx)
+func (_q *WeightRatingQuery) OnlyX(ctx context.Context) *WeightRating {
+	node, err := _q.Only(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -182,9 +182,9 @@ func (wrq *WeightRatingQuery) OnlyX(ctx context.Context) *WeightRating {
 // OnlyID is like Only, but returns the only WeightRating ID in the query.
 // Returns a *NotSingularError when more than one WeightRating ID is found.
 // Returns a *NotFoundError when no entities are found.
-func (wrq *WeightRatingQuery) OnlyID(ctx context.Context) (id int, err error) {
+func (_q *WeightRatingQuery) OnlyID(ctx context.Context) (id int, err error) {
 	var ids []int
-	if ids, err = wrq.Limit(2).IDs(setContextOp(ctx, wrq.ctx, ent.OpQueryOnlyID)); err != nil {
+	if ids, err = _q.Limit(2).IDs(setContextOp(ctx, _q.ctx, ent.OpQueryOnlyID)); err != nil {
 		return
 	}
 	switch len(ids) {
@@ -199,8 +199,8 @@ func (wrq *WeightRatingQuery) OnlyID(ctx context.Context) (id int, err error) {
 }
 
 // OnlyIDX is like OnlyID, but panics if an error occurs.
-func (wrq *WeightRatingQuery) OnlyIDX(ctx context.Context) int {
-	id, err := wrq.OnlyID(ctx)
+func (_q *WeightRatingQuery) OnlyIDX(ctx context.Context) int {
+	id, err := _q.OnlyID(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -208,18 +208,18 @@ func (wrq *WeightRatingQuery) OnlyIDX(ctx context.Context) int {
 }
 
 // All executes the query and returns a list of WeightRatings.
-func (wrq *WeightRatingQuery) All(ctx context.Context) ([]*WeightRating, error) {
-	ctx = setContextOp(ctx, wrq.ctx, ent.OpQueryAll)
-	if err := wrq.prepareQuery(ctx); err != nil {
+func (_q *WeightRatingQuery) All(ctx context.Context) ([]*WeightRating, error) {
+	ctx = setContextOp(ctx, _q.ctx, ent.OpQueryAll)
+	if err := _q.prepareQuery(ctx); err != nil {
 		return nil, err
 	}
 	qr := querierAll[[]*WeightRating, *WeightRatingQuery]()
-	return withInterceptors[[]*WeightRating](ctx, wrq, qr, wrq.inters)
+	return withInterceptors[[]*WeightRating](ctx, _q, qr, _q.inters)
 }
 
 // AllX is like All, but panics if an error occurs.
-func (wrq *WeightRatingQuery) AllX(ctx context.Context) []*WeightRating {
-	nodes, err := wrq.All(ctx)
+func (_q *WeightRatingQuery) AllX(ctx context.Context) []*WeightRating {
+	nodes, err := _q.All(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -227,20 +227,20 @@ func (wrq *WeightRatingQuery) AllX(ctx context.Context) []*WeightRating {
 }
 
 // IDs executes the query and returns a list of WeightRating IDs.
-func (wrq *WeightRatingQuery) IDs(ctx context.Context) (ids []int, err error) {
-	if wrq.ctx.Unique == nil && wrq.path != nil {
-		wrq.Unique(true)
+func (_q *WeightRatingQuery) IDs(ctx context.Context) (ids []int, err error) {
+	if _q.ctx.Unique == nil && _q.path != nil {
+		_q.Unique(true)
 	}
-	ctx = setContextOp(ctx, wrq.ctx, ent.OpQueryIDs)
-	if err = wrq.Select(weightrating.FieldID).Scan(ctx, &ids); err != nil {
+	ctx = setContextOp(ctx, _q.ctx, ent.OpQueryIDs)
+	if err = _q.Select(weightrating.FieldID).Scan(ctx, &ids); err != nil {
 		return nil, err
 	}
 	return ids, nil
 }
 
 // IDsX is like IDs, but panics if an error occurs.
-func (wrq *WeightRatingQuery) IDsX(ctx context.Context) []int {
-	ids, err := wrq.IDs(ctx)
+func (_q *WeightRatingQuery) IDsX(ctx context.Context) []int {
+	ids, err := _q.IDs(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -248,17 +248,17 @@ func (wrq *WeightRatingQuery) IDsX(ctx context.Context) []int {
 }
 
 // Count returns the count of the given query.
-func (wrq *WeightRatingQuery) Count(ctx context.Context) (int, error) {
-	ctx = setContextOp(ctx, wrq.ctx, ent.OpQueryCount)
-	if err := wrq.prepareQuery(ctx); err != nil {
+func (_q *WeightRatingQuery) Count(ctx context.Context) (int, error) {
+	ctx = setContextOp(ctx, _q.ctx, ent.OpQueryCount)
+	if err := _q.prepareQuery(ctx); err != nil {
 		return 0, err
 	}
-	return withInterceptors[int](ctx, wrq, querierCount[*WeightRatingQuery](), wrq.inters)
+	return withInterceptors[int](ctx, _q, querierCount[*WeightRatingQuery](), _q.inters)
 }
 
 // CountX is like Count, but panics if an error occurs.
-func (wrq *WeightRatingQuery) CountX(ctx context.Context) int {
-	count, err := wrq.Count(ctx)
+func (_q *WeightRatingQuery) CountX(ctx context.Context) int {
+	count, err := _q.Count(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -266,9 +266,9 @@ func (wrq *WeightRatingQuery) CountX(ctx context.Context) int {
 }
 
 // Exist returns true if the query has elements in the graph.
-func (wrq *WeightRatingQuery) Exist(ctx context.Context) (bool, error) {
-	ctx = setContextOp(ctx, wrq.ctx, ent.OpQueryExist)
-	switch _, err := wrq.FirstID(ctx); {
+func (_q *WeightRatingQuery) Exist(ctx context.Context) (bool, error) {
+	ctx = setContextOp(ctx, _q.ctx, ent.OpQueryExist)
+	switch _, err := _q.FirstID(ctx); {
 	case IsNotFound(err):
 		return false, nil
 	case err != nil:
@@ -279,8 +279,8 @@ func (wrq *WeightRatingQuery) Exist(ctx context.Context) (bool, error) {
 }
 
 // ExistX is like Exist, but panics if an error occurs.
-func (wrq *WeightRatingQuery) ExistX(ctx context.Context) bool {
-	exist, err := wrq.Exist(ctx)
+func (_q *WeightRatingQuery) ExistX(ctx context.Context) bool {
+	exist, err := _q.Exist(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -289,44 +289,44 @@ func (wrq *WeightRatingQuery) ExistX(ctx context.Context) bool {
 
 // Clone returns a duplicate of the WeightRatingQuery builder, including all associated steps. It can be
 // used to prepare common query builders and use them differently after the clone is made.
-func (wrq *WeightRatingQuery) Clone() *WeightRatingQuery {
-	if wrq == nil {
+func (_q *WeightRatingQuery) Clone() *WeightRatingQuery {
+	if _q == nil {
 		return nil
 	}
 	return &WeightRatingQuery{
-		config:           wrq.config,
-		ctx:              wrq.ctx.Clone(),
-		order:            append([]weightrating.OrderOption{}, wrq.order...),
-		inters:           append([]Interceptor{}, wrq.inters...),
-		predicates:       append([]predicate.WeightRating{}, wrq.predicates...),
-		withCaptainsTeam: wrq.withCaptainsTeam.Clone(),
-		withContest:      wrq.withContest.Clone(),
+		config:           _q.config,
+		ctx:              _q.ctx.Clone(),
+		order:            append([]weightrating.OrderOption{}, _q.order...),
+		inters:           append([]Interceptor{}, _q.inters...),
+		predicates:       append([]predicate.WeightRating{}, _q.predicates...),
+		withCaptainsTeam: _q.withCaptainsTeam.Clone(),
+		withContest:      _q.withContest.Clone(),
 		// clone intermediate query.
-		sql:  wrq.sql.Clone(),
-		path: wrq.path,
+		sql:  _q.sql.Clone(),
+		path: _q.path,
 	}
 }
 
 // WithCaptainsTeam tells the query-builder to eager-load the nodes that are connected to
 // the "captains_team" edge. The optional arguments are used to configure the query builder of the edge.
-func (wrq *WeightRatingQuery) WithCaptainsTeam(opts ...func(*TeamQuery)) *WeightRatingQuery {
-	query := (&TeamClient{config: wrq.config}).Query()
+func (_q *WeightRatingQuery) WithCaptainsTeam(opts ...func(*TeamQuery)) *WeightRatingQuery {
+	query := (&TeamClient{config: _q.config}).Query()
 	for _, opt := range opts {
 		opt(query)
 	}
-	wrq.withCaptainsTeam = query
-	return wrq
+	_q.withCaptainsTeam = query
+	return _q
 }
 
 // WithContest tells the query-builder to eager-load the nodes that are connected to
 // the "contest" edge. The optional arguments are used to configure the query builder of the edge.
-func (wrq *WeightRatingQuery) WithContest(opts ...func(*ContestQuery)) *WeightRatingQuery {
-	query := (&ContestClient{config: wrq.config}).Query()
+func (_q *WeightRatingQuery) WithContest(opts ...func(*ContestQuery)) *WeightRatingQuery {
+	query := (&ContestClient{config: _q.config}).Query()
 	for _, opt := range opts {
 		opt(query)
 	}
-	wrq.withContest = query
-	return wrq
+	_q.withContest = query
+	return _q
 }
 
 // GroupBy is used to group vertices by one or more fields/columns.
@@ -343,10 +343,10 @@ func (wrq *WeightRatingQuery) WithContest(opts ...func(*ContestQuery)) *WeightRa
 //		GroupBy(weightrating.FieldDifficulty).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
-func (wrq *WeightRatingQuery) GroupBy(field string, fields ...string) *WeightRatingGroupBy {
-	wrq.ctx.Fields = append([]string{field}, fields...)
-	grbuild := &WeightRatingGroupBy{build: wrq}
-	grbuild.flds = &wrq.ctx.Fields
+func (_q *WeightRatingQuery) GroupBy(field string, fields ...string) *WeightRatingGroupBy {
+	_q.ctx.Fields = append([]string{field}, fields...)
+	grbuild := &WeightRatingGroupBy{build: _q}
+	grbuild.flds = &_q.ctx.Fields
 	grbuild.label = weightrating.Label
 	grbuild.scan = grbuild.Scan
 	return grbuild
@@ -364,56 +364,56 @@ func (wrq *WeightRatingQuery) GroupBy(field string, fields ...string) *WeightRat
 //	client.WeightRating.Query().
 //		Select(weightrating.FieldDifficulty).
 //		Scan(ctx, &v)
-func (wrq *WeightRatingQuery) Select(fields ...string) *WeightRatingSelect {
-	wrq.ctx.Fields = append(wrq.ctx.Fields, fields...)
-	sbuild := &WeightRatingSelect{WeightRatingQuery: wrq}
+func (_q *WeightRatingQuery) Select(fields ...string) *WeightRatingSelect {
+	_q.ctx.Fields = append(_q.ctx.Fields, fields...)
+	sbuild := &WeightRatingSelect{WeightRatingQuery: _q}
 	sbuild.label = weightrating.Label
-	sbuild.flds, sbuild.scan = &wrq.ctx.Fields, sbuild.Scan
+	sbuild.flds, sbuild.scan = &_q.ctx.Fields, sbuild.Scan
 	return sbuild
 }
 
 // Aggregate returns a WeightRatingSelect configured with the given aggregations.
-func (wrq *WeightRatingQuery) Aggregate(fns ...AggregateFunc) *WeightRatingSelect {
-	return wrq.Select().Aggregate(fns...)
+func (_q *WeightRatingQuery) Aggregate(fns ...AggregateFunc) *WeightRatingSelect {
+	return _q.Select().Aggregate(fns...)
 }
 
-func (wrq *WeightRatingQuery) prepareQuery(ctx context.Context) error {
-	for _, inter := range wrq.inters {
+func (_q *WeightRatingQuery) prepareQuery(ctx context.Context) error {
+	for _, inter := range _q.inters {
 		if inter == nil {
 			return fmt.Errorf("ent: uninitialized interceptor (forgotten import ent/runtime?)")
 		}
 		if trv, ok := inter.(Traverser); ok {
-			if err := trv.Traverse(ctx, wrq); err != nil {
+			if err := trv.Traverse(ctx, _q); err != nil {
 				return err
 			}
 		}
 	}
-	for _, f := range wrq.ctx.Fields {
+	for _, f := range _q.ctx.Fields {
 		if !weightrating.ValidColumn(f) {
 			return &ValidationError{Name: f, err: fmt.Errorf("ent: invalid field %q for query", f)}
 		}
 	}
-	if wrq.path != nil {
-		prev, err := wrq.path(ctx)
+	if _q.path != nil {
+		prev, err := _q.path(ctx)
 		if err != nil {
 			return err
 		}
-		wrq.sql = prev
+		_q.sql = prev
 	}
 	return nil
 }
 
-func (wrq *WeightRatingQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*WeightRating, error) {
+func (_q *WeightRatingQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*WeightRating, error) {
 	var (
 		nodes       = []*WeightRating{}
-		withFKs     = wrq.withFKs
-		_spec       = wrq.querySpec()
+		withFKs     = _q.withFKs
+		_spec       = _q.querySpec()
 		loadedTypes = [2]bool{
-			wrq.withCaptainsTeam != nil,
-			wrq.withContest != nil,
+			_q.withCaptainsTeam != nil,
+			_q.withContest != nil,
 		}
 	)
-	if wrq.withCaptainsTeam != nil || wrq.withContest != nil {
+	if _q.withCaptainsTeam != nil || _q.withContest != nil {
 		withFKs = true
 	}
 	if withFKs {
@@ -423,7 +423,7 @@ func (wrq *WeightRatingQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([
 		return (*WeightRating).scanValues(nil, columns)
 	}
 	_spec.Assign = func(columns []string, values []any) error {
-		node := &WeightRating{config: wrq.config}
+		node := &WeightRating{config: _q.config}
 		nodes = append(nodes, node)
 		node.Edges.loadedTypes = loadedTypes
 		return node.assignValues(columns, values)
@@ -431,20 +431,20 @@ func (wrq *WeightRatingQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([
 	for i := range hooks {
 		hooks[i](ctx, _spec)
 	}
-	if err := sqlgraph.QueryNodes(ctx, wrq.driver, _spec); err != nil {
+	if err := sqlgraph.QueryNodes(ctx, _q.driver, _spec); err != nil {
 		return nil, err
 	}
 	if len(nodes) == 0 {
 		return nodes, nil
 	}
-	if query := wrq.withCaptainsTeam; query != nil {
-		if err := wrq.loadCaptainsTeam(ctx, query, nodes, nil,
+	if query := _q.withCaptainsTeam; query != nil {
+		if err := _q.loadCaptainsTeam(ctx, query, nodes, nil,
 			func(n *WeightRating, e *Team) { n.Edges.CaptainsTeam = e }); err != nil {
 			return nil, err
 		}
 	}
-	if query := wrq.withContest; query != nil {
-		if err := wrq.loadContest(ctx, query, nodes, nil,
+	if query := _q.withContest; query != nil {
+		if err := _q.loadContest(ctx, query, nodes, nil,
 			func(n *WeightRating, e *Contest) { n.Edges.Contest = e }); err != nil {
 			return nil, err
 		}
@@ -452,7 +452,7 @@ func (wrq *WeightRatingQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([
 	return nodes, nil
 }
 
-func (wrq *WeightRatingQuery) loadCaptainsTeam(ctx context.Context, query *TeamQuery, nodes []*WeightRating, init func(*WeightRating), assign func(*WeightRating, *Team)) error {
+func (_q *WeightRatingQuery) loadCaptainsTeam(ctx context.Context, query *TeamQuery, nodes []*WeightRating, init func(*WeightRating), assign func(*WeightRating, *Team)) error {
 	ids := make([]int, 0, len(nodes))
 	nodeids := make(map[int][]*WeightRating)
 	for i := range nodes {
@@ -484,7 +484,7 @@ func (wrq *WeightRatingQuery) loadCaptainsTeam(ctx context.Context, query *TeamQ
 	}
 	return nil
 }
-func (wrq *WeightRatingQuery) loadContest(ctx context.Context, query *ContestQuery, nodes []*WeightRating, init func(*WeightRating), assign func(*WeightRating, *Contest)) error {
+func (_q *WeightRatingQuery) loadContest(ctx context.Context, query *ContestQuery, nodes []*WeightRating, init func(*WeightRating), assign func(*WeightRating, *Contest)) error {
 	ids := make([]int, 0, len(nodes))
 	nodeids := make(map[int][]*WeightRating)
 	for i := range nodes {
@@ -517,24 +517,24 @@ func (wrq *WeightRatingQuery) loadContest(ctx context.Context, query *ContestQue
 	return nil
 }
 
-func (wrq *WeightRatingQuery) sqlCount(ctx context.Context) (int, error) {
-	_spec := wrq.querySpec()
-	_spec.Node.Columns = wrq.ctx.Fields
-	if len(wrq.ctx.Fields) > 0 {
-		_spec.Unique = wrq.ctx.Unique != nil && *wrq.ctx.Unique
+func (_q *WeightRatingQuery) sqlCount(ctx context.Context) (int, error) {
+	_spec := _q.querySpec()
+	_spec.Node.Columns = _q.ctx.Fields
+	if len(_q.ctx.Fields) > 0 {
+		_spec.Unique = _q.ctx.Unique != nil && *_q.ctx.Unique
 	}
-	return sqlgraph.CountNodes(ctx, wrq.driver, _spec)
+	return sqlgraph.CountNodes(ctx, _q.driver, _spec)
 }
 
-func (wrq *WeightRatingQuery) querySpec() *sqlgraph.QuerySpec {
+func (_q *WeightRatingQuery) querySpec() *sqlgraph.QuerySpec {
 	_spec := sqlgraph.NewQuerySpec(weightrating.Table, weightrating.Columns, sqlgraph.NewFieldSpec(weightrating.FieldID, field.TypeInt))
-	_spec.From = wrq.sql
-	if unique := wrq.ctx.Unique; unique != nil {
+	_spec.From = _q.sql
+	if unique := _q.ctx.Unique; unique != nil {
 		_spec.Unique = *unique
-	} else if wrq.path != nil {
+	} else if _q.path != nil {
 		_spec.Unique = true
 	}
-	if fields := wrq.ctx.Fields; len(fields) > 0 {
+	if fields := _q.ctx.Fields; len(fields) > 0 {
 		_spec.Node.Columns = make([]string, 0, len(fields))
 		_spec.Node.Columns = append(_spec.Node.Columns, weightrating.FieldID)
 		for i := range fields {
@@ -543,20 +543,20 @@ func (wrq *WeightRatingQuery) querySpec() *sqlgraph.QuerySpec {
 			}
 		}
 	}
-	if ps := wrq.predicates; len(ps) > 0 {
+	if ps := _q.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
 			for i := range ps {
 				ps[i](selector)
 			}
 		}
 	}
-	if limit := wrq.ctx.Limit; limit != nil {
+	if limit := _q.ctx.Limit; limit != nil {
 		_spec.Limit = *limit
 	}
-	if offset := wrq.ctx.Offset; offset != nil {
+	if offset := _q.ctx.Offset; offset != nil {
 		_spec.Offset = *offset
 	}
-	if ps := wrq.order; len(ps) > 0 {
+	if ps := _q.order; len(ps) > 0 {
 		_spec.Order = func(selector *sql.Selector) {
 			for i := range ps {
 				ps[i](selector)
@@ -566,33 +566,33 @@ func (wrq *WeightRatingQuery) querySpec() *sqlgraph.QuerySpec {
 	return _spec
 }
 
-func (wrq *WeightRatingQuery) sqlQuery(ctx context.Context) *sql.Selector {
-	builder := sql.Dialect(wrq.driver.Dialect())
+func (_q *WeightRatingQuery) sqlQuery(ctx context.Context) *sql.Selector {
+	builder := sql.Dialect(_q.driver.Dialect())
 	t1 := builder.Table(weightrating.Table)
-	columns := wrq.ctx.Fields
+	columns := _q.ctx.Fields
 	if len(columns) == 0 {
 		columns = weightrating.Columns
 	}
 	selector := builder.Select(t1.Columns(columns...)...).From(t1)
-	if wrq.sql != nil {
-		selector = wrq.sql
+	if _q.sql != nil {
+		selector = _q.sql
 		selector.Select(selector.Columns(columns...)...)
 	}
-	if wrq.ctx.Unique != nil && *wrq.ctx.Unique {
+	if _q.ctx.Unique != nil && *_q.ctx.Unique {
 		selector.Distinct()
 	}
-	for _, p := range wrq.predicates {
+	for _, p := range _q.predicates {
 		p(selector)
 	}
-	for _, p := range wrq.order {
+	for _, p := range _q.order {
 		p(selector)
 	}
-	if offset := wrq.ctx.Offset; offset != nil {
+	if offset := _q.ctx.Offset; offset != nil {
 		// limit is mandatory for offset clause. We start
 		// with default value, and override it below if needed.
 		selector.Offset(*offset).Limit(math.MaxInt32)
 	}
-	if limit := wrq.ctx.Limit; limit != nil {
+	if limit := _q.ctx.Limit; limit != nil {
 		selector.Limit(*limit)
 	}
 	return selector
@@ -605,41 +605,41 @@ type WeightRatingGroupBy struct {
 }
 
 // Aggregate adds the given aggregation functions to the group-by query.
-func (wrgb *WeightRatingGroupBy) Aggregate(fns ...AggregateFunc) *WeightRatingGroupBy {
-	wrgb.fns = append(wrgb.fns, fns...)
-	return wrgb
+func (_g *WeightRatingGroupBy) Aggregate(fns ...AggregateFunc) *WeightRatingGroupBy {
+	_g.fns = append(_g.fns, fns...)
+	return _g
 }
 
 // Scan applies the selector query and scans the result into the given value.
-func (wrgb *WeightRatingGroupBy) Scan(ctx context.Context, v any) error {
-	ctx = setContextOp(ctx, wrgb.build.ctx, ent.OpQueryGroupBy)
-	if err := wrgb.build.prepareQuery(ctx); err != nil {
+func (_g *WeightRatingGroupBy) Scan(ctx context.Context, v any) error {
+	ctx = setContextOp(ctx, _g.build.ctx, ent.OpQueryGroupBy)
+	if err := _g.build.prepareQuery(ctx); err != nil {
 		return err
 	}
-	return scanWithInterceptors[*WeightRatingQuery, *WeightRatingGroupBy](ctx, wrgb.build, wrgb, wrgb.build.inters, v)
+	return scanWithInterceptors[*WeightRatingQuery, *WeightRatingGroupBy](ctx, _g.build, _g, _g.build.inters, v)
 }
 
-func (wrgb *WeightRatingGroupBy) sqlScan(ctx context.Context, root *WeightRatingQuery, v any) error {
+func (_g *WeightRatingGroupBy) sqlScan(ctx context.Context, root *WeightRatingQuery, v any) error {
 	selector := root.sqlQuery(ctx).Select()
-	aggregation := make([]string, 0, len(wrgb.fns))
-	for _, fn := range wrgb.fns {
+	aggregation := make([]string, 0, len(_g.fns))
+	for _, fn := range _g.fns {
 		aggregation = append(aggregation, fn(selector))
 	}
 	if len(selector.SelectedColumns()) == 0 {
-		columns := make([]string, 0, len(*wrgb.flds)+len(wrgb.fns))
-		for _, f := range *wrgb.flds {
+		columns := make([]string, 0, len(*_g.flds)+len(_g.fns))
+		for _, f := range *_g.flds {
 			columns = append(columns, selector.C(f))
 		}
 		columns = append(columns, aggregation...)
 		selector.Select(columns...)
 	}
-	selector.GroupBy(selector.Columns(*wrgb.flds...)...)
+	selector.GroupBy(selector.Columns(*_g.flds...)...)
 	if err := selector.Err(); err != nil {
 		return err
 	}
 	rows := &sql.Rows{}
 	query, args := selector.Query()
-	if err := wrgb.build.driver.Query(ctx, query, args, rows); err != nil {
+	if err := _g.build.driver.Query(ctx, query, args, rows); err != nil {
 		return err
 	}
 	defer rows.Close()
@@ -653,27 +653,27 @@ type WeightRatingSelect struct {
 }
 
 // Aggregate adds the given aggregation functions to the selector query.
-func (wrs *WeightRatingSelect) Aggregate(fns ...AggregateFunc) *WeightRatingSelect {
-	wrs.fns = append(wrs.fns, fns...)
-	return wrs
+func (_s *WeightRatingSelect) Aggregate(fns ...AggregateFunc) *WeightRatingSelect {
+	_s.fns = append(_s.fns, fns...)
+	return _s
 }
 
 // Scan applies the selector query and scans the result into the given value.
-func (wrs *WeightRatingSelect) Scan(ctx context.Context, v any) error {
-	ctx = setContextOp(ctx, wrs.ctx, ent.OpQuerySelect)
-	if err := wrs.prepareQuery(ctx); err != nil {
+func (_s *WeightRatingSelect) Scan(ctx context.Context, v any) error {
+	ctx = setContextOp(ctx, _s.ctx, ent.OpQuerySelect)
+	if err := _s.prepareQuery(ctx); err != nil {
 		return err
 	}
-	return scanWithInterceptors[*WeightRatingQuery, *WeightRatingSelect](ctx, wrs.WeightRatingQuery, wrs, wrs.inters, v)
+	return scanWithInterceptors[*WeightRatingQuery, *WeightRatingSelect](ctx, _s.WeightRatingQuery, _s, _s.inters, v)
 }
 
-func (wrs *WeightRatingSelect) sqlScan(ctx context.Context, root *WeightRatingQuery, v any) error {
+func (_s *WeightRatingSelect) sqlScan(ctx context.Context, root *WeightRatingQuery, v any) error {
 	selector := root.sqlQuery(ctx)
-	aggregation := make([]string, 0, len(wrs.fns))
-	for _, fn := range wrs.fns {
+	aggregation := make([]string, 0, len(_s.fns))
+	for _, fn := range _s.fns {
 		aggregation = append(aggregation, fn(selector))
 	}
-	switch n := len(*wrs.selector.flds); {
+	switch n := len(*_s.selector.flds); {
 	case n == 0 && len(aggregation) > 0:
 		selector.Select(aggregation...)
 	case n != 0 && len(aggregation) > 0:
@@ -681,7 +681,7 @@ func (wrs *WeightRatingSelect) sqlScan(ctx context.Context, root *WeightRatingQu
 	}
 	rows := &sql.Rows{}
 	query, args := selector.Query()
-	if err := wrs.driver.Query(ctx, query, args, rows); err != nil {
+	if err := _s.driver.Query(ctx, query, args, rows); err != nil {
 		return err
 	}
 	defer rows.Close()

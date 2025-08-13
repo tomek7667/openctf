@@ -4828,25 +4828,31 @@ func (m *TeamMutation) ResetEdge(name string) error {
 // UserMutation represents an operation that mutates the User nodes in the graph.
 type UserMutation struct {
 	config
-	op                 Op
-	typ                string
-	id                 *int
-	username           *string
-	email              *string
-	email_confirmed_at *time.Time
-	confirmation_code  *string
-	permission_level   *user.PermissionLevel
-	description        *string
-	password           *string
-	created_at         *time.Time
-	logo               *[]byte
-	clearedFields      map[string]struct{}
-	teams              map[int]struct{}
-	removedteams       map[int]struct{}
-	clearedteams       bool
-	done               bool
-	oldValue           func(context.Context) (*User, error)
-	predicates         []predicate.User
+	op                   Op
+	typ                  string
+	id                   *int
+	username             *string
+	email                *string
+	email_confirmed_at   *time.Time
+	confirmation_code    *string
+	permission_level     *user.PermissionLevel
+	description          *string
+	password             *string
+	created_at           *time.Time
+	logo                 *[]byte
+	github_account_id    *int64
+	addgithub_account_id *int64
+	github_username      *string
+	github_name          *string
+	github_email         *string
+	github_avatar_url    *string
+	clearedFields        map[string]struct{}
+	teams                map[int]struct{}
+	removedteams         map[int]struct{}
+	clearedteams         bool
+	done                 bool
+	oldValue             func(context.Context) (*User, error)
+	predicates           []predicate.User
 }
 
 var _ ent.Mutation = (*UserMutation)(nil)
@@ -5323,6 +5329,272 @@ func (m *UserMutation) ResetLogo() {
 	delete(m.clearedFields, user.FieldLogo)
 }
 
+// SetGithubAccountID sets the "github_account_id" field.
+func (m *UserMutation) SetGithubAccountID(i int64) {
+	m.github_account_id = &i
+	m.addgithub_account_id = nil
+}
+
+// GithubAccountID returns the value of the "github_account_id" field in the mutation.
+func (m *UserMutation) GithubAccountID() (r int64, exists bool) {
+	v := m.github_account_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldGithubAccountID returns the old "github_account_id" field's value of the User entity.
+// If the User object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *UserMutation) OldGithubAccountID(ctx context.Context) (v *int64, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldGithubAccountID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldGithubAccountID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldGithubAccountID: %w", err)
+	}
+	return oldValue.GithubAccountID, nil
+}
+
+// AddGithubAccountID adds i to the "github_account_id" field.
+func (m *UserMutation) AddGithubAccountID(i int64) {
+	if m.addgithub_account_id != nil {
+		*m.addgithub_account_id += i
+	} else {
+		m.addgithub_account_id = &i
+	}
+}
+
+// AddedGithubAccountID returns the value that was added to the "github_account_id" field in this mutation.
+func (m *UserMutation) AddedGithubAccountID() (r int64, exists bool) {
+	v := m.addgithub_account_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ClearGithubAccountID clears the value of the "github_account_id" field.
+func (m *UserMutation) ClearGithubAccountID() {
+	m.github_account_id = nil
+	m.addgithub_account_id = nil
+	m.clearedFields[user.FieldGithubAccountID] = struct{}{}
+}
+
+// GithubAccountIDCleared returns if the "github_account_id" field was cleared in this mutation.
+func (m *UserMutation) GithubAccountIDCleared() bool {
+	_, ok := m.clearedFields[user.FieldGithubAccountID]
+	return ok
+}
+
+// ResetGithubAccountID resets all changes to the "github_account_id" field.
+func (m *UserMutation) ResetGithubAccountID() {
+	m.github_account_id = nil
+	m.addgithub_account_id = nil
+	delete(m.clearedFields, user.FieldGithubAccountID)
+}
+
+// SetGithubUsername sets the "github_username" field.
+func (m *UserMutation) SetGithubUsername(s string) {
+	m.github_username = &s
+}
+
+// GithubUsername returns the value of the "github_username" field in the mutation.
+func (m *UserMutation) GithubUsername() (r string, exists bool) {
+	v := m.github_username
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldGithubUsername returns the old "github_username" field's value of the User entity.
+// If the User object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *UserMutation) OldGithubUsername(ctx context.Context) (v *string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldGithubUsername is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldGithubUsername requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldGithubUsername: %w", err)
+	}
+	return oldValue.GithubUsername, nil
+}
+
+// ClearGithubUsername clears the value of the "github_username" field.
+func (m *UserMutation) ClearGithubUsername() {
+	m.github_username = nil
+	m.clearedFields[user.FieldGithubUsername] = struct{}{}
+}
+
+// GithubUsernameCleared returns if the "github_username" field was cleared in this mutation.
+func (m *UserMutation) GithubUsernameCleared() bool {
+	_, ok := m.clearedFields[user.FieldGithubUsername]
+	return ok
+}
+
+// ResetGithubUsername resets all changes to the "github_username" field.
+func (m *UserMutation) ResetGithubUsername() {
+	m.github_username = nil
+	delete(m.clearedFields, user.FieldGithubUsername)
+}
+
+// SetGithubName sets the "github_name" field.
+func (m *UserMutation) SetGithubName(s string) {
+	m.github_name = &s
+}
+
+// GithubName returns the value of the "github_name" field in the mutation.
+func (m *UserMutation) GithubName() (r string, exists bool) {
+	v := m.github_name
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldGithubName returns the old "github_name" field's value of the User entity.
+// If the User object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *UserMutation) OldGithubName(ctx context.Context) (v *string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldGithubName is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldGithubName requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldGithubName: %w", err)
+	}
+	return oldValue.GithubName, nil
+}
+
+// ClearGithubName clears the value of the "github_name" field.
+func (m *UserMutation) ClearGithubName() {
+	m.github_name = nil
+	m.clearedFields[user.FieldGithubName] = struct{}{}
+}
+
+// GithubNameCleared returns if the "github_name" field was cleared in this mutation.
+func (m *UserMutation) GithubNameCleared() bool {
+	_, ok := m.clearedFields[user.FieldGithubName]
+	return ok
+}
+
+// ResetGithubName resets all changes to the "github_name" field.
+func (m *UserMutation) ResetGithubName() {
+	m.github_name = nil
+	delete(m.clearedFields, user.FieldGithubName)
+}
+
+// SetGithubEmail sets the "github_email" field.
+func (m *UserMutation) SetGithubEmail(s string) {
+	m.github_email = &s
+}
+
+// GithubEmail returns the value of the "github_email" field in the mutation.
+func (m *UserMutation) GithubEmail() (r string, exists bool) {
+	v := m.github_email
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldGithubEmail returns the old "github_email" field's value of the User entity.
+// If the User object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *UserMutation) OldGithubEmail(ctx context.Context) (v *string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldGithubEmail is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldGithubEmail requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldGithubEmail: %w", err)
+	}
+	return oldValue.GithubEmail, nil
+}
+
+// ClearGithubEmail clears the value of the "github_email" field.
+func (m *UserMutation) ClearGithubEmail() {
+	m.github_email = nil
+	m.clearedFields[user.FieldGithubEmail] = struct{}{}
+}
+
+// GithubEmailCleared returns if the "github_email" field was cleared in this mutation.
+func (m *UserMutation) GithubEmailCleared() bool {
+	_, ok := m.clearedFields[user.FieldGithubEmail]
+	return ok
+}
+
+// ResetGithubEmail resets all changes to the "github_email" field.
+func (m *UserMutation) ResetGithubEmail() {
+	m.github_email = nil
+	delete(m.clearedFields, user.FieldGithubEmail)
+}
+
+// SetGithubAvatarURL sets the "github_avatar_url" field.
+func (m *UserMutation) SetGithubAvatarURL(s string) {
+	m.github_avatar_url = &s
+}
+
+// GithubAvatarURL returns the value of the "github_avatar_url" field in the mutation.
+func (m *UserMutation) GithubAvatarURL() (r string, exists bool) {
+	v := m.github_avatar_url
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldGithubAvatarURL returns the old "github_avatar_url" field's value of the User entity.
+// If the User object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *UserMutation) OldGithubAvatarURL(ctx context.Context) (v *string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldGithubAvatarURL is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldGithubAvatarURL requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldGithubAvatarURL: %w", err)
+	}
+	return oldValue.GithubAvatarURL, nil
+}
+
+// ClearGithubAvatarURL clears the value of the "github_avatar_url" field.
+func (m *UserMutation) ClearGithubAvatarURL() {
+	m.github_avatar_url = nil
+	m.clearedFields[user.FieldGithubAvatarURL] = struct{}{}
+}
+
+// GithubAvatarURLCleared returns if the "github_avatar_url" field was cleared in this mutation.
+func (m *UserMutation) GithubAvatarURLCleared() bool {
+	_, ok := m.clearedFields[user.FieldGithubAvatarURL]
+	return ok
+}
+
+// ResetGithubAvatarURL resets all changes to the "github_avatar_url" field.
+func (m *UserMutation) ResetGithubAvatarURL() {
+	m.github_avatar_url = nil
+	delete(m.clearedFields, user.FieldGithubAvatarURL)
+}
+
 // AddTeamIDs adds the "teams" edge to the Team entity by ids.
 func (m *UserMutation) AddTeamIDs(ids ...int) {
 	if m.teams == nil {
@@ -5411,7 +5683,7 @@ func (m *UserMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *UserMutation) Fields() []string {
-	fields := make([]string, 0, 9)
+	fields := make([]string, 0, 14)
 	if m.username != nil {
 		fields = append(fields, user.FieldUsername)
 	}
@@ -5439,6 +5711,21 @@ func (m *UserMutation) Fields() []string {
 	if m.logo != nil {
 		fields = append(fields, user.FieldLogo)
 	}
+	if m.github_account_id != nil {
+		fields = append(fields, user.FieldGithubAccountID)
+	}
+	if m.github_username != nil {
+		fields = append(fields, user.FieldGithubUsername)
+	}
+	if m.github_name != nil {
+		fields = append(fields, user.FieldGithubName)
+	}
+	if m.github_email != nil {
+		fields = append(fields, user.FieldGithubEmail)
+	}
+	if m.github_avatar_url != nil {
+		fields = append(fields, user.FieldGithubAvatarURL)
+	}
 	return fields
 }
 
@@ -5465,6 +5752,16 @@ func (m *UserMutation) Field(name string) (ent.Value, bool) {
 		return m.CreatedAt()
 	case user.FieldLogo:
 		return m.Logo()
+	case user.FieldGithubAccountID:
+		return m.GithubAccountID()
+	case user.FieldGithubUsername:
+		return m.GithubUsername()
+	case user.FieldGithubName:
+		return m.GithubName()
+	case user.FieldGithubEmail:
+		return m.GithubEmail()
+	case user.FieldGithubAvatarURL:
+		return m.GithubAvatarURL()
 	}
 	return nil, false
 }
@@ -5492,6 +5789,16 @@ func (m *UserMutation) OldField(ctx context.Context, name string) (ent.Value, er
 		return m.OldCreatedAt(ctx)
 	case user.FieldLogo:
 		return m.OldLogo(ctx)
+	case user.FieldGithubAccountID:
+		return m.OldGithubAccountID(ctx)
+	case user.FieldGithubUsername:
+		return m.OldGithubUsername(ctx)
+	case user.FieldGithubName:
+		return m.OldGithubName(ctx)
+	case user.FieldGithubEmail:
+		return m.OldGithubEmail(ctx)
+	case user.FieldGithubAvatarURL:
+		return m.OldGithubAvatarURL(ctx)
 	}
 	return nil, fmt.Errorf("unknown User field %s", name)
 }
@@ -5564,6 +5871,41 @@ func (m *UserMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetLogo(v)
 		return nil
+	case user.FieldGithubAccountID:
+		v, ok := value.(int64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetGithubAccountID(v)
+		return nil
+	case user.FieldGithubUsername:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetGithubUsername(v)
+		return nil
+	case user.FieldGithubName:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetGithubName(v)
+		return nil
+	case user.FieldGithubEmail:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetGithubEmail(v)
+		return nil
+	case user.FieldGithubAvatarURL:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetGithubAvatarURL(v)
+		return nil
 	}
 	return fmt.Errorf("unknown User field %s", name)
 }
@@ -5571,13 +5913,21 @@ func (m *UserMutation) SetField(name string, value ent.Value) error {
 // AddedFields returns all numeric fields that were incremented/decremented during
 // this mutation.
 func (m *UserMutation) AddedFields() []string {
-	return nil
+	var fields []string
+	if m.addgithub_account_id != nil {
+		fields = append(fields, user.FieldGithubAccountID)
+	}
+	return fields
 }
 
 // AddedField returns the numeric value that was incremented/decremented on a field
 // with the given name. The second boolean return value indicates that this field
 // was not set, or was not defined in the schema.
 func (m *UserMutation) AddedField(name string) (ent.Value, bool) {
+	switch name {
+	case user.FieldGithubAccountID:
+		return m.AddedGithubAccountID()
+	}
 	return nil, false
 }
 
@@ -5586,6 +5936,13 @@ func (m *UserMutation) AddedField(name string) (ent.Value, bool) {
 // type.
 func (m *UserMutation) AddField(name string, value ent.Value) error {
 	switch name {
+	case user.FieldGithubAccountID:
+		v, ok := value.(int64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddGithubAccountID(v)
+		return nil
 	}
 	return fmt.Errorf("unknown User numeric field %s", name)
 }
@@ -5605,6 +5962,21 @@ func (m *UserMutation) ClearedFields() []string {
 	}
 	if m.FieldCleared(user.FieldLogo) {
 		fields = append(fields, user.FieldLogo)
+	}
+	if m.FieldCleared(user.FieldGithubAccountID) {
+		fields = append(fields, user.FieldGithubAccountID)
+	}
+	if m.FieldCleared(user.FieldGithubUsername) {
+		fields = append(fields, user.FieldGithubUsername)
+	}
+	if m.FieldCleared(user.FieldGithubName) {
+		fields = append(fields, user.FieldGithubName)
+	}
+	if m.FieldCleared(user.FieldGithubEmail) {
+		fields = append(fields, user.FieldGithubEmail)
+	}
+	if m.FieldCleared(user.FieldGithubAvatarURL) {
+		fields = append(fields, user.FieldGithubAvatarURL)
 	}
 	return fields
 }
@@ -5631,6 +6003,21 @@ func (m *UserMutation) ClearField(name string) error {
 		return nil
 	case user.FieldLogo:
 		m.ClearLogo()
+		return nil
+	case user.FieldGithubAccountID:
+		m.ClearGithubAccountID()
+		return nil
+	case user.FieldGithubUsername:
+		m.ClearGithubUsername()
+		return nil
+	case user.FieldGithubName:
+		m.ClearGithubName()
+		return nil
+	case user.FieldGithubEmail:
+		m.ClearGithubEmail()
+		return nil
+	case user.FieldGithubAvatarURL:
+		m.ClearGithubAvatarURL()
 		return nil
 	}
 	return fmt.Errorf("unknown User nullable field %s", name)
@@ -5666,6 +6053,21 @@ func (m *UserMutation) ResetField(name string) error {
 		return nil
 	case user.FieldLogo:
 		m.ResetLogo()
+		return nil
+	case user.FieldGithubAccountID:
+		m.ResetGithubAccountID()
+		return nil
+	case user.FieldGithubUsername:
+		m.ResetGithubUsername()
+		return nil
+	case user.FieldGithubName:
+		m.ResetGithubName()
+		return nil
+	case user.FieldGithubEmail:
+		m.ResetGithubEmail()
+		return nil
+	case user.FieldGithubAvatarURL:
+		m.ResetGithubAvatarURL()
 		return nil
 	}
 	return fmt.Errorf("unknown User field %s", name)

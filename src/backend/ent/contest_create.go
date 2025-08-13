@@ -25,161 +25,161 @@ type ContestCreate struct {
 }
 
 // SetName sets the "name" field.
-func (cc *ContestCreate) SetName(s string) *ContestCreate {
-	cc.mutation.SetName(s)
-	return cc
+func (_c *ContestCreate) SetName(v string) *ContestCreate {
+	_c.mutation.SetName(v)
+	return _c
 }
 
 // SetDescription sets the "description" field.
-func (cc *ContestCreate) SetDescription(s string) *ContestCreate {
-	cc.mutation.SetDescription(s)
-	return cc
+func (_c *ContestCreate) SetDescription(v string) *ContestCreate {
+	_c.mutation.SetDescription(v)
+	return _c
 }
 
 // SetNillableDescription sets the "description" field if the given value is not nil.
-func (cc *ContestCreate) SetNillableDescription(s *string) *ContestCreate {
-	if s != nil {
-		cc.SetDescription(*s)
+func (_c *ContestCreate) SetNillableDescription(v *string) *ContestCreate {
+	if v != nil {
+		_c.SetDescription(*v)
 	}
-	return cc
+	return _c
 }
 
 // SetRules sets the "rules" field.
-func (cc *ContestCreate) SetRules(s string) *ContestCreate {
-	cc.mutation.SetRules(s)
-	return cc
+func (_c *ContestCreate) SetRules(v string) *ContestCreate {
+	_c.mutation.SetRules(v)
+	return _c
 }
 
 // SetNillableRules sets the "rules" field if the given value is not nil.
-func (cc *ContestCreate) SetNillableRules(s *string) *ContestCreate {
-	if s != nil {
-		cc.SetRules(*s)
+func (_c *ContestCreate) SetNillableRules(v *string) *ContestCreate {
+	if v != nil {
+		_c.SetRules(*v)
 	}
-	return cc
+	return _c
 }
 
 // SetPrizes sets the "prizes" field.
-func (cc *ContestCreate) SetPrizes(s string) *ContestCreate {
-	cc.mutation.SetPrizes(s)
-	return cc
+func (_c *ContestCreate) SetPrizes(v string) *ContestCreate {
+	_c.mutation.SetPrizes(v)
+	return _c
 }
 
 // SetNillablePrizes sets the "prizes" field if the given value is not nil.
-func (cc *ContestCreate) SetNillablePrizes(s *string) *ContestCreate {
-	if s != nil {
-		cc.SetPrizes(*s)
+func (_c *ContestCreate) SetNillablePrizes(v *string) *ContestCreate {
+	if v != nil {
+		_c.SetPrizes(*v)
 	}
-	return cc
+	return _c
 }
 
 // SetStart sets the "start" field.
-func (cc *ContestCreate) SetStart(t time.Time) *ContestCreate {
-	cc.mutation.SetStart(t)
-	return cc
+func (_c *ContestCreate) SetStart(v time.Time) *ContestCreate {
+	_c.mutation.SetStart(v)
+	return _c
 }
 
 // SetEnd sets the "end" field.
-func (cc *ContestCreate) SetEnd(t time.Time) *ContestCreate {
-	cc.mutation.SetEnd(t)
-	return cc
+func (_c *ContestCreate) SetEnd(v time.Time) *ContestCreate {
+	_c.mutation.SetEnd(v)
+	return _c
 }
 
 // SetURL sets the "url" field.
-func (cc *ContestCreate) SetURL(s string) *ContestCreate {
-	cc.mutation.SetURL(s)
-	return cc
+func (_c *ContestCreate) SetURL(v string) *ContestCreate {
+	_c.mutation.SetURL(v)
+	return _c
 }
 
 // SetNillableURL sets the "url" field if the given value is not nil.
-func (cc *ContestCreate) SetNillableURL(s *string) *ContestCreate {
-	if s != nil {
-		cc.SetURL(*s)
+func (_c *ContestCreate) SetNillableURL(v *string) *ContestCreate {
+	if v != nil {
+		_c.SetURL(*v)
 	}
-	return cc
+	return _c
 }
 
 // SetCtftimeID sets the "ctftime_id" field.
-func (cc *ContestCreate) SetCtftimeID(i int) *ContestCreate {
-	cc.mutation.SetCtftimeID(i)
-	return cc
+func (_c *ContestCreate) SetCtftimeID(v int) *ContestCreate {
+	_c.mutation.SetCtftimeID(v)
+	return _c
 }
 
 // SetNillableCtftimeID sets the "ctftime_id" field if the given value is not nil.
-func (cc *ContestCreate) SetNillableCtftimeID(i *int) *ContestCreate {
-	if i != nil {
-		cc.SetCtftimeID(*i)
+func (_c *ContestCreate) SetNillableCtftimeID(v *int) *ContestCreate {
+	if v != nil {
+		_c.SetCtftimeID(*v)
 	}
-	return cc
+	return _c
 }
 
 // SetAssignedWeightPoints sets the "assigned_weight_points" field.
-func (cc *ContestCreate) SetAssignedWeightPoints(i int) *ContestCreate {
-	cc.mutation.SetAssignedWeightPoints(i)
-	return cc
+func (_c *ContestCreate) SetAssignedWeightPoints(v int) *ContestCreate {
+	_c.mutation.SetAssignedWeightPoints(v)
+	return _c
 }
 
 // SetNillableAssignedWeightPoints sets the "assigned_weight_points" field if the given value is not nil.
-func (cc *ContestCreate) SetNillableAssignedWeightPoints(i *int) *ContestCreate {
-	if i != nil {
-		cc.SetAssignedWeightPoints(*i)
+func (_c *ContestCreate) SetNillableAssignedWeightPoints(v *int) *ContestCreate {
+	if v != nil {
+		_c.SetAssignedWeightPoints(*v)
 	}
-	return cc
+	return _c
 }
 
 // SetLogo sets the "logo" field.
-func (cc *ContestCreate) SetLogo(b []byte) *ContestCreate {
-	cc.mutation.SetLogo(b)
-	return cc
+func (_c *ContestCreate) SetLogo(v []byte) *ContestCreate {
+	_c.mutation.SetLogo(v)
+	return _c
 }
 
 // SetOrganizersID sets the "organizers" edge to the Team entity by ID.
-func (cc *ContestCreate) SetOrganizersID(id int) *ContestCreate {
-	cc.mutation.SetOrganizersID(id)
-	return cc
+func (_c *ContestCreate) SetOrganizersID(id int) *ContestCreate {
+	_c.mutation.SetOrganizersID(id)
+	return _c
 }
 
 // SetNillableOrganizersID sets the "organizers" edge to the Team entity by ID if the given value is not nil.
-func (cc *ContestCreate) SetNillableOrganizersID(id *int) *ContestCreate {
+func (_c *ContestCreate) SetNillableOrganizersID(id *int) *ContestCreate {
 	if id != nil {
-		cc = cc.SetOrganizersID(*id)
+		_c = _c.SetOrganizersID(*id)
 	}
-	return cc
+	return _c
 }
 
 // SetOrganizers sets the "organizers" edge to the Team entity.
-func (cc *ContestCreate) SetOrganizers(t *Team) *ContestCreate {
-	return cc.SetOrganizersID(t.ID)
+func (_c *ContestCreate) SetOrganizers(v *Team) *ContestCreate {
+	return _c.SetOrganizersID(v.ID)
 }
 
 // AddPlaceIDs adds the "places" edge to the Place entity by IDs.
-func (cc *ContestCreate) AddPlaceIDs(ids ...int) *ContestCreate {
-	cc.mutation.AddPlaceIDs(ids...)
-	return cc
+func (_c *ContestCreate) AddPlaceIDs(ids ...int) *ContestCreate {
+	_c.mutation.AddPlaceIDs(ids...)
+	return _c
 }
 
 // AddPlaces adds the "places" edges to the Place entity.
-func (cc *ContestCreate) AddPlaces(p ...*Place) *ContestCreate {
-	ids := make([]int, len(p))
-	for i := range p {
-		ids[i] = p[i].ID
+func (_c *ContestCreate) AddPlaces(v ...*Place) *ContestCreate {
+	ids := make([]int, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
 	}
-	return cc.AddPlaceIDs(ids...)
+	return _c.AddPlaceIDs(ids...)
 }
 
 // Mutation returns the ContestMutation object of the builder.
-func (cc *ContestCreate) Mutation() *ContestMutation {
-	return cc.mutation
+func (_c *ContestCreate) Mutation() *ContestMutation {
+	return _c.mutation
 }
 
 // Save creates the Contest in the database.
-func (cc *ContestCreate) Save(ctx context.Context) (*Contest, error) {
-	cc.defaults()
-	return withHooks(ctx, cc.sqlSave, cc.mutation, cc.hooks)
+func (_c *ContestCreate) Save(ctx context.Context) (*Contest, error) {
+	_c.defaults()
+	return withHooks(ctx, _c.sqlSave, _c.mutation, _c.hooks)
 }
 
 // SaveX calls Save and panics if Save returns an error.
-func (cc *ContestCreate) SaveX(ctx context.Context) *Contest {
-	v, err := cc.Save(ctx)
+func (_c *ContestCreate) SaveX(ctx context.Context) *Contest {
+	v, err := _c.Save(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -187,51 +187,51 @@ func (cc *ContestCreate) SaveX(ctx context.Context) *Contest {
 }
 
 // Exec executes the query.
-func (cc *ContestCreate) Exec(ctx context.Context) error {
-	_, err := cc.Save(ctx)
+func (_c *ContestCreate) Exec(ctx context.Context) error {
+	_, err := _c.Save(ctx)
 	return err
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (cc *ContestCreate) ExecX(ctx context.Context) {
-	if err := cc.Exec(ctx); err != nil {
+func (_c *ContestCreate) ExecX(ctx context.Context) {
+	if err := _c.Exec(ctx); err != nil {
 		panic(err)
 	}
 }
 
 // defaults sets the default values of the builder before save.
-func (cc *ContestCreate) defaults() {
-	if _, ok := cc.mutation.AssignedWeightPoints(); !ok {
+func (_c *ContestCreate) defaults() {
+	if _, ok := _c.mutation.AssignedWeightPoints(); !ok {
 		v := contest.DefaultAssignedWeightPoints
-		cc.mutation.SetAssignedWeightPoints(v)
+		_c.mutation.SetAssignedWeightPoints(v)
 	}
 }
 
 // check runs all checks and user-defined validators on the builder.
-func (cc *ContestCreate) check() error {
-	if _, ok := cc.mutation.Name(); !ok {
+func (_c *ContestCreate) check() error {
+	if _, ok := _c.mutation.Name(); !ok {
 		return &ValidationError{Name: "name", err: errors.New(`ent: missing required field "Contest.name"`)}
 	}
-	if v, ok := cc.mutation.Name(); ok {
+	if v, ok := _c.mutation.Name(); ok {
 		if err := contest.NameValidator(v); err != nil {
 			return &ValidationError{Name: "name", err: fmt.Errorf(`ent: validator failed for field "Contest.name": %w`, err)}
 		}
 	}
-	if _, ok := cc.mutation.Start(); !ok {
+	if _, ok := _c.mutation.Start(); !ok {
 		return &ValidationError{Name: "start", err: errors.New(`ent: missing required field "Contest.start"`)}
 	}
-	if _, ok := cc.mutation.End(); !ok {
+	if _, ok := _c.mutation.End(); !ok {
 		return &ValidationError{Name: "end", err: errors.New(`ent: missing required field "Contest.end"`)}
 	}
-	if v, ok := cc.mutation.URL(); ok {
+	if v, ok := _c.mutation.URL(); ok {
 		if err := contest.URLValidator(v); err != nil {
 			return &ValidationError{Name: "url", err: fmt.Errorf(`ent: validator failed for field "Contest.url": %w`, err)}
 		}
 	}
-	if _, ok := cc.mutation.AssignedWeightPoints(); !ok {
+	if _, ok := _c.mutation.AssignedWeightPoints(); !ok {
 		return &ValidationError{Name: "assigned_weight_points", err: errors.New(`ent: missing required field "Contest.assigned_weight_points"`)}
 	}
-	if v, ok := cc.mutation.Logo(); ok {
+	if v, ok := _c.mutation.Logo(); ok {
 		if err := contest.LogoValidator(v); err != nil {
 			return &ValidationError{Name: "logo", err: fmt.Errorf(`ent: validator failed for field "Contest.logo": %w`, err)}
 		}
@@ -239,12 +239,12 @@ func (cc *ContestCreate) check() error {
 	return nil
 }
 
-func (cc *ContestCreate) sqlSave(ctx context.Context) (*Contest, error) {
-	if err := cc.check(); err != nil {
+func (_c *ContestCreate) sqlSave(ctx context.Context) (*Contest, error) {
+	if err := _c.check(); err != nil {
 		return nil, err
 	}
-	_node, _spec := cc.createSpec()
-	if err := sqlgraph.CreateNode(ctx, cc.driver, _spec); err != nil {
+	_node, _spec := _c.createSpec()
+	if err := sqlgraph.CreateNode(ctx, _c.driver, _spec); err != nil {
 		if sqlgraph.IsConstraintError(err) {
 			err = &ConstraintError{msg: err.Error(), wrap: err}
 		}
@@ -252,58 +252,58 @@ func (cc *ContestCreate) sqlSave(ctx context.Context) (*Contest, error) {
 	}
 	id := _spec.ID.Value.(int64)
 	_node.ID = int(id)
-	cc.mutation.id = &_node.ID
-	cc.mutation.done = true
+	_c.mutation.id = &_node.ID
+	_c.mutation.done = true
 	return _node, nil
 }
 
-func (cc *ContestCreate) createSpec() (*Contest, *sqlgraph.CreateSpec) {
+func (_c *ContestCreate) createSpec() (*Contest, *sqlgraph.CreateSpec) {
 	var (
-		_node = &Contest{config: cc.config}
+		_node = &Contest{config: _c.config}
 		_spec = sqlgraph.NewCreateSpec(contest.Table, sqlgraph.NewFieldSpec(contest.FieldID, field.TypeInt))
 	)
-	_spec.OnConflict = cc.conflict
-	if value, ok := cc.mutation.Name(); ok {
+	_spec.OnConflict = _c.conflict
+	if value, ok := _c.mutation.Name(); ok {
 		_spec.SetField(contest.FieldName, field.TypeString, value)
 		_node.Name = value
 	}
-	if value, ok := cc.mutation.Description(); ok {
+	if value, ok := _c.mutation.Description(); ok {
 		_spec.SetField(contest.FieldDescription, field.TypeString, value)
 		_node.Description = &value
 	}
-	if value, ok := cc.mutation.Rules(); ok {
+	if value, ok := _c.mutation.Rules(); ok {
 		_spec.SetField(contest.FieldRules, field.TypeString, value)
 		_node.Rules = &value
 	}
-	if value, ok := cc.mutation.Prizes(); ok {
+	if value, ok := _c.mutation.Prizes(); ok {
 		_spec.SetField(contest.FieldPrizes, field.TypeString, value)
 		_node.Prizes = &value
 	}
-	if value, ok := cc.mutation.Start(); ok {
+	if value, ok := _c.mutation.Start(); ok {
 		_spec.SetField(contest.FieldStart, field.TypeTime, value)
 		_node.Start = value
 	}
-	if value, ok := cc.mutation.End(); ok {
+	if value, ok := _c.mutation.End(); ok {
 		_spec.SetField(contest.FieldEnd, field.TypeTime, value)
 		_node.End = value
 	}
-	if value, ok := cc.mutation.URL(); ok {
+	if value, ok := _c.mutation.URL(); ok {
 		_spec.SetField(contest.FieldURL, field.TypeString, value)
 		_node.URL = &value
 	}
-	if value, ok := cc.mutation.CtftimeID(); ok {
+	if value, ok := _c.mutation.CtftimeID(); ok {
 		_spec.SetField(contest.FieldCtftimeID, field.TypeInt, value)
 		_node.CtftimeID = &value
 	}
-	if value, ok := cc.mutation.AssignedWeightPoints(); ok {
+	if value, ok := _c.mutation.AssignedWeightPoints(); ok {
 		_spec.SetField(contest.FieldAssignedWeightPoints, field.TypeInt, value)
 		_node.AssignedWeightPoints = value
 	}
-	if value, ok := cc.mutation.Logo(); ok {
+	if value, ok := _c.mutation.Logo(); ok {
 		_spec.SetField(contest.FieldLogo, field.TypeBytes, value)
 		_node.Logo = &value
 	}
-	if nodes := cc.mutation.OrganizersIDs(); len(nodes) > 0 {
+	if nodes := _c.mutation.OrganizersIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: false,
@@ -320,7 +320,7 @@ func (cc *ContestCreate) createSpec() (*Contest, *sqlgraph.CreateSpec) {
 		_node.contest_organizers = &nodes[0]
 		_spec.Edges = append(_spec.Edges, edge)
 	}
-	if nodes := cc.mutation.PlacesIDs(); len(nodes) > 0 {
+	if nodes := _c.mutation.PlacesIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
@@ -355,10 +355,10 @@ func (cc *ContestCreate) createSpec() (*Contest, *sqlgraph.CreateSpec) {
 //			SetName(v+v).
 //		}).
 //		Exec(ctx)
-func (cc *ContestCreate) OnConflict(opts ...sql.ConflictOption) *ContestUpsertOne {
-	cc.conflict = opts
+func (_c *ContestCreate) OnConflict(opts ...sql.ConflictOption) *ContestUpsertOne {
+	_c.conflict = opts
 	return &ContestUpsertOne{
-		create: cc,
+		create: _c,
 	}
 }
 
@@ -368,10 +368,10 @@ func (cc *ContestCreate) OnConflict(opts ...sql.ConflictOption) *ContestUpsertOn
 //	client.Contest.Create().
 //		OnConflict(sql.ConflictColumns(columns...)).
 //		Exec(ctx)
-func (cc *ContestCreate) OnConflictColumns(columns ...string) *ContestUpsertOne {
-	cc.conflict = append(cc.conflict, sql.ConflictColumns(columns...))
+func (_c *ContestCreate) OnConflictColumns(columns ...string) *ContestUpsertOne {
+	_c.conflict = append(_c.conflict, sql.ConflictColumns(columns...))
 	return &ContestUpsertOne{
-		create: cc,
+		create: _c,
 	}
 }
 
@@ -834,16 +834,16 @@ type ContestCreateBulk struct {
 }
 
 // Save creates the Contest entities in the database.
-func (ccb *ContestCreateBulk) Save(ctx context.Context) ([]*Contest, error) {
-	if ccb.err != nil {
-		return nil, ccb.err
+func (_c *ContestCreateBulk) Save(ctx context.Context) ([]*Contest, error) {
+	if _c.err != nil {
+		return nil, _c.err
 	}
-	specs := make([]*sqlgraph.CreateSpec, len(ccb.builders))
-	nodes := make([]*Contest, len(ccb.builders))
-	mutators := make([]Mutator, len(ccb.builders))
-	for i := range ccb.builders {
+	specs := make([]*sqlgraph.CreateSpec, len(_c.builders))
+	nodes := make([]*Contest, len(_c.builders))
+	mutators := make([]Mutator, len(_c.builders))
+	for i := range _c.builders {
 		func(i int, root context.Context) {
-			builder := ccb.builders[i]
+			builder := _c.builders[i]
 			builder.defaults()
 			var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
 				mutation, ok := m.(*ContestMutation)
@@ -857,12 +857,12 @@ func (ccb *ContestCreateBulk) Save(ctx context.Context) ([]*Contest, error) {
 				var err error
 				nodes[i], specs[i] = builder.createSpec()
 				if i < len(mutators)-1 {
-					_, err = mutators[i+1].Mutate(root, ccb.builders[i+1].mutation)
+					_, err = mutators[i+1].Mutate(root, _c.builders[i+1].mutation)
 				} else {
 					spec := &sqlgraph.BatchCreateSpec{Nodes: specs}
-					spec.OnConflict = ccb.conflict
+					spec.OnConflict = _c.conflict
 					// Invoke the actual operation on the latest mutation in the chain.
-					if err = sqlgraph.BatchCreate(ctx, ccb.driver, spec); err != nil {
+					if err = sqlgraph.BatchCreate(ctx, _c.driver, spec); err != nil {
 						if sqlgraph.IsConstraintError(err) {
 							err = &ConstraintError{msg: err.Error(), wrap: err}
 						}
@@ -886,7 +886,7 @@ func (ccb *ContestCreateBulk) Save(ctx context.Context) ([]*Contest, error) {
 		}(i, ctx)
 	}
 	if len(mutators) > 0 {
-		if _, err := mutators[0].Mutate(ctx, ccb.builders[0].mutation); err != nil {
+		if _, err := mutators[0].Mutate(ctx, _c.builders[0].mutation); err != nil {
 			return nil, err
 		}
 	}
@@ -894,8 +894,8 @@ func (ccb *ContestCreateBulk) Save(ctx context.Context) ([]*Contest, error) {
 }
 
 // SaveX is like Save, but panics if an error occurs.
-func (ccb *ContestCreateBulk) SaveX(ctx context.Context) []*Contest {
-	v, err := ccb.Save(ctx)
+func (_c *ContestCreateBulk) SaveX(ctx context.Context) []*Contest {
+	v, err := _c.Save(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -903,14 +903,14 @@ func (ccb *ContestCreateBulk) SaveX(ctx context.Context) []*Contest {
 }
 
 // Exec executes the query.
-func (ccb *ContestCreateBulk) Exec(ctx context.Context) error {
-	_, err := ccb.Save(ctx)
+func (_c *ContestCreateBulk) Exec(ctx context.Context) error {
+	_, err := _c.Save(ctx)
 	return err
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (ccb *ContestCreateBulk) ExecX(ctx context.Context) {
-	if err := ccb.Exec(ctx); err != nil {
+func (_c *ContestCreateBulk) ExecX(ctx context.Context) {
+	if err := _c.Exec(ctx); err != nil {
 		panic(err)
 	}
 }
@@ -930,10 +930,10 @@ func (ccb *ContestCreateBulk) ExecX(ctx context.Context) {
 //			SetName(v+v).
 //		}).
 //		Exec(ctx)
-func (ccb *ContestCreateBulk) OnConflict(opts ...sql.ConflictOption) *ContestUpsertBulk {
-	ccb.conflict = opts
+func (_c *ContestCreateBulk) OnConflict(opts ...sql.ConflictOption) *ContestUpsertBulk {
+	_c.conflict = opts
 	return &ContestUpsertBulk{
-		create: ccb,
+		create: _c,
 	}
 }
 
@@ -943,10 +943,10 @@ func (ccb *ContestCreateBulk) OnConflict(opts ...sql.ConflictOption) *ContestUps
 //	client.Contest.Create().
 //		OnConflict(sql.ConflictColumns(columns...)).
 //		Exec(ctx)
-func (ccb *ContestCreateBulk) OnConflictColumns(columns ...string) *ContestUpsertBulk {
-	ccb.conflict = append(ccb.conflict, sql.ConflictColumns(columns...))
+func (_c *ContestCreateBulk) OnConflictColumns(columns ...string) *ContestUpsertBulk {
+	_c.conflict = append(_c.conflict, sql.ConflictColumns(columns...))
 	return &ContestUpsertBulk{
-		create: ccb,
+		create: _c,
 	}
 }
 

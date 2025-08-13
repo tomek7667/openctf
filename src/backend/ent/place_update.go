@@ -23,207 +23,207 @@ type PlaceUpdate struct {
 }
 
 // Where appends a list predicates to the PlaceUpdate builder.
-func (pu *PlaceUpdate) Where(ps ...predicate.Place) *PlaceUpdate {
-	pu.mutation.Where(ps...)
-	return pu
+func (_u *PlaceUpdate) Where(ps ...predicate.Place) *PlaceUpdate {
+	_u.mutation.Where(ps...)
+	return _u
 }
 
 // SetTeamName sets the "team_name" field.
-func (pu *PlaceUpdate) SetTeamName(s string) *PlaceUpdate {
-	pu.mutation.SetTeamName(s)
-	return pu
+func (_u *PlaceUpdate) SetTeamName(v string) *PlaceUpdate {
+	_u.mutation.SetTeamName(v)
+	return _u
 }
 
 // SetNillableTeamName sets the "team_name" field if the given value is not nil.
-func (pu *PlaceUpdate) SetNillableTeamName(s *string) *PlaceUpdate {
-	if s != nil {
-		pu.SetTeamName(*s)
+func (_u *PlaceUpdate) SetNillableTeamName(v *string) *PlaceUpdate {
+	if v != nil {
+		_u.SetTeamName(*v)
 	}
-	return pu
+	return _u
 }
 
 // SetPlace sets the "place" field.
-func (pu *PlaceUpdate) SetPlace(i int) *PlaceUpdate {
-	pu.mutation.ResetPlace()
-	pu.mutation.SetPlace(i)
-	return pu
+func (_u *PlaceUpdate) SetPlace(v int) *PlaceUpdate {
+	_u.mutation.ResetPlace()
+	_u.mutation.SetPlace(v)
+	return _u
 }
 
 // SetNillablePlace sets the "place" field if the given value is not nil.
-func (pu *PlaceUpdate) SetNillablePlace(i *int) *PlaceUpdate {
-	if i != nil {
-		pu.SetPlace(*i)
+func (_u *PlaceUpdate) SetNillablePlace(v *int) *PlaceUpdate {
+	if v != nil {
+		_u.SetPlace(*v)
 	}
-	return pu
+	return _u
 }
 
-// AddPlace adds i to the "place" field.
-func (pu *PlaceUpdate) AddPlace(i int) *PlaceUpdate {
-	pu.mutation.AddPlace(i)
-	return pu
+// AddPlace adds value to the "place" field.
+func (_u *PlaceUpdate) AddPlace(v int) *PlaceUpdate {
+	_u.mutation.AddPlace(v)
+	return _u
 }
 
 // SetCtftimeTeamID sets the "ctftime_team_id" field.
-func (pu *PlaceUpdate) SetCtftimeTeamID(i int) *PlaceUpdate {
-	pu.mutation.ResetCtftimeTeamID()
-	pu.mutation.SetCtftimeTeamID(i)
-	return pu
+func (_u *PlaceUpdate) SetCtftimeTeamID(v int) *PlaceUpdate {
+	_u.mutation.ResetCtftimeTeamID()
+	_u.mutation.SetCtftimeTeamID(v)
+	return _u
 }
 
 // SetNillableCtftimeTeamID sets the "ctftime_team_id" field if the given value is not nil.
-func (pu *PlaceUpdate) SetNillableCtftimeTeamID(i *int) *PlaceUpdate {
-	if i != nil {
-		pu.SetCtftimeTeamID(*i)
+func (_u *PlaceUpdate) SetNillableCtftimeTeamID(v *int) *PlaceUpdate {
+	if v != nil {
+		_u.SetCtftimeTeamID(*v)
 	}
-	return pu
+	return _u
 }
 
-// AddCtftimeTeamID adds i to the "ctftime_team_id" field.
-func (pu *PlaceUpdate) AddCtftimeTeamID(i int) *PlaceUpdate {
-	pu.mutation.AddCtftimeTeamID(i)
-	return pu
+// AddCtftimeTeamID adds value to the "ctftime_team_id" field.
+func (_u *PlaceUpdate) AddCtftimeTeamID(v int) *PlaceUpdate {
+	_u.mutation.AddCtftimeTeamID(v)
+	return _u
 }
 
 // ClearCtftimeTeamID clears the value of the "ctftime_team_id" field.
-func (pu *PlaceUpdate) ClearCtftimeTeamID() *PlaceUpdate {
-	pu.mutation.ClearCtftimeTeamID()
-	return pu
+func (_u *PlaceUpdate) ClearCtftimeTeamID() *PlaceUpdate {
+	_u.mutation.ClearCtftimeTeamID()
+	return _u
 }
 
 // SetContestPoints sets the "contest_points" field.
-func (pu *PlaceUpdate) SetContestPoints(f float64) *PlaceUpdate {
-	pu.mutation.ResetContestPoints()
-	pu.mutation.SetContestPoints(f)
-	return pu
+func (_u *PlaceUpdate) SetContestPoints(v float64) *PlaceUpdate {
+	_u.mutation.ResetContestPoints()
+	_u.mutation.SetContestPoints(v)
+	return _u
 }
 
 // SetNillableContestPoints sets the "contest_points" field if the given value is not nil.
-func (pu *PlaceUpdate) SetNillableContestPoints(f *float64) *PlaceUpdate {
-	if f != nil {
-		pu.SetContestPoints(*f)
+func (_u *PlaceUpdate) SetNillableContestPoints(v *float64) *PlaceUpdate {
+	if v != nil {
+		_u.SetContestPoints(*v)
 	}
-	return pu
+	return _u
 }
 
-// AddContestPoints adds f to the "contest_points" field.
-func (pu *PlaceUpdate) AddContestPoints(f float64) *PlaceUpdate {
-	pu.mutation.AddContestPoints(f)
-	return pu
+// AddContestPoints adds value to the "contest_points" field.
+func (_u *PlaceUpdate) AddContestPoints(v float64) *PlaceUpdate {
+	_u.mutation.AddContestPoints(v)
+	return _u
 }
 
 // ClearContestPoints clears the value of the "contest_points" field.
-func (pu *PlaceUpdate) ClearContestPoints() *PlaceUpdate {
-	pu.mutation.ClearContestPoints()
-	return pu
+func (_u *PlaceUpdate) ClearContestPoints() *PlaceUpdate {
+	_u.mutation.ClearContestPoints()
+	return _u
 }
 
 // SetOpenctfPoints sets the "openctf_points" field.
-func (pu *PlaceUpdate) SetOpenctfPoints(f float64) *PlaceUpdate {
-	pu.mutation.ResetOpenctfPoints()
-	pu.mutation.SetOpenctfPoints(f)
-	return pu
+func (_u *PlaceUpdate) SetOpenctfPoints(v float64) *PlaceUpdate {
+	_u.mutation.ResetOpenctfPoints()
+	_u.mutation.SetOpenctfPoints(v)
+	return _u
 }
 
 // SetNillableOpenctfPoints sets the "openctf_points" field if the given value is not nil.
-func (pu *PlaceUpdate) SetNillableOpenctfPoints(f *float64) *PlaceUpdate {
-	if f != nil {
-		pu.SetOpenctfPoints(*f)
+func (_u *PlaceUpdate) SetNillableOpenctfPoints(v *float64) *PlaceUpdate {
+	if v != nil {
+		_u.SetOpenctfPoints(*v)
 	}
-	return pu
+	return _u
 }
 
-// AddOpenctfPoints adds f to the "openctf_points" field.
-func (pu *PlaceUpdate) AddOpenctfPoints(f float64) *PlaceUpdate {
-	pu.mutation.AddOpenctfPoints(f)
-	return pu
+// AddOpenctfPoints adds value to the "openctf_points" field.
+func (_u *PlaceUpdate) AddOpenctfPoints(v float64) *PlaceUpdate {
+	_u.mutation.AddOpenctfPoints(v)
+	return _u
 }
 
 // ClearOpenctfPoints clears the value of the "openctf_points" field.
-func (pu *PlaceUpdate) ClearOpenctfPoints() *PlaceUpdate {
-	pu.mutation.ClearOpenctfPoints()
-	return pu
+func (_u *PlaceUpdate) ClearOpenctfPoints() *PlaceUpdate {
+	_u.mutation.ClearOpenctfPoints()
+	return _u
 }
 
 // SetAssociatedContestID sets the "associated_contest_id" field.
-func (pu *PlaceUpdate) SetAssociatedContestID(i int) *PlaceUpdate {
-	pu.mutation.ResetAssociatedContestID()
-	pu.mutation.SetAssociatedContestID(i)
-	return pu
+func (_u *PlaceUpdate) SetAssociatedContestID(v int) *PlaceUpdate {
+	_u.mutation.ResetAssociatedContestID()
+	_u.mutation.SetAssociatedContestID(v)
+	return _u
 }
 
 // SetNillableAssociatedContestID sets the "associated_contest_id" field if the given value is not nil.
-func (pu *PlaceUpdate) SetNillableAssociatedContestID(i *int) *PlaceUpdate {
-	if i != nil {
-		pu.SetAssociatedContestID(*i)
+func (_u *PlaceUpdate) SetNillableAssociatedContestID(v *int) *PlaceUpdate {
+	if v != nil {
+		_u.SetAssociatedContestID(*v)
 	}
-	return pu
+	return _u
 }
 
-// AddAssociatedContestID adds i to the "associated_contest_id" field.
-func (pu *PlaceUpdate) AddAssociatedContestID(i int) *PlaceUpdate {
-	pu.mutation.AddAssociatedContestID(i)
-	return pu
+// AddAssociatedContestID adds value to the "associated_contest_id" field.
+func (_u *PlaceUpdate) AddAssociatedContestID(v int) *PlaceUpdate {
+	_u.mutation.AddAssociatedContestID(v)
+	return _u
 }
 
 // SetAssignedWeightPoints sets the "assigned_weight_points" field.
-func (pu *PlaceUpdate) SetAssignedWeightPoints(i int) *PlaceUpdate {
-	pu.mutation.ResetAssignedWeightPoints()
-	pu.mutation.SetAssignedWeightPoints(i)
-	return pu
+func (_u *PlaceUpdate) SetAssignedWeightPoints(v int) *PlaceUpdate {
+	_u.mutation.ResetAssignedWeightPoints()
+	_u.mutation.SetAssignedWeightPoints(v)
+	return _u
 }
 
 // SetNillableAssignedWeightPoints sets the "assigned_weight_points" field if the given value is not nil.
-func (pu *PlaceUpdate) SetNillableAssignedWeightPoints(i *int) *PlaceUpdate {
-	if i != nil {
-		pu.SetAssignedWeightPoints(*i)
+func (_u *PlaceUpdate) SetNillableAssignedWeightPoints(v *int) *PlaceUpdate {
+	if v != nil {
+		_u.SetAssignedWeightPoints(*v)
 	}
-	return pu
+	return _u
 }
 
-// AddAssignedWeightPoints adds i to the "assigned_weight_points" field.
-func (pu *PlaceUpdate) AddAssignedWeightPoints(i int) *PlaceUpdate {
-	pu.mutation.AddAssignedWeightPoints(i)
-	return pu
+// AddAssignedWeightPoints adds value to the "assigned_weight_points" field.
+func (_u *PlaceUpdate) AddAssignedWeightPoints(v int) *PlaceUpdate {
+	_u.mutation.AddAssignedWeightPoints(v)
+	return _u
 }
 
 // SetAssociatedTeamID sets the "associated_team" edge to the Team entity by ID.
-func (pu *PlaceUpdate) SetAssociatedTeamID(id int) *PlaceUpdate {
-	pu.mutation.SetAssociatedTeamID(id)
-	return pu
+func (_u *PlaceUpdate) SetAssociatedTeamID(id int) *PlaceUpdate {
+	_u.mutation.SetAssociatedTeamID(id)
+	return _u
 }
 
 // SetNillableAssociatedTeamID sets the "associated_team" edge to the Team entity by ID if the given value is not nil.
-func (pu *PlaceUpdate) SetNillableAssociatedTeamID(id *int) *PlaceUpdate {
+func (_u *PlaceUpdate) SetNillableAssociatedTeamID(id *int) *PlaceUpdate {
 	if id != nil {
-		pu = pu.SetAssociatedTeamID(*id)
+		_u = _u.SetAssociatedTeamID(*id)
 	}
-	return pu
+	return _u
 }
 
 // SetAssociatedTeam sets the "associated_team" edge to the Team entity.
-func (pu *PlaceUpdate) SetAssociatedTeam(t *Team) *PlaceUpdate {
-	return pu.SetAssociatedTeamID(t.ID)
+func (_u *PlaceUpdate) SetAssociatedTeam(v *Team) *PlaceUpdate {
+	return _u.SetAssociatedTeamID(v.ID)
 }
 
 // Mutation returns the PlaceMutation object of the builder.
-func (pu *PlaceUpdate) Mutation() *PlaceMutation {
-	return pu.mutation
+func (_u *PlaceUpdate) Mutation() *PlaceMutation {
+	return _u.mutation
 }
 
 // ClearAssociatedTeam clears the "associated_team" edge to the Team entity.
-func (pu *PlaceUpdate) ClearAssociatedTeam() *PlaceUpdate {
-	pu.mutation.ClearAssociatedTeam()
-	return pu
+func (_u *PlaceUpdate) ClearAssociatedTeam() *PlaceUpdate {
+	_u.mutation.ClearAssociatedTeam()
+	return _u
 }
 
 // Save executes the query and returns the number of nodes affected by the update operation.
-func (pu *PlaceUpdate) Save(ctx context.Context) (int, error) {
-	return withHooks(ctx, pu.sqlSave, pu.mutation, pu.hooks)
+func (_u *PlaceUpdate) Save(ctx context.Context) (int, error) {
+	return withHooks(ctx, _u.sqlSave, _u.mutation, _u.hooks)
 }
 
 // SaveX is like Save, but panics if an error occurs.
-func (pu *PlaceUpdate) SaveX(ctx context.Context) int {
-	affected, err := pu.Save(ctx)
+func (_u *PlaceUpdate) SaveX(ctx context.Context) int {
+	affected, err := _u.Save(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -231,36 +231,36 @@ func (pu *PlaceUpdate) SaveX(ctx context.Context) int {
 }
 
 // Exec executes the query.
-func (pu *PlaceUpdate) Exec(ctx context.Context) error {
-	_, err := pu.Save(ctx)
+func (_u *PlaceUpdate) Exec(ctx context.Context) error {
+	_, err := _u.Save(ctx)
 	return err
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (pu *PlaceUpdate) ExecX(ctx context.Context) {
-	if err := pu.Exec(ctx); err != nil {
+func (_u *PlaceUpdate) ExecX(ctx context.Context) {
+	if err := _u.Exec(ctx); err != nil {
 		panic(err)
 	}
 }
 
 // check runs all checks and user-defined validators on the builder.
-func (pu *PlaceUpdate) check() error {
-	if v, ok := pu.mutation.TeamName(); ok {
+func (_u *PlaceUpdate) check() error {
+	if v, ok := _u.mutation.TeamName(); ok {
 		if err := place.TeamNameValidator(v); err != nil {
 			return &ValidationError{Name: "team_name", err: fmt.Errorf(`ent: validator failed for field "Place.team_name": %w`, err)}
 		}
 	}
-	if v, ok := pu.mutation.Place(); ok {
+	if v, ok := _u.mutation.Place(); ok {
 		if err := place.PlaceValidator(v); err != nil {
 			return &ValidationError{Name: "place", err: fmt.Errorf(`ent: validator failed for field "Place.place": %w`, err)}
 		}
 	}
-	if v, ok := pu.mutation.ContestPoints(); ok {
+	if v, ok := _u.mutation.ContestPoints(); ok {
 		if err := place.ContestPointsValidator(v); err != nil {
 			return &ValidationError{Name: "contest_points", err: fmt.Errorf(`ent: validator failed for field "Place.contest_points": %w`, err)}
 		}
 	}
-	if v, ok := pu.mutation.OpenctfPoints(); ok {
+	if v, ok := _u.mutation.OpenctfPoints(); ok {
 		if err := place.OpenctfPointsValidator(v); err != nil {
 			return &ValidationError{Name: "openctf_points", err: fmt.Errorf(`ent: validator failed for field "Place.openctf_points": %w`, err)}
 		}
@@ -268,67 +268,67 @@ func (pu *PlaceUpdate) check() error {
 	return nil
 }
 
-func (pu *PlaceUpdate) sqlSave(ctx context.Context) (n int, err error) {
-	if err := pu.check(); err != nil {
-		return n, err
+func (_u *PlaceUpdate) sqlSave(ctx context.Context) (_node int, err error) {
+	if err := _u.check(); err != nil {
+		return _node, err
 	}
 	_spec := sqlgraph.NewUpdateSpec(place.Table, place.Columns, sqlgraph.NewFieldSpec(place.FieldID, field.TypeInt))
-	if ps := pu.mutation.predicates; len(ps) > 0 {
+	if ps := _u.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
 			for i := range ps {
 				ps[i](selector)
 			}
 		}
 	}
-	if value, ok := pu.mutation.TeamName(); ok {
+	if value, ok := _u.mutation.TeamName(); ok {
 		_spec.SetField(place.FieldTeamName, field.TypeString, value)
 	}
-	if value, ok := pu.mutation.Place(); ok {
+	if value, ok := _u.mutation.Place(); ok {
 		_spec.SetField(place.FieldPlace, field.TypeInt, value)
 	}
-	if value, ok := pu.mutation.AddedPlace(); ok {
+	if value, ok := _u.mutation.AddedPlace(); ok {
 		_spec.AddField(place.FieldPlace, field.TypeInt, value)
 	}
-	if value, ok := pu.mutation.CtftimeTeamID(); ok {
+	if value, ok := _u.mutation.CtftimeTeamID(); ok {
 		_spec.SetField(place.FieldCtftimeTeamID, field.TypeInt, value)
 	}
-	if value, ok := pu.mutation.AddedCtftimeTeamID(); ok {
+	if value, ok := _u.mutation.AddedCtftimeTeamID(); ok {
 		_spec.AddField(place.FieldCtftimeTeamID, field.TypeInt, value)
 	}
-	if pu.mutation.CtftimeTeamIDCleared() {
+	if _u.mutation.CtftimeTeamIDCleared() {
 		_spec.ClearField(place.FieldCtftimeTeamID, field.TypeInt)
 	}
-	if value, ok := pu.mutation.ContestPoints(); ok {
+	if value, ok := _u.mutation.ContestPoints(); ok {
 		_spec.SetField(place.FieldContestPoints, field.TypeFloat64, value)
 	}
-	if value, ok := pu.mutation.AddedContestPoints(); ok {
+	if value, ok := _u.mutation.AddedContestPoints(); ok {
 		_spec.AddField(place.FieldContestPoints, field.TypeFloat64, value)
 	}
-	if pu.mutation.ContestPointsCleared() {
+	if _u.mutation.ContestPointsCleared() {
 		_spec.ClearField(place.FieldContestPoints, field.TypeFloat64)
 	}
-	if value, ok := pu.mutation.OpenctfPoints(); ok {
+	if value, ok := _u.mutation.OpenctfPoints(); ok {
 		_spec.SetField(place.FieldOpenctfPoints, field.TypeFloat64, value)
 	}
-	if value, ok := pu.mutation.AddedOpenctfPoints(); ok {
+	if value, ok := _u.mutation.AddedOpenctfPoints(); ok {
 		_spec.AddField(place.FieldOpenctfPoints, field.TypeFloat64, value)
 	}
-	if pu.mutation.OpenctfPointsCleared() {
+	if _u.mutation.OpenctfPointsCleared() {
 		_spec.ClearField(place.FieldOpenctfPoints, field.TypeFloat64)
 	}
-	if value, ok := pu.mutation.AssociatedContestID(); ok {
+	if value, ok := _u.mutation.AssociatedContestID(); ok {
 		_spec.SetField(place.FieldAssociatedContestID, field.TypeInt, value)
 	}
-	if value, ok := pu.mutation.AddedAssociatedContestID(); ok {
+	if value, ok := _u.mutation.AddedAssociatedContestID(); ok {
 		_spec.AddField(place.FieldAssociatedContestID, field.TypeInt, value)
 	}
-	if value, ok := pu.mutation.AssignedWeightPoints(); ok {
+	if value, ok := _u.mutation.AssignedWeightPoints(); ok {
 		_spec.SetField(place.FieldAssignedWeightPoints, field.TypeInt, value)
 	}
-	if value, ok := pu.mutation.AddedAssignedWeightPoints(); ok {
+	if value, ok := _u.mutation.AddedAssignedWeightPoints(); ok {
 		_spec.AddField(place.FieldAssignedWeightPoints, field.TypeInt, value)
 	}
-	if pu.mutation.AssociatedTeamCleared() {
+	if _u.mutation.AssociatedTeamCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: false,
@@ -341,7 +341,7 @@ func (pu *PlaceUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := pu.mutation.AssociatedTeamIDs(); len(nodes) > 0 {
+	if nodes := _u.mutation.AssociatedTeamIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: false,
@@ -357,7 +357,7 @@ func (pu *PlaceUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	if n, err = sqlgraph.UpdateNodes(ctx, pu.driver, _spec); err != nil {
+	if _node, err = sqlgraph.UpdateNodes(ctx, _u.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{place.Label}
 		} else if sqlgraph.IsConstraintError(err) {
@@ -365,8 +365,8 @@ func (pu *PlaceUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		return 0, err
 	}
-	pu.mutation.done = true
-	return n, nil
+	_u.mutation.done = true
+	return _node, nil
 }
 
 // PlaceUpdateOne is the builder for updating a single Place entity.
@@ -378,214 +378,214 @@ type PlaceUpdateOne struct {
 }
 
 // SetTeamName sets the "team_name" field.
-func (puo *PlaceUpdateOne) SetTeamName(s string) *PlaceUpdateOne {
-	puo.mutation.SetTeamName(s)
-	return puo
+func (_u *PlaceUpdateOne) SetTeamName(v string) *PlaceUpdateOne {
+	_u.mutation.SetTeamName(v)
+	return _u
 }
 
 // SetNillableTeamName sets the "team_name" field if the given value is not nil.
-func (puo *PlaceUpdateOne) SetNillableTeamName(s *string) *PlaceUpdateOne {
-	if s != nil {
-		puo.SetTeamName(*s)
+func (_u *PlaceUpdateOne) SetNillableTeamName(v *string) *PlaceUpdateOne {
+	if v != nil {
+		_u.SetTeamName(*v)
 	}
-	return puo
+	return _u
 }
 
 // SetPlace sets the "place" field.
-func (puo *PlaceUpdateOne) SetPlace(i int) *PlaceUpdateOne {
-	puo.mutation.ResetPlace()
-	puo.mutation.SetPlace(i)
-	return puo
+func (_u *PlaceUpdateOne) SetPlace(v int) *PlaceUpdateOne {
+	_u.mutation.ResetPlace()
+	_u.mutation.SetPlace(v)
+	return _u
 }
 
 // SetNillablePlace sets the "place" field if the given value is not nil.
-func (puo *PlaceUpdateOne) SetNillablePlace(i *int) *PlaceUpdateOne {
-	if i != nil {
-		puo.SetPlace(*i)
+func (_u *PlaceUpdateOne) SetNillablePlace(v *int) *PlaceUpdateOne {
+	if v != nil {
+		_u.SetPlace(*v)
 	}
-	return puo
+	return _u
 }
 
-// AddPlace adds i to the "place" field.
-func (puo *PlaceUpdateOne) AddPlace(i int) *PlaceUpdateOne {
-	puo.mutation.AddPlace(i)
-	return puo
+// AddPlace adds value to the "place" field.
+func (_u *PlaceUpdateOne) AddPlace(v int) *PlaceUpdateOne {
+	_u.mutation.AddPlace(v)
+	return _u
 }
 
 // SetCtftimeTeamID sets the "ctftime_team_id" field.
-func (puo *PlaceUpdateOne) SetCtftimeTeamID(i int) *PlaceUpdateOne {
-	puo.mutation.ResetCtftimeTeamID()
-	puo.mutation.SetCtftimeTeamID(i)
-	return puo
+func (_u *PlaceUpdateOne) SetCtftimeTeamID(v int) *PlaceUpdateOne {
+	_u.mutation.ResetCtftimeTeamID()
+	_u.mutation.SetCtftimeTeamID(v)
+	return _u
 }
 
 // SetNillableCtftimeTeamID sets the "ctftime_team_id" field if the given value is not nil.
-func (puo *PlaceUpdateOne) SetNillableCtftimeTeamID(i *int) *PlaceUpdateOne {
-	if i != nil {
-		puo.SetCtftimeTeamID(*i)
+func (_u *PlaceUpdateOne) SetNillableCtftimeTeamID(v *int) *PlaceUpdateOne {
+	if v != nil {
+		_u.SetCtftimeTeamID(*v)
 	}
-	return puo
+	return _u
 }
 
-// AddCtftimeTeamID adds i to the "ctftime_team_id" field.
-func (puo *PlaceUpdateOne) AddCtftimeTeamID(i int) *PlaceUpdateOne {
-	puo.mutation.AddCtftimeTeamID(i)
-	return puo
+// AddCtftimeTeamID adds value to the "ctftime_team_id" field.
+func (_u *PlaceUpdateOne) AddCtftimeTeamID(v int) *PlaceUpdateOne {
+	_u.mutation.AddCtftimeTeamID(v)
+	return _u
 }
 
 // ClearCtftimeTeamID clears the value of the "ctftime_team_id" field.
-func (puo *PlaceUpdateOne) ClearCtftimeTeamID() *PlaceUpdateOne {
-	puo.mutation.ClearCtftimeTeamID()
-	return puo
+func (_u *PlaceUpdateOne) ClearCtftimeTeamID() *PlaceUpdateOne {
+	_u.mutation.ClearCtftimeTeamID()
+	return _u
 }
 
 // SetContestPoints sets the "contest_points" field.
-func (puo *PlaceUpdateOne) SetContestPoints(f float64) *PlaceUpdateOne {
-	puo.mutation.ResetContestPoints()
-	puo.mutation.SetContestPoints(f)
-	return puo
+func (_u *PlaceUpdateOne) SetContestPoints(v float64) *PlaceUpdateOne {
+	_u.mutation.ResetContestPoints()
+	_u.mutation.SetContestPoints(v)
+	return _u
 }
 
 // SetNillableContestPoints sets the "contest_points" field if the given value is not nil.
-func (puo *PlaceUpdateOne) SetNillableContestPoints(f *float64) *PlaceUpdateOne {
-	if f != nil {
-		puo.SetContestPoints(*f)
+func (_u *PlaceUpdateOne) SetNillableContestPoints(v *float64) *PlaceUpdateOne {
+	if v != nil {
+		_u.SetContestPoints(*v)
 	}
-	return puo
+	return _u
 }
 
-// AddContestPoints adds f to the "contest_points" field.
-func (puo *PlaceUpdateOne) AddContestPoints(f float64) *PlaceUpdateOne {
-	puo.mutation.AddContestPoints(f)
-	return puo
+// AddContestPoints adds value to the "contest_points" field.
+func (_u *PlaceUpdateOne) AddContestPoints(v float64) *PlaceUpdateOne {
+	_u.mutation.AddContestPoints(v)
+	return _u
 }
 
 // ClearContestPoints clears the value of the "contest_points" field.
-func (puo *PlaceUpdateOne) ClearContestPoints() *PlaceUpdateOne {
-	puo.mutation.ClearContestPoints()
-	return puo
+func (_u *PlaceUpdateOne) ClearContestPoints() *PlaceUpdateOne {
+	_u.mutation.ClearContestPoints()
+	return _u
 }
 
 // SetOpenctfPoints sets the "openctf_points" field.
-func (puo *PlaceUpdateOne) SetOpenctfPoints(f float64) *PlaceUpdateOne {
-	puo.mutation.ResetOpenctfPoints()
-	puo.mutation.SetOpenctfPoints(f)
-	return puo
+func (_u *PlaceUpdateOne) SetOpenctfPoints(v float64) *PlaceUpdateOne {
+	_u.mutation.ResetOpenctfPoints()
+	_u.mutation.SetOpenctfPoints(v)
+	return _u
 }
 
 // SetNillableOpenctfPoints sets the "openctf_points" field if the given value is not nil.
-func (puo *PlaceUpdateOne) SetNillableOpenctfPoints(f *float64) *PlaceUpdateOne {
-	if f != nil {
-		puo.SetOpenctfPoints(*f)
+func (_u *PlaceUpdateOne) SetNillableOpenctfPoints(v *float64) *PlaceUpdateOne {
+	if v != nil {
+		_u.SetOpenctfPoints(*v)
 	}
-	return puo
+	return _u
 }
 
-// AddOpenctfPoints adds f to the "openctf_points" field.
-func (puo *PlaceUpdateOne) AddOpenctfPoints(f float64) *PlaceUpdateOne {
-	puo.mutation.AddOpenctfPoints(f)
-	return puo
+// AddOpenctfPoints adds value to the "openctf_points" field.
+func (_u *PlaceUpdateOne) AddOpenctfPoints(v float64) *PlaceUpdateOne {
+	_u.mutation.AddOpenctfPoints(v)
+	return _u
 }
 
 // ClearOpenctfPoints clears the value of the "openctf_points" field.
-func (puo *PlaceUpdateOne) ClearOpenctfPoints() *PlaceUpdateOne {
-	puo.mutation.ClearOpenctfPoints()
-	return puo
+func (_u *PlaceUpdateOne) ClearOpenctfPoints() *PlaceUpdateOne {
+	_u.mutation.ClearOpenctfPoints()
+	return _u
 }
 
 // SetAssociatedContestID sets the "associated_contest_id" field.
-func (puo *PlaceUpdateOne) SetAssociatedContestID(i int) *PlaceUpdateOne {
-	puo.mutation.ResetAssociatedContestID()
-	puo.mutation.SetAssociatedContestID(i)
-	return puo
+func (_u *PlaceUpdateOne) SetAssociatedContestID(v int) *PlaceUpdateOne {
+	_u.mutation.ResetAssociatedContestID()
+	_u.mutation.SetAssociatedContestID(v)
+	return _u
 }
 
 // SetNillableAssociatedContestID sets the "associated_contest_id" field if the given value is not nil.
-func (puo *PlaceUpdateOne) SetNillableAssociatedContestID(i *int) *PlaceUpdateOne {
-	if i != nil {
-		puo.SetAssociatedContestID(*i)
+func (_u *PlaceUpdateOne) SetNillableAssociatedContestID(v *int) *PlaceUpdateOne {
+	if v != nil {
+		_u.SetAssociatedContestID(*v)
 	}
-	return puo
+	return _u
 }
 
-// AddAssociatedContestID adds i to the "associated_contest_id" field.
-func (puo *PlaceUpdateOne) AddAssociatedContestID(i int) *PlaceUpdateOne {
-	puo.mutation.AddAssociatedContestID(i)
-	return puo
+// AddAssociatedContestID adds value to the "associated_contest_id" field.
+func (_u *PlaceUpdateOne) AddAssociatedContestID(v int) *PlaceUpdateOne {
+	_u.mutation.AddAssociatedContestID(v)
+	return _u
 }
 
 // SetAssignedWeightPoints sets the "assigned_weight_points" field.
-func (puo *PlaceUpdateOne) SetAssignedWeightPoints(i int) *PlaceUpdateOne {
-	puo.mutation.ResetAssignedWeightPoints()
-	puo.mutation.SetAssignedWeightPoints(i)
-	return puo
+func (_u *PlaceUpdateOne) SetAssignedWeightPoints(v int) *PlaceUpdateOne {
+	_u.mutation.ResetAssignedWeightPoints()
+	_u.mutation.SetAssignedWeightPoints(v)
+	return _u
 }
 
 // SetNillableAssignedWeightPoints sets the "assigned_weight_points" field if the given value is not nil.
-func (puo *PlaceUpdateOne) SetNillableAssignedWeightPoints(i *int) *PlaceUpdateOne {
-	if i != nil {
-		puo.SetAssignedWeightPoints(*i)
+func (_u *PlaceUpdateOne) SetNillableAssignedWeightPoints(v *int) *PlaceUpdateOne {
+	if v != nil {
+		_u.SetAssignedWeightPoints(*v)
 	}
-	return puo
+	return _u
 }
 
-// AddAssignedWeightPoints adds i to the "assigned_weight_points" field.
-func (puo *PlaceUpdateOne) AddAssignedWeightPoints(i int) *PlaceUpdateOne {
-	puo.mutation.AddAssignedWeightPoints(i)
-	return puo
+// AddAssignedWeightPoints adds value to the "assigned_weight_points" field.
+func (_u *PlaceUpdateOne) AddAssignedWeightPoints(v int) *PlaceUpdateOne {
+	_u.mutation.AddAssignedWeightPoints(v)
+	return _u
 }
 
 // SetAssociatedTeamID sets the "associated_team" edge to the Team entity by ID.
-func (puo *PlaceUpdateOne) SetAssociatedTeamID(id int) *PlaceUpdateOne {
-	puo.mutation.SetAssociatedTeamID(id)
-	return puo
+func (_u *PlaceUpdateOne) SetAssociatedTeamID(id int) *PlaceUpdateOne {
+	_u.mutation.SetAssociatedTeamID(id)
+	return _u
 }
 
 // SetNillableAssociatedTeamID sets the "associated_team" edge to the Team entity by ID if the given value is not nil.
-func (puo *PlaceUpdateOne) SetNillableAssociatedTeamID(id *int) *PlaceUpdateOne {
+func (_u *PlaceUpdateOne) SetNillableAssociatedTeamID(id *int) *PlaceUpdateOne {
 	if id != nil {
-		puo = puo.SetAssociatedTeamID(*id)
+		_u = _u.SetAssociatedTeamID(*id)
 	}
-	return puo
+	return _u
 }
 
 // SetAssociatedTeam sets the "associated_team" edge to the Team entity.
-func (puo *PlaceUpdateOne) SetAssociatedTeam(t *Team) *PlaceUpdateOne {
-	return puo.SetAssociatedTeamID(t.ID)
+func (_u *PlaceUpdateOne) SetAssociatedTeam(v *Team) *PlaceUpdateOne {
+	return _u.SetAssociatedTeamID(v.ID)
 }
 
 // Mutation returns the PlaceMutation object of the builder.
-func (puo *PlaceUpdateOne) Mutation() *PlaceMutation {
-	return puo.mutation
+func (_u *PlaceUpdateOne) Mutation() *PlaceMutation {
+	return _u.mutation
 }
 
 // ClearAssociatedTeam clears the "associated_team" edge to the Team entity.
-func (puo *PlaceUpdateOne) ClearAssociatedTeam() *PlaceUpdateOne {
-	puo.mutation.ClearAssociatedTeam()
-	return puo
+func (_u *PlaceUpdateOne) ClearAssociatedTeam() *PlaceUpdateOne {
+	_u.mutation.ClearAssociatedTeam()
+	return _u
 }
 
 // Where appends a list predicates to the PlaceUpdate builder.
-func (puo *PlaceUpdateOne) Where(ps ...predicate.Place) *PlaceUpdateOne {
-	puo.mutation.Where(ps...)
-	return puo
+func (_u *PlaceUpdateOne) Where(ps ...predicate.Place) *PlaceUpdateOne {
+	_u.mutation.Where(ps...)
+	return _u
 }
 
 // Select allows selecting one or more fields (columns) of the returned entity.
 // The default is selecting all fields defined in the entity schema.
-func (puo *PlaceUpdateOne) Select(field string, fields ...string) *PlaceUpdateOne {
-	puo.fields = append([]string{field}, fields...)
-	return puo
+func (_u *PlaceUpdateOne) Select(field string, fields ...string) *PlaceUpdateOne {
+	_u.fields = append([]string{field}, fields...)
+	return _u
 }
 
 // Save executes the query and returns the updated Place entity.
-func (puo *PlaceUpdateOne) Save(ctx context.Context) (*Place, error) {
-	return withHooks(ctx, puo.sqlSave, puo.mutation, puo.hooks)
+func (_u *PlaceUpdateOne) Save(ctx context.Context) (*Place, error) {
+	return withHooks(ctx, _u.sqlSave, _u.mutation, _u.hooks)
 }
 
 // SaveX is like Save, but panics if an error occurs.
-func (puo *PlaceUpdateOne) SaveX(ctx context.Context) *Place {
-	node, err := puo.Save(ctx)
+func (_u *PlaceUpdateOne) SaveX(ctx context.Context) *Place {
+	node, err := _u.Save(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -593,36 +593,36 @@ func (puo *PlaceUpdateOne) SaveX(ctx context.Context) *Place {
 }
 
 // Exec executes the query on the entity.
-func (puo *PlaceUpdateOne) Exec(ctx context.Context) error {
-	_, err := puo.Save(ctx)
+func (_u *PlaceUpdateOne) Exec(ctx context.Context) error {
+	_, err := _u.Save(ctx)
 	return err
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (puo *PlaceUpdateOne) ExecX(ctx context.Context) {
-	if err := puo.Exec(ctx); err != nil {
+func (_u *PlaceUpdateOne) ExecX(ctx context.Context) {
+	if err := _u.Exec(ctx); err != nil {
 		panic(err)
 	}
 }
 
 // check runs all checks and user-defined validators on the builder.
-func (puo *PlaceUpdateOne) check() error {
-	if v, ok := puo.mutation.TeamName(); ok {
+func (_u *PlaceUpdateOne) check() error {
+	if v, ok := _u.mutation.TeamName(); ok {
 		if err := place.TeamNameValidator(v); err != nil {
 			return &ValidationError{Name: "team_name", err: fmt.Errorf(`ent: validator failed for field "Place.team_name": %w`, err)}
 		}
 	}
-	if v, ok := puo.mutation.Place(); ok {
+	if v, ok := _u.mutation.Place(); ok {
 		if err := place.PlaceValidator(v); err != nil {
 			return &ValidationError{Name: "place", err: fmt.Errorf(`ent: validator failed for field "Place.place": %w`, err)}
 		}
 	}
-	if v, ok := puo.mutation.ContestPoints(); ok {
+	if v, ok := _u.mutation.ContestPoints(); ok {
 		if err := place.ContestPointsValidator(v); err != nil {
 			return &ValidationError{Name: "contest_points", err: fmt.Errorf(`ent: validator failed for field "Place.contest_points": %w`, err)}
 		}
 	}
-	if v, ok := puo.mutation.OpenctfPoints(); ok {
+	if v, ok := _u.mutation.OpenctfPoints(); ok {
 		if err := place.OpenctfPointsValidator(v); err != nil {
 			return &ValidationError{Name: "openctf_points", err: fmt.Errorf(`ent: validator failed for field "Place.openctf_points": %w`, err)}
 		}
@@ -630,17 +630,17 @@ func (puo *PlaceUpdateOne) check() error {
 	return nil
 }
 
-func (puo *PlaceUpdateOne) sqlSave(ctx context.Context) (_node *Place, err error) {
-	if err := puo.check(); err != nil {
+func (_u *PlaceUpdateOne) sqlSave(ctx context.Context) (_node *Place, err error) {
+	if err := _u.check(); err != nil {
 		return _node, err
 	}
 	_spec := sqlgraph.NewUpdateSpec(place.Table, place.Columns, sqlgraph.NewFieldSpec(place.FieldID, field.TypeInt))
-	id, ok := puo.mutation.ID()
+	id, ok := _u.mutation.ID()
 	if !ok {
 		return nil, &ValidationError{Name: "id", err: errors.New(`ent: missing "Place.id" for update`)}
 	}
 	_spec.Node.ID.Value = id
-	if fields := puo.fields; len(fields) > 0 {
+	if fields := _u.fields; len(fields) > 0 {
 		_spec.Node.Columns = make([]string, 0, len(fields))
 		_spec.Node.Columns = append(_spec.Node.Columns, place.FieldID)
 		for _, f := range fields {
@@ -652,62 +652,62 @@ func (puo *PlaceUpdateOne) sqlSave(ctx context.Context) (_node *Place, err error
 			}
 		}
 	}
-	if ps := puo.mutation.predicates; len(ps) > 0 {
+	if ps := _u.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
 			for i := range ps {
 				ps[i](selector)
 			}
 		}
 	}
-	if value, ok := puo.mutation.TeamName(); ok {
+	if value, ok := _u.mutation.TeamName(); ok {
 		_spec.SetField(place.FieldTeamName, field.TypeString, value)
 	}
-	if value, ok := puo.mutation.Place(); ok {
+	if value, ok := _u.mutation.Place(); ok {
 		_spec.SetField(place.FieldPlace, field.TypeInt, value)
 	}
-	if value, ok := puo.mutation.AddedPlace(); ok {
+	if value, ok := _u.mutation.AddedPlace(); ok {
 		_spec.AddField(place.FieldPlace, field.TypeInt, value)
 	}
-	if value, ok := puo.mutation.CtftimeTeamID(); ok {
+	if value, ok := _u.mutation.CtftimeTeamID(); ok {
 		_spec.SetField(place.FieldCtftimeTeamID, field.TypeInt, value)
 	}
-	if value, ok := puo.mutation.AddedCtftimeTeamID(); ok {
+	if value, ok := _u.mutation.AddedCtftimeTeamID(); ok {
 		_spec.AddField(place.FieldCtftimeTeamID, field.TypeInt, value)
 	}
-	if puo.mutation.CtftimeTeamIDCleared() {
+	if _u.mutation.CtftimeTeamIDCleared() {
 		_spec.ClearField(place.FieldCtftimeTeamID, field.TypeInt)
 	}
-	if value, ok := puo.mutation.ContestPoints(); ok {
+	if value, ok := _u.mutation.ContestPoints(); ok {
 		_spec.SetField(place.FieldContestPoints, field.TypeFloat64, value)
 	}
-	if value, ok := puo.mutation.AddedContestPoints(); ok {
+	if value, ok := _u.mutation.AddedContestPoints(); ok {
 		_spec.AddField(place.FieldContestPoints, field.TypeFloat64, value)
 	}
-	if puo.mutation.ContestPointsCleared() {
+	if _u.mutation.ContestPointsCleared() {
 		_spec.ClearField(place.FieldContestPoints, field.TypeFloat64)
 	}
-	if value, ok := puo.mutation.OpenctfPoints(); ok {
+	if value, ok := _u.mutation.OpenctfPoints(); ok {
 		_spec.SetField(place.FieldOpenctfPoints, field.TypeFloat64, value)
 	}
-	if value, ok := puo.mutation.AddedOpenctfPoints(); ok {
+	if value, ok := _u.mutation.AddedOpenctfPoints(); ok {
 		_spec.AddField(place.FieldOpenctfPoints, field.TypeFloat64, value)
 	}
-	if puo.mutation.OpenctfPointsCleared() {
+	if _u.mutation.OpenctfPointsCleared() {
 		_spec.ClearField(place.FieldOpenctfPoints, field.TypeFloat64)
 	}
-	if value, ok := puo.mutation.AssociatedContestID(); ok {
+	if value, ok := _u.mutation.AssociatedContestID(); ok {
 		_spec.SetField(place.FieldAssociatedContestID, field.TypeInt, value)
 	}
-	if value, ok := puo.mutation.AddedAssociatedContestID(); ok {
+	if value, ok := _u.mutation.AddedAssociatedContestID(); ok {
 		_spec.AddField(place.FieldAssociatedContestID, field.TypeInt, value)
 	}
-	if value, ok := puo.mutation.AssignedWeightPoints(); ok {
+	if value, ok := _u.mutation.AssignedWeightPoints(); ok {
 		_spec.SetField(place.FieldAssignedWeightPoints, field.TypeInt, value)
 	}
-	if value, ok := puo.mutation.AddedAssignedWeightPoints(); ok {
+	if value, ok := _u.mutation.AddedAssignedWeightPoints(); ok {
 		_spec.AddField(place.FieldAssignedWeightPoints, field.TypeInt, value)
 	}
-	if puo.mutation.AssociatedTeamCleared() {
+	if _u.mutation.AssociatedTeamCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: false,
@@ -720,7 +720,7 @@ func (puo *PlaceUpdateOne) sqlSave(ctx context.Context) (_node *Place, err error
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := puo.mutation.AssociatedTeamIDs(); len(nodes) > 0 {
+	if nodes := _u.mutation.AssociatedTeamIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: false,
@@ -736,10 +736,10 @@ func (puo *PlaceUpdateOne) sqlSave(ctx context.Context) (_node *Place, err error
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	_node = &Place{config: puo.config}
+	_node = &Place{config: _u.config}
 	_spec.Assign = _node.assignValues
 	_spec.ScanValues = _node.scanValues
-	if err = sqlgraph.UpdateNode(ctx, puo.driver, _spec); err != nil {
+	if err = sqlgraph.UpdateNode(ctx, _u.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{place.Label}
 		} else if sqlgraph.IsConstraintError(err) {
@@ -747,6 +747,6 @@ func (puo *PlaceUpdateOne) sqlSave(ctx context.Context) (_node *Place, err error
 		}
 		return nil, err
 	}
-	puo.mutation.done = true
+	_u.mutation.done = true
 	return _node, nil
 }

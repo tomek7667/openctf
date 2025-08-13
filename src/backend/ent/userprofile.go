@@ -90,7 +90,7 @@ func (*UserProfile) scanValues(columns []string) ([]any, error) {
 
 // assignValues assigns the values that were returned from sql.Rows (after scanning)
 // to the UserProfile fields.
-func (up *UserProfile) assignValues(columns []string, values []any) error {
+func (_m *UserProfile) assignValues(columns []string, values []any) error {
 	if m, n := len(values), len(columns); m < n {
 		return fmt.Errorf("mismatch number of scan values: %d != %d", m, n)
 	}
@@ -101,93 +101,93 @@ func (up *UserProfile) assignValues(columns []string, values []any) error {
 			if !ok {
 				return fmt.Errorf("unexpected type %T for field id", value)
 			}
-			up.ID = int(value.Int64)
+			_m.ID = int(value.Int64)
 		case userprofile.FieldLocation:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field location", values[i])
 			} else if value.Valid {
-				up.Location = new(string)
-				*up.Location = value.String
+				_m.Location = new(string)
+				*_m.Location = value.String
 			}
 		case userprofile.FieldGithubLink:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field github_link", values[i])
 			} else if value.Valid {
-				up.GithubLink = new(string)
-				*up.GithubLink = value.String
+				_m.GithubLink = new(string)
+				*_m.GithubLink = value.String
 			}
 		case userprofile.FieldLinkedinLink:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field linkedin_link", values[i])
 			} else if value.Valid {
-				up.LinkedinLink = new(string)
-				*up.LinkedinLink = value.String
+				_m.LinkedinLink = new(string)
+				*_m.LinkedinLink = value.String
 			}
 		case userprofile.FieldTwitterLink:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field twitter_link", values[i])
 			} else if value.Valid {
-				up.TwitterLink = new(string)
-				*up.TwitterLink = value.String
+				_m.TwitterLink = new(string)
+				*_m.TwitterLink = value.String
 			}
 		case userprofile.FieldWebsiteLink:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field website_link", values[i])
 			} else if value.Valid {
-				up.WebsiteLink = new(string)
-				*up.WebsiteLink = value.String
+				_m.WebsiteLink = new(string)
+				*_m.WebsiteLink = value.String
 			}
 		case userprofile.FieldWebSkillLevel:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field web_skill_level", values[i])
 			} else if value.Valid {
-				up.WebSkillLevel = int(value.Int64)
+				_m.WebSkillLevel = int(value.Int64)
 			}
 		case userprofile.FieldRevSkillLevel:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field rev_skill_level", values[i])
 			} else if value.Valid {
-				up.RevSkillLevel = int(value.Int64)
+				_m.RevSkillLevel = int(value.Int64)
 			}
 		case userprofile.FieldPwnSkillLevel:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field pwn_skill_level", values[i])
 			} else if value.Valid {
-				up.PwnSkillLevel = int(value.Int64)
+				_m.PwnSkillLevel = int(value.Int64)
 			}
 		case userprofile.FieldCryptoSkillLevel:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field crypto_skill_level", values[i])
 			} else if value.Valid {
-				up.CryptoSkillLevel = int(value.Int64)
+				_m.CryptoSkillLevel = int(value.Int64)
 			}
 		case userprofile.FieldMiscSkillLevel:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field misc_skill_level", values[i])
 			} else if value.Valid {
-				up.MiscSkillLevel = int(value.Int64)
+				_m.MiscSkillLevel = int(value.Int64)
 			}
 		case userprofile.FieldShowEmail:
 			if value, ok := values[i].(*sql.NullBool); !ok {
 				return fmt.Errorf("unexpected type %T for field show_email", values[i])
 			} else if value.Valid {
-				up.ShowEmail = value.Bool
+				_m.ShowEmail = value.Bool
 			}
 		case userprofile.FieldShowLocation:
 			if value, ok := values[i].(*sql.NullBool); !ok {
 				return fmt.Errorf("unexpected type %T for field show_location", values[i])
 			} else if value.Valid {
-				up.ShowLocation = value.Bool
+				_m.ShowLocation = value.Bool
 			}
 		case userprofile.ForeignKeys[0]:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for edge-field user_profile_user", value)
 			} else if value.Valid {
-				up.user_profile_user = new(int)
-				*up.user_profile_user = int(value.Int64)
+				_m.user_profile_user = new(int)
+				*_m.user_profile_user = int(value.Int64)
 			}
 		default:
-			up.selectValues.Set(columns[i], values[i])
+			_m.selectValues.Set(columns[i], values[i])
 		}
 	}
 	return nil
@@ -195,83 +195,83 @@ func (up *UserProfile) assignValues(columns []string, values []any) error {
 
 // Value returns the ent.Value that was dynamically selected and assigned to the UserProfile.
 // This includes values selected through modifiers, order, etc.
-func (up *UserProfile) Value(name string) (ent.Value, error) {
-	return up.selectValues.Get(name)
+func (_m *UserProfile) Value(name string) (ent.Value, error) {
+	return _m.selectValues.Get(name)
 }
 
 // QueryUser queries the "user" edge of the UserProfile entity.
-func (up *UserProfile) QueryUser() *UserQuery {
-	return NewUserProfileClient(up.config).QueryUser(up)
+func (_m *UserProfile) QueryUser() *UserQuery {
+	return NewUserProfileClient(_m.config).QueryUser(_m)
 }
 
 // Update returns a builder for updating this UserProfile.
 // Note that you need to call UserProfile.Unwrap() before calling this method if this UserProfile
 // was returned from a transaction, and the transaction was committed or rolled back.
-func (up *UserProfile) Update() *UserProfileUpdateOne {
-	return NewUserProfileClient(up.config).UpdateOne(up)
+func (_m *UserProfile) Update() *UserProfileUpdateOne {
+	return NewUserProfileClient(_m.config).UpdateOne(_m)
 }
 
 // Unwrap unwraps the UserProfile entity that was returned from a transaction after it was closed,
 // so that all future queries will be executed through the driver which created the transaction.
-func (up *UserProfile) Unwrap() *UserProfile {
-	_tx, ok := up.config.driver.(*txDriver)
+func (_m *UserProfile) Unwrap() *UserProfile {
+	_tx, ok := _m.config.driver.(*txDriver)
 	if !ok {
 		panic("ent: UserProfile is not a transactional entity")
 	}
-	up.config.driver = _tx.drv
-	return up
+	_m.config.driver = _tx.drv
+	return _m
 }
 
 // String implements the fmt.Stringer.
-func (up *UserProfile) String() string {
+func (_m *UserProfile) String() string {
 	var builder strings.Builder
 	builder.WriteString("UserProfile(")
-	builder.WriteString(fmt.Sprintf("id=%v, ", up.ID))
-	if v := up.Location; v != nil {
+	builder.WriteString(fmt.Sprintf("id=%v, ", _m.ID))
+	if v := _m.Location; v != nil {
 		builder.WriteString("location=")
 		builder.WriteString(*v)
 	}
 	builder.WriteString(", ")
-	if v := up.GithubLink; v != nil {
+	if v := _m.GithubLink; v != nil {
 		builder.WriteString("github_link=")
 		builder.WriteString(*v)
 	}
 	builder.WriteString(", ")
-	if v := up.LinkedinLink; v != nil {
+	if v := _m.LinkedinLink; v != nil {
 		builder.WriteString("linkedin_link=")
 		builder.WriteString(*v)
 	}
 	builder.WriteString(", ")
-	if v := up.TwitterLink; v != nil {
+	if v := _m.TwitterLink; v != nil {
 		builder.WriteString("twitter_link=")
 		builder.WriteString(*v)
 	}
 	builder.WriteString(", ")
-	if v := up.WebsiteLink; v != nil {
+	if v := _m.WebsiteLink; v != nil {
 		builder.WriteString("website_link=")
 		builder.WriteString(*v)
 	}
 	builder.WriteString(", ")
 	builder.WriteString("web_skill_level=")
-	builder.WriteString(fmt.Sprintf("%v", up.WebSkillLevel))
+	builder.WriteString(fmt.Sprintf("%v", _m.WebSkillLevel))
 	builder.WriteString(", ")
 	builder.WriteString("rev_skill_level=")
-	builder.WriteString(fmt.Sprintf("%v", up.RevSkillLevel))
+	builder.WriteString(fmt.Sprintf("%v", _m.RevSkillLevel))
 	builder.WriteString(", ")
 	builder.WriteString("pwn_skill_level=")
-	builder.WriteString(fmt.Sprintf("%v", up.PwnSkillLevel))
+	builder.WriteString(fmt.Sprintf("%v", _m.PwnSkillLevel))
 	builder.WriteString(", ")
 	builder.WriteString("crypto_skill_level=")
-	builder.WriteString(fmt.Sprintf("%v", up.CryptoSkillLevel))
+	builder.WriteString(fmt.Sprintf("%v", _m.CryptoSkillLevel))
 	builder.WriteString(", ")
 	builder.WriteString("misc_skill_level=")
-	builder.WriteString(fmt.Sprintf("%v", up.MiscSkillLevel))
+	builder.WriteString(fmt.Sprintf("%v", _m.MiscSkillLevel))
 	builder.WriteString(", ")
 	builder.WriteString("show_email=")
-	builder.WriteString(fmt.Sprintf("%v", up.ShowEmail))
+	builder.WriteString(fmt.Sprintf("%v", _m.ShowEmail))
 	builder.WriteString(", ")
 	builder.WriteString("show_location=")
-	builder.WriteString(fmt.Sprintf("%v", up.ShowLocation))
+	builder.WriteString(fmt.Sprintf("%v", _m.ShowLocation))
 	builder.WriteByte(')')
 	return builder.String()
 }

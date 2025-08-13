@@ -1,4 +1,5 @@
 import { sleep } from "@/lib/utils";
+import { GH_CLIENT_ID } from "./constant";
 
 export interface PasswordChangeDto {
 	currentPassword: string;
@@ -25,7 +26,9 @@ export interface ConnectionSettings {
 	discord: string;
 }
 
-export const changePassword = async (data: PasswordChangeDto): Promise<{ success: boolean; message: string }> => {
+export const changePassword = async (
+	data: PasswordChangeDto
+): Promise<{ success: boolean; message: string }> => {
 	await sleep(1000);
 	if (data.newPassword !== data.confirmPassword) {
 		return { success: false, message: "Passwords do not match" };
@@ -33,26 +36,23 @@ export const changePassword = async (data: PasswordChangeDto): Promise<{ success
 	return { success: true, message: "Password updated successfully" };
 };
 
-export const updateNotifications = async (_settings: NotificationSettings): Promise<{ success: boolean; message: string }> => {
+export const updateNotifications = async (
+	_settings: NotificationSettings
+): Promise<{ success: boolean; message: string }> => {
 	await sleep(800);
 	return { success: true, message: "Notification settings updated" };
 };
 
-export const updatePrivacy = async (_settings: PrivacySettings): Promise<{ success: boolean; message: string }> => {
+export const updatePrivacy = async (
+	_settings: PrivacySettings
+): Promise<{ success: boolean; message: string }> => {
 	await sleep(800);
 	return { success: true, message: "Privacy settings updated" };
 };
 
-export const updateConnections = async (_connections: ConnectionSettings): Promise<{ success: boolean; message: string }> => {
+export const updateConnections = async (
+	_connections: ConnectionSettings
+): Promise<{ success: boolean; message: string }> => {
 	await sleep(1000);
 	return { success: true, message: "Connected services updated" };
-};
-
-export const connectGithub = async (): Promise<{ success: boolean; url?: string; message: string }> => {
-	await sleep(500);
-	return { 
-		success: true, 
-		url: "https://github.com/login/oauth/authorize?client_id=mock",
-		message: "Redirecting to GitHub..." 
-	};
 };

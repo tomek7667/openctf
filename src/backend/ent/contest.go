@@ -100,7 +100,7 @@ func (*Contest) scanValues(columns []string) ([]any, error) {
 
 // assignValues assigns the values that were returned from sql.Rows (after scanning)
 // to the Contest fields.
-func (c *Contest) assignValues(columns []string, values []any) error {
+func (_m *Contest) assignValues(columns []string, values []any) error {
 	if m, n := len(values), len(columns); m < n {
 		return fmt.Errorf("mismatch number of scan values: %d != %d", m, n)
 	}
@@ -111,81 +111,81 @@ func (c *Contest) assignValues(columns []string, values []any) error {
 			if !ok {
 				return fmt.Errorf("unexpected type %T for field id", value)
 			}
-			c.ID = int(value.Int64)
+			_m.ID = int(value.Int64)
 		case contest.FieldName:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field name", values[i])
 			} else if value.Valid {
-				c.Name = value.String
+				_m.Name = value.String
 			}
 		case contest.FieldDescription:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field description", values[i])
 			} else if value.Valid {
-				c.Description = new(string)
-				*c.Description = value.String
+				_m.Description = new(string)
+				*_m.Description = value.String
 			}
 		case contest.FieldRules:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field rules", values[i])
 			} else if value.Valid {
-				c.Rules = new(string)
-				*c.Rules = value.String
+				_m.Rules = new(string)
+				*_m.Rules = value.String
 			}
 		case contest.FieldPrizes:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field prizes", values[i])
 			} else if value.Valid {
-				c.Prizes = new(string)
-				*c.Prizes = value.String
+				_m.Prizes = new(string)
+				*_m.Prizes = value.String
 			}
 		case contest.FieldStart:
 			if value, ok := values[i].(*sql.NullTime); !ok {
 				return fmt.Errorf("unexpected type %T for field start", values[i])
 			} else if value.Valid {
-				c.Start = value.Time
+				_m.Start = value.Time
 			}
 		case contest.FieldEnd:
 			if value, ok := values[i].(*sql.NullTime); !ok {
 				return fmt.Errorf("unexpected type %T for field end", values[i])
 			} else if value.Valid {
-				c.End = value.Time
+				_m.End = value.Time
 			}
 		case contest.FieldURL:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field url", values[i])
 			} else if value.Valid {
-				c.URL = new(string)
-				*c.URL = value.String
+				_m.URL = new(string)
+				*_m.URL = value.String
 			}
 		case contest.FieldCtftimeID:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field ctftime_id", values[i])
 			} else if value.Valid {
-				c.CtftimeID = new(int)
-				*c.CtftimeID = int(value.Int64)
+				_m.CtftimeID = new(int)
+				*_m.CtftimeID = int(value.Int64)
 			}
 		case contest.FieldAssignedWeightPoints:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field assigned_weight_points", values[i])
 			} else if value.Valid {
-				c.AssignedWeightPoints = int(value.Int64)
+				_m.AssignedWeightPoints = int(value.Int64)
 			}
 		case contest.FieldLogo:
 			if value, ok := values[i].(*[]byte); !ok {
 				return fmt.Errorf("unexpected type %T for field logo", values[i])
 			} else if value != nil {
-				c.Logo = value
+				_m.Logo = value
 			}
 		case contest.ForeignKeys[0]:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for edge-field contest_organizers", value)
 			} else if value.Valid {
-				c.contest_organizers = new(int)
-				*c.contest_organizers = int(value.Int64)
+				_m.contest_organizers = new(int)
+				*_m.contest_organizers = int(value.Int64)
 			}
 		default:
-			c.selectValues.Set(columns[i], values[i])
+			_m.selectValues.Set(columns[i], values[i])
 		}
 	}
 	return nil
@@ -193,81 +193,81 @@ func (c *Contest) assignValues(columns []string, values []any) error {
 
 // Value returns the ent.Value that was dynamically selected and assigned to the Contest.
 // This includes values selected through modifiers, order, etc.
-func (c *Contest) Value(name string) (ent.Value, error) {
-	return c.selectValues.Get(name)
+func (_m *Contest) Value(name string) (ent.Value, error) {
+	return _m.selectValues.Get(name)
 }
 
 // QueryOrganizers queries the "organizers" edge of the Contest entity.
-func (c *Contest) QueryOrganizers() *TeamQuery {
-	return NewContestClient(c.config).QueryOrganizers(c)
+func (_m *Contest) QueryOrganizers() *TeamQuery {
+	return NewContestClient(_m.config).QueryOrganizers(_m)
 }
 
 // QueryPlaces queries the "places" edge of the Contest entity.
-func (c *Contest) QueryPlaces() *PlaceQuery {
-	return NewContestClient(c.config).QueryPlaces(c)
+func (_m *Contest) QueryPlaces() *PlaceQuery {
+	return NewContestClient(_m.config).QueryPlaces(_m)
 }
 
 // Update returns a builder for updating this Contest.
 // Note that you need to call Contest.Unwrap() before calling this method if this Contest
 // was returned from a transaction, and the transaction was committed or rolled back.
-func (c *Contest) Update() *ContestUpdateOne {
-	return NewContestClient(c.config).UpdateOne(c)
+func (_m *Contest) Update() *ContestUpdateOne {
+	return NewContestClient(_m.config).UpdateOne(_m)
 }
 
 // Unwrap unwraps the Contest entity that was returned from a transaction after it was closed,
 // so that all future queries will be executed through the driver which created the transaction.
-func (c *Contest) Unwrap() *Contest {
-	_tx, ok := c.config.driver.(*txDriver)
+func (_m *Contest) Unwrap() *Contest {
+	_tx, ok := _m.config.driver.(*txDriver)
 	if !ok {
 		panic("ent: Contest is not a transactional entity")
 	}
-	c.config.driver = _tx.drv
-	return c
+	_m.config.driver = _tx.drv
+	return _m
 }
 
 // String implements the fmt.Stringer.
-func (c *Contest) String() string {
+func (_m *Contest) String() string {
 	var builder strings.Builder
 	builder.WriteString("Contest(")
-	builder.WriteString(fmt.Sprintf("id=%v, ", c.ID))
+	builder.WriteString(fmt.Sprintf("id=%v, ", _m.ID))
 	builder.WriteString("name=")
-	builder.WriteString(c.Name)
+	builder.WriteString(_m.Name)
 	builder.WriteString(", ")
-	if v := c.Description; v != nil {
+	if v := _m.Description; v != nil {
 		builder.WriteString("description=")
 		builder.WriteString(*v)
 	}
 	builder.WriteString(", ")
-	if v := c.Rules; v != nil {
+	if v := _m.Rules; v != nil {
 		builder.WriteString("rules=")
 		builder.WriteString(*v)
 	}
 	builder.WriteString(", ")
-	if v := c.Prizes; v != nil {
+	if v := _m.Prizes; v != nil {
 		builder.WriteString("prizes=")
 		builder.WriteString(*v)
 	}
 	builder.WriteString(", ")
 	builder.WriteString("start=")
-	builder.WriteString(c.Start.Format(time.ANSIC))
+	builder.WriteString(_m.Start.Format(time.ANSIC))
 	builder.WriteString(", ")
 	builder.WriteString("end=")
-	builder.WriteString(c.End.Format(time.ANSIC))
+	builder.WriteString(_m.End.Format(time.ANSIC))
 	builder.WriteString(", ")
-	if v := c.URL; v != nil {
+	if v := _m.URL; v != nil {
 		builder.WriteString("url=")
 		builder.WriteString(*v)
 	}
 	builder.WriteString(", ")
-	if v := c.CtftimeID; v != nil {
+	if v := _m.CtftimeID; v != nil {
 		builder.WriteString("ctftime_id=")
 		builder.WriteString(fmt.Sprintf("%v", *v))
 	}
 	builder.WriteString(", ")
 	builder.WriteString("assigned_weight_points=")
-	builder.WriteString(fmt.Sprintf("%v", c.AssignedWeightPoints))
+	builder.WriteString(fmt.Sprintf("%v", _m.AssignedWeightPoints))
 	builder.WriteString(", ")
-	if v := c.Logo; v != nil {
+	if v := _m.Logo; v != nil {
 		builder.WriteString("logo=")
 		builder.WriteString(fmt.Sprintf("%v", *v))
 	}

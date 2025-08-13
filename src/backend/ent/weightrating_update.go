@@ -24,79 +24,79 @@ type WeightRatingUpdate struct {
 }
 
 // Where appends a list predicates to the WeightRatingUpdate builder.
-func (wru *WeightRatingUpdate) Where(ps ...predicate.WeightRating) *WeightRatingUpdate {
-	wru.mutation.Where(ps...)
-	return wru
+func (_u *WeightRatingUpdate) Where(ps ...predicate.WeightRating) *WeightRatingUpdate {
+	_u.mutation.Where(ps...)
+	return _u
 }
 
 // SetDifficulty sets the "difficulty" field.
-func (wru *WeightRatingUpdate) SetDifficulty(i int) *WeightRatingUpdate {
-	wru.mutation.ResetDifficulty()
-	wru.mutation.SetDifficulty(i)
-	return wru
+func (_u *WeightRatingUpdate) SetDifficulty(v int) *WeightRatingUpdate {
+	_u.mutation.ResetDifficulty()
+	_u.mutation.SetDifficulty(v)
+	return _u
 }
 
 // SetNillableDifficulty sets the "difficulty" field if the given value is not nil.
-func (wru *WeightRatingUpdate) SetNillableDifficulty(i *int) *WeightRatingUpdate {
-	if i != nil {
-		wru.SetDifficulty(*i)
+func (_u *WeightRatingUpdate) SetNillableDifficulty(v *int) *WeightRatingUpdate {
+	if v != nil {
+		_u.SetDifficulty(*v)
 	}
-	return wru
+	return _u
 }
 
-// AddDifficulty adds i to the "difficulty" field.
-func (wru *WeightRatingUpdate) AddDifficulty(i int) *WeightRatingUpdate {
-	wru.mutation.AddDifficulty(i)
-	return wru
+// AddDifficulty adds value to the "difficulty" field.
+func (_u *WeightRatingUpdate) AddDifficulty(v int) *WeightRatingUpdate {
+	_u.mutation.AddDifficulty(v)
+	return _u
 }
 
 // SetCaptainsTeamID sets the "captains_team" edge to the Team entity by ID.
-func (wru *WeightRatingUpdate) SetCaptainsTeamID(id int) *WeightRatingUpdate {
-	wru.mutation.SetCaptainsTeamID(id)
-	return wru
+func (_u *WeightRatingUpdate) SetCaptainsTeamID(id int) *WeightRatingUpdate {
+	_u.mutation.SetCaptainsTeamID(id)
+	return _u
 }
 
 // SetCaptainsTeam sets the "captains_team" edge to the Team entity.
-func (wru *WeightRatingUpdate) SetCaptainsTeam(t *Team) *WeightRatingUpdate {
-	return wru.SetCaptainsTeamID(t.ID)
+func (_u *WeightRatingUpdate) SetCaptainsTeam(v *Team) *WeightRatingUpdate {
+	return _u.SetCaptainsTeamID(v.ID)
 }
 
 // SetContestID sets the "contest" edge to the Contest entity by ID.
-func (wru *WeightRatingUpdate) SetContestID(id int) *WeightRatingUpdate {
-	wru.mutation.SetContestID(id)
-	return wru
+func (_u *WeightRatingUpdate) SetContestID(id int) *WeightRatingUpdate {
+	_u.mutation.SetContestID(id)
+	return _u
 }
 
 // SetContest sets the "contest" edge to the Contest entity.
-func (wru *WeightRatingUpdate) SetContest(c *Contest) *WeightRatingUpdate {
-	return wru.SetContestID(c.ID)
+func (_u *WeightRatingUpdate) SetContest(v *Contest) *WeightRatingUpdate {
+	return _u.SetContestID(v.ID)
 }
 
 // Mutation returns the WeightRatingMutation object of the builder.
-func (wru *WeightRatingUpdate) Mutation() *WeightRatingMutation {
-	return wru.mutation
+func (_u *WeightRatingUpdate) Mutation() *WeightRatingMutation {
+	return _u.mutation
 }
 
 // ClearCaptainsTeam clears the "captains_team" edge to the Team entity.
-func (wru *WeightRatingUpdate) ClearCaptainsTeam() *WeightRatingUpdate {
-	wru.mutation.ClearCaptainsTeam()
-	return wru
+func (_u *WeightRatingUpdate) ClearCaptainsTeam() *WeightRatingUpdate {
+	_u.mutation.ClearCaptainsTeam()
+	return _u
 }
 
 // ClearContest clears the "contest" edge to the Contest entity.
-func (wru *WeightRatingUpdate) ClearContest() *WeightRatingUpdate {
-	wru.mutation.ClearContest()
-	return wru
+func (_u *WeightRatingUpdate) ClearContest() *WeightRatingUpdate {
+	_u.mutation.ClearContest()
+	return _u
 }
 
 // Save executes the query and returns the number of nodes affected by the update operation.
-func (wru *WeightRatingUpdate) Save(ctx context.Context) (int, error) {
-	return withHooks(ctx, wru.sqlSave, wru.mutation, wru.hooks)
+func (_u *WeightRatingUpdate) Save(ctx context.Context) (int, error) {
+	return withHooks(ctx, _u.sqlSave, _u.mutation, _u.hooks)
 }
 
 // SaveX is like Save, but panics if an error occurs.
-func (wru *WeightRatingUpdate) SaveX(ctx context.Context) int {
-	affected, err := wru.Save(ctx)
+func (_u *WeightRatingUpdate) SaveX(ctx context.Context) int {
+	affected, err := _u.Save(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -104,53 +104,53 @@ func (wru *WeightRatingUpdate) SaveX(ctx context.Context) int {
 }
 
 // Exec executes the query.
-func (wru *WeightRatingUpdate) Exec(ctx context.Context) error {
-	_, err := wru.Save(ctx)
+func (_u *WeightRatingUpdate) Exec(ctx context.Context) error {
+	_, err := _u.Save(ctx)
 	return err
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (wru *WeightRatingUpdate) ExecX(ctx context.Context) {
-	if err := wru.Exec(ctx); err != nil {
+func (_u *WeightRatingUpdate) ExecX(ctx context.Context) {
+	if err := _u.Exec(ctx); err != nil {
 		panic(err)
 	}
 }
 
 // check runs all checks and user-defined validators on the builder.
-func (wru *WeightRatingUpdate) check() error {
-	if v, ok := wru.mutation.Difficulty(); ok {
+func (_u *WeightRatingUpdate) check() error {
+	if v, ok := _u.mutation.Difficulty(); ok {
 		if err := weightrating.DifficultyValidator(v); err != nil {
 			return &ValidationError{Name: "difficulty", err: fmt.Errorf(`ent: validator failed for field "WeightRating.difficulty": %w`, err)}
 		}
 	}
-	if wru.mutation.CaptainsTeamCleared() && len(wru.mutation.CaptainsTeamIDs()) > 0 {
+	if _u.mutation.CaptainsTeamCleared() && len(_u.mutation.CaptainsTeamIDs()) > 0 {
 		return errors.New(`ent: clearing a required unique edge "WeightRating.captains_team"`)
 	}
-	if wru.mutation.ContestCleared() && len(wru.mutation.ContestIDs()) > 0 {
+	if _u.mutation.ContestCleared() && len(_u.mutation.ContestIDs()) > 0 {
 		return errors.New(`ent: clearing a required unique edge "WeightRating.contest"`)
 	}
 	return nil
 }
 
-func (wru *WeightRatingUpdate) sqlSave(ctx context.Context) (n int, err error) {
-	if err := wru.check(); err != nil {
-		return n, err
+func (_u *WeightRatingUpdate) sqlSave(ctx context.Context) (_node int, err error) {
+	if err := _u.check(); err != nil {
+		return _node, err
 	}
 	_spec := sqlgraph.NewUpdateSpec(weightrating.Table, weightrating.Columns, sqlgraph.NewFieldSpec(weightrating.FieldID, field.TypeInt))
-	if ps := wru.mutation.predicates; len(ps) > 0 {
+	if ps := _u.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
 			for i := range ps {
 				ps[i](selector)
 			}
 		}
 	}
-	if value, ok := wru.mutation.Difficulty(); ok {
+	if value, ok := _u.mutation.Difficulty(); ok {
 		_spec.SetField(weightrating.FieldDifficulty, field.TypeInt, value)
 	}
-	if value, ok := wru.mutation.AddedDifficulty(); ok {
+	if value, ok := _u.mutation.AddedDifficulty(); ok {
 		_spec.AddField(weightrating.FieldDifficulty, field.TypeInt, value)
 	}
-	if wru.mutation.CaptainsTeamCleared() {
+	if _u.mutation.CaptainsTeamCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: false,
@@ -163,7 +163,7 @@ func (wru *WeightRatingUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := wru.mutation.CaptainsTeamIDs(); len(nodes) > 0 {
+	if nodes := _u.mutation.CaptainsTeamIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: false,
@@ -179,7 +179,7 @@ func (wru *WeightRatingUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	if wru.mutation.ContestCleared() {
+	if _u.mutation.ContestCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: false,
@@ -192,7 +192,7 @@ func (wru *WeightRatingUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := wru.mutation.ContestIDs(); len(nodes) > 0 {
+	if nodes := _u.mutation.ContestIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: false,
@@ -208,7 +208,7 @@ func (wru *WeightRatingUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	if n, err = sqlgraph.UpdateNodes(ctx, wru.driver, _spec); err != nil {
+	if _node, err = sqlgraph.UpdateNodes(ctx, _u.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{weightrating.Label}
 		} else if sqlgraph.IsConstraintError(err) {
@@ -216,8 +216,8 @@ func (wru *WeightRatingUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		return 0, err
 	}
-	wru.mutation.done = true
-	return n, nil
+	_u.mutation.done = true
+	return _node, nil
 }
 
 // WeightRatingUpdateOne is the builder for updating a single WeightRating entity.
@@ -229,86 +229,86 @@ type WeightRatingUpdateOne struct {
 }
 
 // SetDifficulty sets the "difficulty" field.
-func (wruo *WeightRatingUpdateOne) SetDifficulty(i int) *WeightRatingUpdateOne {
-	wruo.mutation.ResetDifficulty()
-	wruo.mutation.SetDifficulty(i)
-	return wruo
+func (_u *WeightRatingUpdateOne) SetDifficulty(v int) *WeightRatingUpdateOne {
+	_u.mutation.ResetDifficulty()
+	_u.mutation.SetDifficulty(v)
+	return _u
 }
 
 // SetNillableDifficulty sets the "difficulty" field if the given value is not nil.
-func (wruo *WeightRatingUpdateOne) SetNillableDifficulty(i *int) *WeightRatingUpdateOne {
-	if i != nil {
-		wruo.SetDifficulty(*i)
+func (_u *WeightRatingUpdateOne) SetNillableDifficulty(v *int) *WeightRatingUpdateOne {
+	if v != nil {
+		_u.SetDifficulty(*v)
 	}
-	return wruo
+	return _u
 }
 
-// AddDifficulty adds i to the "difficulty" field.
-func (wruo *WeightRatingUpdateOne) AddDifficulty(i int) *WeightRatingUpdateOne {
-	wruo.mutation.AddDifficulty(i)
-	return wruo
+// AddDifficulty adds value to the "difficulty" field.
+func (_u *WeightRatingUpdateOne) AddDifficulty(v int) *WeightRatingUpdateOne {
+	_u.mutation.AddDifficulty(v)
+	return _u
 }
 
 // SetCaptainsTeamID sets the "captains_team" edge to the Team entity by ID.
-func (wruo *WeightRatingUpdateOne) SetCaptainsTeamID(id int) *WeightRatingUpdateOne {
-	wruo.mutation.SetCaptainsTeamID(id)
-	return wruo
+func (_u *WeightRatingUpdateOne) SetCaptainsTeamID(id int) *WeightRatingUpdateOne {
+	_u.mutation.SetCaptainsTeamID(id)
+	return _u
 }
 
 // SetCaptainsTeam sets the "captains_team" edge to the Team entity.
-func (wruo *WeightRatingUpdateOne) SetCaptainsTeam(t *Team) *WeightRatingUpdateOne {
-	return wruo.SetCaptainsTeamID(t.ID)
+func (_u *WeightRatingUpdateOne) SetCaptainsTeam(v *Team) *WeightRatingUpdateOne {
+	return _u.SetCaptainsTeamID(v.ID)
 }
 
 // SetContestID sets the "contest" edge to the Contest entity by ID.
-func (wruo *WeightRatingUpdateOne) SetContestID(id int) *WeightRatingUpdateOne {
-	wruo.mutation.SetContestID(id)
-	return wruo
+func (_u *WeightRatingUpdateOne) SetContestID(id int) *WeightRatingUpdateOne {
+	_u.mutation.SetContestID(id)
+	return _u
 }
 
 // SetContest sets the "contest" edge to the Contest entity.
-func (wruo *WeightRatingUpdateOne) SetContest(c *Contest) *WeightRatingUpdateOne {
-	return wruo.SetContestID(c.ID)
+func (_u *WeightRatingUpdateOne) SetContest(v *Contest) *WeightRatingUpdateOne {
+	return _u.SetContestID(v.ID)
 }
 
 // Mutation returns the WeightRatingMutation object of the builder.
-func (wruo *WeightRatingUpdateOne) Mutation() *WeightRatingMutation {
-	return wruo.mutation
+func (_u *WeightRatingUpdateOne) Mutation() *WeightRatingMutation {
+	return _u.mutation
 }
 
 // ClearCaptainsTeam clears the "captains_team" edge to the Team entity.
-func (wruo *WeightRatingUpdateOne) ClearCaptainsTeam() *WeightRatingUpdateOne {
-	wruo.mutation.ClearCaptainsTeam()
-	return wruo
+func (_u *WeightRatingUpdateOne) ClearCaptainsTeam() *WeightRatingUpdateOne {
+	_u.mutation.ClearCaptainsTeam()
+	return _u
 }
 
 // ClearContest clears the "contest" edge to the Contest entity.
-func (wruo *WeightRatingUpdateOne) ClearContest() *WeightRatingUpdateOne {
-	wruo.mutation.ClearContest()
-	return wruo
+func (_u *WeightRatingUpdateOne) ClearContest() *WeightRatingUpdateOne {
+	_u.mutation.ClearContest()
+	return _u
 }
 
 // Where appends a list predicates to the WeightRatingUpdate builder.
-func (wruo *WeightRatingUpdateOne) Where(ps ...predicate.WeightRating) *WeightRatingUpdateOne {
-	wruo.mutation.Where(ps...)
-	return wruo
+func (_u *WeightRatingUpdateOne) Where(ps ...predicate.WeightRating) *WeightRatingUpdateOne {
+	_u.mutation.Where(ps...)
+	return _u
 }
 
 // Select allows selecting one or more fields (columns) of the returned entity.
 // The default is selecting all fields defined in the entity schema.
-func (wruo *WeightRatingUpdateOne) Select(field string, fields ...string) *WeightRatingUpdateOne {
-	wruo.fields = append([]string{field}, fields...)
-	return wruo
+func (_u *WeightRatingUpdateOne) Select(field string, fields ...string) *WeightRatingUpdateOne {
+	_u.fields = append([]string{field}, fields...)
+	return _u
 }
 
 // Save executes the query and returns the updated WeightRating entity.
-func (wruo *WeightRatingUpdateOne) Save(ctx context.Context) (*WeightRating, error) {
-	return withHooks(ctx, wruo.sqlSave, wruo.mutation, wruo.hooks)
+func (_u *WeightRatingUpdateOne) Save(ctx context.Context) (*WeightRating, error) {
+	return withHooks(ctx, _u.sqlSave, _u.mutation, _u.hooks)
 }
 
 // SaveX is like Save, but panics if an error occurs.
-func (wruo *WeightRatingUpdateOne) SaveX(ctx context.Context) *WeightRating {
-	node, err := wruo.Save(ctx)
+func (_u *WeightRatingUpdateOne) SaveX(ctx context.Context) *WeightRating {
+	node, err := _u.Save(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -316,45 +316,45 @@ func (wruo *WeightRatingUpdateOne) SaveX(ctx context.Context) *WeightRating {
 }
 
 // Exec executes the query on the entity.
-func (wruo *WeightRatingUpdateOne) Exec(ctx context.Context) error {
-	_, err := wruo.Save(ctx)
+func (_u *WeightRatingUpdateOne) Exec(ctx context.Context) error {
+	_, err := _u.Save(ctx)
 	return err
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (wruo *WeightRatingUpdateOne) ExecX(ctx context.Context) {
-	if err := wruo.Exec(ctx); err != nil {
+func (_u *WeightRatingUpdateOne) ExecX(ctx context.Context) {
+	if err := _u.Exec(ctx); err != nil {
 		panic(err)
 	}
 }
 
 // check runs all checks and user-defined validators on the builder.
-func (wruo *WeightRatingUpdateOne) check() error {
-	if v, ok := wruo.mutation.Difficulty(); ok {
+func (_u *WeightRatingUpdateOne) check() error {
+	if v, ok := _u.mutation.Difficulty(); ok {
 		if err := weightrating.DifficultyValidator(v); err != nil {
 			return &ValidationError{Name: "difficulty", err: fmt.Errorf(`ent: validator failed for field "WeightRating.difficulty": %w`, err)}
 		}
 	}
-	if wruo.mutation.CaptainsTeamCleared() && len(wruo.mutation.CaptainsTeamIDs()) > 0 {
+	if _u.mutation.CaptainsTeamCleared() && len(_u.mutation.CaptainsTeamIDs()) > 0 {
 		return errors.New(`ent: clearing a required unique edge "WeightRating.captains_team"`)
 	}
-	if wruo.mutation.ContestCleared() && len(wruo.mutation.ContestIDs()) > 0 {
+	if _u.mutation.ContestCleared() && len(_u.mutation.ContestIDs()) > 0 {
 		return errors.New(`ent: clearing a required unique edge "WeightRating.contest"`)
 	}
 	return nil
 }
 
-func (wruo *WeightRatingUpdateOne) sqlSave(ctx context.Context) (_node *WeightRating, err error) {
-	if err := wruo.check(); err != nil {
+func (_u *WeightRatingUpdateOne) sqlSave(ctx context.Context) (_node *WeightRating, err error) {
+	if err := _u.check(); err != nil {
 		return _node, err
 	}
 	_spec := sqlgraph.NewUpdateSpec(weightrating.Table, weightrating.Columns, sqlgraph.NewFieldSpec(weightrating.FieldID, field.TypeInt))
-	id, ok := wruo.mutation.ID()
+	id, ok := _u.mutation.ID()
 	if !ok {
 		return nil, &ValidationError{Name: "id", err: errors.New(`ent: missing "WeightRating.id" for update`)}
 	}
 	_spec.Node.ID.Value = id
-	if fields := wruo.fields; len(fields) > 0 {
+	if fields := _u.fields; len(fields) > 0 {
 		_spec.Node.Columns = make([]string, 0, len(fields))
 		_spec.Node.Columns = append(_spec.Node.Columns, weightrating.FieldID)
 		for _, f := range fields {
@@ -366,20 +366,20 @@ func (wruo *WeightRatingUpdateOne) sqlSave(ctx context.Context) (_node *WeightRa
 			}
 		}
 	}
-	if ps := wruo.mutation.predicates; len(ps) > 0 {
+	if ps := _u.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
 			for i := range ps {
 				ps[i](selector)
 			}
 		}
 	}
-	if value, ok := wruo.mutation.Difficulty(); ok {
+	if value, ok := _u.mutation.Difficulty(); ok {
 		_spec.SetField(weightrating.FieldDifficulty, field.TypeInt, value)
 	}
-	if value, ok := wruo.mutation.AddedDifficulty(); ok {
+	if value, ok := _u.mutation.AddedDifficulty(); ok {
 		_spec.AddField(weightrating.FieldDifficulty, field.TypeInt, value)
 	}
-	if wruo.mutation.CaptainsTeamCleared() {
+	if _u.mutation.CaptainsTeamCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: false,
@@ -392,7 +392,7 @@ func (wruo *WeightRatingUpdateOne) sqlSave(ctx context.Context) (_node *WeightRa
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := wruo.mutation.CaptainsTeamIDs(); len(nodes) > 0 {
+	if nodes := _u.mutation.CaptainsTeamIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: false,
@@ -408,7 +408,7 @@ func (wruo *WeightRatingUpdateOne) sqlSave(ctx context.Context) (_node *WeightRa
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	if wruo.mutation.ContestCleared() {
+	if _u.mutation.ContestCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: false,
@@ -421,7 +421,7 @@ func (wruo *WeightRatingUpdateOne) sqlSave(ctx context.Context) (_node *WeightRa
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := wruo.mutation.ContestIDs(); len(nodes) > 0 {
+	if nodes := _u.mutation.ContestIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: false,
@@ -437,10 +437,10 @@ func (wruo *WeightRatingUpdateOne) sqlSave(ctx context.Context) (_node *WeightRa
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	_node = &WeightRating{config: wruo.config}
+	_node = &WeightRating{config: _u.config}
 	_spec.Assign = _node.assignValues
 	_spec.ScanValues = _node.scanValues
-	if err = sqlgraph.UpdateNode(ctx, wruo.driver, _spec); err != nil {
+	if err = sqlgraph.UpdateNode(ctx, _u.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{weightrating.Label}
 		} else if sqlgraph.IsConstraintError(err) {
@@ -448,6 +448,6 @@ func (wruo *WeightRatingUpdateOne) sqlSave(ctx context.Context) (_node *WeightRa
 		}
 		return nil, err
 	}
-	wruo.mutation.done = true
+	_u.mutation.done = true
 	return _node, nil
 }

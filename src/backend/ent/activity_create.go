@@ -24,62 +24,62 @@ type ActivityCreate struct {
 }
 
 // SetType sets the "type" field.
-func (ac *ActivityCreate) SetType(s string) *ActivityCreate {
-	ac.mutation.SetType(s)
-	return ac
+func (_c *ActivityCreate) SetType(v string) *ActivityCreate {
+	_c.mutation.SetType(v)
+	return _c
 }
 
 // SetTitle sets the "title" field.
-func (ac *ActivityCreate) SetTitle(s string) *ActivityCreate {
-	ac.mutation.SetTitle(s)
-	return ac
+func (_c *ActivityCreate) SetTitle(v string) *ActivityCreate {
+	_c.mutation.SetTitle(v)
+	return _c
 }
 
 // SetDescription sets the "description" field.
-func (ac *ActivityCreate) SetDescription(s string) *ActivityCreate {
-	ac.mutation.SetDescription(s)
-	return ac
+func (_c *ActivityCreate) SetDescription(v string) *ActivityCreate {
+	_c.mutation.SetDescription(v)
+	return _c
 }
 
 // SetDate sets the "date" field.
-func (ac *ActivityCreate) SetDate(t time.Time) *ActivityCreate {
-	ac.mutation.SetDate(t)
-	return ac
+func (_c *ActivityCreate) SetDate(v time.Time) *ActivityCreate {
+	_c.mutation.SetDate(v)
+	return _c
 }
 
 // SetNillableDate sets the "date" field if the given value is not nil.
-func (ac *ActivityCreate) SetNillableDate(t *time.Time) *ActivityCreate {
-	if t != nil {
-		ac.SetDate(*t)
+func (_c *ActivityCreate) SetNillableDate(v *time.Time) *ActivityCreate {
+	if v != nil {
+		_c.SetDate(*v)
 	}
-	return ac
+	return _c
 }
 
 // SetUserID sets the "user" edge to the User entity by ID.
-func (ac *ActivityCreate) SetUserID(id int) *ActivityCreate {
-	ac.mutation.SetUserID(id)
-	return ac
+func (_c *ActivityCreate) SetUserID(id int) *ActivityCreate {
+	_c.mutation.SetUserID(id)
+	return _c
 }
 
 // SetUser sets the "user" edge to the User entity.
-func (ac *ActivityCreate) SetUser(u *User) *ActivityCreate {
-	return ac.SetUserID(u.ID)
+func (_c *ActivityCreate) SetUser(v *User) *ActivityCreate {
+	return _c.SetUserID(v.ID)
 }
 
 // Mutation returns the ActivityMutation object of the builder.
-func (ac *ActivityCreate) Mutation() *ActivityMutation {
-	return ac.mutation
+func (_c *ActivityCreate) Mutation() *ActivityMutation {
+	return _c.mutation
 }
 
 // Save creates the Activity in the database.
-func (ac *ActivityCreate) Save(ctx context.Context) (*Activity, error) {
-	ac.defaults()
-	return withHooks(ctx, ac.sqlSave, ac.mutation, ac.hooks)
+func (_c *ActivityCreate) Save(ctx context.Context) (*Activity, error) {
+	_c.defaults()
+	return withHooks(ctx, _c.sqlSave, _c.mutation, _c.hooks)
 }
 
 // SaveX calls Save and panics if Save returns an error.
-func (ac *ActivityCreate) SaveX(ctx context.Context) *Activity {
-	v, err := ac.Save(ctx)
+func (_c *ActivityCreate) SaveX(ctx context.Context) *Activity {
+	v, err := _c.Save(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -87,57 +87,57 @@ func (ac *ActivityCreate) SaveX(ctx context.Context) *Activity {
 }
 
 // Exec executes the query.
-func (ac *ActivityCreate) Exec(ctx context.Context) error {
-	_, err := ac.Save(ctx)
+func (_c *ActivityCreate) Exec(ctx context.Context) error {
+	_, err := _c.Save(ctx)
 	return err
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (ac *ActivityCreate) ExecX(ctx context.Context) {
-	if err := ac.Exec(ctx); err != nil {
+func (_c *ActivityCreate) ExecX(ctx context.Context) {
+	if err := _c.Exec(ctx); err != nil {
 		panic(err)
 	}
 }
 
 // defaults sets the default values of the builder before save.
-func (ac *ActivityCreate) defaults() {
-	if _, ok := ac.mutation.Date(); !ok {
+func (_c *ActivityCreate) defaults() {
+	if _, ok := _c.mutation.Date(); !ok {
 		v := activity.DefaultDate
-		ac.mutation.SetDate(v)
+		_c.mutation.SetDate(v)
 	}
 }
 
 // check runs all checks and user-defined validators on the builder.
-func (ac *ActivityCreate) check() error {
-	if _, ok := ac.mutation.GetType(); !ok {
+func (_c *ActivityCreate) check() error {
+	if _, ok := _c.mutation.GetType(); !ok {
 		return &ValidationError{Name: "type", err: errors.New(`ent: missing required field "Activity.type"`)}
 	}
-	if v, ok := ac.mutation.GetType(); ok {
+	if v, ok := _c.mutation.GetType(); ok {
 		if err := activity.TypeValidator(v); err != nil {
 			return &ValidationError{Name: "type", err: fmt.Errorf(`ent: validator failed for field "Activity.type": %w`, err)}
 		}
 	}
-	if _, ok := ac.mutation.Title(); !ok {
+	if _, ok := _c.mutation.Title(); !ok {
 		return &ValidationError{Name: "title", err: errors.New(`ent: missing required field "Activity.title"`)}
 	}
-	if _, ok := ac.mutation.Description(); !ok {
+	if _, ok := _c.mutation.Description(); !ok {
 		return &ValidationError{Name: "description", err: errors.New(`ent: missing required field "Activity.description"`)}
 	}
-	if _, ok := ac.mutation.Date(); !ok {
+	if _, ok := _c.mutation.Date(); !ok {
 		return &ValidationError{Name: "date", err: errors.New(`ent: missing required field "Activity.date"`)}
 	}
-	if len(ac.mutation.UserIDs()) == 0 {
+	if len(_c.mutation.UserIDs()) == 0 {
 		return &ValidationError{Name: "user", err: errors.New(`ent: missing required edge "Activity.user"`)}
 	}
 	return nil
 }
 
-func (ac *ActivityCreate) sqlSave(ctx context.Context) (*Activity, error) {
-	if err := ac.check(); err != nil {
+func (_c *ActivityCreate) sqlSave(ctx context.Context) (*Activity, error) {
+	if err := _c.check(); err != nil {
 		return nil, err
 	}
-	_node, _spec := ac.createSpec()
-	if err := sqlgraph.CreateNode(ctx, ac.driver, _spec); err != nil {
+	_node, _spec := _c.createSpec()
+	if err := sqlgraph.CreateNode(ctx, _c.driver, _spec); err != nil {
 		if sqlgraph.IsConstraintError(err) {
 			err = &ConstraintError{msg: err.Error(), wrap: err}
 		}
@@ -145,34 +145,34 @@ func (ac *ActivityCreate) sqlSave(ctx context.Context) (*Activity, error) {
 	}
 	id := _spec.ID.Value.(int64)
 	_node.ID = int(id)
-	ac.mutation.id = &_node.ID
-	ac.mutation.done = true
+	_c.mutation.id = &_node.ID
+	_c.mutation.done = true
 	return _node, nil
 }
 
-func (ac *ActivityCreate) createSpec() (*Activity, *sqlgraph.CreateSpec) {
+func (_c *ActivityCreate) createSpec() (*Activity, *sqlgraph.CreateSpec) {
 	var (
-		_node = &Activity{config: ac.config}
+		_node = &Activity{config: _c.config}
 		_spec = sqlgraph.NewCreateSpec(activity.Table, sqlgraph.NewFieldSpec(activity.FieldID, field.TypeInt))
 	)
-	_spec.OnConflict = ac.conflict
-	if value, ok := ac.mutation.GetType(); ok {
+	_spec.OnConflict = _c.conflict
+	if value, ok := _c.mutation.GetType(); ok {
 		_spec.SetField(activity.FieldType, field.TypeString, value)
 		_node.Type = value
 	}
-	if value, ok := ac.mutation.Title(); ok {
+	if value, ok := _c.mutation.Title(); ok {
 		_spec.SetField(activity.FieldTitle, field.TypeString, value)
 		_node.Title = value
 	}
-	if value, ok := ac.mutation.Description(); ok {
+	if value, ok := _c.mutation.Description(); ok {
 		_spec.SetField(activity.FieldDescription, field.TypeString, value)
 		_node.Description = value
 	}
-	if value, ok := ac.mutation.Date(); ok {
+	if value, ok := _c.mutation.Date(); ok {
 		_spec.SetField(activity.FieldDate, field.TypeTime, value)
 		_node.Date = value
 	}
-	if nodes := ac.mutation.UserIDs(); len(nodes) > 0 {
+	if nodes := _c.mutation.UserIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: false,
@@ -208,10 +208,10 @@ func (ac *ActivityCreate) createSpec() (*Activity, *sqlgraph.CreateSpec) {
 //			SetType(v+v).
 //		}).
 //		Exec(ctx)
-func (ac *ActivityCreate) OnConflict(opts ...sql.ConflictOption) *ActivityUpsertOne {
-	ac.conflict = opts
+func (_c *ActivityCreate) OnConflict(opts ...sql.ConflictOption) *ActivityUpsertOne {
+	_c.conflict = opts
 	return &ActivityUpsertOne{
-		create: ac,
+		create: _c,
 	}
 }
 
@@ -221,10 +221,10 @@ func (ac *ActivityCreate) OnConflict(opts ...sql.ConflictOption) *ActivityUpsert
 //	client.Activity.Create().
 //		OnConflict(sql.ConflictColumns(columns...)).
 //		Exec(ctx)
-func (ac *ActivityCreate) OnConflictColumns(columns ...string) *ActivityUpsertOne {
-	ac.conflict = append(ac.conflict, sql.ConflictColumns(columns...))
+func (_c *ActivityCreate) OnConflictColumns(columns ...string) *ActivityUpsertOne {
+	_c.conflict = append(_c.conflict, sql.ConflictColumns(columns...))
 	return &ActivityUpsertOne{
-		create: ac,
+		create: _c,
 	}
 }
 
@@ -427,16 +427,16 @@ type ActivityCreateBulk struct {
 }
 
 // Save creates the Activity entities in the database.
-func (acb *ActivityCreateBulk) Save(ctx context.Context) ([]*Activity, error) {
-	if acb.err != nil {
-		return nil, acb.err
+func (_c *ActivityCreateBulk) Save(ctx context.Context) ([]*Activity, error) {
+	if _c.err != nil {
+		return nil, _c.err
 	}
-	specs := make([]*sqlgraph.CreateSpec, len(acb.builders))
-	nodes := make([]*Activity, len(acb.builders))
-	mutators := make([]Mutator, len(acb.builders))
-	for i := range acb.builders {
+	specs := make([]*sqlgraph.CreateSpec, len(_c.builders))
+	nodes := make([]*Activity, len(_c.builders))
+	mutators := make([]Mutator, len(_c.builders))
+	for i := range _c.builders {
 		func(i int, root context.Context) {
-			builder := acb.builders[i]
+			builder := _c.builders[i]
 			builder.defaults()
 			var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
 				mutation, ok := m.(*ActivityMutation)
@@ -450,12 +450,12 @@ func (acb *ActivityCreateBulk) Save(ctx context.Context) ([]*Activity, error) {
 				var err error
 				nodes[i], specs[i] = builder.createSpec()
 				if i < len(mutators)-1 {
-					_, err = mutators[i+1].Mutate(root, acb.builders[i+1].mutation)
+					_, err = mutators[i+1].Mutate(root, _c.builders[i+1].mutation)
 				} else {
 					spec := &sqlgraph.BatchCreateSpec{Nodes: specs}
-					spec.OnConflict = acb.conflict
+					spec.OnConflict = _c.conflict
 					// Invoke the actual operation on the latest mutation in the chain.
-					if err = sqlgraph.BatchCreate(ctx, acb.driver, spec); err != nil {
+					if err = sqlgraph.BatchCreate(ctx, _c.driver, spec); err != nil {
 						if sqlgraph.IsConstraintError(err) {
 							err = &ConstraintError{msg: err.Error(), wrap: err}
 						}
@@ -479,7 +479,7 @@ func (acb *ActivityCreateBulk) Save(ctx context.Context) ([]*Activity, error) {
 		}(i, ctx)
 	}
 	if len(mutators) > 0 {
-		if _, err := mutators[0].Mutate(ctx, acb.builders[0].mutation); err != nil {
+		if _, err := mutators[0].Mutate(ctx, _c.builders[0].mutation); err != nil {
 			return nil, err
 		}
 	}
@@ -487,8 +487,8 @@ func (acb *ActivityCreateBulk) Save(ctx context.Context) ([]*Activity, error) {
 }
 
 // SaveX is like Save, but panics if an error occurs.
-func (acb *ActivityCreateBulk) SaveX(ctx context.Context) []*Activity {
-	v, err := acb.Save(ctx)
+func (_c *ActivityCreateBulk) SaveX(ctx context.Context) []*Activity {
+	v, err := _c.Save(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -496,14 +496,14 @@ func (acb *ActivityCreateBulk) SaveX(ctx context.Context) []*Activity {
 }
 
 // Exec executes the query.
-func (acb *ActivityCreateBulk) Exec(ctx context.Context) error {
-	_, err := acb.Save(ctx)
+func (_c *ActivityCreateBulk) Exec(ctx context.Context) error {
+	_, err := _c.Save(ctx)
 	return err
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (acb *ActivityCreateBulk) ExecX(ctx context.Context) {
-	if err := acb.Exec(ctx); err != nil {
+func (_c *ActivityCreateBulk) ExecX(ctx context.Context) {
+	if err := _c.Exec(ctx); err != nil {
 		panic(err)
 	}
 }
@@ -523,10 +523,10 @@ func (acb *ActivityCreateBulk) ExecX(ctx context.Context) {
 //			SetType(v+v).
 //		}).
 //		Exec(ctx)
-func (acb *ActivityCreateBulk) OnConflict(opts ...sql.ConflictOption) *ActivityUpsertBulk {
-	acb.conflict = opts
+func (_c *ActivityCreateBulk) OnConflict(opts ...sql.ConflictOption) *ActivityUpsertBulk {
+	_c.conflict = opts
 	return &ActivityUpsertBulk{
-		create: acb,
+		create: _c,
 	}
 }
 
@@ -536,10 +536,10 @@ func (acb *ActivityCreateBulk) OnConflict(opts ...sql.ConflictOption) *ActivityU
 //	client.Activity.Create().
 //		OnConflict(sql.ConflictColumns(columns...)).
 //		Exec(ctx)
-func (acb *ActivityCreateBulk) OnConflictColumns(columns ...string) *ActivityUpsertBulk {
-	acb.conflict = append(acb.conflict, sql.ConflictColumns(columns...))
+func (_c *ActivityCreateBulk) OnConflictColumns(columns ...string) *ActivityUpsertBulk {
+	_c.conflict = append(_c.conflict, sql.ConflictColumns(columns...))
 	return &ActivityUpsertBulk{
-		create: acb,
+		create: _c,
 	}
 }
 

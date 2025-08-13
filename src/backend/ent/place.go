@@ -83,7 +83,7 @@ func (*Place) scanValues(columns []string) ([]any, error) {
 
 // assignValues assigns the values that were returned from sql.Rows (after scanning)
 // to the Place fields.
-func (pl *Place) assignValues(columns []string, values []any) error {
+func (_m *Place) assignValues(columns []string, values []any) error {
 	if m, n := len(values), len(columns); m < n {
 		return fmt.Errorf("mismatch number of scan values: %d != %d", m, n)
 	}
@@ -94,68 +94,68 @@ func (pl *Place) assignValues(columns []string, values []any) error {
 			if !ok {
 				return fmt.Errorf("unexpected type %T for field id", value)
 			}
-			pl.ID = int(value.Int64)
+			_m.ID = int(value.Int64)
 		case place.FieldTeamName:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field team_name", values[i])
 			} else if value.Valid {
-				pl.TeamName = value.String
+				_m.TeamName = value.String
 			}
 		case place.FieldPlace:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field place", values[i])
 			} else if value.Valid {
-				pl.Place = int(value.Int64)
+				_m.Place = int(value.Int64)
 			}
 		case place.FieldCtftimeTeamID:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field ctftime_team_id", values[i])
 			} else if value.Valid {
-				pl.CtftimeTeamID = new(int)
-				*pl.CtftimeTeamID = int(value.Int64)
+				_m.CtftimeTeamID = new(int)
+				*_m.CtftimeTeamID = int(value.Int64)
 			}
 		case place.FieldContestPoints:
 			if value, ok := values[i].(*sql.NullFloat64); !ok {
 				return fmt.Errorf("unexpected type %T for field contest_points", values[i])
 			} else if value.Valid {
-				pl.ContestPoints = new(float64)
-				*pl.ContestPoints = value.Float64
+				_m.ContestPoints = new(float64)
+				*_m.ContestPoints = value.Float64
 			}
 		case place.FieldOpenctfPoints:
 			if value, ok := values[i].(*sql.NullFloat64); !ok {
 				return fmt.Errorf("unexpected type %T for field openctf_points", values[i])
 			} else if value.Valid {
-				pl.OpenctfPoints = new(float64)
-				*pl.OpenctfPoints = value.Float64
+				_m.OpenctfPoints = new(float64)
+				*_m.OpenctfPoints = value.Float64
 			}
 		case place.FieldAssociatedContestID:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field associated_contest_id", values[i])
 			} else if value.Valid {
-				pl.AssociatedContestID = int(value.Int64)
+				_m.AssociatedContestID = int(value.Int64)
 			}
 		case place.FieldAssignedWeightPoints:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field assigned_weight_points", values[i])
 			} else if value.Valid {
-				pl.AssignedWeightPoints = int(value.Int64)
+				_m.AssignedWeightPoints = int(value.Int64)
 			}
 		case place.ForeignKeys[0]:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for edge-field contest_places", value)
 			} else if value.Valid {
-				pl.contest_places = new(int)
-				*pl.contest_places = int(value.Int64)
+				_m.contest_places = new(int)
+				*_m.contest_places = int(value.Int64)
 			}
 		case place.ForeignKeys[1]:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for edge-field place_associated_team", value)
 			} else if value.Valid {
-				pl.place_associated_team = new(int)
-				*pl.place_associated_team = int(value.Int64)
+				_m.place_associated_team = new(int)
+				*_m.place_associated_team = int(value.Int64)
 			}
 		default:
-			pl.selectValues.Set(columns[i], values[i])
+			_m.selectValues.Set(columns[i], values[i])
 		}
 	}
 	return nil
@@ -163,64 +163,64 @@ func (pl *Place) assignValues(columns []string, values []any) error {
 
 // Value returns the ent.Value that was dynamically selected and assigned to the Place.
 // This includes values selected through modifiers, order, etc.
-func (pl *Place) Value(name string) (ent.Value, error) {
-	return pl.selectValues.Get(name)
+func (_m *Place) Value(name string) (ent.Value, error) {
+	return _m.selectValues.Get(name)
 }
 
 // QueryAssociatedTeam queries the "associated_team" edge of the Place entity.
-func (pl *Place) QueryAssociatedTeam() *TeamQuery {
-	return NewPlaceClient(pl.config).QueryAssociatedTeam(pl)
+func (_m *Place) QueryAssociatedTeam() *TeamQuery {
+	return NewPlaceClient(_m.config).QueryAssociatedTeam(_m)
 }
 
 // Update returns a builder for updating this Place.
 // Note that you need to call Place.Unwrap() before calling this method if this Place
 // was returned from a transaction, and the transaction was committed or rolled back.
-func (pl *Place) Update() *PlaceUpdateOne {
-	return NewPlaceClient(pl.config).UpdateOne(pl)
+func (_m *Place) Update() *PlaceUpdateOne {
+	return NewPlaceClient(_m.config).UpdateOne(_m)
 }
 
 // Unwrap unwraps the Place entity that was returned from a transaction after it was closed,
 // so that all future queries will be executed through the driver which created the transaction.
-func (pl *Place) Unwrap() *Place {
-	_tx, ok := pl.config.driver.(*txDriver)
+func (_m *Place) Unwrap() *Place {
+	_tx, ok := _m.config.driver.(*txDriver)
 	if !ok {
 		panic("ent: Place is not a transactional entity")
 	}
-	pl.config.driver = _tx.drv
-	return pl
+	_m.config.driver = _tx.drv
+	return _m
 }
 
 // String implements the fmt.Stringer.
-func (pl *Place) String() string {
+func (_m *Place) String() string {
 	var builder strings.Builder
 	builder.WriteString("Place(")
-	builder.WriteString(fmt.Sprintf("id=%v, ", pl.ID))
+	builder.WriteString(fmt.Sprintf("id=%v, ", _m.ID))
 	builder.WriteString("team_name=")
-	builder.WriteString(pl.TeamName)
+	builder.WriteString(_m.TeamName)
 	builder.WriteString(", ")
 	builder.WriteString("place=")
-	builder.WriteString(fmt.Sprintf("%v", pl.Place))
+	builder.WriteString(fmt.Sprintf("%v", _m.Place))
 	builder.WriteString(", ")
-	if v := pl.CtftimeTeamID; v != nil {
+	if v := _m.CtftimeTeamID; v != nil {
 		builder.WriteString("ctftime_team_id=")
 		builder.WriteString(fmt.Sprintf("%v", *v))
 	}
 	builder.WriteString(", ")
-	if v := pl.ContestPoints; v != nil {
+	if v := _m.ContestPoints; v != nil {
 		builder.WriteString("contest_points=")
 		builder.WriteString(fmt.Sprintf("%v", *v))
 	}
 	builder.WriteString(", ")
-	if v := pl.OpenctfPoints; v != nil {
+	if v := _m.OpenctfPoints; v != nil {
 		builder.WriteString("openctf_points=")
 		builder.WriteString(fmt.Sprintf("%v", *v))
 	}
 	builder.WriteString(", ")
 	builder.WriteString("associated_contest_id=")
-	builder.WriteString(fmt.Sprintf("%v", pl.AssociatedContestID))
+	builder.WriteString(fmt.Sprintf("%v", _m.AssociatedContestID))
 	builder.WriteString(", ")
 	builder.WriteString("assigned_weight_points=")
-	builder.WriteString(fmt.Sprintf("%v", pl.AssignedWeightPoints))
+	builder.WriteString(fmt.Sprintf("%v", _m.AssignedWeightPoints))
 	builder.WriteByte(')')
 	return builder.String()
 }

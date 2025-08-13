@@ -22,7 +22,7 @@ type User struct {
 	// Email holds the value of the "email" field.
 	Email string `json:"email,omitempty"`
 	// EmailConfirmedAt holds the value of the "email_confirmed_at" field.
-	EmailConfirmedAt *time.Time `json:"email_confirmed_at,omitempty"`
+	EmailConfirmedAt *time.Time `json:"email_confirmed_at"`
 	// ConfirmationCode holds the value of the "confirmation_code" field.
 	ConfirmationCode *string `json:"-"`
 	// PermissionLevel holds the value of the "permission_level" field.
@@ -35,6 +35,16 @@ type User struct {
 	CreatedAt time.Time `json:"created_at,omitempty"`
 	// Logo holds the value of the "logo" field.
 	Logo *[]byte `json:"logo,omitempty"`
+	// GithubAccountID holds the value of the "github_account_id" field.
+	GithubAccountID *int64 `json:"github_account_id,omitempty"`
+	// GithubUsername holds the value of the "github_username" field.
+	GithubUsername *string `json:"github_username,omitempty"`
+	// GithubName holds the value of the "github_name" field.
+	GithubName *string `json:"github_name,omitempty"`
+	// GithubEmail holds the value of the "github_email" field.
+	GithubEmail *string `json:"github_email,omitempty"`
+	// GithubAvatarURL holds the value of the "github_avatar_url" field.
+	GithubAvatarURL *string `json:"github_avatar_url,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the UserQuery when eager-loading is set.
 	Edges        UserEdges `json:"edges"`
@@ -66,9 +76,9 @@ func (*User) scanValues(columns []string) ([]any, error) {
 		switch columns[i] {
 		case user.FieldLogo:
 			values[i] = new([]byte)
-		case user.FieldID:
+		case user.FieldID, user.FieldGithubAccountID:
 			values[i] = new(sql.NullInt64)
-		case user.FieldUsername, user.FieldEmail, user.FieldConfirmationCode, user.FieldPermissionLevel, user.FieldDescription, user.FieldPassword:
+		case user.FieldUsername, user.FieldEmail, user.FieldConfirmationCode, user.FieldPermissionLevel, user.FieldDescription, user.FieldPassword, user.FieldGithubUsername, user.FieldGithubName, user.FieldGithubEmail, user.FieldGithubAvatarURL:
 			values[i] = new(sql.NullString)
 		case user.FieldEmailConfirmedAt, user.FieldCreatedAt:
 			values[i] = new(sql.NullTime)
@@ -81,7 +91,7 @@ func (*User) scanValues(columns []string) ([]any, error) {
 
 // assignValues assigns the values that were returned from sql.Rows (after scanning)
 // to the User fields.
-func (u *User) assignValues(columns []string, values []any) error {
+func (_m *User) assignValues(columns []string, values []any) error {
 	if m, n := len(values), len(columns); m < n {
 		return fmt.Errorf("mismatch number of scan values: %d != %d", m, n)
 	}
@@ -92,66 +102,101 @@ func (u *User) assignValues(columns []string, values []any) error {
 			if !ok {
 				return fmt.Errorf("unexpected type %T for field id", value)
 			}
-			u.ID = int(value.Int64)
+			_m.ID = int(value.Int64)
 		case user.FieldUsername:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field username", values[i])
 			} else if value.Valid {
-				u.Username = value.String
+				_m.Username = value.String
 			}
 		case user.FieldEmail:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field email", values[i])
 			} else if value.Valid {
-				u.Email = value.String
+				_m.Email = value.String
 			}
 		case user.FieldEmailConfirmedAt:
 			if value, ok := values[i].(*sql.NullTime); !ok {
 				return fmt.Errorf("unexpected type %T for field email_confirmed_at", values[i])
 			} else if value.Valid {
-				u.EmailConfirmedAt = new(time.Time)
-				*u.EmailConfirmedAt = value.Time
+				_m.EmailConfirmedAt = new(time.Time)
+				*_m.EmailConfirmedAt = value.Time
 			}
 		case user.FieldConfirmationCode:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field confirmation_code", values[i])
 			} else if value.Valid {
-				u.ConfirmationCode = new(string)
-				*u.ConfirmationCode = value.String
+				_m.ConfirmationCode = new(string)
+				*_m.ConfirmationCode = value.String
 			}
 		case user.FieldPermissionLevel:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field permission_level", values[i])
 			} else if value.Valid {
-				u.PermissionLevel = user.PermissionLevel(value.String)
+				_m.PermissionLevel = user.PermissionLevel(value.String)
 			}
 		case user.FieldDescription:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field description", values[i])
 			} else if value.Valid {
-				u.Description = new(string)
-				*u.Description = value.String
+				_m.Description = new(string)
+				*_m.Description = value.String
 			}
 		case user.FieldPassword:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field password", values[i])
 			} else if value.Valid {
-				u.Password = value.String
+				_m.Password = value.String
 			}
 		case user.FieldCreatedAt:
 			if value, ok := values[i].(*sql.NullTime); !ok {
 				return fmt.Errorf("unexpected type %T for field created_at", values[i])
 			} else if value.Valid {
-				u.CreatedAt = value.Time
+				_m.CreatedAt = value.Time
 			}
 		case user.FieldLogo:
 			if value, ok := values[i].(*[]byte); !ok {
 				return fmt.Errorf("unexpected type %T for field logo", values[i])
 			} else if value != nil {
-				u.Logo = value
+				_m.Logo = value
+			}
+		case user.FieldGithubAccountID:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field github_account_id", values[i])
+			} else if value.Valid {
+				_m.GithubAccountID = new(int64)
+				*_m.GithubAccountID = value.Int64
+			}
+		case user.FieldGithubUsername:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field github_username", values[i])
+			} else if value.Valid {
+				_m.GithubUsername = new(string)
+				*_m.GithubUsername = value.String
+			}
+		case user.FieldGithubName:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field github_name", values[i])
+			} else if value.Valid {
+				_m.GithubName = new(string)
+				*_m.GithubName = value.String
+			}
+		case user.FieldGithubEmail:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field github_email", values[i])
+			} else if value.Valid {
+				_m.GithubEmail = new(string)
+				*_m.GithubEmail = value.String
+			}
+		case user.FieldGithubAvatarURL:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field github_avatar_url", values[i])
+			} else if value.Valid {
+				_m.GithubAvatarURL = new(string)
+				*_m.GithubAvatarURL = value.String
 			}
 		default:
-			u.selectValues.Set(columns[i], values[i])
+			_m.selectValues.Set(columns[i], values[i])
 		}
 	}
 	return nil
@@ -159,45 +204,45 @@ func (u *User) assignValues(columns []string, values []any) error {
 
 // Value returns the ent.Value that was dynamically selected and assigned to the User.
 // This includes values selected through modifiers, order, etc.
-func (u *User) Value(name string) (ent.Value, error) {
-	return u.selectValues.Get(name)
+func (_m *User) Value(name string) (ent.Value, error) {
+	return _m.selectValues.Get(name)
 }
 
 // QueryTeams queries the "teams" edge of the User entity.
-func (u *User) QueryTeams() *TeamQuery {
-	return NewUserClient(u.config).QueryTeams(u)
+func (_m *User) QueryTeams() *TeamQuery {
+	return NewUserClient(_m.config).QueryTeams(_m)
 }
 
 // Update returns a builder for updating this User.
 // Note that you need to call User.Unwrap() before calling this method if this User
 // was returned from a transaction, and the transaction was committed or rolled back.
-func (u *User) Update() *UserUpdateOne {
-	return NewUserClient(u.config).UpdateOne(u)
+func (_m *User) Update() *UserUpdateOne {
+	return NewUserClient(_m.config).UpdateOne(_m)
 }
 
 // Unwrap unwraps the User entity that was returned from a transaction after it was closed,
 // so that all future queries will be executed through the driver which created the transaction.
-func (u *User) Unwrap() *User {
-	_tx, ok := u.config.driver.(*txDriver)
+func (_m *User) Unwrap() *User {
+	_tx, ok := _m.config.driver.(*txDriver)
 	if !ok {
 		panic("ent: User is not a transactional entity")
 	}
-	u.config.driver = _tx.drv
-	return u
+	_m.config.driver = _tx.drv
+	return _m
 }
 
 // String implements the fmt.Stringer.
-func (u *User) String() string {
+func (_m *User) String() string {
 	var builder strings.Builder
 	builder.WriteString("User(")
-	builder.WriteString(fmt.Sprintf("id=%v, ", u.ID))
+	builder.WriteString(fmt.Sprintf("id=%v, ", _m.ID))
 	builder.WriteString("username=")
-	builder.WriteString(u.Username)
+	builder.WriteString(_m.Username)
 	builder.WriteString(", ")
 	builder.WriteString("email=")
-	builder.WriteString(u.Email)
+	builder.WriteString(_m.Email)
 	builder.WriteString(", ")
-	if v := u.EmailConfirmedAt; v != nil {
+	if v := _m.EmailConfirmedAt; v != nil {
 		builder.WriteString("email_confirmed_at=")
 		builder.WriteString(v.Format(time.ANSIC))
 	}
@@ -205,9 +250,9 @@ func (u *User) String() string {
 	builder.WriteString("confirmation_code=<sensitive>")
 	builder.WriteString(", ")
 	builder.WriteString("permission_level=")
-	builder.WriteString(fmt.Sprintf("%v", u.PermissionLevel))
+	builder.WriteString(fmt.Sprintf("%v", _m.PermissionLevel))
 	builder.WriteString(", ")
-	if v := u.Description; v != nil {
+	if v := _m.Description; v != nil {
 		builder.WriteString("description=")
 		builder.WriteString(*v)
 	}
@@ -215,11 +260,36 @@ func (u *User) String() string {
 	builder.WriteString("password=<sensitive>")
 	builder.WriteString(", ")
 	builder.WriteString("created_at=")
-	builder.WriteString(u.CreatedAt.Format(time.ANSIC))
+	builder.WriteString(_m.CreatedAt.Format(time.ANSIC))
 	builder.WriteString(", ")
-	if v := u.Logo; v != nil {
+	if v := _m.Logo; v != nil {
 		builder.WriteString("logo=")
 		builder.WriteString(fmt.Sprintf("%v", *v))
+	}
+	builder.WriteString(", ")
+	if v := _m.GithubAccountID; v != nil {
+		builder.WriteString("github_account_id=")
+		builder.WriteString(fmt.Sprintf("%v", *v))
+	}
+	builder.WriteString(", ")
+	if v := _m.GithubUsername; v != nil {
+		builder.WriteString("github_username=")
+		builder.WriteString(*v)
+	}
+	builder.WriteString(", ")
+	if v := _m.GithubName; v != nil {
+		builder.WriteString("github_name=")
+		builder.WriteString(*v)
+	}
+	builder.WriteString(", ")
+	if v := _m.GithubEmail; v != nil {
+		builder.WriteString("github_email=")
+		builder.WriteString(*v)
+	}
+	builder.WriteString(", ")
+	if v := _m.GithubAvatarURL; v != nil {
+		builder.WriteString("github_avatar_url=")
+		builder.WriteString(*v)
 	}
 	builder.WriteByte(')')
 	return builder.String()

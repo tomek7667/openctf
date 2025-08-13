@@ -23,198 +23,198 @@ type UserProfileCreate struct {
 }
 
 // SetLocation sets the "location" field.
-func (upc *UserProfileCreate) SetLocation(s string) *UserProfileCreate {
-	upc.mutation.SetLocation(s)
-	return upc
+func (_c *UserProfileCreate) SetLocation(v string) *UserProfileCreate {
+	_c.mutation.SetLocation(v)
+	return _c
 }
 
 // SetNillableLocation sets the "location" field if the given value is not nil.
-func (upc *UserProfileCreate) SetNillableLocation(s *string) *UserProfileCreate {
-	if s != nil {
-		upc.SetLocation(*s)
+func (_c *UserProfileCreate) SetNillableLocation(v *string) *UserProfileCreate {
+	if v != nil {
+		_c.SetLocation(*v)
 	}
-	return upc
+	return _c
 }
 
 // SetGithubLink sets the "github_link" field.
-func (upc *UserProfileCreate) SetGithubLink(s string) *UserProfileCreate {
-	upc.mutation.SetGithubLink(s)
-	return upc
+func (_c *UserProfileCreate) SetGithubLink(v string) *UserProfileCreate {
+	_c.mutation.SetGithubLink(v)
+	return _c
 }
 
 // SetNillableGithubLink sets the "github_link" field if the given value is not nil.
-func (upc *UserProfileCreate) SetNillableGithubLink(s *string) *UserProfileCreate {
-	if s != nil {
-		upc.SetGithubLink(*s)
+func (_c *UserProfileCreate) SetNillableGithubLink(v *string) *UserProfileCreate {
+	if v != nil {
+		_c.SetGithubLink(*v)
 	}
-	return upc
+	return _c
 }
 
 // SetLinkedinLink sets the "linkedin_link" field.
-func (upc *UserProfileCreate) SetLinkedinLink(s string) *UserProfileCreate {
-	upc.mutation.SetLinkedinLink(s)
-	return upc
+func (_c *UserProfileCreate) SetLinkedinLink(v string) *UserProfileCreate {
+	_c.mutation.SetLinkedinLink(v)
+	return _c
 }
 
 // SetNillableLinkedinLink sets the "linkedin_link" field if the given value is not nil.
-func (upc *UserProfileCreate) SetNillableLinkedinLink(s *string) *UserProfileCreate {
-	if s != nil {
-		upc.SetLinkedinLink(*s)
+func (_c *UserProfileCreate) SetNillableLinkedinLink(v *string) *UserProfileCreate {
+	if v != nil {
+		_c.SetLinkedinLink(*v)
 	}
-	return upc
+	return _c
 }
 
 // SetTwitterLink sets the "twitter_link" field.
-func (upc *UserProfileCreate) SetTwitterLink(s string) *UserProfileCreate {
-	upc.mutation.SetTwitterLink(s)
-	return upc
+func (_c *UserProfileCreate) SetTwitterLink(v string) *UserProfileCreate {
+	_c.mutation.SetTwitterLink(v)
+	return _c
 }
 
 // SetNillableTwitterLink sets the "twitter_link" field if the given value is not nil.
-func (upc *UserProfileCreate) SetNillableTwitterLink(s *string) *UserProfileCreate {
-	if s != nil {
-		upc.SetTwitterLink(*s)
+func (_c *UserProfileCreate) SetNillableTwitterLink(v *string) *UserProfileCreate {
+	if v != nil {
+		_c.SetTwitterLink(*v)
 	}
-	return upc
+	return _c
 }
 
 // SetWebsiteLink sets the "website_link" field.
-func (upc *UserProfileCreate) SetWebsiteLink(s string) *UserProfileCreate {
-	upc.mutation.SetWebsiteLink(s)
-	return upc
+func (_c *UserProfileCreate) SetWebsiteLink(v string) *UserProfileCreate {
+	_c.mutation.SetWebsiteLink(v)
+	return _c
 }
 
 // SetNillableWebsiteLink sets the "website_link" field if the given value is not nil.
-func (upc *UserProfileCreate) SetNillableWebsiteLink(s *string) *UserProfileCreate {
-	if s != nil {
-		upc.SetWebsiteLink(*s)
+func (_c *UserProfileCreate) SetNillableWebsiteLink(v *string) *UserProfileCreate {
+	if v != nil {
+		_c.SetWebsiteLink(*v)
 	}
-	return upc
+	return _c
 }
 
 // SetWebSkillLevel sets the "web_skill_level" field.
-func (upc *UserProfileCreate) SetWebSkillLevel(i int) *UserProfileCreate {
-	upc.mutation.SetWebSkillLevel(i)
-	return upc
+func (_c *UserProfileCreate) SetWebSkillLevel(v int) *UserProfileCreate {
+	_c.mutation.SetWebSkillLevel(v)
+	return _c
 }
 
 // SetNillableWebSkillLevel sets the "web_skill_level" field if the given value is not nil.
-func (upc *UserProfileCreate) SetNillableWebSkillLevel(i *int) *UserProfileCreate {
-	if i != nil {
-		upc.SetWebSkillLevel(*i)
+func (_c *UserProfileCreate) SetNillableWebSkillLevel(v *int) *UserProfileCreate {
+	if v != nil {
+		_c.SetWebSkillLevel(*v)
 	}
-	return upc
+	return _c
 }
 
 // SetRevSkillLevel sets the "rev_skill_level" field.
-func (upc *UserProfileCreate) SetRevSkillLevel(i int) *UserProfileCreate {
-	upc.mutation.SetRevSkillLevel(i)
-	return upc
+func (_c *UserProfileCreate) SetRevSkillLevel(v int) *UserProfileCreate {
+	_c.mutation.SetRevSkillLevel(v)
+	return _c
 }
 
 // SetNillableRevSkillLevel sets the "rev_skill_level" field if the given value is not nil.
-func (upc *UserProfileCreate) SetNillableRevSkillLevel(i *int) *UserProfileCreate {
-	if i != nil {
-		upc.SetRevSkillLevel(*i)
+func (_c *UserProfileCreate) SetNillableRevSkillLevel(v *int) *UserProfileCreate {
+	if v != nil {
+		_c.SetRevSkillLevel(*v)
 	}
-	return upc
+	return _c
 }
 
 // SetPwnSkillLevel sets the "pwn_skill_level" field.
-func (upc *UserProfileCreate) SetPwnSkillLevel(i int) *UserProfileCreate {
-	upc.mutation.SetPwnSkillLevel(i)
-	return upc
+func (_c *UserProfileCreate) SetPwnSkillLevel(v int) *UserProfileCreate {
+	_c.mutation.SetPwnSkillLevel(v)
+	return _c
 }
 
 // SetNillablePwnSkillLevel sets the "pwn_skill_level" field if the given value is not nil.
-func (upc *UserProfileCreate) SetNillablePwnSkillLevel(i *int) *UserProfileCreate {
-	if i != nil {
-		upc.SetPwnSkillLevel(*i)
+func (_c *UserProfileCreate) SetNillablePwnSkillLevel(v *int) *UserProfileCreate {
+	if v != nil {
+		_c.SetPwnSkillLevel(*v)
 	}
-	return upc
+	return _c
 }
 
 // SetCryptoSkillLevel sets the "crypto_skill_level" field.
-func (upc *UserProfileCreate) SetCryptoSkillLevel(i int) *UserProfileCreate {
-	upc.mutation.SetCryptoSkillLevel(i)
-	return upc
+func (_c *UserProfileCreate) SetCryptoSkillLevel(v int) *UserProfileCreate {
+	_c.mutation.SetCryptoSkillLevel(v)
+	return _c
 }
 
 // SetNillableCryptoSkillLevel sets the "crypto_skill_level" field if the given value is not nil.
-func (upc *UserProfileCreate) SetNillableCryptoSkillLevel(i *int) *UserProfileCreate {
-	if i != nil {
-		upc.SetCryptoSkillLevel(*i)
+func (_c *UserProfileCreate) SetNillableCryptoSkillLevel(v *int) *UserProfileCreate {
+	if v != nil {
+		_c.SetCryptoSkillLevel(*v)
 	}
-	return upc
+	return _c
 }
 
 // SetMiscSkillLevel sets the "misc_skill_level" field.
-func (upc *UserProfileCreate) SetMiscSkillLevel(i int) *UserProfileCreate {
-	upc.mutation.SetMiscSkillLevel(i)
-	return upc
+func (_c *UserProfileCreate) SetMiscSkillLevel(v int) *UserProfileCreate {
+	_c.mutation.SetMiscSkillLevel(v)
+	return _c
 }
 
 // SetNillableMiscSkillLevel sets the "misc_skill_level" field if the given value is not nil.
-func (upc *UserProfileCreate) SetNillableMiscSkillLevel(i *int) *UserProfileCreate {
-	if i != nil {
-		upc.SetMiscSkillLevel(*i)
+func (_c *UserProfileCreate) SetNillableMiscSkillLevel(v *int) *UserProfileCreate {
+	if v != nil {
+		_c.SetMiscSkillLevel(*v)
 	}
-	return upc
+	return _c
 }
 
 // SetShowEmail sets the "show_email" field.
-func (upc *UserProfileCreate) SetShowEmail(b bool) *UserProfileCreate {
-	upc.mutation.SetShowEmail(b)
-	return upc
+func (_c *UserProfileCreate) SetShowEmail(v bool) *UserProfileCreate {
+	_c.mutation.SetShowEmail(v)
+	return _c
 }
 
 // SetNillableShowEmail sets the "show_email" field if the given value is not nil.
-func (upc *UserProfileCreate) SetNillableShowEmail(b *bool) *UserProfileCreate {
-	if b != nil {
-		upc.SetShowEmail(*b)
+func (_c *UserProfileCreate) SetNillableShowEmail(v *bool) *UserProfileCreate {
+	if v != nil {
+		_c.SetShowEmail(*v)
 	}
-	return upc
+	return _c
 }
 
 // SetShowLocation sets the "show_location" field.
-func (upc *UserProfileCreate) SetShowLocation(b bool) *UserProfileCreate {
-	upc.mutation.SetShowLocation(b)
-	return upc
+func (_c *UserProfileCreate) SetShowLocation(v bool) *UserProfileCreate {
+	_c.mutation.SetShowLocation(v)
+	return _c
 }
 
 // SetNillableShowLocation sets the "show_location" field if the given value is not nil.
-func (upc *UserProfileCreate) SetNillableShowLocation(b *bool) *UserProfileCreate {
-	if b != nil {
-		upc.SetShowLocation(*b)
+func (_c *UserProfileCreate) SetNillableShowLocation(v *bool) *UserProfileCreate {
+	if v != nil {
+		_c.SetShowLocation(*v)
 	}
-	return upc
+	return _c
 }
 
 // SetUserID sets the "user" edge to the User entity by ID.
-func (upc *UserProfileCreate) SetUserID(id int) *UserProfileCreate {
-	upc.mutation.SetUserID(id)
-	return upc
+func (_c *UserProfileCreate) SetUserID(id int) *UserProfileCreate {
+	_c.mutation.SetUserID(id)
+	return _c
 }
 
 // SetUser sets the "user" edge to the User entity.
-func (upc *UserProfileCreate) SetUser(u *User) *UserProfileCreate {
-	return upc.SetUserID(u.ID)
+func (_c *UserProfileCreate) SetUser(v *User) *UserProfileCreate {
+	return _c.SetUserID(v.ID)
 }
 
 // Mutation returns the UserProfileMutation object of the builder.
-func (upc *UserProfileCreate) Mutation() *UserProfileMutation {
-	return upc.mutation
+func (_c *UserProfileCreate) Mutation() *UserProfileMutation {
+	return _c.mutation
 }
 
 // Save creates the UserProfile in the database.
-func (upc *UserProfileCreate) Save(ctx context.Context) (*UserProfile, error) {
-	upc.defaults()
-	return withHooks(ctx, upc.sqlSave, upc.mutation, upc.hooks)
+func (_c *UserProfileCreate) Save(ctx context.Context) (*UserProfile, error) {
+	_c.defaults()
+	return withHooks(ctx, _c.sqlSave, _c.mutation, _c.hooks)
 }
 
 // SaveX calls Save and panics if Save returns an error.
-func (upc *UserProfileCreate) SaveX(ctx context.Context) *UserProfile {
-	v, err := upc.Save(ctx)
+func (_c *UserProfileCreate) SaveX(ctx context.Context) *UserProfile {
+	v, err := _c.Save(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -222,115 +222,115 @@ func (upc *UserProfileCreate) SaveX(ctx context.Context) *UserProfile {
 }
 
 // Exec executes the query.
-func (upc *UserProfileCreate) Exec(ctx context.Context) error {
-	_, err := upc.Save(ctx)
+func (_c *UserProfileCreate) Exec(ctx context.Context) error {
+	_, err := _c.Save(ctx)
 	return err
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (upc *UserProfileCreate) ExecX(ctx context.Context) {
-	if err := upc.Exec(ctx); err != nil {
+func (_c *UserProfileCreate) ExecX(ctx context.Context) {
+	if err := _c.Exec(ctx); err != nil {
 		panic(err)
 	}
 }
 
 // defaults sets the default values of the builder before save.
-func (upc *UserProfileCreate) defaults() {
-	if _, ok := upc.mutation.WebSkillLevel(); !ok {
+func (_c *UserProfileCreate) defaults() {
+	if _, ok := _c.mutation.WebSkillLevel(); !ok {
 		v := userprofile.DefaultWebSkillLevel
-		upc.mutation.SetWebSkillLevel(v)
+		_c.mutation.SetWebSkillLevel(v)
 	}
-	if _, ok := upc.mutation.RevSkillLevel(); !ok {
+	if _, ok := _c.mutation.RevSkillLevel(); !ok {
 		v := userprofile.DefaultRevSkillLevel
-		upc.mutation.SetRevSkillLevel(v)
+		_c.mutation.SetRevSkillLevel(v)
 	}
-	if _, ok := upc.mutation.PwnSkillLevel(); !ok {
+	if _, ok := _c.mutation.PwnSkillLevel(); !ok {
 		v := userprofile.DefaultPwnSkillLevel
-		upc.mutation.SetPwnSkillLevel(v)
+		_c.mutation.SetPwnSkillLevel(v)
 	}
-	if _, ok := upc.mutation.CryptoSkillLevel(); !ok {
+	if _, ok := _c.mutation.CryptoSkillLevel(); !ok {
 		v := userprofile.DefaultCryptoSkillLevel
-		upc.mutation.SetCryptoSkillLevel(v)
+		_c.mutation.SetCryptoSkillLevel(v)
 	}
-	if _, ok := upc.mutation.MiscSkillLevel(); !ok {
+	if _, ok := _c.mutation.MiscSkillLevel(); !ok {
 		v := userprofile.DefaultMiscSkillLevel
-		upc.mutation.SetMiscSkillLevel(v)
+		_c.mutation.SetMiscSkillLevel(v)
 	}
-	if _, ok := upc.mutation.ShowEmail(); !ok {
+	if _, ok := _c.mutation.ShowEmail(); !ok {
 		v := userprofile.DefaultShowEmail
-		upc.mutation.SetShowEmail(v)
+		_c.mutation.SetShowEmail(v)
 	}
-	if _, ok := upc.mutation.ShowLocation(); !ok {
+	if _, ok := _c.mutation.ShowLocation(); !ok {
 		v := userprofile.DefaultShowLocation
-		upc.mutation.SetShowLocation(v)
+		_c.mutation.SetShowLocation(v)
 	}
 }
 
 // check runs all checks and user-defined validators on the builder.
-func (upc *UserProfileCreate) check() error {
-	if v, ok := upc.mutation.Location(); ok {
+func (_c *UserProfileCreate) check() error {
+	if v, ok := _c.mutation.Location(); ok {
 		if err := userprofile.LocationValidator(v); err != nil {
 			return &ValidationError{Name: "location", err: fmt.Errorf(`ent: validator failed for field "UserProfile.location": %w`, err)}
 		}
 	}
-	if _, ok := upc.mutation.WebSkillLevel(); !ok {
+	if _, ok := _c.mutation.WebSkillLevel(); !ok {
 		return &ValidationError{Name: "web_skill_level", err: errors.New(`ent: missing required field "UserProfile.web_skill_level"`)}
 	}
-	if v, ok := upc.mutation.WebSkillLevel(); ok {
+	if v, ok := _c.mutation.WebSkillLevel(); ok {
 		if err := userprofile.WebSkillLevelValidator(v); err != nil {
 			return &ValidationError{Name: "web_skill_level", err: fmt.Errorf(`ent: validator failed for field "UserProfile.web_skill_level": %w`, err)}
 		}
 	}
-	if _, ok := upc.mutation.RevSkillLevel(); !ok {
+	if _, ok := _c.mutation.RevSkillLevel(); !ok {
 		return &ValidationError{Name: "rev_skill_level", err: errors.New(`ent: missing required field "UserProfile.rev_skill_level"`)}
 	}
-	if v, ok := upc.mutation.RevSkillLevel(); ok {
+	if v, ok := _c.mutation.RevSkillLevel(); ok {
 		if err := userprofile.RevSkillLevelValidator(v); err != nil {
 			return &ValidationError{Name: "rev_skill_level", err: fmt.Errorf(`ent: validator failed for field "UserProfile.rev_skill_level": %w`, err)}
 		}
 	}
-	if _, ok := upc.mutation.PwnSkillLevel(); !ok {
+	if _, ok := _c.mutation.PwnSkillLevel(); !ok {
 		return &ValidationError{Name: "pwn_skill_level", err: errors.New(`ent: missing required field "UserProfile.pwn_skill_level"`)}
 	}
-	if v, ok := upc.mutation.PwnSkillLevel(); ok {
+	if v, ok := _c.mutation.PwnSkillLevel(); ok {
 		if err := userprofile.PwnSkillLevelValidator(v); err != nil {
 			return &ValidationError{Name: "pwn_skill_level", err: fmt.Errorf(`ent: validator failed for field "UserProfile.pwn_skill_level": %w`, err)}
 		}
 	}
-	if _, ok := upc.mutation.CryptoSkillLevel(); !ok {
+	if _, ok := _c.mutation.CryptoSkillLevel(); !ok {
 		return &ValidationError{Name: "crypto_skill_level", err: errors.New(`ent: missing required field "UserProfile.crypto_skill_level"`)}
 	}
-	if v, ok := upc.mutation.CryptoSkillLevel(); ok {
+	if v, ok := _c.mutation.CryptoSkillLevel(); ok {
 		if err := userprofile.CryptoSkillLevelValidator(v); err != nil {
 			return &ValidationError{Name: "crypto_skill_level", err: fmt.Errorf(`ent: validator failed for field "UserProfile.crypto_skill_level": %w`, err)}
 		}
 	}
-	if _, ok := upc.mutation.MiscSkillLevel(); !ok {
+	if _, ok := _c.mutation.MiscSkillLevel(); !ok {
 		return &ValidationError{Name: "misc_skill_level", err: errors.New(`ent: missing required field "UserProfile.misc_skill_level"`)}
 	}
-	if v, ok := upc.mutation.MiscSkillLevel(); ok {
+	if v, ok := _c.mutation.MiscSkillLevel(); ok {
 		if err := userprofile.MiscSkillLevelValidator(v); err != nil {
 			return &ValidationError{Name: "misc_skill_level", err: fmt.Errorf(`ent: validator failed for field "UserProfile.misc_skill_level": %w`, err)}
 		}
 	}
-	if _, ok := upc.mutation.ShowEmail(); !ok {
+	if _, ok := _c.mutation.ShowEmail(); !ok {
 		return &ValidationError{Name: "show_email", err: errors.New(`ent: missing required field "UserProfile.show_email"`)}
 	}
-	if _, ok := upc.mutation.ShowLocation(); !ok {
+	if _, ok := _c.mutation.ShowLocation(); !ok {
 		return &ValidationError{Name: "show_location", err: errors.New(`ent: missing required field "UserProfile.show_location"`)}
 	}
-	if len(upc.mutation.UserIDs()) == 0 {
+	if len(_c.mutation.UserIDs()) == 0 {
 		return &ValidationError{Name: "user", err: errors.New(`ent: missing required edge "UserProfile.user"`)}
 	}
 	return nil
 }
 
-func (upc *UserProfileCreate) sqlSave(ctx context.Context) (*UserProfile, error) {
-	if err := upc.check(); err != nil {
+func (_c *UserProfileCreate) sqlSave(ctx context.Context) (*UserProfile, error) {
+	if err := _c.check(); err != nil {
 		return nil, err
 	}
-	_node, _spec := upc.createSpec()
-	if err := sqlgraph.CreateNode(ctx, upc.driver, _spec); err != nil {
+	_node, _spec := _c.createSpec()
+	if err := sqlgraph.CreateNode(ctx, _c.driver, _spec); err != nil {
 		if sqlgraph.IsConstraintError(err) {
 			err = &ConstraintError{msg: err.Error(), wrap: err}
 		}
@@ -338,66 +338,66 @@ func (upc *UserProfileCreate) sqlSave(ctx context.Context) (*UserProfile, error)
 	}
 	id := _spec.ID.Value.(int64)
 	_node.ID = int(id)
-	upc.mutation.id = &_node.ID
-	upc.mutation.done = true
+	_c.mutation.id = &_node.ID
+	_c.mutation.done = true
 	return _node, nil
 }
 
-func (upc *UserProfileCreate) createSpec() (*UserProfile, *sqlgraph.CreateSpec) {
+func (_c *UserProfileCreate) createSpec() (*UserProfile, *sqlgraph.CreateSpec) {
 	var (
-		_node = &UserProfile{config: upc.config}
+		_node = &UserProfile{config: _c.config}
 		_spec = sqlgraph.NewCreateSpec(userprofile.Table, sqlgraph.NewFieldSpec(userprofile.FieldID, field.TypeInt))
 	)
-	_spec.OnConflict = upc.conflict
-	if value, ok := upc.mutation.Location(); ok {
+	_spec.OnConflict = _c.conflict
+	if value, ok := _c.mutation.Location(); ok {
 		_spec.SetField(userprofile.FieldLocation, field.TypeString, value)
 		_node.Location = &value
 	}
-	if value, ok := upc.mutation.GithubLink(); ok {
+	if value, ok := _c.mutation.GithubLink(); ok {
 		_spec.SetField(userprofile.FieldGithubLink, field.TypeString, value)
 		_node.GithubLink = &value
 	}
-	if value, ok := upc.mutation.LinkedinLink(); ok {
+	if value, ok := _c.mutation.LinkedinLink(); ok {
 		_spec.SetField(userprofile.FieldLinkedinLink, field.TypeString, value)
 		_node.LinkedinLink = &value
 	}
-	if value, ok := upc.mutation.TwitterLink(); ok {
+	if value, ok := _c.mutation.TwitterLink(); ok {
 		_spec.SetField(userprofile.FieldTwitterLink, field.TypeString, value)
 		_node.TwitterLink = &value
 	}
-	if value, ok := upc.mutation.WebsiteLink(); ok {
+	if value, ok := _c.mutation.WebsiteLink(); ok {
 		_spec.SetField(userprofile.FieldWebsiteLink, field.TypeString, value)
 		_node.WebsiteLink = &value
 	}
-	if value, ok := upc.mutation.WebSkillLevel(); ok {
+	if value, ok := _c.mutation.WebSkillLevel(); ok {
 		_spec.SetField(userprofile.FieldWebSkillLevel, field.TypeInt, value)
 		_node.WebSkillLevel = value
 	}
-	if value, ok := upc.mutation.RevSkillLevel(); ok {
+	if value, ok := _c.mutation.RevSkillLevel(); ok {
 		_spec.SetField(userprofile.FieldRevSkillLevel, field.TypeInt, value)
 		_node.RevSkillLevel = value
 	}
-	if value, ok := upc.mutation.PwnSkillLevel(); ok {
+	if value, ok := _c.mutation.PwnSkillLevel(); ok {
 		_spec.SetField(userprofile.FieldPwnSkillLevel, field.TypeInt, value)
 		_node.PwnSkillLevel = value
 	}
-	if value, ok := upc.mutation.CryptoSkillLevel(); ok {
+	if value, ok := _c.mutation.CryptoSkillLevel(); ok {
 		_spec.SetField(userprofile.FieldCryptoSkillLevel, field.TypeInt, value)
 		_node.CryptoSkillLevel = value
 	}
-	if value, ok := upc.mutation.MiscSkillLevel(); ok {
+	if value, ok := _c.mutation.MiscSkillLevel(); ok {
 		_spec.SetField(userprofile.FieldMiscSkillLevel, field.TypeInt, value)
 		_node.MiscSkillLevel = value
 	}
-	if value, ok := upc.mutation.ShowEmail(); ok {
+	if value, ok := _c.mutation.ShowEmail(); ok {
 		_spec.SetField(userprofile.FieldShowEmail, field.TypeBool, value)
 		_node.ShowEmail = value
 	}
-	if value, ok := upc.mutation.ShowLocation(); ok {
+	if value, ok := _c.mutation.ShowLocation(); ok {
 		_spec.SetField(userprofile.FieldShowLocation, field.TypeBool, value)
 		_node.ShowLocation = value
 	}
-	if nodes := upc.mutation.UserIDs(); len(nodes) > 0 {
+	if nodes := _c.mutation.UserIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: false,
@@ -433,10 +433,10 @@ func (upc *UserProfileCreate) createSpec() (*UserProfile, *sqlgraph.CreateSpec) 
 //			SetLocation(v+v).
 //		}).
 //		Exec(ctx)
-func (upc *UserProfileCreate) OnConflict(opts ...sql.ConflictOption) *UserProfileUpsertOne {
-	upc.conflict = opts
+func (_c *UserProfileCreate) OnConflict(opts ...sql.ConflictOption) *UserProfileUpsertOne {
+	_c.conflict = opts
 	return &UserProfileUpsertOne{
-		create: upc,
+		create: _c,
 	}
 }
 
@@ -446,10 +446,10 @@ func (upc *UserProfileCreate) OnConflict(opts ...sql.ConflictOption) *UserProfil
 //	client.UserProfile.Create().
 //		OnConflict(sql.ConflictColumns(columns...)).
 //		Exec(ctx)
-func (upc *UserProfileCreate) OnConflictColumns(columns ...string) *UserProfileUpsertOne {
-	upc.conflict = append(upc.conflict, sql.ConflictColumns(columns...))
+func (_c *UserProfileCreate) OnConflictColumns(columns ...string) *UserProfileUpsertOne {
+	_c.conflict = append(_c.conflict, sql.ConflictColumns(columns...))
 	return &UserProfileUpsertOne{
-		create: upc,
+		create: _c,
 	}
 }
 
@@ -990,16 +990,16 @@ type UserProfileCreateBulk struct {
 }
 
 // Save creates the UserProfile entities in the database.
-func (upcb *UserProfileCreateBulk) Save(ctx context.Context) ([]*UserProfile, error) {
-	if upcb.err != nil {
-		return nil, upcb.err
+func (_c *UserProfileCreateBulk) Save(ctx context.Context) ([]*UserProfile, error) {
+	if _c.err != nil {
+		return nil, _c.err
 	}
-	specs := make([]*sqlgraph.CreateSpec, len(upcb.builders))
-	nodes := make([]*UserProfile, len(upcb.builders))
-	mutators := make([]Mutator, len(upcb.builders))
-	for i := range upcb.builders {
+	specs := make([]*sqlgraph.CreateSpec, len(_c.builders))
+	nodes := make([]*UserProfile, len(_c.builders))
+	mutators := make([]Mutator, len(_c.builders))
+	for i := range _c.builders {
 		func(i int, root context.Context) {
-			builder := upcb.builders[i]
+			builder := _c.builders[i]
 			builder.defaults()
 			var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
 				mutation, ok := m.(*UserProfileMutation)
@@ -1013,12 +1013,12 @@ func (upcb *UserProfileCreateBulk) Save(ctx context.Context) ([]*UserProfile, er
 				var err error
 				nodes[i], specs[i] = builder.createSpec()
 				if i < len(mutators)-1 {
-					_, err = mutators[i+1].Mutate(root, upcb.builders[i+1].mutation)
+					_, err = mutators[i+1].Mutate(root, _c.builders[i+1].mutation)
 				} else {
 					spec := &sqlgraph.BatchCreateSpec{Nodes: specs}
-					spec.OnConflict = upcb.conflict
+					spec.OnConflict = _c.conflict
 					// Invoke the actual operation on the latest mutation in the chain.
-					if err = sqlgraph.BatchCreate(ctx, upcb.driver, spec); err != nil {
+					if err = sqlgraph.BatchCreate(ctx, _c.driver, spec); err != nil {
 						if sqlgraph.IsConstraintError(err) {
 							err = &ConstraintError{msg: err.Error(), wrap: err}
 						}
@@ -1042,7 +1042,7 @@ func (upcb *UserProfileCreateBulk) Save(ctx context.Context) ([]*UserProfile, er
 		}(i, ctx)
 	}
 	if len(mutators) > 0 {
-		if _, err := mutators[0].Mutate(ctx, upcb.builders[0].mutation); err != nil {
+		if _, err := mutators[0].Mutate(ctx, _c.builders[0].mutation); err != nil {
 			return nil, err
 		}
 	}
@@ -1050,8 +1050,8 @@ func (upcb *UserProfileCreateBulk) Save(ctx context.Context) ([]*UserProfile, er
 }
 
 // SaveX is like Save, but panics if an error occurs.
-func (upcb *UserProfileCreateBulk) SaveX(ctx context.Context) []*UserProfile {
-	v, err := upcb.Save(ctx)
+func (_c *UserProfileCreateBulk) SaveX(ctx context.Context) []*UserProfile {
+	v, err := _c.Save(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -1059,14 +1059,14 @@ func (upcb *UserProfileCreateBulk) SaveX(ctx context.Context) []*UserProfile {
 }
 
 // Exec executes the query.
-func (upcb *UserProfileCreateBulk) Exec(ctx context.Context) error {
-	_, err := upcb.Save(ctx)
+func (_c *UserProfileCreateBulk) Exec(ctx context.Context) error {
+	_, err := _c.Save(ctx)
 	return err
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (upcb *UserProfileCreateBulk) ExecX(ctx context.Context) {
-	if err := upcb.Exec(ctx); err != nil {
+func (_c *UserProfileCreateBulk) ExecX(ctx context.Context) {
+	if err := _c.Exec(ctx); err != nil {
 		panic(err)
 	}
 }
@@ -1086,10 +1086,10 @@ func (upcb *UserProfileCreateBulk) ExecX(ctx context.Context) {
 //			SetLocation(v+v).
 //		}).
 //		Exec(ctx)
-func (upcb *UserProfileCreateBulk) OnConflict(opts ...sql.ConflictOption) *UserProfileUpsertBulk {
-	upcb.conflict = opts
+func (_c *UserProfileCreateBulk) OnConflict(opts ...sql.ConflictOption) *UserProfileUpsertBulk {
+	_c.conflict = opts
 	return &UserProfileUpsertBulk{
-		create: upcb,
+		create: _c,
 	}
 }
 
@@ -1099,10 +1099,10 @@ func (upcb *UserProfileCreateBulk) OnConflict(opts ...sql.ConflictOption) *UserP
 //	client.UserProfile.Create().
 //		OnConflict(sql.ConflictColumns(columns...)).
 //		Exec(ctx)
-func (upcb *UserProfileCreateBulk) OnConflictColumns(columns ...string) *UserProfileUpsertBulk {
-	upcb.conflict = append(upcb.conflict, sql.ConflictColumns(columns...))
+func (_c *UserProfileCreateBulk) OnConflictColumns(columns ...string) *UserProfileUpsertBulk {
+	_c.conflict = append(_c.conflict, sql.ConflictColumns(columns...))
 	return &UserProfileUpsertBulk{
-		create: upcb,
+		create: _c,
 	}
 }
 

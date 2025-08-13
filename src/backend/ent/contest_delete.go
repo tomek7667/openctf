@@ -20,56 +20,56 @@ type ContestDelete struct {
 }
 
 // Where appends a list predicates to the ContestDelete builder.
-func (cd *ContestDelete) Where(ps ...predicate.Contest) *ContestDelete {
-	cd.mutation.Where(ps...)
-	return cd
+func (_d *ContestDelete) Where(ps ...predicate.Contest) *ContestDelete {
+	_d.mutation.Where(ps...)
+	return _d
 }
 
 // Exec executes the deletion query and returns how many vertices were deleted.
-func (cd *ContestDelete) Exec(ctx context.Context) (int, error) {
-	return withHooks(ctx, cd.sqlExec, cd.mutation, cd.hooks)
+func (_d *ContestDelete) Exec(ctx context.Context) (int, error) {
+	return withHooks(ctx, _d.sqlExec, _d.mutation, _d.hooks)
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (cd *ContestDelete) ExecX(ctx context.Context) int {
-	n, err := cd.Exec(ctx)
+func (_d *ContestDelete) ExecX(ctx context.Context) int {
+	n, err := _d.Exec(ctx)
 	if err != nil {
 		panic(err)
 	}
 	return n
 }
 
-func (cd *ContestDelete) sqlExec(ctx context.Context) (int, error) {
+func (_d *ContestDelete) sqlExec(ctx context.Context) (int, error) {
 	_spec := sqlgraph.NewDeleteSpec(contest.Table, sqlgraph.NewFieldSpec(contest.FieldID, field.TypeInt))
-	if ps := cd.mutation.predicates; len(ps) > 0 {
+	if ps := _d.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
 			for i := range ps {
 				ps[i](selector)
 			}
 		}
 	}
-	affected, err := sqlgraph.DeleteNodes(ctx, cd.driver, _spec)
+	affected, err := sqlgraph.DeleteNodes(ctx, _d.driver, _spec)
 	if err != nil && sqlgraph.IsConstraintError(err) {
 		err = &ConstraintError{msg: err.Error(), wrap: err}
 	}
-	cd.mutation.done = true
+	_d.mutation.done = true
 	return affected, err
 }
 
 // ContestDeleteOne is the builder for deleting a single Contest entity.
 type ContestDeleteOne struct {
-	cd *ContestDelete
+	_d *ContestDelete
 }
 
 // Where appends a list predicates to the ContestDelete builder.
-func (cdo *ContestDeleteOne) Where(ps ...predicate.Contest) *ContestDeleteOne {
-	cdo.cd.mutation.Where(ps...)
-	return cdo
+func (_d *ContestDeleteOne) Where(ps ...predicate.Contest) *ContestDeleteOne {
+	_d._d.mutation.Where(ps...)
+	return _d
 }
 
 // Exec executes the deletion query.
-func (cdo *ContestDeleteOne) Exec(ctx context.Context) error {
-	n, err := cdo.cd.Exec(ctx)
+func (_d *ContestDeleteOne) Exec(ctx context.Context) error {
+	n, err := _d._d.Exec(ctx)
 	switch {
 	case err != nil:
 		return err
@@ -81,8 +81,8 @@ func (cdo *ContestDeleteOne) Exec(ctx context.Context) error {
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (cdo *ContestDeleteOne) ExecX(ctx context.Context) {
-	if err := cdo.Exec(ctx); err != nil {
+func (_d *ContestDeleteOne) ExecX(ctx context.Context) {
+	if err := _d.Exec(ctx); err != nil {
 		panic(err)
 	}
 }

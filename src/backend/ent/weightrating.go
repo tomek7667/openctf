@@ -81,7 +81,7 @@ func (*WeightRating) scanValues(columns []string) ([]any, error) {
 
 // assignValues assigns the values that were returned from sql.Rows (after scanning)
 // to the WeightRating fields.
-func (wr *WeightRating) assignValues(columns []string, values []any) error {
+func (_m *WeightRating) assignValues(columns []string, values []any) error {
 	if m, n := len(values), len(columns); m < n {
 		return fmt.Errorf("mismatch number of scan values: %d != %d", m, n)
 	}
@@ -92,29 +92,29 @@ func (wr *WeightRating) assignValues(columns []string, values []any) error {
 			if !ok {
 				return fmt.Errorf("unexpected type %T for field id", value)
 			}
-			wr.ID = int(value.Int64)
+			_m.ID = int(value.Int64)
 		case weightrating.FieldDifficulty:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field difficulty", values[i])
 			} else if value.Valid {
-				wr.Difficulty = int(value.Int64)
+				_m.Difficulty = int(value.Int64)
 			}
 		case weightrating.ForeignKeys[0]:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for edge-field weight_rating_captains_team", value)
 			} else if value.Valid {
-				wr.weight_rating_captains_team = new(int)
-				*wr.weight_rating_captains_team = int(value.Int64)
+				_m.weight_rating_captains_team = new(int)
+				*_m.weight_rating_captains_team = int(value.Int64)
 			}
 		case weightrating.ForeignKeys[1]:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for edge-field weight_rating_contest", value)
 			} else if value.Valid {
-				wr.weight_rating_contest = new(int)
-				*wr.weight_rating_contest = int(value.Int64)
+				_m.weight_rating_contest = new(int)
+				*_m.weight_rating_contest = int(value.Int64)
 			}
 		default:
-			wr.selectValues.Set(columns[i], values[i])
+			_m.selectValues.Set(columns[i], values[i])
 		}
 	}
 	return nil
@@ -122,45 +122,45 @@ func (wr *WeightRating) assignValues(columns []string, values []any) error {
 
 // Value returns the ent.Value that was dynamically selected and assigned to the WeightRating.
 // This includes values selected through modifiers, order, etc.
-func (wr *WeightRating) Value(name string) (ent.Value, error) {
-	return wr.selectValues.Get(name)
+func (_m *WeightRating) Value(name string) (ent.Value, error) {
+	return _m.selectValues.Get(name)
 }
 
 // QueryCaptainsTeam queries the "captains_team" edge of the WeightRating entity.
-func (wr *WeightRating) QueryCaptainsTeam() *TeamQuery {
-	return NewWeightRatingClient(wr.config).QueryCaptainsTeam(wr)
+func (_m *WeightRating) QueryCaptainsTeam() *TeamQuery {
+	return NewWeightRatingClient(_m.config).QueryCaptainsTeam(_m)
 }
 
 // QueryContest queries the "contest" edge of the WeightRating entity.
-func (wr *WeightRating) QueryContest() *ContestQuery {
-	return NewWeightRatingClient(wr.config).QueryContest(wr)
+func (_m *WeightRating) QueryContest() *ContestQuery {
+	return NewWeightRatingClient(_m.config).QueryContest(_m)
 }
 
 // Update returns a builder for updating this WeightRating.
 // Note that you need to call WeightRating.Unwrap() before calling this method if this WeightRating
 // was returned from a transaction, and the transaction was committed or rolled back.
-func (wr *WeightRating) Update() *WeightRatingUpdateOne {
-	return NewWeightRatingClient(wr.config).UpdateOne(wr)
+func (_m *WeightRating) Update() *WeightRatingUpdateOne {
+	return NewWeightRatingClient(_m.config).UpdateOne(_m)
 }
 
 // Unwrap unwraps the WeightRating entity that was returned from a transaction after it was closed,
 // so that all future queries will be executed through the driver which created the transaction.
-func (wr *WeightRating) Unwrap() *WeightRating {
-	_tx, ok := wr.config.driver.(*txDriver)
+func (_m *WeightRating) Unwrap() *WeightRating {
+	_tx, ok := _m.config.driver.(*txDriver)
 	if !ok {
 		panic("ent: WeightRating is not a transactional entity")
 	}
-	wr.config.driver = _tx.drv
-	return wr
+	_m.config.driver = _tx.drv
+	return _m
 }
 
 // String implements the fmt.Stringer.
-func (wr *WeightRating) String() string {
+func (_m *WeightRating) String() string {
 	var builder strings.Builder
 	builder.WriteString("WeightRating(")
-	builder.WriteString(fmt.Sprintf("id=%v, ", wr.ID))
+	builder.WriteString(fmt.Sprintf("id=%v, ", _m.ID))
 	builder.WriteString("difficulty=")
-	builder.WriteString(fmt.Sprintf("%v", wr.Difficulty))
+	builder.WriteString(fmt.Sprintf("%v", _m.Difficulty))
 	builder.WriteByte(')')
 	return builder.String()
 }

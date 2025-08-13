@@ -9,6 +9,7 @@ import (
 	"openctfbackend/internal/crawler"
 	"openctfbackend/internal/croner"
 	"openctfbackend/internal/ctftime"
+	"openctfbackend/internal/github"
 	"openctfbackend/internal/logger"
 	"openctfbackend/internal/openctf"
 	"openctfbackend/internal/rest"
@@ -24,6 +25,7 @@ var (
 	serviceClient *service.Client
 	ctftimeClient *ctftime.Client
 	icloudClient  *icloud.Client
+	githubClient  *github.Client
 )
 
 func getCreds() string {
@@ -64,6 +66,22 @@ func init() {
 		utils.Getenv("ICLOUD_SENDER_EMAIL", ""),
 		utils.Getenv("ICLOUD_APP_SPECIFIC_PASSWORD", ""),
 	)
+	if err != nil {
+		slog.Error("initializing icloud client failed", "err", err)
+		if len(os.Args) == 1 {
+			panic(err)
+		}
+	}
+	githubClient, err = github.New(
+		utils.Getenv("GH_CLIENT_SECRET", ""),
+		utils.Getenv("GH_CLIENT_ID", "Iv23litf0P4UDtM8mHCA"),
+	)
+	if err != nil {
+		slog.Error("initializing github client failed", "err", err)
+		if len(os.Args) == 1 {
+			panic(err)
+		}
+	}
 }
 
 // SetupSwaggerDocs configures the global docs settings for Swagger.
@@ -83,6 +101,7 @@ func main() {
 		serviceClient,
 		ctftimeClient,
 		icloudClient,
+		githubClient,
 	)
 	crawler := crawler.New(
 		serviceClient,

@@ -24,93 +24,93 @@ type ContestRatingUpdate struct {
 }
 
 // Where appends a list predicates to the ContestRatingUpdate builder.
-func (cru *ContestRatingUpdate) Where(ps ...predicate.ContestRating) *ContestRatingUpdate {
-	cru.mutation.Where(ps...)
-	return cru
+func (_u *ContestRatingUpdate) Where(ps ...predicate.ContestRating) *ContestRatingUpdate {
+	_u.mutation.Where(ps...)
+	return _u
 }
 
 // SetRating sets the "rating" field.
-func (cru *ContestRatingUpdate) SetRating(i int) *ContestRatingUpdate {
-	cru.mutation.ResetRating()
-	cru.mutation.SetRating(i)
-	return cru
+func (_u *ContestRatingUpdate) SetRating(v int) *ContestRatingUpdate {
+	_u.mutation.ResetRating()
+	_u.mutation.SetRating(v)
+	return _u
 }
 
 // SetNillableRating sets the "rating" field if the given value is not nil.
-func (cru *ContestRatingUpdate) SetNillableRating(i *int) *ContestRatingUpdate {
-	if i != nil {
-		cru.SetRating(*i)
+func (_u *ContestRatingUpdate) SetNillableRating(v *int) *ContestRatingUpdate {
+	if v != nil {
+		_u.SetRating(*v)
 	}
-	return cru
+	return _u
 }
 
-// AddRating adds i to the "rating" field.
-func (cru *ContestRatingUpdate) AddRating(i int) *ContestRatingUpdate {
-	cru.mutation.AddRating(i)
-	return cru
+// AddRating adds value to the "rating" field.
+func (_u *ContestRatingUpdate) AddRating(v int) *ContestRatingUpdate {
+	_u.mutation.AddRating(v)
+	return _u
 }
 
 // SetRelevant sets the "relevant" field.
-func (cru *ContestRatingUpdate) SetRelevant(b bool) *ContestRatingUpdate {
-	cru.mutation.SetRelevant(b)
-	return cru
+func (_u *ContestRatingUpdate) SetRelevant(v bool) *ContestRatingUpdate {
+	_u.mutation.SetRelevant(v)
+	return _u
 }
 
 // SetNillableRelevant sets the "relevant" field if the given value is not nil.
-func (cru *ContestRatingUpdate) SetNillableRelevant(b *bool) *ContestRatingUpdate {
-	if b != nil {
-		cru.SetRelevant(*b)
+func (_u *ContestRatingUpdate) SetNillableRelevant(v *bool) *ContestRatingUpdate {
+	if v != nil {
+		_u.SetRelevant(*v)
 	}
-	return cru
+	return _u
 }
 
 // SetUserID sets the "user" edge to the User entity by ID.
-func (cru *ContestRatingUpdate) SetUserID(id int) *ContestRatingUpdate {
-	cru.mutation.SetUserID(id)
-	return cru
+func (_u *ContestRatingUpdate) SetUserID(id int) *ContestRatingUpdate {
+	_u.mutation.SetUserID(id)
+	return _u
 }
 
 // SetUser sets the "user" edge to the User entity.
-func (cru *ContestRatingUpdate) SetUser(u *User) *ContestRatingUpdate {
-	return cru.SetUserID(u.ID)
+func (_u *ContestRatingUpdate) SetUser(v *User) *ContestRatingUpdate {
+	return _u.SetUserID(v.ID)
 }
 
 // SetContestID sets the "contest" edge to the Contest entity by ID.
-func (cru *ContestRatingUpdate) SetContestID(id int) *ContestRatingUpdate {
-	cru.mutation.SetContestID(id)
-	return cru
+func (_u *ContestRatingUpdate) SetContestID(id int) *ContestRatingUpdate {
+	_u.mutation.SetContestID(id)
+	return _u
 }
 
 // SetContest sets the "contest" edge to the Contest entity.
-func (cru *ContestRatingUpdate) SetContest(c *Contest) *ContestRatingUpdate {
-	return cru.SetContestID(c.ID)
+func (_u *ContestRatingUpdate) SetContest(v *Contest) *ContestRatingUpdate {
+	return _u.SetContestID(v.ID)
 }
 
 // Mutation returns the ContestRatingMutation object of the builder.
-func (cru *ContestRatingUpdate) Mutation() *ContestRatingMutation {
-	return cru.mutation
+func (_u *ContestRatingUpdate) Mutation() *ContestRatingMutation {
+	return _u.mutation
 }
 
 // ClearUser clears the "user" edge to the User entity.
-func (cru *ContestRatingUpdate) ClearUser() *ContestRatingUpdate {
-	cru.mutation.ClearUser()
-	return cru
+func (_u *ContestRatingUpdate) ClearUser() *ContestRatingUpdate {
+	_u.mutation.ClearUser()
+	return _u
 }
 
 // ClearContest clears the "contest" edge to the Contest entity.
-func (cru *ContestRatingUpdate) ClearContest() *ContestRatingUpdate {
-	cru.mutation.ClearContest()
-	return cru
+func (_u *ContestRatingUpdate) ClearContest() *ContestRatingUpdate {
+	_u.mutation.ClearContest()
+	return _u
 }
 
 // Save executes the query and returns the number of nodes affected by the update operation.
-func (cru *ContestRatingUpdate) Save(ctx context.Context) (int, error) {
-	return withHooks(ctx, cru.sqlSave, cru.mutation, cru.hooks)
+func (_u *ContestRatingUpdate) Save(ctx context.Context) (int, error) {
+	return withHooks(ctx, _u.sqlSave, _u.mutation, _u.hooks)
 }
 
 // SaveX is like Save, but panics if an error occurs.
-func (cru *ContestRatingUpdate) SaveX(ctx context.Context) int {
-	affected, err := cru.Save(ctx)
+func (_u *ContestRatingUpdate) SaveX(ctx context.Context) int {
+	affected, err := _u.Save(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -118,56 +118,56 @@ func (cru *ContestRatingUpdate) SaveX(ctx context.Context) int {
 }
 
 // Exec executes the query.
-func (cru *ContestRatingUpdate) Exec(ctx context.Context) error {
-	_, err := cru.Save(ctx)
+func (_u *ContestRatingUpdate) Exec(ctx context.Context) error {
+	_, err := _u.Save(ctx)
 	return err
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (cru *ContestRatingUpdate) ExecX(ctx context.Context) {
-	if err := cru.Exec(ctx); err != nil {
+func (_u *ContestRatingUpdate) ExecX(ctx context.Context) {
+	if err := _u.Exec(ctx); err != nil {
 		panic(err)
 	}
 }
 
 // check runs all checks and user-defined validators on the builder.
-func (cru *ContestRatingUpdate) check() error {
-	if v, ok := cru.mutation.Rating(); ok {
+func (_u *ContestRatingUpdate) check() error {
+	if v, ok := _u.mutation.Rating(); ok {
 		if err := contestrating.RatingValidator(v); err != nil {
 			return &ValidationError{Name: "rating", err: fmt.Errorf(`ent: validator failed for field "ContestRating.rating": %w`, err)}
 		}
 	}
-	if cru.mutation.UserCleared() && len(cru.mutation.UserIDs()) > 0 {
+	if _u.mutation.UserCleared() && len(_u.mutation.UserIDs()) > 0 {
 		return errors.New(`ent: clearing a required unique edge "ContestRating.user"`)
 	}
-	if cru.mutation.ContestCleared() && len(cru.mutation.ContestIDs()) > 0 {
+	if _u.mutation.ContestCleared() && len(_u.mutation.ContestIDs()) > 0 {
 		return errors.New(`ent: clearing a required unique edge "ContestRating.contest"`)
 	}
 	return nil
 }
 
-func (cru *ContestRatingUpdate) sqlSave(ctx context.Context) (n int, err error) {
-	if err := cru.check(); err != nil {
-		return n, err
+func (_u *ContestRatingUpdate) sqlSave(ctx context.Context) (_node int, err error) {
+	if err := _u.check(); err != nil {
+		return _node, err
 	}
 	_spec := sqlgraph.NewUpdateSpec(contestrating.Table, contestrating.Columns, sqlgraph.NewFieldSpec(contestrating.FieldID, field.TypeInt))
-	if ps := cru.mutation.predicates; len(ps) > 0 {
+	if ps := _u.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
 			for i := range ps {
 				ps[i](selector)
 			}
 		}
 	}
-	if value, ok := cru.mutation.Rating(); ok {
+	if value, ok := _u.mutation.Rating(); ok {
 		_spec.SetField(contestrating.FieldRating, field.TypeInt, value)
 	}
-	if value, ok := cru.mutation.AddedRating(); ok {
+	if value, ok := _u.mutation.AddedRating(); ok {
 		_spec.AddField(contestrating.FieldRating, field.TypeInt, value)
 	}
-	if value, ok := cru.mutation.Relevant(); ok {
+	if value, ok := _u.mutation.Relevant(); ok {
 		_spec.SetField(contestrating.FieldRelevant, field.TypeBool, value)
 	}
-	if cru.mutation.UserCleared() {
+	if _u.mutation.UserCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: false,
@@ -180,7 +180,7 @@ func (cru *ContestRatingUpdate) sqlSave(ctx context.Context) (n int, err error) 
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := cru.mutation.UserIDs(); len(nodes) > 0 {
+	if nodes := _u.mutation.UserIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: false,
@@ -196,7 +196,7 @@ func (cru *ContestRatingUpdate) sqlSave(ctx context.Context) (n int, err error) 
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	if cru.mutation.ContestCleared() {
+	if _u.mutation.ContestCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: false,
@@ -209,7 +209,7 @@ func (cru *ContestRatingUpdate) sqlSave(ctx context.Context) (n int, err error) 
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := cru.mutation.ContestIDs(); len(nodes) > 0 {
+	if nodes := _u.mutation.ContestIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: false,
@@ -225,7 +225,7 @@ func (cru *ContestRatingUpdate) sqlSave(ctx context.Context) (n int, err error) 
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	if n, err = sqlgraph.UpdateNodes(ctx, cru.driver, _spec); err != nil {
+	if _node, err = sqlgraph.UpdateNodes(ctx, _u.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{contestrating.Label}
 		} else if sqlgraph.IsConstraintError(err) {
@@ -233,8 +233,8 @@ func (cru *ContestRatingUpdate) sqlSave(ctx context.Context) (n int, err error) 
 		}
 		return 0, err
 	}
-	cru.mutation.done = true
-	return n, nil
+	_u.mutation.done = true
+	return _node, nil
 }
 
 // ContestRatingUpdateOne is the builder for updating a single ContestRating entity.
@@ -246,100 +246,100 @@ type ContestRatingUpdateOne struct {
 }
 
 // SetRating sets the "rating" field.
-func (cruo *ContestRatingUpdateOne) SetRating(i int) *ContestRatingUpdateOne {
-	cruo.mutation.ResetRating()
-	cruo.mutation.SetRating(i)
-	return cruo
+func (_u *ContestRatingUpdateOne) SetRating(v int) *ContestRatingUpdateOne {
+	_u.mutation.ResetRating()
+	_u.mutation.SetRating(v)
+	return _u
 }
 
 // SetNillableRating sets the "rating" field if the given value is not nil.
-func (cruo *ContestRatingUpdateOne) SetNillableRating(i *int) *ContestRatingUpdateOne {
-	if i != nil {
-		cruo.SetRating(*i)
+func (_u *ContestRatingUpdateOne) SetNillableRating(v *int) *ContestRatingUpdateOne {
+	if v != nil {
+		_u.SetRating(*v)
 	}
-	return cruo
+	return _u
 }
 
-// AddRating adds i to the "rating" field.
-func (cruo *ContestRatingUpdateOne) AddRating(i int) *ContestRatingUpdateOne {
-	cruo.mutation.AddRating(i)
-	return cruo
+// AddRating adds value to the "rating" field.
+func (_u *ContestRatingUpdateOne) AddRating(v int) *ContestRatingUpdateOne {
+	_u.mutation.AddRating(v)
+	return _u
 }
 
 // SetRelevant sets the "relevant" field.
-func (cruo *ContestRatingUpdateOne) SetRelevant(b bool) *ContestRatingUpdateOne {
-	cruo.mutation.SetRelevant(b)
-	return cruo
+func (_u *ContestRatingUpdateOne) SetRelevant(v bool) *ContestRatingUpdateOne {
+	_u.mutation.SetRelevant(v)
+	return _u
 }
 
 // SetNillableRelevant sets the "relevant" field if the given value is not nil.
-func (cruo *ContestRatingUpdateOne) SetNillableRelevant(b *bool) *ContestRatingUpdateOne {
-	if b != nil {
-		cruo.SetRelevant(*b)
+func (_u *ContestRatingUpdateOne) SetNillableRelevant(v *bool) *ContestRatingUpdateOne {
+	if v != nil {
+		_u.SetRelevant(*v)
 	}
-	return cruo
+	return _u
 }
 
 // SetUserID sets the "user" edge to the User entity by ID.
-func (cruo *ContestRatingUpdateOne) SetUserID(id int) *ContestRatingUpdateOne {
-	cruo.mutation.SetUserID(id)
-	return cruo
+func (_u *ContestRatingUpdateOne) SetUserID(id int) *ContestRatingUpdateOne {
+	_u.mutation.SetUserID(id)
+	return _u
 }
 
 // SetUser sets the "user" edge to the User entity.
-func (cruo *ContestRatingUpdateOne) SetUser(u *User) *ContestRatingUpdateOne {
-	return cruo.SetUserID(u.ID)
+func (_u *ContestRatingUpdateOne) SetUser(v *User) *ContestRatingUpdateOne {
+	return _u.SetUserID(v.ID)
 }
 
 // SetContestID sets the "contest" edge to the Contest entity by ID.
-func (cruo *ContestRatingUpdateOne) SetContestID(id int) *ContestRatingUpdateOne {
-	cruo.mutation.SetContestID(id)
-	return cruo
+func (_u *ContestRatingUpdateOne) SetContestID(id int) *ContestRatingUpdateOne {
+	_u.mutation.SetContestID(id)
+	return _u
 }
 
 // SetContest sets the "contest" edge to the Contest entity.
-func (cruo *ContestRatingUpdateOne) SetContest(c *Contest) *ContestRatingUpdateOne {
-	return cruo.SetContestID(c.ID)
+func (_u *ContestRatingUpdateOne) SetContest(v *Contest) *ContestRatingUpdateOne {
+	return _u.SetContestID(v.ID)
 }
 
 // Mutation returns the ContestRatingMutation object of the builder.
-func (cruo *ContestRatingUpdateOne) Mutation() *ContestRatingMutation {
-	return cruo.mutation
+func (_u *ContestRatingUpdateOne) Mutation() *ContestRatingMutation {
+	return _u.mutation
 }
 
 // ClearUser clears the "user" edge to the User entity.
-func (cruo *ContestRatingUpdateOne) ClearUser() *ContestRatingUpdateOne {
-	cruo.mutation.ClearUser()
-	return cruo
+func (_u *ContestRatingUpdateOne) ClearUser() *ContestRatingUpdateOne {
+	_u.mutation.ClearUser()
+	return _u
 }
 
 // ClearContest clears the "contest" edge to the Contest entity.
-func (cruo *ContestRatingUpdateOne) ClearContest() *ContestRatingUpdateOne {
-	cruo.mutation.ClearContest()
-	return cruo
+func (_u *ContestRatingUpdateOne) ClearContest() *ContestRatingUpdateOne {
+	_u.mutation.ClearContest()
+	return _u
 }
 
 // Where appends a list predicates to the ContestRatingUpdate builder.
-func (cruo *ContestRatingUpdateOne) Where(ps ...predicate.ContestRating) *ContestRatingUpdateOne {
-	cruo.mutation.Where(ps...)
-	return cruo
+func (_u *ContestRatingUpdateOne) Where(ps ...predicate.ContestRating) *ContestRatingUpdateOne {
+	_u.mutation.Where(ps...)
+	return _u
 }
 
 // Select allows selecting one or more fields (columns) of the returned entity.
 // The default is selecting all fields defined in the entity schema.
-func (cruo *ContestRatingUpdateOne) Select(field string, fields ...string) *ContestRatingUpdateOne {
-	cruo.fields = append([]string{field}, fields...)
-	return cruo
+func (_u *ContestRatingUpdateOne) Select(field string, fields ...string) *ContestRatingUpdateOne {
+	_u.fields = append([]string{field}, fields...)
+	return _u
 }
 
 // Save executes the query and returns the updated ContestRating entity.
-func (cruo *ContestRatingUpdateOne) Save(ctx context.Context) (*ContestRating, error) {
-	return withHooks(ctx, cruo.sqlSave, cruo.mutation, cruo.hooks)
+func (_u *ContestRatingUpdateOne) Save(ctx context.Context) (*ContestRating, error) {
+	return withHooks(ctx, _u.sqlSave, _u.mutation, _u.hooks)
 }
 
 // SaveX is like Save, but panics if an error occurs.
-func (cruo *ContestRatingUpdateOne) SaveX(ctx context.Context) *ContestRating {
-	node, err := cruo.Save(ctx)
+func (_u *ContestRatingUpdateOne) SaveX(ctx context.Context) *ContestRating {
+	node, err := _u.Save(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -347,45 +347,45 @@ func (cruo *ContestRatingUpdateOne) SaveX(ctx context.Context) *ContestRating {
 }
 
 // Exec executes the query on the entity.
-func (cruo *ContestRatingUpdateOne) Exec(ctx context.Context) error {
-	_, err := cruo.Save(ctx)
+func (_u *ContestRatingUpdateOne) Exec(ctx context.Context) error {
+	_, err := _u.Save(ctx)
 	return err
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (cruo *ContestRatingUpdateOne) ExecX(ctx context.Context) {
-	if err := cruo.Exec(ctx); err != nil {
+func (_u *ContestRatingUpdateOne) ExecX(ctx context.Context) {
+	if err := _u.Exec(ctx); err != nil {
 		panic(err)
 	}
 }
 
 // check runs all checks and user-defined validators on the builder.
-func (cruo *ContestRatingUpdateOne) check() error {
-	if v, ok := cruo.mutation.Rating(); ok {
+func (_u *ContestRatingUpdateOne) check() error {
+	if v, ok := _u.mutation.Rating(); ok {
 		if err := contestrating.RatingValidator(v); err != nil {
 			return &ValidationError{Name: "rating", err: fmt.Errorf(`ent: validator failed for field "ContestRating.rating": %w`, err)}
 		}
 	}
-	if cruo.mutation.UserCleared() && len(cruo.mutation.UserIDs()) > 0 {
+	if _u.mutation.UserCleared() && len(_u.mutation.UserIDs()) > 0 {
 		return errors.New(`ent: clearing a required unique edge "ContestRating.user"`)
 	}
-	if cruo.mutation.ContestCleared() && len(cruo.mutation.ContestIDs()) > 0 {
+	if _u.mutation.ContestCleared() && len(_u.mutation.ContestIDs()) > 0 {
 		return errors.New(`ent: clearing a required unique edge "ContestRating.contest"`)
 	}
 	return nil
 }
 
-func (cruo *ContestRatingUpdateOne) sqlSave(ctx context.Context) (_node *ContestRating, err error) {
-	if err := cruo.check(); err != nil {
+func (_u *ContestRatingUpdateOne) sqlSave(ctx context.Context) (_node *ContestRating, err error) {
+	if err := _u.check(); err != nil {
 		return _node, err
 	}
 	_spec := sqlgraph.NewUpdateSpec(contestrating.Table, contestrating.Columns, sqlgraph.NewFieldSpec(contestrating.FieldID, field.TypeInt))
-	id, ok := cruo.mutation.ID()
+	id, ok := _u.mutation.ID()
 	if !ok {
 		return nil, &ValidationError{Name: "id", err: errors.New(`ent: missing "ContestRating.id" for update`)}
 	}
 	_spec.Node.ID.Value = id
-	if fields := cruo.fields; len(fields) > 0 {
+	if fields := _u.fields; len(fields) > 0 {
 		_spec.Node.Columns = make([]string, 0, len(fields))
 		_spec.Node.Columns = append(_spec.Node.Columns, contestrating.FieldID)
 		for _, f := range fields {
@@ -397,23 +397,23 @@ func (cruo *ContestRatingUpdateOne) sqlSave(ctx context.Context) (_node *Contest
 			}
 		}
 	}
-	if ps := cruo.mutation.predicates; len(ps) > 0 {
+	if ps := _u.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
 			for i := range ps {
 				ps[i](selector)
 			}
 		}
 	}
-	if value, ok := cruo.mutation.Rating(); ok {
+	if value, ok := _u.mutation.Rating(); ok {
 		_spec.SetField(contestrating.FieldRating, field.TypeInt, value)
 	}
-	if value, ok := cruo.mutation.AddedRating(); ok {
+	if value, ok := _u.mutation.AddedRating(); ok {
 		_spec.AddField(contestrating.FieldRating, field.TypeInt, value)
 	}
-	if value, ok := cruo.mutation.Relevant(); ok {
+	if value, ok := _u.mutation.Relevant(); ok {
 		_spec.SetField(contestrating.FieldRelevant, field.TypeBool, value)
 	}
-	if cruo.mutation.UserCleared() {
+	if _u.mutation.UserCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: false,
@@ -426,7 +426,7 @@ func (cruo *ContestRatingUpdateOne) sqlSave(ctx context.Context) (_node *Contest
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := cruo.mutation.UserIDs(); len(nodes) > 0 {
+	if nodes := _u.mutation.UserIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: false,
@@ -442,7 +442,7 @@ func (cruo *ContestRatingUpdateOne) sqlSave(ctx context.Context) (_node *Contest
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	if cruo.mutation.ContestCleared() {
+	if _u.mutation.ContestCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: false,
@@ -455,7 +455,7 @@ func (cruo *ContestRatingUpdateOne) sqlSave(ctx context.Context) (_node *Contest
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := cruo.mutation.ContestIDs(); len(nodes) > 0 {
+	if nodes := _u.mutation.ContestIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: false,
@@ -471,10 +471,10 @@ func (cruo *ContestRatingUpdateOne) sqlSave(ctx context.Context) (_node *Contest
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	_node = &ContestRating{config: cruo.config}
+	_node = &ContestRating{config: _u.config}
 	_spec.Assign = _node.assignValues
 	_spec.ScanValues = _node.scanValues
-	if err = sqlgraph.UpdateNode(ctx, cruo.driver, _spec); err != nil {
+	if err = sqlgraph.UpdateNode(ctx, _u.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{contestrating.Label}
 		} else if sqlgraph.IsConstraintError(err) {
@@ -482,6 +482,6 @@ func (cruo *ContestRatingUpdateOne) sqlSave(ctx context.Context) (_node *Contest
 		}
 		return nil, err
 	}
-	cruo.mutation.done = true
+	_u.mutation.done = true
 	return _node, nil
 }

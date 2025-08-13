@@ -24,97 +24,97 @@ type ActivityUpdate struct {
 }
 
 // Where appends a list predicates to the ActivityUpdate builder.
-func (au *ActivityUpdate) Where(ps ...predicate.Activity) *ActivityUpdate {
-	au.mutation.Where(ps...)
-	return au
+func (_u *ActivityUpdate) Where(ps ...predicate.Activity) *ActivityUpdate {
+	_u.mutation.Where(ps...)
+	return _u
 }
 
 // SetType sets the "type" field.
-func (au *ActivityUpdate) SetType(s string) *ActivityUpdate {
-	au.mutation.SetType(s)
-	return au
+func (_u *ActivityUpdate) SetType(v string) *ActivityUpdate {
+	_u.mutation.SetType(v)
+	return _u
 }
 
 // SetNillableType sets the "type" field if the given value is not nil.
-func (au *ActivityUpdate) SetNillableType(s *string) *ActivityUpdate {
-	if s != nil {
-		au.SetType(*s)
+func (_u *ActivityUpdate) SetNillableType(v *string) *ActivityUpdate {
+	if v != nil {
+		_u.SetType(*v)
 	}
-	return au
+	return _u
 }
 
 // SetTitle sets the "title" field.
-func (au *ActivityUpdate) SetTitle(s string) *ActivityUpdate {
-	au.mutation.SetTitle(s)
-	return au
+func (_u *ActivityUpdate) SetTitle(v string) *ActivityUpdate {
+	_u.mutation.SetTitle(v)
+	return _u
 }
 
 // SetNillableTitle sets the "title" field if the given value is not nil.
-func (au *ActivityUpdate) SetNillableTitle(s *string) *ActivityUpdate {
-	if s != nil {
-		au.SetTitle(*s)
+func (_u *ActivityUpdate) SetNillableTitle(v *string) *ActivityUpdate {
+	if v != nil {
+		_u.SetTitle(*v)
 	}
-	return au
+	return _u
 }
 
 // SetDescription sets the "description" field.
-func (au *ActivityUpdate) SetDescription(s string) *ActivityUpdate {
-	au.mutation.SetDescription(s)
-	return au
+func (_u *ActivityUpdate) SetDescription(v string) *ActivityUpdate {
+	_u.mutation.SetDescription(v)
+	return _u
 }
 
 // SetNillableDescription sets the "description" field if the given value is not nil.
-func (au *ActivityUpdate) SetNillableDescription(s *string) *ActivityUpdate {
-	if s != nil {
-		au.SetDescription(*s)
+func (_u *ActivityUpdate) SetNillableDescription(v *string) *ActivityUpdate {
+	if v != nil {
+		_u.SetDescription(*v)
 	}
-	return au
+	return _u
 }
 
 // SetDate sets the "date" field.
-func (au *ActivityUpdate) SetDate(t time.Time) *ActivityUpdate {
-	au.mutation.SetDate(t)
-	return au
+func (_u *ActivityUpdate) SetDate(v time.Time) *ActivityUpdate {
+	_u.mutation.SetDate(v)
+	return _u
 }
 
 // SetNillableDate sets the "date" field if the given value is not nil.
-func (au *ActivityUpdate) SetNillableDate(t *time.Time) *ActivityUpdate {
-	if t != nil {
-		au.SetDate(*t)
+func (_u *ActivityUpdate) SetNillableDate(v *time.Time) *ActivityUpdate {
+	if v != nil {
+		_u.SetDate(*v)
 	}
-	return au
+	return _u
 }
 
 // SetUserID sets the "user" edge to the User entity by ID.
-func (au *ActivityUpdate) SetUserID(id int) *ActivityUpdate {
-	au.mutation.SetUserID(id)
-	return au
+func (_u *ActivityUpdate) SetUserID(id int) *ActivityUpdate {
+	_u.mutation.SetUserID(id)
+	return _u
 }
 
 // SetUser sets the "user" edge to the User entity.
-func (au *ActivityUpdate) SetUser(u *User) *ActivityUpdate {
-	return au.SetUserID(u.ID)
+func (_u *ActivityUpdate) SetUser(v *User) *ActivityUpdate {
+	return _u.SetUserID(v.ID)
 }
 
 // Mutation returns the ActivityMutation object of the builder.
-func (au *ActivityUpdate) Mutation() *ActivityMutation {
-	return au.mutation
+func (_u *ActivityUpdate) Mutation() *ActivityMutation {
+	return _u.mutation
 }
 
 // ClearUser clears the "user" edge to the User entity.
-func (au *ActivityUpdate) ClearUser() *ActivityUpdate {
-	au.mutation.ClearUser()
-	return au
+func (_u *ActivityUpdate) ClearUser() *ActivityUpdate {
+	_u.mutation.ClearUser()
+	return _u
 }
 
 // Save executes the query and returns the number of nodes affected by the update operation.
-func (au *ActivityUpdate) Save(ctx context.Context) (int, error) {
-	return withHooks(ctx, au.sqlSave, au.mutation, au.hooks)
+func (_u *ActivityUpdate) Save(ctx context.Context) (int, error) {
+	return withHooks(ctx, _u.sqlSave, _u.mutation, _u.hooks)
 }
 
 // SaveX is like Save, but panics if an error occurs.
-func (au *ActivityUpdate) SaveX(ctx context.Context) int {
-	affected, err := au.Save(ctx)
+func (_u *ActivityUpdate) SaveX(ctx context.Context) int {
+	affected, err := _u.Save(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -122,56 +122,56 @@ func (au *ActivityUpdate) SaveX(ctx context.Context) int {
 }
 
 // Exec executes the query.
-func (au *ActivityUpdate) Exec(ctx context.Context) error {
-	_, err := au.Save(ctx)
+func (_u *ActivityUpdate) Exec(ctx context.Context) error {
+	_, err := _u.Save(ctx)
 	return err
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (au *ActivityUpdate) ExecX(ctx context.Context) {
-	if err := au.Exec(ctx); err != nil {
+func (_u *ActivityUpdate) ExecX(ctx context.Context) {
+	if err := _u.Exec(ctx); err != nil {
 		panic(err)
 	}
 }
 
 // check runs all checks and user-defined validators on the builder.
-func (au *ActivityUpdate) check() error {
-	if v, ok := au.mutation.GetType(); ok {
+func (_u *ActivityUpdate) check() error {
+	if v, ok := _u.mutation.GetType(); ok {
 		if err := activity.TypeValidator(v); err != nil {
 			return &ValidationError{Name: "type", err: fmt.Errorf(`ent: validator failed for field "Activity.type": %w`, err)}
 		}
 	}
-	if au.mutation.UserCleared() && len(au.mutation.UserIDs()) > 0 {
+	if _u.mutation.UserCleared() && len(_u.mutation.UserIDs()) > 0 {
 		return errors.New(`ent: clearing a required unique edge "Activity.user"`)
 	}
 	return nil
 }
 
-func (au *ActivityUpdate) sqlSave(ctx context.Context) (n int, err error) {
-	if err := au.check(); err != nil {
-		return n, err
+func (_u *ActivityUpdate) sqlSave(ctx context.Context) (_node int, err error) {
+	if err := _u.check(); err != nil {
+		return _node, err
 	}
 	_spec := sqlgraph.NewUpdateSpec(activity.Table, activity.Columns, sqlgraph.NewFieldSpec(activity.FieldID, field.TypeInt))
-	if ps := au.mutation.predicates; len(ps) > 0 {
+	if ps := _u.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
 			for i := range ps {
 				ps[i](selector)
 			}
 		}
 	}
-	if value, ok := au.mutation.GetType(); ok {
+	if value, ok := _u.mutation.GetType(); ok {
 		_spec.SetField(activity.FieldType, field.TypeString, value)
 	}
-	if value, ok := au.mutation.Title(); ok {
+	if value, ok := _u.mutation.Title(); ok {
 		_spec.SetField(activity.FieldTitle, field.TypeString, value)
 	}
-	if value, ok := au.mutation.Description(); ok {
+	if value, ok := _u.mutation.Description(); ok {
 		_spec.SetField(activity.FieldDescription, field.TypeString, value)
 	}
-	if value, ok := au.mutation.Date(); ok {
+	if value, ok := _u.mutation.Date(); ok {
 		_spec.SetField(activity.FieldDate, field.TypeTime, value)
 	}
-	if au.mutation.UserCleared() {
+	if _u.mutation.UserCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: false,
@@ -184,7 +184,7 @@ func (au *ActivityUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := au.mutation.UserIDs(); len(nodes) > 0 {
+	if nodes := _u.mutation.UserIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: false,
@@ -200,7 +200,7 @@ func (au *ActivityUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	if n, err = sqlgraph.UpdateNodes(ctx, au.driver, _spec); err != nil {
+	if _node, err = sqlgraph.UpdateNodes(ctx, _u.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{activity.Label}
 		} else if sqlgraph.IsConstraintError(err) {
@@ -208,8 +208,8 @@ func (au *ActivityUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		return 0, err
 	}
-	au.mutation.done = true
-	return n, nil
+	_u.mutation.done = true
+	return _node, nil
 }
 
 // ActivityUpdateOne is the builder for updating a single Activity entity.
@@ -221,104 +221,104 @@ type ActivityUpdateOne struct {
 }
 
 // SetType sets the "type" field.
-func (auo *ActivityUpdateOne) SetType(s string) *ActivityUpdateOne {
-	auo.mutation.SetType(s)
-	return auo
+func (_u *ActivityUpdateOne) SetType(v string) *ActivityUpdateOne {
+	_u.mutation.SetType(v)
+	return _u
 }
 
 // SetNillableType sets the "type" field if the given value is not nil.
-func (auo *ActivityUpdateOne) SetNillableType(s *string) *ActivityUpdateOne {
-	if s != nil {
-		auo.SetType(*s)
+func (_u *ActivityUpdateOne) SetNillableType(v *string) *ActivityUpdateOne {
+	if v != nil {
+		_u.SetType(*v)
 	}
-	return auo
+	return _u
 }
 
 // SetTitle sets the "title" field.
-func (auo *ActivityUpdateOne) SetTitle(s string) *ActivityUpdateOne {
-	auo.mutation.SetTitle(s)
-	return auo
+func (_u *ActivityUpdateOne) SetTitle(v string) *ActivityUpdateOne {
+	_u.mutation.SetTitle(v)
+	return _u
 }
 
 // SetNillableTitle sets the "title" field if the given value is not nil.
-func (auo *ActivityUpdateOne) SetNillableTitle(s *string) *ActivityUpdateOne {
-	if s != nil {
-		auo.SetTitle(*s)
+func (_u *ActivityUpdateOne) SetNillableTitle(v *string) *ActivityUpdateOne {
+	if v != nil {
+		_u.SetTitle(*v)
 	}
-	return auo
+	return _u
 }
 
 // SetDescription sets the "description" field.
-func (auo *ActivityUpdateOne) SetDescription(s string) *ActivityUpdateOne {
-	auo.mutation.SetDescription(s)
-	return auo
+func (_u *ActivityUpdateOne) SetDescription(v string) *ActivityUpdateOne {
+	_u.mutation.SetDescription(v)
+	return _u
 }
 
 // SetNillableDescription sets the "description" field if the given value is not nil.
-func (auo *ActivityUpdateOne) SetNillableDescription(s *string) *ActivityUpdateOne {
-	if s != nil {
-		auo.SetDescription(*s)
+func (_u *ActivityUpdateOne) SetNillableDescription(v *string) *ActivityUpdateOne {
+	if v != nil {
+		_u.SetDescription(*v)
 	}
-	return auo
+	return _u
 }
 
 // SetDate sets the "date" field.
-func (auo *ActivityUpdateOne) SetDate(t time.Time) *ActivityUpdateOne {
-	auo.mutation.SetDate(t)
-	return auo
+func (_u *ActivityUpdateOne) SetDate(v time.Time) *ActivityUpdateOne {
+	_u.mutation.SetDate(v)
+	return _u
 }
 
 // SetNillableDate sets the "date" field if the given value is not nil.
-func (auo *ActivityUpdateOne) SetNillableDate(t *time.Time) *ActivityUpdateOne {
-	if t != nil {
-		auo.SetDate(*t)
+func (_u *ActivityUpdateOne) SetNillableDate(v *time.Time) *ActivityUpdateOne {
+	if v != nil {
+		_u.SetDate(*v)
 	}
-	return auo
+	return _u
 }
 
 // SetUserID sets the "user" edge to the User entity by ID.
-func (auo *ActivityUpdateOne) SetUserID(id int) *ActivityUpdateOne {
-	auo.mutation.SetUserID(id)
-	return auo
+func (_u *ActivityUpdateOne) SetUserID(id int) *ActivityUpdateOne {
+	_u.mutation.SetUserID(id)
+	return _u
 }
 
 // SetUser sets the "user" edge to the User entity.
-func (auo *ActivityUpdateOne) SetUser(u *User) *ActivityUpdateOne {
-	return auo.SetUserID(u.ID)
+func (_u *ActivityUpdateOne) SetUser(v *User) *ActivityUpdateOne {
+	return _u.SetUserID(v.ID)
 }
 
 // Mutation returns the ActivityMutation object of the builder.
-func (auo *ActivityUpdateOne) Mutation() *ActivityMutation {
-	return auo.mutation
+func (_u *ActivityUpdateOne) Mutation() *ActivityMutation {
+	return _u.mutation
 }
 
 // ClearUser clears the "user" edge to the User entity.
-func (auo *ActivityUpdateOne) ClearUser() *ActivityUpdateOne {
-	auo.mutation.ClearUser()
-	return auo
+func (_u *ActivityUpdateOne) ClearUser() *ActivityUpdateOne {
+	_u.mutation.ClearUser()
+	return _u
 }
 
 // Where appends a list predicates to the ActivityUpdate builder.
-func (auo *ActivityUpdateOne) Where(ps ...predicate.Activity) *ActivityUpdateOne {
-	auo.mutation.Where(ps...)
-	return auo
+func (_u *ActivityUpdateOne) Where(ps ...predicate.Activity) *ActivityUpdateOne {
+	_u.mutation.Where(ps...)
+	return _u
 }
 
 // Select allows selecting one or more fields (columns) of the returned entity.
 // The default is selecting all fields defined in the entity schema.
-func (auo *ActivityUpdateOne) Select(field string, fields ...string) *ActivityUpdateOne {
-	auo.fields = append([]string{field}, fields...)
-	return auo
+func (_u *ActivityUpdateOne) Select(field string, fields ...string) *ActivityUpdateOne {
+	_u.fields = append([]string{field}, fields...)
+	return _u
 }
 
 // Save executes the query and returns the updated Activity entity.
-func (auo *ActivityUpdateOne) Save(ctx context.Context) (*Activity, error) {
-	return withHooks(ctx, auo.sqlSave, auo.mutation, auo.hooks)
+func (_u *ActivityUpdateOne) Save(ctx context.Context) (*Activity, error) {
+	return withHooks(ctx, _u.sqlSave, _u.mutation, _u.hooks)
 }
 
 // SaveX is like Save, but panics if an error occurs.
-func (auo *ActivityUpdateOne) SaveX(ctx context.Context) *Activity {
-	node, err := auo.Save(ctx)
+func (_u *ActivityUpdateOne) SaveX(ctx context.Context) *Activity {
+	node, err := _u.Save(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -326,42 +326,42 @@ func (auo *ActivityUpdateOne) SaveX(ctx context.Context) *Activity {
 }
 
 // Exec executes the query on the entity.
-func (auo *ActivityUpdateOne) Exec(ctx context.Context) error {
-	_, err := auo.Save(ctx)
+func (_u *ActivityUpdateOne) Exec(ctx context.Context) error {
+	_, err := _u.Save(ctx)
 	return err
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (auo *ActivityUpdateOne) ExecX(ctx context.Context) {
-	if err := auo.Exec(ctx); err != nil {
+func (_u *ActivityUpdateOne) ExecX(ctx context.Context) {
+	if err := _u.Exec(ctx); err != nil {
 		panic(err)
 	}
 }
 
 // check runs all checks and user-defined validators on the builder.
-func (auo *ActivityUpdateOne) check() error {
-	if v, ok := auo.mutation.GetType(); ok {
+func (_u *ActivityUpdateOne) check() error {
+	if v, ok := _u.mutation.GetType(); ok {
 		if err := activity.TypeValidator(v); err != nil {
 			return &ValidationError{Name: "type", err: fmt.Errorf(`ent: validator failed for field "Activity.type": %w`, err)}
 		}
 	}
-	if auo.mutation.UserCleared() && len(auo.mutation.UserIDs()) > 0 {
+	if _u.mutation.UserCleared() && len(_u.mutation.UserIDs()) > 0 {
 		return errors.New(`ent: clearing a required unique edge "Activity.user"`)
 	}
 	return nil
 }
 
-func (auo *ActivityUpdateOne) sqlSave(ctx context.Context) (_node *Activity, err error) {
-	if err := auo.check(); err != nil {
+func (_u *ActivityUpdateOne) sqlSave(ctx context.Context) (_node *Activity, err error) {
+	if err := _u.check(); err != nil {
 		return _node, err
 	}
 	_spec := sqlgraph.NewUpdateSpec(activity.Table, activity.Columns, sqlgraph.NewFieldSpec(activity.FieldID, field.TypeInt))
-	id, ok := auo.mutation.ID()
+	id, ok := _u.mutation.ID()
 	if !ok {
 		return nil, &ValidationError{Name: "id", err: errors.New(`ent: missing "Activity.id" for update`)}
 	}
 	_spec.Node.ID.Value = id
-	if fields := auo.fields; len(fields) > 0 {
+	if fields := _u.fields; len(fields) > 0 {
 		_spec.Node.Columns = make([]string, 0, len(fields))
 		_spec.Node.Columns = append(_spec.Node.Columns, activity.FieldID)
 		for _, f := range fields {
@@ -373,26 +373,26 @@ func (auo *ActivityUpdateOne) sqlSave(ctx context.Context) (_node *Activity, err
 			}
 		}
 	}
-	if ps := auo.mutation.predicates; len(ps) > 0 {
+	if ps := _u.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
 			for i := range ps {
 				ps[i](selector)
 			}
 		}
 	}
-	if value, ok := auo.mutation.GetType(); ok {
+	if value, ok := _u.mutation.GetType(); ok {
 		_spec.SetField(activity.FieldType, field.TypeString, value)
 	}
-	if value, ok := auo.mutation.Title(); ok {
+	if value, ok := _u.mutation.Title(); ok {
 		_spec.SetField(activity.FieldTitle, field.TypeString, value)
 	}
-	if value, ok := auo.mutation.Description(); ok {
+	if value, ok := _u.mutation.Description(); ok {
 		_spec.SetField(activity.FieldDescription, field.TypeString, value)
 	}
-	if value, ok := auo.mutation.Date(); ok {
+	if value, ok := _u.mutation.Date(); ok {
 		_spec.SetField(activity.FieldDate, field.TypeTime, value)
 	}
-	if auo.mutation.UserCleared() {
+	if _u.mutation.UserCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: false,
@@ -405,7 +405,7 @@ func (auo *ActivityUpdateOne) sqlSave(ctx context.Context) (_node *Activity, err
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := auo.mutation.UserIDs(); len(nodes) > 0 {
+	if nodes := _u.mutation.UserIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: false,
@@ -421,10 +421,10 @@ func (auo *ActivityUpdateOne) sqlSave(ctx context.Context) (_node *Activity, err
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	_node = &Activity{config: auo.config}
+	_node = &Activity{config: _u.config}
 	_spec.Assign = _node.assignValues
 	_spec.ScanValues = _node.scanValues
-	if err = sqlgraph.UpdateNode(ctx, auo.driver, _spec); err != nil {
+	if err = sqlgraph.UpdateNode(ctx, _u.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{activity.Label}
 		} else if sqlgraph.IsConstraintError(err) {
@@ -432,6 +432,6 @@ func (auo *ActivityUpdateOne) sqlSave(ctx context.Context) (_node *Activity, err
 		}
 		return nil, err
 	}
-	auo.mutation.done = true
+	_u.mutation.done = true
 	return _node, nil
 }
