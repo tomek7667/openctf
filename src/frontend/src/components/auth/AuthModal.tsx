@@ -429,7 +429,8 @@ export function AuthModal({
 											<Button
 												onClick={signGithubHandler}
 												disabled={isLoading}
-												className="w-half font-mono font-semibold bg-[#444444] text-white border border-[#111111] hover:bg-[#000000] hover:border-[#ffffff] disabled:bg-gray-600 disabled:border-gray-600 disabled:cursor-not-allowed rounded-md px-4 py-2 transition-colors"
+												variant="secondary"
+												className="w-half font-mono font-semibold"
 											>
 												<span>
 													{isLoading ? (
