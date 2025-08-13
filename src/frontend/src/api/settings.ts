@@ -1,5 +1,4 @@
 import { sleep } from "@/lib/utils";
-import { GH_CLIENT_ID } from "./constant";
 
 export interface PasswordChangeDto {
 	currentPassword: string;
