@@ -80,17 +80,17 @@ const ContestTableRow = ({ contest }: { contest: Contest }) => (
 			</div>
 		</td>
 		<td className="p-4 font-mono text-xs">
-			{new Date(contest.startTime).toLocaleDateString()}
+			{new Date(contest.start).toLocaleDateString()}
 			<br />
-			{new Date(contest.startTime).toLocaleTimeString([], {
+			{new Date(contest.start).toLocaleTimeString([], {
 				hour: "2-digit",
 				minute: "2-digit",
 			})}
 		</td>
 		<td className="p-4 font-mono text-xs">
-			{new Date(contest.endTime).toLocaleDateString()}
+			{new Date(contest.end).toLocaleDateString()}
 			<br />
-			{new Date(contest.endTime).toLocaleTimeString([], {
+			{new Date(contest.end).toLocaleTimeString([], {
 				hour: "2-digit",
 				minute: "2-digit",
 			})}
@@ -190,7 +190,7 @@ export default function ContestsPage() {
 		// Year filter
 		if (filters.year) {
 			filtered = filtered.filter(
-				(contest) => new Date(contest.startTime).getFullYear() === filters.year
+				(contest) => new Date(contest.start).getFullYear() === filters.year
 			);
 		}
 

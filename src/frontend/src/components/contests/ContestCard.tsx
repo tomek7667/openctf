@@ -93,8 +93,12 @@ const getWeightColor = (weight: number) => {
 };
 
 export function ContestCard({ contest, index = 0 }: ContestCardProps) {
-	const timeInfo = getTimeInfo(contest.startTime, contest.endTime, contest.status as ContestStatus);
-	const duration = getDuration(contest.startTime, contest.endTime);
+	const timeInfo = getTimeInfo(
+		contest.start,
+		contest.end,
+		contest.status as ContestStatus
+	);
+	const duration = getDuration(contest.start, contest.end);
 
 	return (
 		<Link href={`/contests/${contest.id}`}>
@@ -106,102 +110,102 @@ export function ContestCard({ contest, index = 0 }: ContestCardProps) {
 				className="group block"
 			>
 				<Card
-				className={clsx(
-					"h-full transition-all duration-300 hacker-border rounded-none",
-					"bg-card/50 backdrop-blur-sm",
-					"hover:border-primary/60 hover:shadow-lg hover:shadow-primary/20",
-					contest.status === "live" &&
-						"border-green-400/60 shadow-lg shadow-green-400/20"
-				)}
-			>
-				<CardHeader className="pb-3">
-					<div className="flex items-start justify-between gap-3">
-						<div className="flex-1 min-w-0">
-							<h3 className="font-bold text-lg text-foreground font-mono group-hover:text-primary transition-colors duration-300 truncate">
-								{contest.name.replace(/-/g, " ").toUpperCase()}
-							</h3>
-							<p className="text-sm text-muted-foreground mt-1 line-clamp-2">
-								{contest.description}
-							</p>
-						</div>
-
-						<div
-							className={clsx(
-								"px-2 py-1 rounded border text-xs font-mono font-bold flex items-center gap-1 shrink-0",
-								getStatusColor(contest.status as ContestStatus)
-							)}
-						>
-							{getStatusIcon(contest.status as ContestStatus)}
-							{(contest.status || "unknown").toUpperCase()}
-						</div>
-					</div>
-				</CardHeader>
-
-				<CardContent className="pt-0 space-y-4">
-					{/* Contest Info */}
-					<div className="grid grid-cols-2 gap-4 text-sm">
-						<div className="space-y-2">
-							<div className="flex items-center gap-2 text-muted-foreground">
-								<Calendar className="h-4 w-4" />
-								<span>Start</span>
-							</div>
-							<div className="font-mono text-foreground text-xs">
-								{formatContestDate(contest.startTime)}
-							</div>
-						</div>
-
-						<div className="space-y-2">
-							<div className="flex items-center gap-2 text-muted-foreground">
-								<Clock className="h-4 w-4" />
-								<span>Duration</span>
-							</div>
-							<div className="font-mono text-foreground">{duration}</div>
-						</div>
-					</div>
-
-					{/* Time Status */}
-					{timeInfo && (
-						<div className="p-3 bg-primary/5 border border-primary/20 rounded font-mono text-sm">
-							<div className="flex items-center gap-2">
-								<Clock className="h-4 w-4 text-primary" />
-								<span className="text-primary font-medium">{timeInfo}</span>
-							</div>
-						</div>
+					className={clsx(
+						"h-full transition-all duration-300 hacker-border rounded-none",
+						"bg-card/50 backdrop-blur-sm",
+						"hover:border-primary/60 hover:shadow-lg hover:shadow-primary/20",
+						contest.status === "live" &&
+							"border-green-400/60 shadow-lg shadow-green-400/20"
 					)}
-
-					{/* Weight */}
-					<div className="space-y-3">
-						<div className="flex items-center justify-between">
-							<div className="flex items-center gap-2">
-								<Shield className="h-4 w-4 text-muted-foreground" />
-								<span className="text-sm text-muted-foreground">Weight</span>
+				>
+					<CardHeader className="pb-3">
+						<div className="flex items-start justify-between gap-3">
+							<div className="flex-1 min-w-0">
+								<h3 className="font-bold text-lg text-foreground font-mono group-hover:text-primary transition-colors duration-300 truncate">
+									{contest.name.replace(/-/g, " ").toUpperCase()}
+								</h3>
+								<p className="text-sm text-muted-foreground mt-1 line-clamp-2">
+									{contest.description}
+								</p>
 							</div>
+
 							<div
 								className={clsx(
-									"font-mono font-bold",
-									getWeightColor(contest.weight || 0)
+									"px-2 py-1 rounded border text-xs font-mono font-bold flex items-center gap-1 shrink-0",
+									getStatusColor(contest.status as ContestStatus)
 								)}
 							>
-								{contest.weight || 0} pts
+								{getStatusIcon(contest.status as ContestStatus)}
+								{(contest.status || "unknown").toUpperCase()}
 							</div>
 						</div>
-					</div>
+					</CardHeader>
 
-					{/* Stats */}
-					<div className="flex items-center gap-4 text-sm text-muted-foreground pt-2 border-t border-border/50">
-						<div className="flex items-center gap-1">
-							<Users className="h-4 w-4" />
-							<span>{contest.participantCount || 0}</span>
+					<CardContent className="pt-0 space-y-4">
+						{/* Contest Info */}
+						<div className="grid grid-cols-2 gap-4 text-sm">
+							<div className="space-y-2">
+								<div className="flex items-center gap-2 text-muted-foreground">
+									<Calendar className="h-4 w-4" />
+									<span>Start</span>
+								</div>
+								<div className="font-mono text-foreground text-xs">
+									{formatContestDate(contest.start)}
+								</div>
+							</div>
+
+							<div className="space-y-2">
+								<div className="flex items-center gap-2 text-muted-foreground">
+									<Clock className="h-4 w-4" />
+									<span>Duration</span>
+								</div>
+								<div className="font-mono text-foreground">{duration}</div>
+							</div>
 						</div>
-						{contest.ctftimeId && (
-							<div className="flex items-center gap-1">
-								<Flag className="h-4 w-4" />
-								<span className="text-xs">CTFtime</span>
+
+						{/* Time Status */}
+						{timeInfo && (
+							<div className="p-3 bg-primary/5 border border-primary/20 rounded font-mono text-sm">
+								<div className="flex items-center gap-2">
+									<Clock className="h-4 w-4 text-primary" />
+									<span className="text-primary font-medium">{timeInfo}</span>
+								</div>
 							</div>
 						)}
-					</div>
-				</CardContent>
-			</Card>
+
+						{/* Weight */}
+						<div className="space-y-3">
+							<div className="flex items-center justify-between">
+								<div className="flex items-center gap-2">
+									<Shield className="h-4 w-4 text-muted-foreground" />
+									<span className="text-sm text-muted-foreground">Weight</span>
+								</div>
+								<div
+									className={clsx(
+										"font-mono font-bold",
+										getWeightColor(contest.weight || 0)
+									)}
+								>
+									{contest.weight || 0} pts
+								</div>
+							</div>
+						</div>
+
+						{/* Stats */}
+						<div className="flex items-center gap-4 text-sm text-muted-foreground pt-2 border-t border-border/50">
+							<div className="flex items-center gap-1">
+								<Users className="h-4 w-4" />
+								<span>{contest.participantCount || 0}</span>
+							</div>
+							{contest.ctftimeId && (
+								<div className="flex items-center gap-1">
+									<Flag className="h-4 w-4" />
+									<span className="text-xs">CTFtime</span>
+								</div>
+							)}
+						</div>
+					</CardContent>
+				</Card>
 			</motion.div>
 		</Link>
 	);

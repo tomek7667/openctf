@@ -31,7 +31,12 @@ import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 import { MainLayout } from "@/components/layout/MainLayout";
-import { getContest, Contest, getLiveLeaderboard, LiveLeaderboard } from "@/api/contests";
+import {
+	getContest,
+	Contest,
+	getLiveLeaderboard,
+	LiveLeaderboard,
+} from "@/api/contests";
 import { getUserTeams } from "@/api/teams";
 
 import { useAuth } from "@/hooks/useAuth";
@@ -67,17 +72,26 @@ interface Place {
 	ctftimeId: number;
 }
 
-function PlaceRow({ place, index, contestName, userTeam, isCaptain }: { 
-	place: Place; 
+function PlaceRow({
+	place,
+	index,
+	contestName,
+	userTeam,
+	isCaptain,
+}: {
+	place: Place;
 	index: number;
 	contestName: string;
 	userTeam?: string | undefined;
 	isCaptain?: boolean;
 }) {
 	const getRowStyle = (rank: number) => {
-		if (rank === 1) return "bg-gradient-to-r from-yellow-500/30 to-orange-500/20 border-yellow-400 shadow-lg shadow-yellow-400/20";
-		if (rank === 2) return "bg-gradient-to-r from-gray-300/30 to-gray-500/20 border-gray-400 shadow-lg shadow-gray-400/20";
-		if (rank === 3) return "bg-gradient-to-r from-amber-600/30 to-yellow-700/20 border-amber-600 shadow-lg shadow-amber-600/20";
+		if (rank === 1)
+			return "bg-gradient-to-r from-yellow-500/30 to-orange-500/20 border-yellow-400 shadow-lg shadow-yellow-400/20";
+		if (rank === 2)
+			return "bg-gradient-to-r from-gray-300/30 to-gray-500/20 border-gray-400 shadow-lg shadow-gray-400/20";
+		if (rank === 3)
+			return "bg-gradient-to-r from-amber-600/30 to-yellow-700/20 border-amber-600 shadow-lg shadow-amber-600/20";
 		return "hover:bg-muted/20 border-border/50";
 	};
 
@@ -142,13 +156,21 @@ function PlaceRow({ place, index, contestName, userTeam, isCaptain }: {
 			className={`border-b transition-all duration-300 hover:bg-primary/5 ${getRowStyle(place.rank)}`}
 		>
 			<td className="p-3 w-16">
-				<Link href={`/teams/${place.teamName.toLowerCase().replace(/\s+/g, '-')}`} className="flex items-center justify-center cursor-pointer">
+				<Link
+					href={`/teams/${place.teamName.toLowerCase().replace(/\s+/g, "-")}`}
+					className="flex items-center justify-center cursor-pointer"
+				>
 					{getRankDisplay(place.rank)}
 				</Link>
 			</td>
 			<td className="p-3">
-				<Link href={`/teams/${place.teamName.toLowerCase().replace(/\s+/g, '-')}`} className="block cursor-pointer">
-					<div className={`font-mono font-bold text-sm ${getTeamNameColor(place.rank)}`}>
+				<Link
+					href={`/teams/${place.teamName.toLowerCase().replace(/\s+/g, "-")}`}
+					className="block cursor-pointer"
+				>
+					<div
+						className={`font-mono font-bold text-sm ${getTeamNameColor(place.rank)}`}
+					>
 						{place.teamName}
 						{getTitle(place.rank) && (
 							<span className={`ml-2 ${getTitleColor(place.rank)}`}>
@@ -162,14 +184,22 @@ function PlaceRow({ place, index, contestName, userTeam, isCaptain }: {
 				</Link>
 			</td>
 			<td className="p-3 font-mono text-lg font-bold text-right">
-				<Link href={`/teams/${place.teamName.toLowerCase().replace(/\s+/g, '-')}`} className="block cursor-pointer">
+				<Link
+					href={`/teams/${place.teamName.toLowerCase().replace(/\s+/g, "-")}`}
+					className="block cursor-pointer"
+				>
 					{place.contestPoints}
 				</Link>
 			</td>
 			<td className="p-3 font-mono text-lg text-right">
 				<div className="flex items-center justify-end gap-2">
-					<Link href={`/teams/${place.teamName.toLowerCase().replace(/\s+/g, '-')}`} className="cursor-pointer">
-						<span className={getPointsColor(place.rank)}>{place.openctfPoints}</span>
+					<Link
+						href={`/teams/${place.teamName.toLowerCase().replace(/\s+/g, "-")}`}
+						className="cursor-pointer"
+					>
+						<span className={getPointsColor(place.rank)}>
+							{place.openctfPoints}
+						</span>
 					</Link>
 					{userTeam === place.teamName && (
 						<TwitterShareButton
@@ -192,7 +222,8 @@ const getMockWriteups = (contestId: string) => {
 			{
 				id: 1,
 				title: "Web Challenge: SQL Injection in Login Form",
-				description: "A detailed walkthrough of exploiting SQL injection vulnerability in the contest's login system.",
+				description:
+					"A detailed walkthrough of exploiting SQL injection vulnerability in the contest's login system.",
 				authorName: "hackerman",
 				authorAvatar: null,
 				category: "web",
@@ -209,7 +240,8 @@ const getMockWriteups = (contestId: string) => {
 			{
 				id: 2,
 				title: "Crypto: RSA Key Recovery",
-				description: "How to recover RSA private key from weak random number generation.",
+				description:
+					"How to recover RSA private key from weak random number generation.",
 				authorName: "cryptoking",
 				authorAvatar: null,
 				category: "crypto",
@@ -237,14 +269,12 @@ function WriteupCard({ writeup }: { writeup: any }) {
 			className="group relative"
 		>
 			<div className="absolute inset-0 bg-gradient-to-r from-green-500/20 to-blue-500/20 rounded-lg blur-xl group-hover:blur-2xl transition-all duration-500 opacity-0 group-hover:opacity-100" />
-			
+
 			<div className="relative bg-card/50 backdrop-blur-sm border border-green-500/30 rounded-lg p-6 h-full hover:border-green-400/50 transition-all duration-300 group-hover:shadow-lg group-hover:shadow-green-500/20">
 				<div className="flex items-start justify-between mb-4">
 					<div>
 						<h3 className="font-mono text-lg font-bold text-white group-hover:text-green-400 transition-colors line-clamp-2">
-							<Link href={`/writeups/${writeup.id}`}>
-								{writeup.title}
-							</Link>
+							<Link href={`/writeups/${writeup.id}`}>{writeup.title}</Link>
 						</h3>
 						<div className="flex items-center space-x-2 mt-1">
 							<Badge variant="outline" className="text-xs">
@@ -269,7 +299,9 @@ function WriteupCard({ writeup }: { writeup: any }) {
 					<div className="flex items-center space-x-4">
 						<div className="flex items-center space-x-1">
 							<Star className="h-4 w-4 text-yellow-400 fill-current" />
-							<span className="font-mono">{writeup.averageRating.toFixed(1)}</span>
+							<span className="font-mono">
+								{writeup.averageRating.toFixed(1)}
+							</span>
 						</div>
 						<div className="flex items-center space-x-1">
 							<Eye className="h-4 w-4" />
@@ -308,7 +340,10 @@ export default function ContestDetailsPage() {
 					setContest(contestResponse.data);
 
 					// Get leaderboard if contest is live or finished
-					if (contestResponse.data.status === 'live' || contestResponse.data.status === 'finished') {
+					if (
+						contestResponse.data.status === "live" ||
+						contestResponse.data.status === "finished"
+					) {
 						const leaderboardResponse = await getLiveLeaderboard(contestId);
 						if (leaderboardResponse.success && leaderboardResponse.data) {
 							setLeaderboard(leaderboardResponse.data);
@@ -323,7 +358,11 @@ export default function ContestDetailsPage() {
 				// Get user's team information if authenticated
 				if (isAuthenticated && user) {
 					const userTeamsResponse = await getUserTeams(user.id.toString());
-					if (userTeamsResponse.success && userTeamsResponse.data && userTeamsResponse.data.length > 0) {
+					if (
+						userTeamsResponse.success &&
+						userTeamsResponse.data &&
+						userTeamsResponse.data.length > 0
+					) {
 						const team = userTeamsResponse.data[0]; // Assume user's primary team
 						if (team) {
 							setUserTeam(team.name);
@@ -366,7 +405,10 @@ export default function ContestDetailsPage() {
 							<br />
 							{"// Error 404: Resource does not exist"}
 						</p>
-						<Link href="/contests" className="inline-block px-4 py-2 bg-green-500/20 border border-green-400/50 text-green-400 font-mono font-bold hover:bg-green-500/30 transition-colors">
+						<Link
+							href="/contests"
+							className="inline-block px-4 py-2 bg-green-500/20 border border-green-400/50 text-green-400 font-mono font-bold hover:bg-green-500/30 transition-colors"
+						>
 							&gt; BACK_TO_CONTESTS
 						</Link>
 					</div>
@@ -381,8 +423,8 @@ export default function ContestDetailsPage() {
 	};
 
 	const getDuration = () => {
-		const start = parseISO(contest.startTime);
-		const end = parseISO(contest.endTime);
+		const start = parseISO(contest.start);
+		const end = parseISO(contest.end);
 		const duration = intervalToDuration({ start, end });
 
 		if (duration.days) {
@@ -392,8 +434,8 @@ export default function ContestDetailsPage() {
 	};
 
 	const getTimeStatus = () => {
-		const start = parseISO(contest.startTime);
-		const end = parseISO(contest.endTime);
+		const start = parseISO(contest.start);
+		const end = parseISO(contest.end);
 
 		if (contest.status === "upcoming") {
 			return {
@@ -551,7 +593,7 @@ export default function ContestDetailsPage() {
 												<span className="text-sm">Start Date</span>
 											</div>
 											<div className="font-mono text-sm">
-												{formatContestDate(contest.startTime)}
+												{formatContestDate(contest.start)}
 											</div>
 										</div>
 
@@ -609,72 +651,92 @@ export default function ContestDetailsPage() {
 				</section>
 
 				{/* Leaderboard Section */}
-				{contest.status === "finished" && leaderboard && leaderboard.entries.length > 0 && (
-					<section className="py-12 px-4">
-						<div className="max-w-7xl mx-auto">
-							<motion.div
-								initial={{ opacity: 0, y: 20 }}
-								animate={{ opacity: 1, y: 0 }}
-								className="space-y-6"
-							>
-								<div className="flex items-center gap-3">
-									<Trophy className="h-6 w-6 text-yellow-400" />
-									<h2 className="text-2xl font-bold font-mono text-yellow-400">
-										&gt; FINAL_LEADERBOARD
-									</h2>
-								</div>
-
-								<div className="bg-card/30 rounded-none hacker-border overflow-hidden">
-
-									<div className="overflow-x-auto">
-										<table className="w-full">
-											<thead className="bg-muted/30">
-												<tr className="border-b border-border/50">
-													<th className="p-3 text-center font-mono text-xs font-bold w-16">
-														Rank
-													</th>
-													<th className="p-3 text-left font-mono text-xs font-bold">
-														Team
-													</th>
-													<th className="p-3 text-right font-mono text-xs font-bold">
-														Contest Points
-													</th>
-													<th className="p-3 text-right font-mono text-xs font-bold">
-														OpenCTF Points
-													</th>
-												</tr>
-											</thead>
-											<tbody>
-												{[...leaderboard.entries, ...Array.from({length: Math.max(0, 15 - leaderboard.entries.length)}, (_, i) => ({
-													participantId: `mock-${leaderboard.entries.length + i + 1}`,
-													rank: leaderboard.entries.length + i + 1,
-													participantName: `Team${leaderboard.entries.length + i + 1}`,
-													score: Math.max(100, 5000 - (leaderboard.entries.length + i) * 200)
-												}))].map((entry, index) => (
-													<PlaceRow
-														key={entry.participantId}
-														place={{
-															id: entry.participantId,
-															rank: entry.rank,
-															teamName: entry.participantName,
-															contestPoints: entry.score || Math.max(100, 5000 - (entry.rank - 1) * 200),
-															openctfPoints: (1000 - (entry.rank - 1) * 50).toFixed(1),
-															ctftimeId: 12345 + index * 1000
-														}}
-														index={index}
-														contestName={contest.name}
-														userTeam={userTeam}
-														isCaptain={isCaptain}
-													/>
-												))}
-											</tbody>
-										</table>
+				{contest.status === "finished" &&
+					leaderboard &&
+					leaderboard.entries.length > 0 && (
+						<section className="py-12 px-4">
+							<div className="max-w-7xl mx-auto">
+								<motion.div
+									initial={{ opacity: 0, y: 20 }}
+									animate={{ opacity: 1, y: 0 }}
+									className="space-y-6"
+								>
+									<div className="flex items-center gap-3">
+										<Trophy className="h-6 w-6 text-yellow-400" />
+										<h2 className="text-2xl font-bold font-mono text-yellow-400">
+											&gt; FINAL_LEADERBOARD
+										</h2>
 									</div>
-								</div>
-							</motion.div>
-						</div>
-					</section>
-				)}
+
+									<div className="bg-card/30 rounded-none hacker-border overflow-hidden">
+										<div className="overflow-x-auto">
+											<table className="w-full">
+												<thead className="bg-muted/30">
+													<tr className="border-b border-border/50">
+														<th className="p-3 text-center font-mono text-xs font-bold w-16">
+															Rank
+														</th>
+														<th className="p-3 text-left font-mono text-xs font-bold">
+															Team
+														</th>
+														<th className="p-3 text-right font-mono text-xs font-bold">
+															Contest Points
+														</th>
+														<th className="p-3 text-right font-mono text-xs font-bold">
+															OpenCTF Points
+														</th>
+													</tr>
+												</thead>
+												<tbody>
+													{[
+														...leaderboard.entries,
+														...Array.from(
+															{
+																length: Math.max(
+																	0,
+																	15 - leaderboard.entries.length
+																),
+															},
+															(_, i) => ({
+																participantId: `mock-${leaderboard.entries.length + i + 1}`,
+																rank: leaderboard.entries.length + i + 1,
+																participantName: `Team${leaderboard.entries.length + i + 1}`,
+																score: Math.max(
+																	100,
+																	5000 - (leaderboard.entries.length + i) * 200
+																),
+															})
+														),
+													].map((entry, index) => (
+														<PlaceRow
+															key={entry.participantId}
+															place={{
+																id: entry.participantId,
+																rank: entry.rank,
+																teamName: entry.participantName,
+																contestPoints:
+																	entry.score ||
+																	Math.max(100, 5000 - (entry.rank - 1) * 200),
+																openctfPoints: (
+																	1000 -
+																	(entry.rank - 1) * 50
+																).toFixed(1),
+																ctftimeId: 12345 + index * 1000,
+															}}
+															index={index}
+															contestName={contest.name}
+															userTeam={userTeam}
+															isCaptain={isCaptain}
+														/>
+													))}
+												</tbody>
+											</table>
+										</div>
+									</div>
+								</motion.div>
+							</div>
+						</section>
+					)}
 
 				{/* Writeups Section */}
 				<section className="py-12 px-4">
@@ -705,8 +767,12 @@ export default function ContestDetailsPage() {
 						) : (
 							<div className="text-center py-12">
 								<BookOpen className="h-16 w-16 text-gray-600 mx-auto mb-4" />
-								<h3 className="text-xl font-mono text-gray-400 mb-2">No writeups yet</h3>
-								<p className="text-gray-500 font-mono mb-4">Be the first to share your solution!</p>
+								<h3 className="text-xl font-mono text-gray-400 mb-2">
+									No writeups yet
+								</h3>
+								<p className="text-gray-500 font-mono mb-4">
+									Be the first to share your solution!
+								</p>
 								{isAuthenticated && (
 									<Link href={`/writeups/create?contest=${contestId}`}>
 										<Button className="font-mono bg-gradient-to-r from-green-500 to-blue-500 hover:from-green-600 hover:to-blue-600 text-black font-bold">
