@@ -25,7 +25,6 @@ func (c *Client) RegisterGithub(
 		Create().
 		SetUsername(ghInfo.Login).
 		SetEmail(ghEmail).
-		// SetLogo(),
 		SetGithubAccountID(ghInfo.ID).
 		SetGithubUsername(ghInfo.Login).
 		SetGithubName(ghInfo.Name).
