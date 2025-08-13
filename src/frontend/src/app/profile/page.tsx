@@ -44,6 +44,7 @@ import { SkillRadar } from "@/components/ui/SkillRadar";
 import { GH_CLIENT_ID } from "@/api/constant";
 import useToast from "@/hooks/useToast";
 import { connectGithub, disconnectGithub } from "@/api";
+import Image from "next/image";
 
 const rarityColors = {
 	common: "text-gray-400 border-gray-400",
@@ -174,9 +175,15 @@ export default function ProfilePage() {
 			connections: true,
 		}));
 		try {
+			const url = new URL("https://github.com/login/oauth/authorize");
+			url.searchParams.set("client_id", GH_CLIENT_ID);
+			url.searchParams.set(
+				"redirect_uri",
+				location.href + "?tab=settings&connections_loading=true"
+			);
 			const result = {
 				success: true,
-				url: `https://github.com/login/oauth/authorize?client_id=${GH_CLIENT_ID}`,
+				url: url.toString(),
 				message: "Redirecting to GitHub...",
 			};
 			window.open(result.url, "_self");
@@ -825,10 +832,12 @@ export default function ProfilePage() {
 											</div>
 											{user.github_account_id ? (
 												<div className="flex items-center space-x-3">
-													<img
-														src={user.github_avatar_url}
+													<Image
 														alt={`${user.github_username}'s avatar`}
+														src={user.github_avatar_url!}
 														className="w-8 h-8 rounded border border-green-500/50"
+														width={8}
+														height={8}
 													/>
 													<span className="font-mono text-green-400 text-sm">
 														Connected as {user.github_username}

@@ -9,6 +9,14 @@ const nextConfig = {
 		];
 	},
 	output: "standalone",
+	images: {
+		remotePatterns: [
+			{
+				hostname: "avatars.githubusercontent.com",
+				protocol: "https",
+			},
+		],
+	},
 };
 
 module.exports = nextConfig;
