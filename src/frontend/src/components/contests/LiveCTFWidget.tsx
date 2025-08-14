@@ -3,15 +3,18 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { Target, Clock } from "@/components/ui/icons";
-import { Contest } from "@/api/contests";
 import Link from "next/link";
+import { ParsedContest } from "@/api";
+import { ContestStatus } from "@/types/api";
 
 interface LiveCTFWidgetProps {
-	contests: Contest[];
+	contests: ParsedContest[];
 }
 
 export function LiveCTFWidget({ contests }: LiveCTFWidgetProps) {
-	const ongoingContests = contests.filter((c) => c.status === "live");
+	const ongoingContests = contests.filter(
+		(c) => c.status === ContestStatus.Ongoing
+	);
 	const upcomingContests = contests
 		.filter((c) => c.status === "upcoming")
 		.sort((a, b) => new Date(a.start).getTime() - new Date(b.start).getTime());
@@ -24,7 +27,7 @@ export function LiveCTFWidget({ contests }: LiveCTFWidgetProps) {
 			acc[date].push(contest);
 			return acc;
 		},
-		{} as Record<string, Contest[]>
+		{} as Record<string, ParsedContest[]>
 	);
 
 	const upcomingToShow = Object.entries(groupedUpcoming)
@@ -68,7 +71,7 @@ export function LiveCTFWidget({ contests }: LiveCTFWidgetProps) {
 												hour: "2-digit",
 												minute: "2-digit",
 											})}{" "}
-											| W: {contest.weight || 0}
+											| W: {contest.assigned_weight_points || 0}
 										</div>
 									</div>
 								</Link>
@@ -109,7 +112,8 @@ export function LiveCTFWidget({ contests }: LiveCTFWidgetProps) {
 													hour: "2-digit",
 													minute: "2-digit",
 												})}{" "}
-												| {contest.duration}h | W: {contest.weight || 0}
+												| {contest.duration}h | W:{" "}
+												{contest.assigned_weight_points || 0}
 											</div>
 										</div>
 									</Link>

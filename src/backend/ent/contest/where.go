@@ -85,6 +85,11 @@ func End(v time.Time) predicate.Contest {
 	return predicate.Contest(sql.FieldEQ(FieldEnd, v))
 }
 
+// Duration applies equality check predicate on the "duration" field. It's identical to DurationEQ.
+func Duration(v float64) predicate.Contest {
+	return predicate.Contest(sql.FieldEQ(FieldDuration, v))
+}
+
 // URL applies equality check predicate on the "url" field. It's identical to URLEQ.
 func URL(v string) predicate.Contest {
 	return predicate.Contest(sql.FieldEQ(FieldURL, v))
@@ -473,6 +478,46 @@ func EndLT(v time.Time) predicate.Contest {
 // EndLTE applies the LTE predicate on the "end" field.
 func EndLTE(v time.Time) predicate.Contest {
 	return predicate.Contest(sql.FieldLTE(FieldEnd, v))
+}
+
+// DurationEQ applies the EQ predicate on the "duration" field.
+func DurationEQ(v float64) predicate.Contest {
+	return predicate.Contest(sql.FieldEQ(FieldDuration, v))
+}
+
+// DurationNEQ applies the NEQ predicate on the "duration" field.
+func DurationNEQ(v float64) predicate.Contest {
+	return predicate.Contest(sql.FieldNEQ(FieldDuration, v))
+}
+
+// DurationIn applies the In predicate on the "duration" field.
+func DurationIn(vs ...float64) predicate.Contest {
+	return predicate.Contest(sql.FieldIn(FieldDuration, vs...))
+}
+
+// DurationNotIn applies the NotIn predicate on the "duration" field.
+func DurationNotIn(vs ...float64) predicate.Contest {
+	return predicate.Contest(sql.FieldNotIn(FieldDuration, vs...))
+}
+
+// DurationGT applies the GT predicate on the "duration" field.
+func DurationGT(v float64) predicate.Contest {
+	return predicate.Contest(sql.FieldGT(FieldDuration, v))
+}
+
+// DurationGTE applies the GTE predicate on the "duration" field.
+func DurationGTE(v float64) predicate.Contest {
+	return predicate.Contest(sql.FieldGTE(FieldDuration, v))
+}
+
+// DurationLT applies the LT predicate on the "duration" field.
+func DurationLT(v float64) predicate.Contest {
+	return predicate.Contest(sql.FieldLT(FieldDuration, v))
+}
+
+// DurationLTE applies the LTE predicate on the "duration" field.
+func DurationLTE(v float64) predicate.Contest {
+	return predicate.Contest(sql.FieldLTE(FieldDuration, v))
 }
 
 // URLEQ applies the EQ predicate on the "url" field.

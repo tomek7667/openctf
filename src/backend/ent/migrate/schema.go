@@ -63,6 +63,7 @@ var (
 		{Name: "prizes", Type: field.TypeString, Nullable: true},
 		{Name: "start", Type: field.TypeTime},
 		{Name: "end", Type: field.TypeTime},
+		{Name: "duration", Type: field.TypeFloat64},
 		{Name: "url", Type: field.TypeString, Nullable: true},
 		{Name: "ctftime_id", Type: field.TypeInt, Nullable: true},
 		{Name: "assigned_weight_points", Type: field.TypeInt, Default: 0},
@@ -77,7 +78,7 @@ var (
 		ForeignKeys: []*schema.ForeignKey{
 			{
 				Symbol:     "contests_teams_organizers",
-				Columns:    []*schema.Column{ContestsColumns[11]},
+				Columns:    []*schema.Column{ContestsColumns[12]},
 				RefColumns: []*schema.Column{TeamsColumns[0]},
 				OnDelete:   schema.SetNull,
 			},

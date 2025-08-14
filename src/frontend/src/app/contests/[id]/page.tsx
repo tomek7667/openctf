@@ -31,16 +31,11 @@ import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 import { MainLayout } from "@/components/layout/MainLayout";
-import {
-	getContest,
-	Contest,
-	getLiveLeaderboard,
-	LiveLeaderboard,
-} from "@/api/contests";
-import { getUserTeams } from "@/api/teams";
-
+import { getContest, ParsedContest } from "@/api/contests";
 import { useAuth } from "@/hooks/useAuth";
 import { clsx } from "clsx";
+import { ContestStatus, Place } from "@/types/api";
+import useToast from "@/hooks/useToast";
 
 const getStatusColor = (status: string) => {
 	switch (status) {
@@ -62,15 +57,6 @@ const getWeightColor = (weight: number) => {
 	if (weight >= 20) return "text-blue-400";
 	return "text-green-400";
 };
-
-interface Place {
-	id: string;
-	rank: number;
-	teamName: string;
-	contestPoints: number;
-	openctfPoints: string;
-	ctftimeId: number;
-}
 
 function PlaceRow({
 	place,
@@ -153,59 +139,59 @@ function PlaceRow({
 			initial={{ opacity: 0, x: -20 }}
 			animate={{ opacity: 1, x: 0 }}
 			transition={{ delay: index * 0.1 }}
-			className={`border-b transition-all duration-300 hover:bg-primary/5 ${getRowStyle(place.rank)}`}
+			className={`border-b transition-all duration-300 hover:bg-primary/5 ${getRowStyle(place.place)}`}
 		>
 			<td className="p-3 w-16">
 				<Link
-					href={`/teams/${place.teamName.toLowerCase().replace(/\s+/g, "-")}`}
+					href={`/teams/${place.team_name.toLowerCase().replace(/\s+/g, "-")}`}
 					className="flex items-center justify-center cursor-pointer"
 				>
-					{getRankDisplay(place.rank)}
+					{getRankDisplay(place.place)}
 				</Link>
 			</td>
 			<td className="p-3">
 				<Link
-					href={`/teams/${place.teamName.toLowerCase().replace(/\s+/g, "-")}`}
+					href={`/teams/${place.team_name.toLowerCase().replace(/\s+/g, "-")}`}
 					className="block cursor-pointer"
 				>
 					<div
-						className={`font-mono font-bold text-sm ${getTeamNameColor(place.rank)}`}
+						className={`font-mono font-bold text-sm ${getTeamNameColor(place.place)}`}
 					>
-						{place.teamName}
-						{getTitle(place.rank) && (
-							<span className={`ml-2 ${getTitleColor(place.rank)}`}>
-								{getTitle(place.rank)}
+						{place.team_name}
+						{getTitle(place.place) && (
+							<span className={`ml-2 ${getTitleColor(place.place)}`}>
+								{getTitle(place.place)}
 							</span>
 						)}
 					</div>
 					<div className="text-xs text-muted-foreground font-mono">
-						CTFtime: {place.ctftimeId}
+						CTFtime: {place.ctftime_team_id}
 					</div>
 				</Link>
 			</td>
 			<td className="p-3 font-mono text-lg font-bold text-right">
 				<Link
-					href={`/teams/${place.teamName.toLowerCase().replace(/\s+/g, "-")}`}
+					href={`/teams/${place.team_name.toLowerCase().replace(/\s+/g, "-")}`}
 					className="block cursor-pointer"
 				>
-					{place.contestPoints}
+					{place.contest_points}
 				</Link>
 			</td>
 			<td className="p-3 font-mono text-lg text-right">
 				<div className="flex items-center justify-end gap-2">
 					<Link
-						href={`/teams/${place.teamName.toLowerCase().replace(/\s+/g, "-")}`}
+						href={`/teams/${place.team_name.toLowerCase().replace(/\s+/g, "-")}`}
 						className="cursor-pointer"
 					>
-						<span className={getPointsColor(place.rank)}>
-							{place.openctfPoints}
+						<span className={getPointsColor(place.place)}>
+							{place.assigned_weight_points}
 						</span>
 					</Link>
-					{userTeam === place.teamName && (
+					{userTeam === place.team_name && (
 						<TwitterShareButton
 							contestName={contestName}
-							teamName={place.teamName}
-							place={place.rank}
+							teamName={place.team_name}
+							place={place.place}
 							isCaptain={isCaptain || false}
 						/>
 					)}
@@ -214,51 +200,6 @@ function PlaceRow({
 		</motion.tr>
 	);
 }
-
-// Mock writeups data
-const getMockWriteups = (contestId: string) => {
-	if (contestId === "contest-003") {
-		return [
-			{
-				id: 1,
-				title: "Web Challenge: SQL Injection in Login Form",
-				description:
-					"A detailed walkthrough of exploiting SQL injection vulnerability in the contest's login system.",
-				authorName: "hackerman",
-				authorAvatar: null,
-				category: "web",
-				difficulty: "Medium",
-				tags: ["sql-injection", "web", "authentication"],
-				averageRating: 4.5,
-				totalRatings: 12,
-				views: 234,
-				likes: 18,
-				createdAt: "2024-01-15T10:30:00Z",
-				featured: true,
-				verified: true,
-			},
-			{
-				id: 2,
-				title: "Crypto: RSA Key Recovery",
-				description:
-					"How to recover RSA private key from weak random number generation.",
-				authorName: "cryptoking",
-				authorAvatar: null,
-				category: "crypto",
-				difficulty: "Hard",
-				tags: ["rsa", "crypto", "weak-rng"],
-				averageRating: 4.8,
-				totalRatings: 8,
-				views: 156,
-				likes: 24,
-				createdAt: "2024-01-16T14:20:00Z",
-				featured: false,
-				verified: true,
-			},
-		];
-	}
-	return [];
-};
 
 function WriteupCard({ writeup }: { writeup: any }) {
 	return (
@@ -322,56 +263,51 @@ export default function ContestDetailsPage() {
 	const params = useParams();
 	const contestId = params.id as string;
 	const { isAuthenticated, user } = useAuth();
+	const { toast } = useToast();
 
-	const [contest, setContest] = useState<Contest | null>(null);
-	const [leaderboard, setLeaderboard] = useState<LiveLeaderboard | null>(null);
+	const [contest, setContest] = useState<ParsedContest | null>(null);
 	const [writeups, setWriteups] = useState<any[]>([]);
 	const [isLoading, setIsLoading] = useState(true);
-	const [userTeam, setUserTeam] = useState<string | undefined>();
-	const [isCaptain, setIsCaptain] = useState(false);
+	const [userTeam, _setUserTeam] = useState<string | undefined>();
+	const [isCaptain, _setIsCaptain] = useState(false);
 
 	useEffect(() => {
 		const fetchContestDetails = async () => {
 			try {
 				setIsLoading(true);
-				// Get contest details
-				const contestResponse = await getContest(contestId);
-				if (contestResponse.success && contestResponse.data) {
-					setContest(contestResponse.data);
+				const contest = await getContest(Number(contestId));
+				setContest(contest);
 
-					// Get leaderboard if contest is live or finished
-					if (
-						contestResponse.data.status === "live" ||
-						contestResponse.data.status === "finished"
-					) {
-						const leaderboardResponse = await getLiveLeaderboard(contestId);
-						if (leaderboardResponse.success && leaderboardResponse.data) {
-							setLeaderboard(leaderboardResponse.data);
-						}
-					}
-
-					// Get writeups for this contest
-					const writeupsData = getMockWriteups(contestId);
-					setWriteups(writeupsData);
+				if (contest.status === ContestStatus.Finished) {
+					// TODO: Get writeups for this contest
+					// const writeupsData = getMockWriteups(contestId);
+					// setWriteups(writeupsData);
+					setWriteups([]);
 				}
 
 				// Get user's team information if authenticated
 				if (isAuthenticated && user) {
-					const userTeamsResponse = await getUserTeams(user.id.toString());
-					if (
-						userTeamsResponse.success &&
-						userTeamsResponse.data &&
-						userTeamsResponse.data.length > 0
-					) {
-						const team = userTeamsResponse.data[0]; // Assume user's primary team
-						if (team) {
-							setUserTeam(team.name);
-							setIsCaptain(team.captainId === user.id.toString());
-						}
-					}
+					// TODO: implement user teams in BE
+					// const userTeamsResponse = await getUserTeams(user.id.toString());
+					// if (
+					// 	userTeamsResponse.success &&
+					// 	userTeamsResponse.data &&
+					// 	userTeamsResponse.data.length > 0
+					// ) {
+					// 	const team = userTeamsResponse.data[0]; // Assume user's primary team
+					// 	if (team) {
+					// 		setUserTeam(team.name);
+					// 		setIsCaptain(team.captainId === user.id.toString());
+					// 	}
+					// }
 				}
-			} catch (error) {
+			} catch (error: any) {
 				console.error("Error fetching contest details:", error);
+				toast.error(
+					"error fetching contest details",
+					error?.message ??
+						"unknown error occurred. Please contact the administrator"
+				);
 			} finally {
 				setIsLoading(false);
 			}
@@ -380,6 +316,7 @@ export default function ContestDetailsPage() {
 		if (contestId) {
 			fetchContestDetails();
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [contestId, isAuthenticated, user]);
 
 	if (isLoading) {
@@ -437,17 +374,17 @@ export default function ContestDetailsPage() {
 		const start = parseISO(contest.start);
 		const end = parseISO(contest.end);
 
-		if (contest.status === "upcoming") {
+		if (contest.status === ContestStatus.Upcoming) {
 			return {
 				label: `Starts ${formatDistanceToNow(start, { addSuffix: true })}`,
 				color: "text-blue-400",
 			};
-		} else if (contest.status === "live") {
+		} else if (contest.status === ContestStatus.Ongoing) {
 			return {
 				label: `Ends ${formatDistanceToNow(end, { addSuffix: true })}`,
 				color: "text-green-400",
 			};
-		} else if (contest.status === "finished") {
+		} else if (contest.status === ContestStatus.Finished) {
 			return {
 				label: `Ended ${formatDistanceToNow(end, { addSuffix: true })}`,
 				color: "text-gray-400",
@@ -490,20 +427,23 @@ export default function ContestDetailsPage() {
 												getStatusColor(contest.status || "unknown")
 											)}
 										>
-											{contest.status === "live" && (
+											{contest.status === ContestStatus.Ongoing && (
 												<Target className="h-4 w-4" />
 											)}
-											{contest.status === "upcoming" && (
+											{contest.status === ContestStatus.Upcoming && (
 												<Calendar className="h-4 w-4" />
 											)}
-											{contest.status === "finished" && (
+											{contest.status === ContestStatus.Finished && (
 												<Trophy className="h-4 w-4" />
 											)}
-											{(contest.status || "unknown").toUpperCase()}
+											{(contest.status === ContestStatus.Ongoing
+												? "live"
+												: contest.status || "unknown"
+											).toUpperCase()}
 										</div>
-										{contest.ctftimeId && (
-											<a
-												href={`https://ctftime.org/event/${contest.ctftimeId}`}
+										{contest.ctftime_id && (
+											<Link
+												href={`https://ctftime.org/event/${contest.ctftime_id}`}
 												target="_blank"
 												rel="noopener noreferrer"
 											>
@@ -514,7 +454,7 @@ export default function ContestDetailsPage() {
 													<Flag className="h-3 w-3 mr-1" />
 													CTFtime
 												</Badge>
-											</a>
+											</Link>
 										)}
 									</div>
 
@@ -537,42 +477,23 @@ export default function ContestDetailsPage() {
 								</div>
 
 								{/* Additional Details */}
-								{(contest.rulesUrl || contest.prizes.length > 0) && (
+								{(contest.rules || contest.prizes) && (
 									<div className="space-y-4">
-										{contest.rulesUrl && (
+										{contest.rules && (
 											<div>
 												<h3 className="font-bold font-mono text-primary mb-2">
 													&gt; RULES
 												</h3>
-												<a
-													href={contest.rulesUrl}
-													target="_blank"
-													rel="noopener noreferrer"
-													className="text-primary hover:underline"
-												>
-													View Contest Rules
-												</a>
+												<div className="space-y-2">{contest.rules}</div>
 											</div>
 										)}
 
-										{contest.prizes.length > 0 && (
+										{contest.prizes && (
 											<div>
 												<h3 className="font-bold font-mono text-primary mb-2">
 													&gt; PRIZES
 												</h3>
-												<div className="space-y-2">
-													{contest.prizes.slice(0, 3).map((prize, index) => (
-														<div
-															key={index}
-															className="text-muted-foreground text-sm"
-														>
-															{prize.rank}. {prize.description}
-															{prize.value &&
-																prize.currency &&
-																` - ${prize.value} ${prize.currency}`}
-														</div>
-													))}
-												</div>
+												<div className="space-y-2">{contest.prizes}</div>
 											</div>
 										)}
 									</div>
@@ -605,15 +526,17 @@ export default function ContestDetailsPage() {
 											<div className="font-mono text-sm">{getDuration()}</div>
 										</div>
 
-										<div>
-											<div className="flex items-center gap-2 text-muted-foreground mb-1">
-												<Users className="h-4 w-4" />
-												<span className="text-sm">Participants</span>
+										{contest.edges?.places && (
+											<div>
+												<div className="flex items-center gap-2 text-muted-foreground mb-1">
+													<Users className="h-4 w-4" />
+													<span className="text-sm">Participants</span>
+												</div>
+												<div className="font-mono text-sm">
+													{contest.edges.places.length} teams
+												</div>
 											</div>
-											<div className="font-mono text-sm">
-												{contest.participantCount} teams
-											</div>
-										</div>
+										)}
 
 										<div>
 											<div className="flex items-center gap-2 text-muted-foreground mb-1">
@@ -623,24 +546,24 @@ export default function ContestDetailsPage() {
 											<div
 												className={clsx(
 													"font-mono font-bold",
-													getWeightColor(contest.weight || 0)
+													getWeightColor(contest.assigned_weight_points || 0)
 												)}
 											>
-												{contest.weight || 0} pts
+												{contest.assigned_weight_points || 0} pts
 											</div>
 										</div>
 
-										{contest.website && (
+										{contest.url && (
 											<div className="pt-4">
-												<a
-													href={contest.website}
+												<Link
+													href={contest.url}
 													target="_blank"
 													rel="noopener noreferrer"
 													className="w-full bg-primary hover:bg-primary/80 text-primary-foreground px-4 py-2 rounded font-mono font-bold text-sm transition-colors flex items-center justify-center gap-2"
 												>
 													<ExternalLink className="h-4 w-4" />
 													VISIT CONTEST
-												</a>
+												</Link>
 											</div>
 										)}
 									</div>
@@ -652,8 +575,8 @@ export default function ContestDetailsPage() {
 
 				{/* Leaderboard Section */}
 				{contest.status === "finished" &&
-					leaderboard &&
-					leaderboard.entries.length > 0 && (
+					contest.edges?.places &&
+					contest.edges.places.length > 0 && (
 						<section className="py-12 px-4">
 							<div className="max-w-7xl mx-auto">
 								<motion.div
@@ -688,41 +611,10 @@ export default function ContestDetailsPage() {
 													</tr>
 												</thead>
 												<tbody>
-													{[
-														...leaderboard.entries,
-														...Array.from(
-															{
-																length: Math.max(
-																	0,
-																	15 - leaderboard.entries.length
-																),
-															},
-															(_, i) => ({
-																participantId: `mock-${leaderboard.entries.length + i + 1}`,
-																rank: leaderboard.entries.length + i + 1,
-																participantName: `Team${leaderboard.entries.length + i + 1}`,
-																score: Math.max(
-																	100,
-																	5000 - (leaderboard.entries.length + i) * 200
-																),
-															})
-														),
-													].map((entry, index) => (
+													{contest.edges.places.map((place, index) => (
 														<PlaceRow
-															key={entry.participantId}
-															place={{
-																id: entry.participantId,
-																rank: entry.rank,
-																teamName: entry.participantName,
-																contestPoints:
-																	entry.score ||
-																	Math.max(100, 5000 - (entry.rank - 1) * 200),
-																openctfPoints: (
-																	1000 -
-																	(entry.rank - 1) * 50
-																).toFixed(1),
-																ctftimeId: 12345 + index * 1000,
-															}}
+															key={place.id}
+															place={place}
 															index={index}
 															contestName={contest.name}
 															userTeam={userTeam}

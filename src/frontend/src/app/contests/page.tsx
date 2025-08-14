@@ -19,8 +19,8 @@ import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 import { MainLayout } from "@/components/layout/MainLayout";
 import { ContestCard } from "@/components/contests/ContestCard";
 import { LiveCTFWidget } from "@/components/contests/LiveCTFWidget";
-import { getContests, Contest } from "@/api/contests";
-import { ContestStatus, ContestStatusType } from "@/types/api";
+import { getContests, ParsedContest } from "@/api/contests";
+import { RawContest, ContestStatus, ContestStatusType } from "@/types/api";
 import { clsx } from "clsx";
 
 const contestStatuses: {
@@ -29,9 +29,9 @@ const contestStatuses: {
 	icon: React.ComponentType<{ className?: undefined | string }>;
 }[] = [
 	{ status: "all", label: "All Contests", icon: Calendar },
-	{ status: ContestStatus.ONGOING, label: "Live Now", icon: Target },
-	{ status: ContestStatus.UPCOMING, label: "Upcoming", icon: Clock },
-	{ status: ContestStatus.FINISHED, label: "Finished", icon: Trophy },
+	{ status: ContestStatus.Ongoing, label: "Live Now", icon: Target },
+	{ status: ContestStatus.Upcoming, label: "Upcoming", icon: Clock },
+	{ status: ContestStatus.Finished, label: "Finished", icon: Trophy },
 ];
 
 const ratingOptions = [
@@ -64,7 +64,7 @@ interface ContestFilters {
 	year?: undefined | number;
 }
 
-const ContestTableRow = ({ contest }: { contest: Contest }) => (
+const ContestTableRow = ({ contest }: { contest: RawContest }) => (
 	<tr
 		className="border-b border-border/50 hover:bg-muted/20 transition-colors cursor-pointer"
 		onClick={() => (window.location.href = `/contests/${contest.id}`)}
@@ -102,31 +102,31 @@ const ContestTableRow = ({ contest }: { contest: Contest }) => (
 				<span
 					className={clsx(
 						"font-bold",
-						(contest.weight || 0) >= 80
+						(contest.assigned_weight_points || 0) >= 80
 							? "text-red-400"
-							: (contest.weight || 0) >= 50
+							: (contest.assigned_weight_points || 0) >= 50
 								? "text-yellow-400"
-								: (contest.weight || 0) >= 20
+								: (contest.assigned_weight_points || 0) >= 20
 									? "text-blue-400"
 									: "text-green-400"
 					)}
 				>
-					{contest.weight || 0}
+					{contest.assigned_weight_points || 0}
 				</span>
 			</div>
 		</td>
 		<td className="p-4 font-mono text-sm">
 			<div className="flex items-center gap-1">
 				<Users className="h-4 w-4 text-muted-foreground" />
-				{contest.participantCount}
+				{contest.edges?.places?.length ?? "---"}
 			</div>
 		</td>
 	</tr>
 );
 
 export default function ContestsPage() {
-	const [contests, setContests] = useState<Contest[]>([]);
-	const [filteredContests, setFilteredContests] = useState<Contest[]>([]);
+	const [contests, setContests] = useState<ParsedContest[]>([]);
+	const [filteredContests, setFilteredContests] = useState<ParsedContest[]>([]);
 	const [isLoading, setIsLoading] = useState(true);
 	const [filters, setFilters] = useState<ContestFilters>({
 		search: "",
@@ -138,9 +138,12 @@ export default function ContestsPage() {
 		const fetchContests = async () => {
 			try {
 				setIsLoading(true);
-				const response = await getContests({}, 1, 50);
-				setContests(response.data?.contests || []);
-				setFilteredContests(response.data?.contests || []);
+				const contests = await getContests({
+					Offset: 0,
+					Limit: 50,
+				});
+				setContests(contests || []);
+				setFilteredContests(contests || []);
 			} catch (error) {
 				console.error("Error fetching contests:", error);
 			} finally {
@@ -182,7 +185,7 @@ export default function ContestsPage() {
 		// Weight filter
 		if (filters.minWeight !== undefined && filters.maxWeight !== undefined) {
 			filtered = filtered.filter((contest) => {
-				const weight = contest.weight || 0;
+				const weight = contest.assigned_weight_points || 0;
 				return weight >= filters.minWeight! && weight <= filters.maxWeight!;
 			});
 		}
@@ -222,7 +225,11 @@ export default function ContestsPage() {
 		});
 	};
 
-	const OngoingContestsSection = ({ contests }: { contests: Contest[] }) => {
+	const OngoingContestsSection = ({
+		contests,
+	}: {
+		contests: ParsedContest[];
+	}) => {
 		const [currentPage, setCurrentPage] = useState(1);
 		const itemsPerPage = 6;
 		const totalPages = Math.ceil(contests.length / itemsPerPage);
@@ -290,7 +297,11 @@ export default function ContestsPage() {
 		);
 	};
 
-	const UpcomingContestsSection = ({ contests }: { contests: Contest[] }) => {
+	const UpcomingContestsSection = ({
+		contests,
+	}: {
+		contests: ParsedContest[];
+	}) => {
 		const [currentPage, setCurrentPage] = useState(1);
 		const itemsPerPage = 6;
 		const totalPages = Math.ceil(contests.length / itemsPerPage);
@@ -359,7 +370,11 @@ export default function ContestsPage() {
 		);
 	};
 
-	const FinishedContestsSection = ({ contests }: { contests: Contest[] }) => {
+	const FinishedContestsSection = ({
+		contests,
+	}: {
+		contests: ParsedContest[];
+	}) => {
 		const [currentPage, setCurrentPage] = useState(1);
 		const itemsPerPage = 20;
 		const totalPages = Math.ceil(contests.length / itemsPerPage);
@@ -522,29 +537,23 @@ export default function ContestsPage() {
 
 	// Group contests by status
 	const ongoingContests = filteredContests.filter(
-		(c) => c.status === "live" // Contest interface uses 'live' not 'ongoing'
+		(c) => c.status === ContestStatus.Ongoing // Contest interface uses 'live' not 'ongoing'
 	);
 	const upcomingContests = filteredContests.filter(
-		(c) => c.status === "upcoming"
+		(c) => c.status === ContestStatus.Upcoming
 	);
 	const finishedContests = filteredContests.filter(
-		(c) => c.status === "finished"
+		(c) => c.status === ContestStatus.Finished
 	);
 
-	// Stats
 	const stats = {
 		total: contests.length,
-		ongoing: contests.filter((c) => c.status === "live").length, // Contest interface uses 'live'
-		upcoming: contests.filter((c) => c.status === "upcoming").length,
-		finished: contests.filter((c) => c.status === "finished").length,
+		ongoing: contests.filter((c) => c.status === ContestStatus.Ongoing).length, // Contest interface uses 'live'
+		upcoming: contests.filter((c) => c.status === ContestStatus.Upcoming)
+			.length,
+		finished: contests.filter((c) => c.status === ContestStatus.Finished)
+			.length,
 	};
-
-	const hasActiveFilters =
-		filters.search ||
-		filters.status !== "all" ||
-		filters.minRating ||
-		filters.minWeight ||
-		filters.year;
 
 	return (
 		<MainLayout>
@@ -712,22 +721,21 @@ export default function ContestsPage() {
 							</div>
 
 							{/* Clear Filters */}
-							{hasActiveFilters && (
-								<div className="flex justify-between items-center">
-									<span className="text-sm text-muted-foreground font-mono">
-										Showing {filteredContests.length} of {contests.length}{" "}
-										contests
-									</span>
-									<Button
-										variant="outline"
-										size="sm"
-										onClick={clearFilters}
-										className="font-mono"
-									>
-										Clear Filters
-									</Button>
-								</div>
-							)}
+
+							<div className="flex justify-between items-center">
+								<span className="text-sm text-muted-foreground font-mono">
+									Showing {filteredContests.length} of {contests.length}{" "}
+									contests
+								</span>
+								<Button
+									variant="outline"
+									size="sm"
+									onClick={clearFilters}
+									className="font-mono"
+								>
+									Clear Filters
+								</Button>
+							</div>
 						</motion.div>
 					</div>
 				</section>
@@ -743,7 +751,7 @@ export default function ContestsPage() {
 							<>
 								{/* Ongoing Contests */}
 								{(filters.status === "all" ||
-									filters.status === ContestStatus.ONGOING) &&
+									filters.status === ContestStatus.Ongoing) &&
 									ongoingContests.length > 0 && (
 										<OngoingContestsSection contests={ongoingContests} />
 									)}

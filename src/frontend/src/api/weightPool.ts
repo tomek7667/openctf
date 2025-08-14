@@ -1,5 +1,5 @@
 import { sleep } from "@/lib/utils";
-import type { Contest, AggregatedContestsDifficulties } from "@/types/api";
+import type { RawContest, AggregatedContestsDifficulties } from "@/types/api";
 
 export interface MonthlyDistribution {
 	month: string;
@@ -11,7 +11,7 @@ export interface MonthlyDistribution {
 }
 
 export interface ContestWeightHistory {
-	contest: Contest;
+	contest: RawContest;
 	avgDifficulty: number;
 	avgQuality?: number;
 	totalRatings: number;
@@ -84,24 +84,24 @@ export const getContestWeightHistory = async (): Promise<
 	await sleep(1000);
 	// TODO: implement getContestWeightHistory
 	return [
-		{
-			contest: {
-				id: 1,
-				name: "cybersec-challenge-2025",
-				description: "International cybersecurity competition",
-				start: "2025-01-15T14:00:00Z",
-				end: "2025-01-17T14:00:00Z",
-				assigned_weight_points: 35,
-				participantCount: 287,
-				places: [],
-			} as Contest,
-			avgDifficulty: 85,
-			avgQuality: 4.5,
-			totalRatings: 156,
-			participants: 287,
-			weightReceived: 35,
-			eligible: true,
-		},
+		// {
+		// 	contest: {
+		// 		id: 1,
+		// 		name: "cybersec-challenge-2025",
+		// 		description: "International cybersecurity competition",
+		// 		start: "2025-01-15T14:00:00Z",
+		// 		end: "2025-01-17T14:00:00Z",
+		// 		assigned_weight_points: 35,
+		// 		participantCount: 287,
+		// 		places: [],
+		// 	} as RawContest,
+		// 	avgDifficulty: 85,
+		// 	avgQuality: 4.5,
+		// 	totalRatings: 156,
+		// 	participants: 287,
+		// 	weightReceived: 35,
+		// 	eligible: true,
+		// },
 	];
 };
 

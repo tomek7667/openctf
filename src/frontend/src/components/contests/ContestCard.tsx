@@ -14,12 +14,12 @@ import {
 	Shield,
 } from "@/components/ui/icons";
 import { Card, CardContent, CardHeader } from "@/components/ui/Card";
-import { Contest } from "@/api/contests";
 import { ContestStatus } from "@/types/api";
 import { clsx } from "clsx";
+import { ParsedContest } from "@/api";
 
 interface ContestCardProps {
-	contest: Contest;
+	contest: ParsedContest;
 	index?: undefined | number;
 }
 
@@ -114,7 +114,7 @@ export function ContestCard({ contest, index = 0 }: ContestCardProps) {
 						"h-full transition-all duration-300 hacker-border rounded-none",
 						"bg-card/50 backdrop-blur-sm",
 						"hover:border-primary/60 hover:shadow-lg hover:shadow-primary/20",
-						contest.status === "live" &&
+						contest.status === ContestStatus.Ongoing &&
 							"border-green-400/60 shadow-lg shadow-green-400/20"
 					)}
 				>
@@ -132,11 +132,14 @@ export function ContestCard({ contest, index = 0 }: ContestCardProps) {
 							<div
 								className={clsx(
 									"px-2 py-1 rounded border text-xs font-mono font-bold flex items-center gap-1 shrink-0",
-									getStatusColor(contest.status as ContestStatus)
+									getStatusColor(contest.status)
 								)}
 							>
-								{getStatusIcon(contest.status as ContestStatus)}
-								{(contest.status || "unknown").toUpperCase()}
+								{getStatusIcon(contest.status)}
+								{(contest.status === ContestStatus.Ongoing
+									? "live"
+									: contest.status || "unknown"
+								).toUpperCase()}
 							</div>
 						</div>
 					</CardHeader>
@@ -183,10 +186,10 @@ export function ContestCard({ contest, index = 0 }: ContestCardProps) {
 								<div
 									className={clsx(
 										"font-mono font-bold",
-										getWeightColor(contest.weight || 0)
+										getWeightColor(contest.assigned_weight_points || 0)
 									)}
 								>
-									{contest.weight || 0} pts
+									{contest.assigned_weight_points || 0} pts
 								</div>
 							</div>
 						</div>
@@ -195,9 +198,9 @@ export function ContestCard({ contest, index = 0 }: ContestCardProps) {
 						<div className="flex items-center gap-4 text-sm text-muted-foreground pt-2 border-t border-border/50">
 							<div className="flex items-center gap-1">
 								<Users className="h-4 w-4" />
-								<span>{contest.participantCount || 0}</span>
+								<span>{contest.edges?.places?.length ?? "---"}</span>
 							</div>
-							{contest.ctftimeId && (
+							{contest.ctftime_id && (
 								<div className="flex items-center gap-1">
 									<Flag className="h-4 w-4" />
 									<span className="text-xs">CTFtime</span>

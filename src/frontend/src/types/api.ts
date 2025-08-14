@@ -18,6 +18,37 @@ export interface User {
 	github_avatar_url?: string;
 }
 
+export interface RawContest {
+	id: number;
+	name: string;
+	description: string;
+	rules: string;
+	prizes: string;
+	start: string;
+	end: string;
+	duration: number;
+	url: string;
+	ctftime_id: number;
+	assigned_weight_points: number;
+	logo: string | null;
+	edges?: contestEdges;
+}
+
+export interface contestEdges {
+	places?: Place[];
+}
+
+export interface Place {
+	id: number;
+	team_name: string;
+	place: number;
+	ctftime_team_id: number | null;
+	contest_points: number;
+	openctf_points: number | null;
+	associated_contest_id: number;
+	assigned_weight_points: number;
+}
+
 export interface Team {
 	id: number;
 	name: string;
@@ -32,52 +63,19 @@ export interface Team {
 	members?: User[];
 }
 
-export interface Contest {
-	id: number;
-	name: string;
-	description?: string;
-	rules?: string;
-	prizes?: string;
-	start: string;
-	end: string;
-	url?: string;
-	ctftime_id?: number;
-	assigned_weight_points: number;
-	logo?: string;
-	organizers?: Team;
-	places?: Place[];
-	status?: ContestStatus;
-	assignedWeightPoints?: number;
-	averageRating?: number;
-	totalRatings?: number;
-	participantCount?: number;
-}
-
-export interface Place {
-	id: number;
-	team_name: string;
-	place: number;
-	ctftime_team_id?: number;
-	contest_points?: number;
-	openctf_points?: number;
-	associated_contest_id: number;
-	assigned_weight_points: number;
-	associated_team?: Team;
-}
-
 export interface ContestRating {
 	id: number;
 	rating: number;
 	relevant: boolean;
 	user: User;
-	contest: Contest;
+	contest: RawContest;
 }
 
 export interface WeightRating {
 	id: number;
 	difficulty: number;
 	captains_team: Team;
-	contest: Contest;
+	contest: RawContest;
 }
 
 export interface AggregatedContestsDifficulties {
@@ -90,17 +88,17 @@ export interface AggregatedContestsDifficulties {
 }
 
 export enum ContestStatus {
-	UPCOMING = "upcoming",
-	ONGOING = "ongoing",
-	FINISHED = "finished",
-	CANCELLED = "cancelled",
+	Upcoming = "upcoming",
+	Ongoing = "ongoing",
+	Finished = "finished",
+	Cancelled = "cancelled",
 }
 
 export type ContestStatusType =
-	| ContestStatus.UPCOMING
-	| ContestStatus.ONGOING
-	| ContestStatus.FINISHED
-	| ContestStatus.CANCELLED;
+	| ContestStatus.Upcoming
+	| ContestStatus.Ongoing
+	| ContestStatus.Finished
+	| ContestStatus.Cancelled;
 
 export interface ApiResponse<T = unknown> {
 	success: boolean;

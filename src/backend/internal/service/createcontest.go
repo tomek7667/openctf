@@ -32,6 +32,7 @@ func (c *Client) CreateContest(ctx context.Context, organizers *ent.Team, dto *C
 		SetPrizes(dto.Prizes).
 		SetStart(dto.Start).
 		SetEnd(dto.End).
+		SetDuration(dto.End.Sub(dto.Start).Hours()).
 		SetURL(dto.Url)
 
 		// the contest must have organizers or have ctftime ID

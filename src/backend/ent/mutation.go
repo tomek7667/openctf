@@ -1167,6 +1167,8 @@ type ContestMutation struct {
 	prizes                    *string
 	start                     *time.Time
 	end                       *time.Time
+	duration                  *float64
+	addduration               *float64
 	url                       *string
 	ctftime_id                *int
 	addctftime_id             *int
@@ -1537,6 +1539,62 @@ func (m *ContestMutation) ResetEnd() {
 	m.end = nil
 }
 
+// SetDuration sets the "duration" field.
+func (m *ContestMutation) SetDuration(f float64) {
+	m.duration = &f
+	m.addduration = nil
+}
+
+// Duration returns the value of the "duration" field in the mutation.
+func (m *ContestMutation) Duration() (r float64, exists bool) {
+	v := m.duration
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldDuration returns the old "duration" field's value of the Contest entity.
+// If the Contest object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ContestMutation) OldDuration(ctx context.Context) (v float64, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldDuration is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldDuration requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldDuration: %w", err)
+	}
+	return oldValue.Duration, nil
+}
+
+// AddDuration adds f to the "duration" field.
+func (m *ContestMutation) AddDuration(f float64) {
+	if m.addduration != nil {
+		*m.addduration += f
+	} else {
+		m.addduration = &f
+	}
+}
+
+// AddedDuration returns the value that was added to the "duration" field in this mutation.
+func (m *ContestMutation) AddedDuration() (r float64, exists bool) {
+	v := m.addduration
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetDuration resets all changes to the "duration" field.
+func (m *ContestMutation) ResetDuration() {
+	m.duration = nil
+	m.addduration = nil
+}
+
 // SetURL sets the "url" field.
 func (m *ContestMutation) SetURL(s string) {
 	m.url = &s
@@ -1888,7 +1946,7 @@ func (m *ContestMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *ContestMutation) Fields() []string {
-	fields := make([]string, 0, 10)
+	fields := make([]string, 0, 11)
 	if m.name != nil {
 		fields = append(fields, contest.FieldName)
 	}
@@ -1906,6 +1964,9 @@ func (m *ContestMutation) Fields() []string {
 	}
 	if m.end != nil {
 		fields = append(fields, contest.FieldEnd)
+	}
+	if m.duration != nil {
+		fields = append(fields, contest.FieldDuration)
 	}
 	if m.url != nil {
 		fields = append(fields, contest.FieldURL)
@@ -1939,6 +2000,8 @@ func (m *ContestMutation) Field(name string) (ent.Value, bool) {
 		return m.Start()
 	case contest.FieldEnd:
 		return m.End()
+	case contest.FieldDuration:
+		return m.Duration()
 	case contest.FieldURL:
 		return m.URL()
 	case contest.FieldCtftimeID:
@@ -1968,6 +2031,8 @@ func (m *ContestMutation) OldField(ctx context.Context, name string) (ent.Value,
 		return m.OldStart(ctx)
 	case contest.FieldEnd:
 		return m.OldEnd(ctx)
+	case contest.FieldDuration:
+		return m.OldDuration(ctx)
 	case contest.FieldURL:
 		return m.OldURL(ctx)
 	case contest.FieldCtftimeID:
@@ -2027,6 +2092,13 @@ func (m *ContestMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetEnd(v)
 		return nil
+	case contest.FieldDuration:
+		v, ok := value.(float64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetDuration(v)
+		return nil
 	case contest.FieldURL:
 		v, ok := value.(string)
 		if !ok {
@@ -2063,6 +2135,9 @@ func (m *ContestMutation) SetField(name string, value ent.Value) error {
 // this mutation.
 func (m *ContestMutation) AddedFields() []string {
 	var fields []string
+	if m.addduration != nil {
+		fields = append(fields, contest.FieldDuration)
+	}
 	if m.addctftime_id != nil {
 		fields = append(fields, contest.FieldCtftimeID)
 	}
@@ -2077,6 +2152,8 @@ func (m *ContestMutation) AddedFields() []string {
 // was not set, or was not defined in the schema.
 func (m *ContestMutation) AddedField(name string) (ent.Value, bool) {
 	switch name {
+	case contest.FieldDuration:
+		return m.AddedDuration()
 	case contest.FieldCtftimeID:
 		return m.AddedCtftimeID()
 	case contest.FieldAssignedWeightPoints:
@@ -2090,6 +2167,13 @@ func (m *ContestMutation) AddedField(name string) (ent.Value, bool) {
 // type.
 func (m *ContestMutation) AddField(name string, value ent.Value) error {
 	switch name {
+	case contest.FieldDuration:
+		v, ok := value.(float64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddDuration(v)
+		return nil
 	case contest.FieldCtftimeID:
 		v, ok := value.(int)
 		if !ok {
@@ -2187,6 +2271,9 @@ func (m *ContestMutation) ResetField(name string) error {
 		return nil
 	case contest.FieldEnd:
 		m.ResetEnd()
+		return nil
+	case contest.FieldDuration:
+		m.ResetDuration()
 		return nil
 	case contest.FieldURL:
 		m.ResetURL()

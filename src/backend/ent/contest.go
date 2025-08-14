@@ -30,6 +30,8 @@ type Contest struct {
 	Start time.Time `json:"start"`
 	// End holds the value of the "end" field.
 	End time.Time `json:"end"`
+	// duration of the contest in hours
+	Duration float64 `json:"duration"`
 	// URL holds the value of the "url" field.
 	URL *string `json:"url"`
 	// CtftimeID holds the value of the "ctftime_id" field.
@@ -83,6 +85,8 @@ func (*Contest) scanValues(columns []string) ([]any, error) {
 		switch columns[i] {
 		case contest.FieldLogo:
 			values[i] = new([]byte)
+		case contest.FieldDuration:
+			values[i] = new(sql.NullFloat64)
 		case contest.FieldID, contest.FieldCtftimeID, contest.FieldAssignedWeightPoints:
 			values[i] = new(sql.NullInt64)
 		case contest.FieldName, contest.FieldDescription, contest.FieldRules, contest.FieldPrizes, contest.FieldURL:
@@ -150,6 +154,12 @@ func (_m *Contest) assignValues(columns []string, values []any) error {
 				return fmt.Errorf("unexpected type %T for field end", values[i])
 			} else if value.Valid {
 				_m.End = value.Time
+			}
+		case contest.FieldDuration:
+			if value, ok := values[i].(*sql.NullFloat64); !ok {
+				return fmt.Errorf("unexpected type %T for field duration", values[i])
+			} else if value.Valid {
+				_m.Duration = value.Float64
 			}
 		case contest.FieldURL:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -253,6 +263,9 @@ func (_m *Contest) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("end=")
 	builder.WriteString(_m.End.Format(time.ANSIC))
+	builder.WriteString(", ")
+	builder.WriteString("duration=")
+	builder.WriteString(fmt.Sprintf("%v", _m.Duration))
 	builder.WriteString(", ")
 	if v := _m.URL; v != nil {
 		builder.WriteString("url=")

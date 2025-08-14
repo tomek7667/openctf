@@ -84,6 +84,12 @@ func (_c *ContestCreate) SetEnd(v time.Time) *ContestCreate {
 	return _c
 }
 
+// SetDuration sets the "duration" field.
+func (_c *ContestCreate) SetDuration(v float64) *ContestCreate {
+	_c.mutation.SetDuration(v)
+	return _c
+}
+
 // SetURL sets the "url" field.
 func (_c *ContestCreate) SetURL(v string) *ContestCreate {
 	_c.mutation.SetURL(v)
@@ -223,6 +229,9 @@ func (_c *ContestCreate) check() error {
 	if _, ok := _c.mutation.End(); !ok {
 		return &ValidationError{Name: "end", err: errors.New(`ent: missing required field "Contest.end"`)}
 	}
+	if _, ok := _c.mutation.Duration(); !ok {
+		return &ValidationError{Name: "duration", err: errors.New(`ent: missing required field "Contest.duration"`)}
+	}
 	if v, ok := _c.mutation.URL(); ok {
 		if err := contest.URLValidator(v); err != nil {
 			return &ValidationError{Name: "url", err: fmt.Errorf(`ent: validator failed for field "Contest.url": %w`, err)}
@@ -286,6 +295,10 @@ func (_c *ContestCreate) createSpec() (*Contest, *sqlgraph.CreateSpec) {
 	if value, ok := _c.mutation.End(); ok {
 		_spec.SetField(contest.FieldEnd, field.TypeTime, value)
 		_node.End = value
+	}
+	if value, ok := _c.mutation.Duration(); ok {
+		_spec.SetField(contest.FieldDuration, field.TypeFloat64, value)
+		_node.Duration = value
 	}
 	if value, ok := _c.mutation.URL(); ok {
 		_spec.SetField(contest.FieldURL, field.TypeString, value)
@@ -475,6 +488,24 @@ func (u *ContestUpsert) SetEnd(v time.Time) *ContestUpsert {
 // UpdateEnd sets the "end" field to the value that was provided on create.
 func (u *ContestUpsert) UpdateEnd() *ContestUpsert {
 	u.SetExcluded(contest.FieldEnd)
+	return u
+}
+
+// SetDuration sets the "duration" field.
+func (u *ContestUpsert) SetDuration(v float64) *ContestUpsert {
+	u.Set(contest.FieldDuration, v)
+	return u
+}
+
+// UpdateDuration sets the "duration" field to the value that was provided on create.
+func (u *ContestUpsert) UpdateDuration() *ContestUpsert {
+	u.SetExcluded(contest.FieldDuration)
+	return u
+}
+
+// AddDuration adds v to the "duration" field.
+func (u *ContestUpsert) AddDuration(v float64) *ContestUpsert {
+	u.Add(contest.FieldDuration, v)
 	return u
 }
 
@@ -698,6 +729,27 @@ func (u *ContestUpsertOne) SetEnd(v time.Time) *ContestUpsertOne {
 func (u *ContestUpsertOne) UpdateEnd() *ContestUpsertOne {
 	return u.Update(func(s *ContestUpsert) {
 		s.UpdateEnd()
+	})
+}
+
+// SetDuration sets the "duration" field.
+func (u *ContestUpsertOne) SetDuration(v float64) *ContestUpsertOne {
+	return u.Update(func(s *ContestUpsert) {
+		s.SetDuration(v)
+	})
+}
+
+// AddDuration adds v to the "duration" field.
+func (u *ContestUpsertOne) AddDuration(v float64) *ContestUpsertOne {
+	return u.Update(func(s *ContestUpsert) {
+		s.AddDuration(v)
+	})
+}
+
+// UpdateDuration sets the "duration" field to the value that was provided on create.
+func (u *ContestUpsertOne) UpdateDuration() *ContestUpsertOne {
+	return u.Update(func(s *ContestUpsert) {
+		s.UpdateDuration()
 	})
 }
 
@@ -1098,6 +1150,27 @@ func (u *ContestUpsertBulk) SetEnd(v time.Time) *ContestUpsertBulk {
 func (u *ContestUpsertBulk) UpdateEnd() *ContestUpsertBulk {
 	return u.Update(func(s *ContestUpsert) {
 		s.UpdateEnd()
+	})
+}
+
+// SetDuration sets the "duration" field.
+func (u *ContestUpsertBulk) SetDuration(v float64) *ContestUpsertBulk {
+	return u.Update(func(s *ContestUpsert) {
+		s.SetDuration(v)
+	})
+}
+
+// AddDuration adds v to the "duration" field.
+func (u *ContestUpsertBulk) AddDuration(v float64) *ContestUpsertBulk {
+	return u.Update(func(s *ContestUpsert) {
+		s.AddDuration(v)
+	})
+}
+
+// UpdateDuration sets the "duration" field to the value that was provided on create.
+func (u *ContestUpsertBulk) UpdateDuration() *ContestUpsertBulk {
+	return u.Update(func(s *ContestUpsert) {
+		s.UpdateDuration()
 	})
 }
 

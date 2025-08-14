@@ -531,21 +531,6 @@ export async function createTeam(
 	};
 }
 
-export async function getUserTeams(
-	userId: string
-): Promise<ApiResponse<Team[]>> {
-	await new Promise((resolve) => setTimeout(resolve, 200));
-
-	const userTeams = mockTeams.filter((team) =>
-		team.members?.some((member) => member.id.toString() === userId)
-	);
-
-	return {
-		success: true,
-		data: userTeams,
-	};
-}
-
 // Placeholder functions for team management
 export async function getTeamApplications(
 	_teamId: string | number,

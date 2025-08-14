@@ -9,7 +9,6 @@ import {
 	Shield,
 	Star,
 	Trophy,
-
 	ChevronLeft,
 	ChevronRight,
 	Globe,
@@ -22,8 +21,12 @@ import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 import { MainLayout } from "@/components/layout/MainLayout";
-import { getCountryByCode, getPopularCountries, COUNTRIES } from "@/lib/countries";
-import { getTeams, Team, TeamFilters, getUserTeams } from "@/api/teams";
+import {
+	getCountryByCode,
+	getPopularCountries,
+	COUNTRIES,
+} from "@/lib/countries";
+import { getTeams, Team, TeamFilters } from "@/api/teams";
 import { useAuthStore } from "@/store/authStore";
 import { clsx } from "clsx";
 
@@ -75,9 +78,13 @@ const CompactStatCard = ({
 		<div className="flex items-center gap-2">
 			<span className="text-xs font-mono text-muted-foreground">{label}:</span>
 			{isLoading ? (
-				<span className="text-sm font-bold font-mono text-primary animate-pulse">--</span>
+				<span className="text-sm font-bold font-mono text-primary animate-pulse">
+					--
+				</span>
 			) : (
-				<span className="text-sm font-bold font-mono text-primary">{value}</span>
+				<span className="text-sm font-bold font-mono text-primary">
+					{value}
+				</span>
 			)}
 		</div>
 	</div>
@@ -141,7 +148,10 @@ const TeamTableRow = ({ team }: { team: TeamWithStats }) => {
 	const PrivacyIcon = privacyIcons[team.privacy];
 
 	return (
-		<tr className="border-b border-border/50 hover:bg-muted/20 transition-colors cursor-pointer" onClick={() => window.location.href = `/teams/${team.id}`}>
+		<tr
+			className="border-b border-border/50 hover:bg-muted/20 transition-colors cursor-pointer"
+			onClick={() => (window.location.href = `/teams/${team.id}`)}
+		>
 			<td className="p-3">
 				<div className="flex items-center gap-3">
 					<div
@@ -161,9 +171,14 @@ const TeamTableRow = ({ team }: { team: TeamWithStats }) => {
 							<span className="font-bold text-foreground font-mono text-base">
 								{team.name}
 							</span>
-							<PrivacyIcon className={`h-3 w-3 ${privacyColors[team.privacy]}`} />
+							<PrivacyIcon
+								className={`h-3 w-3 ${privacyColors[team.privacy]}`}
+							/>
 							{team.recruitment.isRecruiting && (
-								<Badge variant="outline" className="text-xs font-mono text-green-400 border-green-400">
+								<Badge
+									variant="outline"
+									className="text-xs font-mono text-green-400 border-green-400"
+								>
 									RECRUITING
 								</Badge>
 							)}
@@ -176,17 +191,19 @@ const TeamTableRow = ({ team }: { team: TeamWithStats }) => {
 			</td>
 			<td className="p-3">
 				<div className="flex items-center gap-2">
-					<span className="text-base">{getCountryByCode(team.country_code || "US")?.flag || "🌍"}</span>
+					<span className="text-base">
+						{getCountryByCode(team.country_code || "US")?.flag || "🌍"}
+					</span>
 					<span className="font-mono text-sm">{team.country_code || "US"}</span>
 				</div>
 			</td>
 			<td className="p-3 font-mono text-sm font-bold text-primary">
 				{team.statistics.currentRating.toLocaleString()}
 			</td>
+			<td className="p-3 font-mono text-sm">{team.memberCount}</td>
 			<td className="p-3 font-mono text-sm">
-				{team.memberCount}
+				{team.statistics.contestsParticipated}
 			</td>
-			<td className="p-3 font-mono text-sm">{team.statistics.contestsParticipated}</td>
 			<td className="p-3 font-mono text-sm">{team.statistics.contestsWon}</td>
 		</tr>
 	);
@@ -284,7 +301,7 @@ const Pagination = ({
 export default function TeamsPage() {
 	const { user, isAuthenticated } = useAuthStore();
 	const [teams, setTeams] = useState<TeamWithStats[]>([]);
-	const [, setUserTeams] = useState<Team[]>([]);
+	// const [userTeams, setUserTeams] = useState<Team[]>([]);
 	const [isLoading, setIsLoading] = useState(true);
 	const [showCountryFilter, setShowCountryFilter] = useState(false);
 	const [showAllCountries, setShowAllCountries] = useState(false);
@@ -307,18 +324,26 @@ export default function TeamsPage() {
 
 				const teamFilters: TeamFilters = {};
 				if (filters.search) teamFilters.search = filters.search;
-				if (filters.countries.length > 0 && !resetFilters && filters.countries[0]) teamFilters.country = filters.countries[0];
+				if (
+					filters.countries.length > 0 &&
+					!resetFilters &&
+					filters.countries[0]
+				)
+					teamFilters.country = filters.countries[0];
 				if (filters.minRating) teamFilters.minRating = filters.minRating;
-				if (filters.isRecruiting !== undefined) teamFilters.isRecruiting = filters.isRecruiting;
+				if (filters.isRecruiting !== undefined)
+					teamFilters.isRecruiting = filters.isRecruiting;
 				teamFilters.sortBy = "rating";
 
 				const response = await getTeams(teamFilters, page, pagination.pageSize);
 				if (response.success && response.data) {
 					// Add ranking to teams based on rating
-					const teamsWithRanking: TeamWithStats[] = response.data.teams.map((team, index) => ({
-						...team,
-						ranking: (page - 1) * pagination.pageSize + index + 1,
-					}));
+					const teamsWithRanking: TeamWithStats[] = response.data.teams.map(
+						(team, index) => ({
+							...team,
+							ranking: (page - 1) * pagination.pageSize + index + 1,
+						})
+					);
 
 					setTeams(teamsWithRanking);
 					setPagination({
@@ -331,10 +356,11 @@ export default function TeamsPage() {
 
 				// Load user's teams if authenticated
 				if (isAuthenticated && user?.id) {
-					const userTeamsResponse = await getUserTeams(user.id.toString());
-					if (userTeamsResponse.success && userTeamsResponse.data) {
-						setUserTeams(userTeamsResponse.data);
-					}
+					// TODO: implement getting user teams
+					// const userTeamsResponse = await getUserTeams(user.id.toString());
+					// if (userTeamsResponse.success && userTeamsResponse.data) {
+					// 	setUserTeams(userTeamsResponse.data);
+					// }
 				}
 			} catch (error) {
 				console.error("Error fetching teams:", error);
@@ -342,7 +368,15 @@ export default function TeamsPage() {
 				setIsLoading(false);
 			}
 		},
-		[pagination.pageSize, filters.countries, filters.search, filters.minRating, filters.isRecruiting, isAuthenticated, user?.id]
+		[
+			pagination.pageSize,
+			filters.countries,
+			filters.search,
+			filters.minRating,
+			filters.isRecruiting,
+			isAuthenticated,
+			user?.id,
+		]
 	);
 
 	// Initial load
@@ -353,7 +387,13 @@ export default function TeamsPage() {
 	// Handle filter changes
 	useEffect(() => {
 		fetchTeams(1); // Reset to first page when filters change
-	}, [filters.countries, filters.search, filters.minRating, filters.isRecruiting, fetchTeams]);
+	}, [
+		filters.countries,
+		filters.search,
+		filters.minRating,
+		filters.isRecruiting,
+		fetchTeams,
+	]);
 
 	const updateFilter = (key: keyof TeamFiltersState, value: any) => {
 		setFilters((prev) => ({ ...prev, [key]: value }));
@@ -426,7 +466,9 @@ export default function TeamsPage() {
 						<div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
 							<div className="flex items-center gap-3">
 								<Users className="h-5 w-5 text-primary" />
-								<h1 className="text-xl font-bold font-mono text-foreground">TEAM_RANKINGS</h1>
+								<h1 className="text-xl font-bold font-mono text-foreground">
+									TEAM_RANKINGS
+								</h1>
 								<span className="text-sm text-muted-foreground font-mono">
 									{stats.total} teams registered
 								</span>
@@ -476,30 +518,45 @@ export default function TeamsPage() {
 								{/* Quick Filters */}
 								<div className="flex flex-wrap gap-1">
 									<Badge
-										variant={filters.privacy === "public" ? "default" : "outline"}
+										variant={
+											filters.privacy === "public" ? "default" : "outline"
+										}
 										className="cursor-pointer text-xs font-mono h-8 px-2"
 										onClick={() =>
-											updateFilter("privacy", filters.privacy === "public" ? undefined : "public")
+											updateFilter(
+												"privacy",
+												filters.privacy === "public" ? undefined : "public"
+											)
 										}
 									>
 										<Globe className="h-3 w-3 mr-1" />
 										Public
 									</Badge>
 									<Badge
-										variant={filters.isRecruiting === true ? "default" : "outline"}
+										variant={
+											filters.isRecruiting === true ? "default" : "outline"
+										}
 										className="cursor-pointer text-xs font-mono h-8 px-2"
 										onClick={() =>
-											updateFilter("isRecruiting", filters.isRecruiting === true ? undefined : true)
+											updateFilter(
+												"isRecruiting",
+												filters.isRecruiting === true ? undefined : true
+											)
 										}
 									>
 										<Shield className="h-3 w-3 mr-1" />
 										Recruiting
 									</Badge>
 									<Badge
-										variant={filters.hasOpenSlots === true ? "default" : "outline"}
+										variant={
+											filters.hasOpenSlots === true ? "default" : "outline"
+										}
 										className="cursor-pointer text-xs font-mono h-8 px-2"
 										onClick={() =>
-											updateFilter("hasOpenSlots", filters.hasOpenSlots === true ? undefined : true)
+											updateFilter(
+												"hasOpenSlots",
+												filters.hasOpenSlots === true ? undefined : true
+											)
 										}
 									>
 										<Users className="h-3 w-3 mr-1" />
@@ -508,7 +565,12 @@ export default function TeamsPage() {
 									<Badge
 										variant={filters.minRating ? "default" : "outline"}
 										className="cursor-pointer text-xs font-mono h-8 px-2"
-										onClick={() => updateFilter("minRating", filters.minRating ? undefined : 2000)}
+										onClick={() =>
+											updateFilter(
+												"minRating",
+												filters.minRating ? undefined : 2000
+											)
+										}
 									>
 										<Star className="h-3 w-3 mr-1" />
 										2K+
@@ -523,7 +585,9 @@ export default function TeamsPage() {
 									className="font-mono text-xs h-8 px-2"
 								>
 									<Globe className="h-3 w-3 mr-1" />
-									Countries {filters.countries.length > 0 && `(${filters.countries.length})`}
+									Countries{" "}
+									{filters.countries.length > 0 &&
+										`(${filters.countries.length})`}
 								</Button>
 
 								{/* Create Team Button */}
@@ -563,7 +627,9 @@ export default function TeamsPage() {
 												selectedCountries={filters.countries}
 												onToggle={toggleCountryFilter}
 												showAll={showAllCountries}
-												onToggleShowAll={() => setShowAllCountries(!showAllCountries)}
+												onToggleShowAll={() =>
+													setShowAllCountries(!showAllCountries)
+												}
 											/>
 										</div>
 									</motion.div>
@@ -598,7 +664,9 @@ export default function TeamsPage() {
 											{topTeams.map((team, index) => (
 												<div
 													key={team.id}
-													onClick={() => window.location.href = `/teams/${team.id}`}
+													onClick={() =>
+														(window.location.href = `/teams/${team.id}`)
+													}
 													className={`p-4 rounded-lg border transition-all hover:scale-105 cursor-pointer ${
 														index === 0
 															? "bg-gradient-to-br from-yellow-500/20 to-orange-500/20 border-yellow-400"
@@ -611,9 +679,12 @@ export default function TeamsPage() {
 												>
 													<div className="text-center">
 														<div className="text-2xl mb-2">
-															{getCountryByCode(team.country_code || "US")?.flag || "🌍"}
+															{getCountryByCode(team.country_code || "US")
+																?.flag || "🌍"}
 														</div>
-														<div className="text-lg font-bold mb-1">#{team.ranking}</div>
+														<div className="text-lg font-bold mb-1">
+															#{team.ranking}
+														</div>
 														<h3 className="font-bold text-sm mb-2 flex items-center justify-center gap-1">
 															{team.name}
 															{team.recruitment.isRecruiting && (
@@ -624,9 +695,14 @@ export default function TeamsPage() {
 															{team.description}
 														</p>
 														<div className="text-xs space-y-1">
-															<div>Rating: {team.statistics.currentRating.toLocaleString()}</div>
+															<div>
+																Rating:{" "}
+																{team.statistics.currentRating.toLocaleString()}
+															</div>
 															<div>Members: {team.memberCount}</div>
-															<div>Contests: {team.statistics.contestsParticipated}</div>
+															<div>
+																Contests: {team.statistics.contestsParticipated}
+															</div>
 														</div>
 													</div>
 												</div>
@@ -649,12 +725,24 @@ export default function TeamsPage() {
 										<table className="w-full">
 											<thead className="bg-muted/30">
 												<tr className="border-b border-border/50">
-													<th className="p-3 text-left font-mono text-sm font-bold w-auto">Team</th>
-													<th className="p-3 text-left font-mono text-sm font-bold w-24">Country</th>
-													<th className="p-3 text-left font-mono text-sm font-bold w-24">Rating</th>
-													<th className="p-3 text-left font-mono text-sm font-bold w-20">Members</th>
-													<th className="p-3 text-left font-mono text-sm font-bold w-20">Contests</th>
-													<th className="p-3 text-left font-mono text-sm font-bold w-16">Wins</th>
+													<th className="p-3 text-left font-mono text-sm font-bold w-auto">
+														Team
+													</th>
+													<th className="p-3 text-left font-mono text-sm font-bold w-24">
+														Country
+													</th>
+													<th className="p-3 text-left font-mono text-sm font-bold w-24">
+														Rating
+													</th>
+													<th className="p-3 text-left font-mono text-sm font-bold w-20">
+														Members
+													</th>
+													<th className="p-3 text-left font-mono text-sm font-bold w-20">
+														Contests
+													</th>
+													<th className="p-3 text-left font-mono text-sm font-bold w-16">
+														Wins
+													</th>
 												</tr>
 											</thead>
 											<tbody>
@@ -680,7 +768,10 @@ export default function TeamsPage() {
 									<div className="text-center py-8">
 										<div className="text-muted-foreground font-mono text-sm">
 											No teams found.{" "}
-											<button onClick={clearFilters} className="text-primary hover:underline">
+											<button
+												onClick={clearFilters}
+												className="text-primary hover:underline"
+											>
 												Clear filters
 											</button>
 										</div>

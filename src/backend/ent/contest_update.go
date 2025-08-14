@@ -132,6 +132,27 @@ func (_u *ContestUpdate) SetNillableEnd(v *time.Time) *ContestUpdate {
 	return _u
 }
 
+// SetDuration sets the "duration" field.
+func (_u *ContestUpdate) SetDuration(v float64) *ContestUpdate {
+	_u.mutation.ResetDuration()
+	_u.mutation.SetDuration(v)
+	return _u
+}
+
+// SetNillableDuration sets the "duration" field if the given value is not nil.
+func (_u *ContestUpdate) SetNillableDuration(v *float64) *ContestUpdate {
+	if v != nil {
+		_u.SetDuration(*v)
+	}
+	return _u
+}
+
+// AddDuration adds value to the "duration" field.
+func (_u *ContestUpdate) AddDuration(v float64) *ContestUpdate {
+	_u.mutation.AddDuration(v)
+	return _u
+}
+
 // SetURL sets the "url" field.
 func (_u *ContestUpdate) SetURL(v string) *ContestUpdate {
 	_u.mutation.SetURL(v)
@@ -364,6 +385,12 @@ func (_u *ContestUpdate) sqlSave(ctx context.Context) (_node int, err error) {
 	if value, ok := _u.mutation.End(); ok {
 		_spec.SetField(contest.FieldEnd, field.TypeTime, value)
 	}
+	if value, ok := _u.mutation.Duration(); ok {
+		_spec.SetField(contest.FieldDuration, field.TypeFloat64, value)
+	}
+	if value, ok := _u.mutation.AddedDuration(); ok {
+		_spec.AddField(contest.FieldDuration, field.TypeFloat64, value)
+	}
 	if value, ok := _u.mutation.URL(); ok {
 		_spec.SetField(contest.FieldURL, field.TypeString, value)
 	}
@@ -584,6 +611,27 @@ func (_u *ContestUpdateOne) SetNillableEnd(v *time.Time) *ContestUpdateOne {
 	if v != nil {
 		_u.SetEnd(*v)
 	}
+	return _u
+}
+
+// SetDuration sets the "duration" field.
+func (_u *ContestUpdateOne) SetDuration(v float64) *ContestUpdateOne {
+	_u.mutation.ResetDuration()
+	_u.mutation.SetDuration(v)
+	return _u
+}
+
+// SetNillableDuration sets the "duration" field if the given value is not nil.
+func (_u *ContestUpdateOne) SetNillableDuration(v *float64) *ContestUpdateOne {
+	if v != nil {
+		_u.SetDuration(*v)
+	}
+	return _u
+}
+
+// AddDuration adds value to the "duration" field.
+func (_u *ContestUpdateOne) AddDuration(v float64) *ContestUpdateOne {
+	_u.mutation.AddDuration(v)
 	return _u
 }
 
@@ -848,6 +896,12 @@ func (_u *ContestUpdateOne) sqlSave(ctx context.Context) (_node *Contest, err er
 	}
 	if value, ok := _u.mutation.End(); ok {
 		_spec.SetField(contest.FieldEnd, field.TypeTime, value)
+	}
+	if value, ok := _u.mutation.Duration(); ok {
+		_spec.SetField(contest.FieldDuration, field.TypeFloat64, value)
+	}
+	if value, ok := _u.mutation.AddedDuration(); ok {
+		_spec.AddField(contest.FieldDuration, field.TypeFloat64, value)
 	}
 	if value, ok := _u.mutation.URL(); ok {
 		_spec.SetField(contest.FieldURL, field.TypeString, value)

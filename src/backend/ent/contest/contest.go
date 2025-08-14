@@ -24,6 +24,8 @@ const (
 	FieldStart = "start"
 	// FieldEnd holds the string denoting the end field in the database.
 	FieldEnd = "end"
+	// FieldDuration holds the string denoting the duration field in the database.
+	FieldDuration = "duration"
 	// FieldURL holds the string denoting the url field in the database.
 	FieldURL = "url"
 	// FieldCtftimeID holds the string denoting the ctftime_id field in the database.
@@ -63,6 +65,7 @@ var Columns = []string{
 	FieldPrizes,
 	FieldStart,
 	FieldEnd,
+	FieldDuration,
 	FieldURL,
 	FieldCtftimeID,
 	FieldAssignedWeightPoints,
@@ -137,6 +140,11 @@ func ByStart(opts ...sql.OrderTermOption) OrderOption {
 // ByEnd orders the results by the end field.
 func ByEnd(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldEnd, opts...).ToFunc()
+}
+
+// ByDuration orders the results by the duration field.
+func ByDuration(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldDuration, opts...).ToFunc()
 }
 
 // ByURL orders the results by the url field.

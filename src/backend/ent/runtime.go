@@ -43,15 +43,15 @@ func init() {
 	// contest.NameValidator is a validator for the "name" field. It is called by the builders before save.
 	contest.NameValidator = contestDescName.Validators[0].(func(string) error)
 	// contestDescURL is the schema descriptor for url field.
-	contestDescURL := contestFields[6].Descriptor()
+	contestDescURL := contestFields[7].Descriptor()
 	// contest.URLValidator is a validator for the "url" field. It is called by the builders before save.
 	contest.URLValidator = contestDescURL.Validators[0].(func(string) error)
 	// contestDescAssignedWeightPoints is the schema descriptor for assigned_weight_points field.
-	contestDescAssignedWeightPoints := contestFields[8].Descriptor()
+	contestDescAssignedWeightPoints := contestFields[9].Descriptor()
 	// contest.DefaultAssignedWeightPoints holds the default value on creation for the assigned_weight_points field.
 	contest.DefaultAssignedWeightPoints = contestDescAssignedWeightPoints.Default.(int)
 	// contestDescLogo is the schema descriptor for logo field.
-	contestDescLogo := contestFields[9].Descriptor()
+	contestDescLogo := contestFields[10].Descriptor()
 	// contest.LogoValidator is a validator for the "logo" field. It is called by the builders before save.
 	contest.LogoValidator = contestDescLogo.Validators[0].(func([]byte) error)
 	contestratingFields := schema.ContestRating{}.Fields()
