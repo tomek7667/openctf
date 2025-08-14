@@ -708,7 +708,7 @@ export default function TeamPage() {
 								</Button>
 
 								<div className="flex items-center gap-3">
-									<span className="text-4xl opacity-40 grayscale">
+									<span className="text-4xl opacity-40">
 										<Flag code={team.country_code} />
 									</span>
 									<div className="text-left">

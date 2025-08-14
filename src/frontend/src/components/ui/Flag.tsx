@@ -17,6 +17,8 @@ export const Flag = ({
 	return (
 		<Image
 			style={{ verticalAlign: "middle" }}
+			width={20}
+			height={15}
 			{...props}
 			src={getFlagUrl(code)}
 			alt={`Flag of ${code}`}
