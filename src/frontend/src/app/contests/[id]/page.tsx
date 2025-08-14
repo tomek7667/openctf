@@ -164,9 +164,11 @@ function PlaceRow({
 							</span>
 						)}
 					</div>
-					<div className="text-xs text-muted-foreground font-mono">
-						CTFtime: {place.ctftime_team_id}
-					</div>
+					{place.ctftime_team_id && (
+						<div className="text-xs text-muted-foreground font-mono">
+							CTFtime: {place.ctftime_team_id}
+						</div>
+					)}
 				</Link>
 			</td>
 			<td className="p-3 font-mono text-lg font-bold text-right">

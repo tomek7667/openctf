@@ -66,15 +66,15 @@ interface ContestFilters {
 
 const ContestTableRow = ({ contest }: { contest: RawContest }) => (
 	<tr
-		className="border-b border-border/50 hover:bg-muted/20 transition-colors cursor-pointer"
+		className="border-b border-border/50 hover:bg-muted/20 transition-colors cursor-pointer max-h-[500px] overflow-y-auto"
 		onClick={() => (window.location.href = `/contests/${contest.id}`)}
 	>
-		<td className="p-4 font-mono">
+		<td className="p-4 font-mono max-w-[400px]">
 			<div>
 				<div className="font-bold text-foreground">
 					{contest.name.replace(/-/g, " ").toUpperCase()}
 				</div>
-				<div className="text-sm text-muted-foreground">
+				<div className="text-sm text-muted-foreground truncate">
 					{contest.description}
 				</div>
 			</div>
