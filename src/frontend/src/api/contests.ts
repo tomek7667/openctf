@@ -91,9 +91,6 @@ export interface Contest {
 	end: string; //!
 	// in hours
 	duration: number;
-	// Registration
-	maxTeamSize: number;
-	minTeamSize: number;
 	// Organization
 	organizer: string;
 	organizerLogo?: string;
@@ -193,9 +190,6 @@ const mockContests: Contest[] = [
 		start: "2024-03-15T18:00:00Z",
 		end: "2024-03-17T18:00:00Z",
 		duration: 48,
-
-		maxTeamSize: 5,
-		minTeamSize: 1,
 		organizer: "CyberDefenders Alliance",
 		organizerLogo:
 			"https://images.unsplash.com/photo-1614064641938-3bbee52942c7?w=64&h=64&fit=crop",
@@ -253,9 +247,6 @@ const mockContests: Contest[] = [
 		start: "2024-05-17T13:00:00Z",
 		end: "2024-05-18T21:00:00Z",
 		duration: 32,
-
-		maxTeamSize: 4,
-		minTeamSize: 1,
 		organizer: "NorthSec Organization",
 		organizerWebsite: "https://nsec.io",
 		logoUrl:
@@ -316,8 +307,6 @@ const mockContests: Contest[] = [
 		start: "2024-03-12T00:00:00Z",
 		end: "2024-03-26T23:59:59Z",
 		duration: 336, // 14 days
-		maxTeamSize: 5,
-		minTeamSize: 1,
 		organizer: "Carnegie Mellon University",
 		organizerLogo:
 			"https://images.unsplash.com/photo-1562774053-701939374585?w=64&h=64&fit=crop",
@@ -382,9 +371,6 @@ const mockContests: Contest[] = [
 		start: "2024-04-27T17:00:00Z",
 		end: "2024-04-28T17:00:00Z",
 		duration: 24,
-
-		maxTeamSize: 6,
-		minTeamSize: 1,
 		organizer: "BSides San Francisco",
 		organizerWebsite: "https://bsidessf.org",
 		logoUrl:
@@ -450,8 +436,6 @@ const mockContests: Contest[] = [
 		start: "2024-05-04T00:00:00Z",
 		end: "2024-05-06T00:00:00Z",
 		duration: 48,
-		maxTeamSize: 8,
-		minTeamSize: 3,
 		organizer: "DEFCON",
 		organizerWebsite: "https://defcon.org",
 		website: "https://oooverflow.io",
@@ -485,8 +469,6 @@ const mockContests: Contest[] = [
 		start: "2024-06-21T18:00:00Z",
 		end: "2024-06-23T18:00:00Z",
 		duration: 48,
-		maxTeamSize: 4,
-		minTeamSize: 1,
 		organizer: "Google",
 		organizerWebsite: "https://google.com",
 		website: "https://capturetheflag.withgoogle.com",
@@ -530,8 +512,6 @@ const mockContests: Contest[] = [
 		start: "2024-04-12T16:00:00Z",
 		end: "2024-04-14T16:00:00Z",
 		duration: 48,
-		maxTeamSize: 5,
-		minTeamSize: 2,
 		organizer: "HackTheBox",
 		organizerWebsite: "https://hackthebox.com",
 		website: "https://ctf.hackthebox.com",
@@ -587,8 +567,6 @@ const mockContests: Contest[] = [
 		start: "2024-04-19T21:00:00Z",
 		end: "2024-04-21T21:00:00Z",
 		duration: 48,
-		maxTeamSize: 6,
-		minTeamSize: 1,
 		organizer: "Plaid Parliament of Pwning",
 		organizerWebsite: "https://pwning.net",
 		website: "https://plaidctf.com",
@@ -630,8 +608,6 @@ const mockContests: Contest[] = [
 		start: "2024-03-09T14:00:00Z",
 		end: "2024-03-14T14:00:00Z",
 		duration: 120,
-		maxTeamSize: 4,
-		minTeamSize: 1,
 		organizer: "HackTheBox",
 		organizerWebsite: "https://hackthebox.com",
 		website: "https://ctf.hackthebox.com",
@@ -667,8 +643,6 @@ const mockContests: Contest[] = [
 		start: "2024-03-11T12:00:00Z",
 		end: "2024-03-13T12:00:00Z",
 		duration: 48,
-		maxTeamSize: 5,
-		minTeamSize: 2,
 		organizer: "VolgaCTF",
 		organizerWebsite: "https://volgactf.ru",
 		website: "https://volgactf.ru",
@@ -702,8 +676,6 @@ const mockContests: Contest[] = [
 		start: "2024-03-10T20:30:00Z",
 		end: "2024-03-12T20:30:00Z",
 		duration: 48,
-		maxTeamSize: 4,
-		minTeamSize: 1,
 		organizer: "ASIS CTF Team",
 		organizerWebsite: "https://asisctf.com",
 		website: "https://asisctf.com",
@@ -737,8 +709,6 @@ const mockContests: Contest[] = [
 		start: "2024-03-11T02:00:00Z",
 		end: "2024-03-13T02:00:00Z",
 		duration: 48,
-		maxTeamSize: 6,
-		minTeamSize: 3,
 		organizer: "0ops Team",
 		organizerWebsite: "https://0ops.sjtu.edu.cn",
 		website: "https://ctf.0ops.sjtu.edu.cn",
@@ -772,8 +742,6 @@ const mockContests: Contest[] = [
 		start: "2024-03-12T05:00:00Z",
 		end: "2024-03-13T05:00:00Z",
 		duration: 24,
-		maxTeamSize: 4,
-		minTeamSize: 1,
 		organizer: "LINE Corporation",
 		organizerWebsite: "https://linecorp.com",
 		website: "https://linectf.me",
@@ -814,8 +782,6 @@ const mockContests: Contest[] = [
 		start: "2024-03-11T18:00:00Z",
 		end: "2024-03-13T18:00:00Z",
 		duration: 48,
-		maxTeamSize: 5,
-		minTeamSize: 1,
 		organizer: "Midnight Sun CTF",
 		organizerWebsite: "https://midnightsunctf.se",
 		website: "https://midnightsunctf.se",
@@ -891,10 +857,7 @@ const upcomingContests = Array.from({ length: 40 }, (_, i) => {
 		),
 		registrationStart: regStart.toISOString(),
 		registrationEnd: regEnd.toISOString(),
-
 		allowIndividuals: Math.random() > 0.3,
-		maxTeamSize: 3 + Math.floor(Math.random() * 4),
-		minTeamSize: 1,
 		organizer: selectedOrganizer || "Unknown Organizer",
 		organizerWebsite: `https://${(selectedOrganizer || "unknown").toLowerCase().replace(/\s+/g, "")}.com`,
 		website: `https://ctf.${(selectedOrganizer || "unknown").toLowerCase().replace(/\s+/g, "")}.com`,
@@ -933,6 +896,7 @@ const upcomingContests = Array.from({ length: 40 }, (_, i) => {
 		updatedAt: new Date(2024, 1, 1 + i).toISOString(),
 	};
 });
+
 // Generate 150 finished contests
 const finishedContests = Array.from({ length: 150 }, (_, i) => {
 	const endDate = new Date(2024, 1, 1 + Math.floor(i / 3)); // Ending from Feb 1, 2024
@@ -988,10 +952,7 @@ const finishedContests = Array.from({ length: 150 }, (_, i) => {
 		),
 		registrationStart: regStart.toISOString(),
 		registrationEnd: regEnd.toISOString(),
-
 		allowIndividuals: Math.random() > 0.3,
-		maxTeamSize: 3 + Math.floor(Math.random() * 4),
-		minTeamSize: 1,
 		organizer: organizers[i % organizers.length] || "Unknown Organizer",
 		organizerWebsite: `https://${(organizers[i % organizers.length] || "unknown").toLowerCase().replace(/\s+/g, "")}.com`,
 		website: `https://ctf.${(organizers[i % organizers.length] || "unknown").toLowerCase().replace(/\s+/g, "")}.com`,
@@ -1062,6 +1023,7 @@ const finishedContests = Array.from({ length: 150 }, (_, i) => {
 		updatedAt: endDate.toISOString(),
 	};
 });
+
 // Combine all contests
 const allMockContests = [
 	...mockContests,
