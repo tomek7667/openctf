@@ -41,6 +41,8 @@ jobs:
 
       - name: Build frontend
         working-directory: ./src/frontend
+        env:
+          LOCAL_API_BASE_URL: ${{ secrets.LOCAL_API_BASE_URL }}
         run: |
           set -e
           yarn build

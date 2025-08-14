@@ -21,14 +21,11 @@ import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 import { MainLayout } from "@/components/layout/MainLayout";
-import {
-	getCountryByCode,
-	getPopularCountries,
-	COUNTRIES,
-} from "@/lib/countries";
+import { getPopularCountries, COUNTRIES } from "@/lib/countries";
 import { getTeams, Team, TeamFilters } from "@/api/teams";
 import { useAuthStore } from "@/store/authStore";
 import { clsx } from "clsx";
+import { Flag } from "@/components/ui/Flag";
 
 interface TeamWithStats extends Team {
 	ranking: number;
@@ -134,7 +131,9 @@ const CountryFilter = ({
 							)}
 							title={country.name}
 						>
-							<div className="text-sm">{country.flag}</div>
+							<div className="text-sm">
+								<Flag code={country.code} />
+							</div>
 							<div className="text-xs truncate">{country.code}</div>
 						</button>
 					))}
@@ -192,7 +191,7 @@ const TeamTableRow = ({ team }: { team: TeamWithStats }) => {
 			<td className="p-3">
 				<div className="flex items-center gap-2">
 					<span className="text-base">
-						{getCountryByCode(team.country_code || "US")?.flag || "🌍"}
+						<Flag code={team.country_code} />
 					</span>
 					<span className="font-mono text-sm">{team.country_code || "US"}</span>
 				</div>
@@ -679,8 +678,7 @@ export default function TeamsPage() {
 												>
 													<div className="text-center">
 														<div className="text-2xl mb-2">
-															{getCountryByCode(team.country_code || "US")
-																?.flag || "🌍"}
+															<Flag code={team.country_code} />
 														</div>
 														<div className="text-lg font-bold mb-1">
 															#{team.ranking}

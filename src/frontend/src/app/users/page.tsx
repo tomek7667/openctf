@@ -18,8 +18,9 @@ import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 import { MainLayout } from "@/components/layout/MainLayout";
-import { getCountryByCode, getPopularCountries, COUNTRIES } from "@/lib/countries";
+import { getPopularCountries, COUNTRIES } from "@/lib/countries";
 import { clsx } from "clsx";
+import { Flag } from "@/components/ui/Flag";
 
 // Extended User interface for display
 interface UserWithStats {
@@ -74,7 +75,7 @@ const getUsers = async (params?: {
 	};
 }> => {
 	await Promise.resolve(); // Simulate API delay
-	
+
 	const mockUsers: UserWithStats[] = [
 		{
 			id: 1,
@@ -281,11 +282,11 @@ const getUsers = async (params?: {
 
 	const offset = params?.offset || 0;
 	const limit = params?.limit || 20;
-	
+
 	// Filter by country if provided
 	let filteredUsers = mockUsers;
 	if (params?.countryCodes && params.countryCodes.length > 0) {
-		filteredUsers = mockUsers.filter(user => 
+		filteredUsers = mockUsers.filter((user) =>
 			params.countryCodes!.includes(user.country_code)
 		);
 	}
@@ -322,24 +323,28 @@ const CompactStatCard = ({
 		<div className="flex items-center gap-2">
 			<span className="text-xs font-mono text-muted-foreground">{label}:</span>
 			{isLoading ? (
-				<span className="text-sm font-bold font-mono text-primary animate-pulse">--</span>
+				<span className="text-sm font-bold font-mono text-primary animate-pulse">
+					--
+				</span>
 			) : (
-				<span className="text-sm font-bold font-mono text-primary">{value}</span>
+				<span className="text-sm font-bold font-mono text-primary">
+					{value}
+				</span>
 			)}
 		</div>
 	</div>
 );
 
-const CountryFilter = ({ 
-	selectedCountries, 
-	onToggle, 
-	showAll, 
-	onToggleShowAll 
-}: { 
-	selectedCountries: string[], 
-	onToggle: (code: string) => void,
-	showAll: boolean,
-	onToggleShowAll: () => void
+const CountryFilter = ({
+	selectedCountries,
+	onToggle,
+	showAll,
+	onToggleShowAll,
+}: {
+	selectedCountries: string[];
+	onToggle: (code: string) => void;
+	showAll: boolean;
+	onToggleShowAll: () => void;
 }) => {
 	const popularCountries = getPopularCountries();
 	const displayCountries = showAll ? COUNTRIES : popularCountries;
@@ -347,7 +352,9 @@ const CountryFilter = ({
 	return (
 		<div className="space-y-3">
 			<div className="flex items-center justify-between">
-				<span className="text-xs font-mono text-muted-foreground">Countries ({selectedCountries.length} selected)</span>
+				<span className="text-xs font-mono text-muted-foreground">
+					Countries ({selectedCountries.length} selected)
+				</span>
 				<Button
 					variant="outline"
 					size="sm"
@@ -357,7 +364,7 @@ const CountryFilter = ({
 					{showAll ? "Popular" : `All ${COUNTRIES.length}`}
 				</Button>
 			</div>
-			
+
 			<div className="max-h-48 overflow-y-auto">
 				<div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-1">
 					{displayCountries.map((country) => (
@@ -372,7 +379,9 @@ const CountryFilter = ({
 							)}
 							title={country.name}
 						>
-							<div className="text-sm">{country.flag}</div>
+							<div className="text-sm">
+								<Flag code={country.code} />
+							</div>
 							<div className="text-xs truncate">{country.code}</div>
 						</button>
 					))}
@@ -383,7 +392,10 @@ const CountryFilter = ({
 };
 
 const UserTableRow = ({ user }: { user: UserWithStats }) => (
-	<tr className="border-b border-border/50 hover:bg-muted/20 transition-colors cursor-pointer" onClick={() => window.location.href = `/users/${user.id}`}>
+	<tr
+		className="border-b border-border/50 hover:bg-muted/20 transition-colors cursor-pointer"
+		onClick={() => (window.location.href = `/users/${user.id}`)}
+	>
 		<td className="p-3">
 			<div className="flex items-center gap-3">
 				<div>
@@ -397,9 +409,7 @@ const UserTableRow = ({ user }: { user: UserWithStats }) => (
 						{user.permission_level === "moderator" && (
 							<Shield className="h-3 w-3 text-blue-400" />
 						)}
-						{user.verified && (
-							<Shield className="h-3 w-3 text-green-400" />
-						)}
+						{user.verified && <Shield className="h-3 w-3 text-green-400" />}
 					</div>
 					<div className="text-xs text-muted-foreground truncate max-w-xs">
 						{user.description}
@@ -409,7 +419,9 @@ const UserTableRow = ({ user }: { user: UserWithStats }) => (
 		</td>
 		<td className="p-3">
 			<div className="flex items-center gap-2">
-				<span className="text-base">{getCountryByCode(user.country_code)?.flag || "🌍"}</span>
+				<span className="text-base">
+					<Flag code={user.country_code} />
+				</span>
 				<span className="font-mono text-xs">{user.country_code}</span>
 			</div>
 		</td>
@@ -421,26 +433,26 @@ const UserTableRow = ({ user }: { user: UserWithStats }) => (
 			)}
 		</td>
 		<td className="p-3 font-mono text-xs">
-			{user.teamName ? user.averagePlace.toFixed(1) : '-'}
+			{user.teamName ? user.averagePlace.toFixed(1) : "-"}
 		</td>
 	</tr>
 );
 
-const Pagination = ({ 
-	pagination, 
+const Pagination = ({
+	pagination,
 	onPageChange,
-	isLoading 
-}: { 
-	pagination: PaginationState, 
-	onPageChange: (page: number) => void,
-	isLoading: boolean 
+	isLoading,
+}: {
+	pagination: PaginationState;
+	onPageChange: (page: number) => void;
+	isLoading: boolean;
 }) => {
 	const { currentPage, totalPages } = pagination;
-	
+
 	const generatePageNumbers = () => {
 		const pages = [];
 		const maxVisible = 7;
-		
+
 		if (totalPages <= maxVisible) {
 			for (let i = 1; i <= totalPages; i++) {
 				pages.push(i);
@@ -462,7 +474,7 @@ const Pagination = ({
 				pages.push(totalPages);
 			}
 		}
-		
+
 		return pages;
 	};
 
@@ -471,7 +483,7 @@ const Pagination = ({
 			<div className="text-xs text-muted-foreground font-mono">
 				Page {currentPage} of {totalPages} ({pagination.total} users)
 			</div>
-			
+
 			<div className="flex items-center gap-1">
 				<Button
 					variant="outline"
@@ -482,7 +494,7 @@ const Pagination = ({
 				>
 					<ChevronLeft className="h-3 w-3" />
 				</Button>
-				
+
 				{generatePageNumbers().map((page, index) => (
 					<React.Fragment key={index}>
 						{page === "..." ? (
@@ -500,7 +512,7 @@ const Pagination = ({
 						)}
 					</React.Fragment>
 				))}
-				
+
 				<Button
 					variant="outline"
 					size="sm"
@@ -532,31 +544,36 @@ export default function UsersPage() {
 	});
 
 	// Fetch users with pagination and filters
-	const fetchUsers = useCallback(async (page: number = 1, resetFilters = false) => {
-		try {
-			setIsLoading(true);
-			const offset = (page - 1) * pagination.pageSize;
-			
-			const params = {
-				offset,
-				limit: pagination.pageSize,
-				...(filters.countries.length > 0 && !resetFilters ? { countryCodes: filters.countries } : {}),
-			};
-			
-			const response = await getUsers(params);
-			setUsers(response.items);
-			setPagination({
-				currentPage: page,
-				pageSize: pagination.pageSize,
-				totalPages: response.pagination.totalPages,
-				total: response.pagination.total,
-			});
-		} catch (error) {
-			console.error("Error fetching users:", error);
-		} finally {
-			setIsLoading(false);
-		}
-	}, [pagination.pageSize, filters.countries]);
+	const fetchUsers = useCallback(
+		async (page: number = 1, resetFilters = false) => {
+			try {
+				setIsLoading(true);
+				const offset = (page - 1) * pagination.pageSize;
+
+				const params = {
+					offset,
+					limit: pagination.pageSize,
+					...(filters.countries.length > 0 && !resetFilters
+						? { countryCodes: filters.countries }
+						: {}),
+				};
+
+				const response = await getUsers(params);
+				setUsers(response.items);
+				setPagination({
+					currentPage: page,
+					pageSize: pagination.pageSize,
+					totalPages: response.pagination.totalPages,
+					total: response.pagination.total,
+				});
+			} catch (error) {
+				console.error("Error fetching users:", error);
+			} finally {
+				setIsLoading(false);
+			}
+		},
+		[pagination.pageSize, filters.countries]
+	);
 
 	// Initial load
 	useEffect(() => {
@@ -594,43 +611,47 @@ export default function UsersPage() {
 	};
 
 	// Apply client-side filters and sort by team average place
-	const filteredUsers = users.filter((user) => {
-		// Search filter
-		if (filters.search) {
-			const searchLower = filters.search.toLowerCase();
+	const filteredUsers = users
+		.filter((user) => {
+			// Search filter
+			if (filters.search) {
+				const searchLower = filters.search.toLowerCase();
+				if (
+					!user.username.toLowerCase().includes(searchLower) &&
+					!user.email.toLowerCase().includes(searchLower) &&
+					!user.description?.toLowerCase().includes(searchLower)
+				) {
+					return false;
+				}
+			}
+
+			// Permission level filter
 			if (
-				!user.username.toLowerCase().includes(searchLower) &&
-				!user.email.toLowerCase().includes(searchLower) &&
-				!user.description?.toLowerCase().includes(searchLower)
+				filters.permissionLevel &&
+				user.permission_level !== filters.permissionLevel
 			) {
 				return false;
 			}
-		}
 
-		// Permission level filter
-		if (filters.permissionLevel && user.permission_level !== filters.permissionLevel) {
-			return false;
-		}
-
-
-
-		// Verified filter
-		if (filters.verified !== undefined && user.verified !== filters.verified) {
-			return false;
-		}
-
-		// Team filter
-		if (filters.hasTeam !== undefined) {
-			const hasTeam = Boolean(user.teamId);
-			if (hasTeam !== filters.hasTeam) {
+			// Verified filter
+			if (
+				filters.verified !== undefined &&
+				user.verified !== filters.verified
+			) {
 				return false;
 			}
-		}
 
-		return true;
-	}).sort((a, b) => a.averagePlace - b.averagePlace);
+			// Team filter
+			if (filters.hasTeam !== undefined) {
+				const hasTeam = Boolean(user.teamId);
+				if (hasTeam !== filters.hasTeam) {
+					return false;
+				}
+			}
 
-
+			return true;
+		})
+		.sort((a, b) => a.averagePlace - b.averagePlace);
 
 	// Stats
 	const stats = {
@@ -644,7 +665,6 @@ export default function UsersPage() {
 		filters.search ||
 		filters.countries.length > 0 ||
 		filters.permissionLevel ||
-
 		filters.verified !== undefined ||
 		filters.hasTeam !== undefined;
 
@@ -664,7 +684,7 @@ export default function UsersPage() {
 									{stats.total} users registered
 								</span>
 							</div>
-							
+
 							{/* Stats */}
 							<div className="flex flex-wrap gap-2">
 								<CompactStatCard
@@ -709,11 +729,18 @@ export default function UsersPage() {
 								{/* Quick Filters */}
 								<div className="flex flex-wrap gap-1">
 									<Badge
-										variant={filters.permissionLevel === "administrator" ? "default" : "outline"}
+										variant={
+											filters.permissionLevel === "administrator"
+												? "default"
+												: "outline"
+										}
 										className="cursor-pointer text-xs font-mono h-8 px-2"
 										onClick={() =>
-											updateFilter("permissionLevel",
-												filters.permissionLevel === "administrator" ? undefined : "administrator"
+											updateFilter(
+												"permissionLevel",
+												filters.permissionLevel === "administrator"
+													? undefined
+													: "administrator"
 											)
 										}
 									>
@@ -721,11 +748,18 @@ export default function UsersPage() {
 										Admins
 									</Badge>
 									<Badge
-										variant={filters.permissionLevel === "moderator" ? "default" : "outline"}
+										variant={
+											filters.permissionLevel === "moderator"
+												? "default"
+												: "outline"
+										}
 										className="cursor-pointer text-xs font-mono h-8 px-2"
 										onClick={() =>
-											updateFilter("permissionLevel", 
-												filters.permissionLevel === "moderator" ? undefined : "moderator"
+											updateFilter(
+												"permissionLevel",
+												filters.permissionLevel === "moderator"
+													? undefined
+													: "moderator"
 											)
 										}
 									>
@@ -735,7 +769,12 @@ export default function UsersPage() {
 									<Badge
 										variant={filters.verified === true ? "default" : "outline"}
 										className="cursor-pointer text-xs font-mono h-8 px-2"
-										onClick={() => updateFilter("verified", filters.verified === true ? undefined : true)}
+										onClick={() =>
+											updateFilter(
+												"verified",
+												filters.verified === true ? undefined : true
+											)
+										}
 									>
 										<Shield className="h-3 w-3 mr-1" />
 										Verified
@@ -743,12 +782,16 @@ export default function UsersPage() {
 									<Badge
 										variant={filters.hasTeam === true ? "default" : "outline"}
 										className="cursor-pointer text-xs font-mono h-8 px-2"
-										onClick={() => updateFilter("hasTeam", filters.hasTeam === true ? undefined : true)}
+										onClick={() =>
+											updateFilter(
+												"hasTeam",
+												filters.hasTeam === true ? undefined : true
+											)
+										}
 									>
 										<Trophy className="h-3 w-3 mr-1" />
 										In Team
 									</Badge>
-
 								</div>
 
 								{/* Country Filter Toggle */}
@@ -759,7 +802,9 @@ export default function UsersPage() {
 									className="font-mono text-xs h-8 px-2"
 								>
 									<Globe className="h-3 w-3 mr-1" />
-									Countries {filters.countries.length > 0 && `(${filters.countries.length})`}
+									Countries{" "}
+									{filters.countries.length > 0 &&
+										`(${filters.countries.length})`}
 								</Button>
 
 								{/* Clear button - always present to prevent layout shift */}
@@ -768,7 +813,7 @@ export default function UsersPage() {
 									size="sm"
 									onClick={clearFilters}
 									disabled={!hasActiveFilters}
-									className={`font-mono text-xs h-8 px-2 ${!hasActiveFilters ? 'opacity-50' : ''}`}
+									className={`font-mono text-xs h-8 px-2 ${!hasActiveFilters ? "opacity-50" : ""}`}
 								>
 									Clear
 								</Button>
@@ -789,7 +834,9 @@ export default function UsersPage() {
 												selectedCountries={filters.countries}
 												onToggle={toggleCountryFilter}
 												showAll={showAllCountries}
-												onToggleShowAll={() => setShowAllCountries(!showAllCountries)}
+												onToggleShowAll={() =>
+													setShowAllCountries(!showAllCountries)
+												}
 											/>
 										</div>
 									</motion.div>
@@ -814,8 +861,6 @@ export default function UsersPage() {
 							</div>
 						) : (
 							<>
-
-
 								{/* All Users Table */}
 								<div className="bg-card/30 rounded-none hacker-border overflow-hidden">
 									<div className="p-3 bg-muted/50 border-b border-border">
@@ -830,10 +875,18 @@ export default function UsersPage() {
 										<table className="w-full">
 											<thead className="bg-muted/30">
 												<tr className="border-b border-border/50">
-													<th className="p-3 text-left font-mono text-xs font-bold">User</th>
-													<th className="p-3 text-left font-mono text-xs font-bold">Country</th>
-													<th className="p-3 text-left font-mono text-xs font-bold">Team</th>
-													<th className="p-3 text-left font-mono text-xs font-bold">Team Avg Place</th>
+													<th className="p-3 text-left font-mono text-xs font-bold">
+														User
+													</th>
+													<th className="p-3 text-left font-mono text-xs font-bold">
+														Country
+													</th>
+													<th className="p-3 text-left font-mono text-xs font-bold">
+														Team
+													</th>
+													<th className="p-3 text-left font-mono text-xs font-bold">
+														Team Avg Place
+													</th>
 												</tr>
 											</thead>
 											<tbody>
@@ -858,7 +911,8 @@ export default function UsersPage() {
 								{filteredUsers.length === 0 && !isLoading && (
 									<div className="text-center py-8">
 										<div className="text-muted-foreground font-mono text-sm">
-											No users found. <button
+											No users found.{" "}
+											<button
 												onClick={clearFilters}
 												className="text-primary hover:underline"
 											>
