@@ -72,6 +72,7 @@ type ServiceClient interface {
 		ghInfo *github.User,
 	) (*ent.User, *string, error)
 	ChangePassword(ctx context.Context, _user *ent.User, dto *service.ChangePasswordDto) (*ent.User, *string, error)
+	GetPlatformStatistics(ctx context.Context) (*ent.AggregatedPlatformStatistics, error)
 }
 
 type CtftimeClient interface {

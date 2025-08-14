@@ -67,4 +67,4 @@ jobs:
         run: |
           cd ${{ secrets.SSH_FRONTEND_DEST }}
           yarn install --production
-          NEXT_PUBLIC_APP_URL="${{ secrets.NEXT_PUBLIC_APP_URL }}" NEXT_PUBLIC_GH_CLIENT_ID="${{ secrets.GH_CLIENT_ID }}" NEXT_PUBLIC_API_URL="${{ secrets.API_URL }}" PORT="${{ secrets.FE_PORT }}" pm2 restart "${{ secrets.FE_APP_NAME }}" --update-env
+          LOCAL_API_BASE_URL="${{ secrets.LOCAL_API_BASE_URL }}" NEXT_PUBLIC_APP_URL="${{ secrets.NEXT_PUBLIC_APP_URL }}" NEXT_PUBLIC_GH_CLIENT_ID="${{ secrets.GH_CLIENT_ID }}" NEXT_PUBLIC_API_URL="${{ secrets.API_URL }}" PORT="${{ secrets.FE_PORT }}" pm2 restart "${{ secrets.FE_APP_NAME }}" --update-env

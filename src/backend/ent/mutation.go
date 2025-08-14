@@ -35,6 +35,7 @@ const (
 	TypeAchievement                    = "Achievement"
 	TypeActivity                       = "Activity"
 	TypeAggregatedContestsDifficulties = "AggregatedContestsDifficulties"
+	TypeAggregatedPlatformStatistics   = "AggregatedPlatformStatistics"
 	TypeAggregatedUserStatistics       = "AggregatedUserStatistics"
 	TypeContest                        = "Contest"
 	TypeContestRating                  = "ContestRating"

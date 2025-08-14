@@ -12,6 +12,7 @@ func (h *Handler) Handle() {
 	h.AddRoutes_ApiTeams()
 	h.AddRoutes_ApiContests()
 	h.AddRoutes_ApiProfiles()
+	h.AddRoutes_ApiStatistics()
 
 	defer func() {
 		slog.Warn("openctf.Handle is closing the database")

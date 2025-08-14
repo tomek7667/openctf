@@ -58,3 +58,12 @@ SELECT
 	u.id as "user_id"
 FROM
 	"users" u;
+
+-- Create "aggregated_platform_statistics" view
+CREATE OR REPLACE VIEW "aggregated_platform_statistics" ("total_users", "total_teams", "total_upcoming_events", "total_past_events", "total_live_events") AS
+SELECT
+	(SELECT COUNT(id) FROM "users") AS "total_users",
+	(SELECT COUNT(id) FROM "teams") AS "total_teams",
+	(SELECT COUNT(id) FROM "contests" WHERE NOW() > "end") AS "total_upcoming_events",
+	(SELECT COUNT(id) FROM "contests" WHERE NOW() < "start") AS "total_past_events",
+	(SELECT COUNT(id) FROM "contests" WHERE NOW() > "start" AND NOW() < "end") AS "total_live_events";

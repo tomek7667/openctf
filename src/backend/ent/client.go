@@ -40,6 +40,8 @@ type Client struct {
 	Activity *ActivityClient
 	// AggregatedContestsDifficulties is the client for interacting with the AggregatedContestsDifficulties builders.
 	AggregatedContestsDifficulties *AggregatedContestsDifficultiesClient
+	// AggregatedPlatformStatistics is the client for interacting with the AggregatedPlatformStatistics builders.
+	AggregatedPlatformStatistics *AggregatedPlatformStatisticsClient
 	// AggregatedUserStatistics is the client for interacting with the AggregatedUserStatistics builders.
 	AggregatedUserStatistics *AggregatedUserStatisticsClient
 	// Contest is the client for interacting with the Contest builders.
@@ -70,6 +72,7 @@ func (c *Client) init() {
 	c.Achievement = NewAchievementClient(c.config)
 	c.Activity = NewActivityClient(c.config)
 	c.AggregatedContestsDifficulties = NewAggregatedContestsDifficultiesClient(c.config)
+	c.AggregatedPlatformStatistics = NewAggregatedPlatformStatisticsClient(c.config)
 	c.AggregatedUserStatistics = NewAggregatedUserStatisticsClient(c.config)
 	c.Contest = NewContestClient(c.config)
 	c.ContestRating = NewContestRatingClient(c.config)
@@ -173,6 +176,7 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 		Achievement:                    NewAchievementClient(cfg),
 		Activity:                       NewActivityClient(cfg),
 		AggregatedContestsDifficulties: NewAggregatedContestsDifficultiesClient(cfg),
+		AggregatedPlatformStatistics:   NewAggregatedPlatformStatisticsClient(cfg),
 		AggregatedUserStatistics:       NewAggregatedUserStatisticsClient(cfg),
 		Contest:                        NewContestClient(cfg),
 		ContestRating:                  NewContestRatingClient(cfg),
@@ -203,6 +207,7 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 		Achievement:                    NewAchievementClient(cfg),
 		Activity:                       NewActivityClient(cfg),
 		AggregatedContestsDifficulties: NewAggregatedContestsDifficultiesClient(cfg),
+		AggregatedPlatformStatistics:   NewAggregatedPlatformStatisticsClient(cfg),
 		AggregatedUserStatistics:       NewAggregatedUserStatisticsClient(cfg),
 		Contest:                        NewContestClient(cfg),
 		ContestRating:                  NewContestRatingClient(cfg),
@@ -252,8 +257,8 @@ func (c *Client) Use(hooks ...Hook) {
 func (c *Client) Intercept(interceptors ...Interceptor) {
 	for _, n := range []interface{ Intercept(...Interceptor) }{
 		c.Achievement, c.Activity, c.AggregatedContestsDifficulties,
-		c.AggregatedUserStatistics, c.Contest, c.ContestRating, c.Place, c.Team,
-		c.User, c.UserProfile, c.WeightRating,
+		c.AggregatedPlatformStatistics, c.AggregatedUserStatistics, c.Contest,
+		c.ContestRating, c.Place, c.Team, c.User, c.UserProfile, c.WeightRating,
 	} {
 		n.Intercept(interceptors...)
 	}
@@ -611,6 +616,36 @@ func (c *AggregatedContestsDifficultiesClient) Query() *AggregatedContestsDiffic
 // Interceptors returns the client interceptors.
 func (c *AggregatedContestsDifficultiesClient) Interceptors() []Interceptor {
 	return c.inters.AggregatedContestsDifficulties
+}
+
+// AggregatedPlatformStatisticsClient is a client for the AggregatedPlatformStatistics schema.
+type AggregatedPlatformStatisticsClient struct {
+	config
+}
+
+// NewAggregatedPlatformStatisticsClient returns a client for the AggregatedPlatformStatistics from the given config.
+func NewAggregatedPlatformStatisticsClient(c config) *AggregatedPlatformStatisticsClient {
+	return &AggregatedPlatformStatisticsClient{config: c}
+}
+
+// Intercept adds a list of query interceptors to the interceptors stack.
+// A call to `Intercept(f, g, h)` equals to `aggregatedplatformstatistics.Intercept(f(g(h())))`.
+func (c *AggregatedPlatformStatisticsClient) Intercept(interceptors ...Interceptor) {
+	c.inters.AggregatedPlatformStatistics = append(c.inters.AggregatedPlatformStatistics, interceptors...)
+}
+
+// Query returns a query builder for AggregatedPlatformStatistics.
+func (c *AggregatedPlatformStatisticsClient) Query() *AggregatedPlatformStatisticsQuery {
+	return &AggregatedPlatformStatisticsQuery{
+		config: c.config,
+		ctx:    &QueryContext{Type: TypeAggregatedPlatformStatistics},
+		inters: c.Interceptors(),
+	}
+}
+
+// Interceptors returns the client interceptors.
+func (c *AggregatedPlatformStatisticsClient) Interceptors() []Interceptor {
+	return c.inters.AggregatedPlatformStatistics
 }
 
 // AggregatedUserStatisticsClient is a client for the AggregatedUserStatistics schema.
@@ -1773,9 +1808,9 @@ type (
 		WeightRating []ent.Hook
 	}
 	inters struct {
-		Achievement, Activity, AggregatedContestsDifficulties, AggregatedUserStatistics,
-		Contest, ContestRating, Place, Team, User, UserProfile,
-		WeightRating []ent.Interceptor
+		Achievement, Activity, AggregatedContestsDifficulties,
+		AggregatedPlatformStatistics, AggregatedUserStatistics, Contest, ContestRating,
+		Place, Team, User, UserProfile, WeightRating []ent.Interceptor
 	}
 )
 
