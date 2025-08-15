@@ -23,7 +23,7 @@ func (User) Fields() []ent.Field {
 		field.String("description").Nillable().Optional(),
 		field.String("password").Sensitive(),
 		field.Time("created_at").Default(time.Now()).Immutable(),
-		field.Bytes("logo").MaxLen(50 * 1024 * 1024).Nillable().Optional(), // Max 50 MB
+		field.String("logo_url").Nillable().Optional(),
 		field.Int64("github_account_id").Nillable().Optional(),
 		field.String("github_username").Nillable().Optional(),
 		field.String("github_name").Nillable().Optional(),

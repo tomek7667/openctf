@@ -30,6 +30,7 @@ func (c *Client) CreateTeam(ctx context.Context, captain *ent.User, dto *CreateT
 		SetName(dto.Name).
 		SetCountryCode(dto.CountryCode).
 		AddMembers(captain).
+		SetCaptain(captain).
 		SetRecruiting(dto.Recruiting)
 	if dto.CtftimeID != nil && *dto.CtftimeID != 0 {
 		teamCreate.SetCtftimeID(*dto.CtftimeID)

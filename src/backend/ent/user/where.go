@@ -90,9 +90,9 @@ func CreatedAt(v time.Time) predicate.User {
 	return predicate.User(sql.FieldEQ(FieldCreatedAt, v))
 }
 
-// Logo applies equality check predicate on the "logo" field. It's identical to LogoEQ.
-func Logo(v []byte) predicate.User {
-	return predicate.User(sql.FieldEQ(FieldLogo, v))
+// LogoURL applies equality check predicate on the "logo_url" field. It's identical to LogoURLEQ.
+func LogoURL(v string) predicate.User {
+	return predicate.User(sql.FieldEQ(FieldLogoURL, v))
 }
 
 // GithubAccountID applies equality check predicate on the "github_account_id" field. It's identical to GithubAccountIDEQ.
@@ -575,54 +575,79 @@ func CreatedAtLTE(v time.Time) predicate.User {
 	return predicate.User(sql.FieldLTE(FieldCreatedAt, v))
 }
 
-// LogoEQ applies the EQ predicate on the "logo" field.
-func LogoEQ(v []byte) predicate.User {
-	return predicate.User(sql.FieldEQ(FieldLogo, v))
+// LogoURLEQ applies the EQ predicate on the "logo_url" field.
+func LogoURLEQ(v string) predicate.User {
+	return predicate.User(sql.FieldEQ(FieldLogoURL, v))
 }
 
-// LogoNEQ applies the NEQ predicate on the "logo" field.
-func LogoNEQ(v []byte) predicate.User {
-	return predicate.User(sql.FieldNEQ(FieldLogo, v))
+// LogoURLNEQ applies the NEQ predicate on the "logo_url" field.
+func LogoURLNEQ(v string) predicate.User {
+	return predicate.User(sql.FieldNEQ(FieldLogoURL, v))
 }
 
-// LogoIn applies the In predicate on the "logo" field.
-func LogoIn(vs ...[]byte) predicate.User {
-	return predicate.User(sql.FieldIn(FieldLogo, vs...))
+// LogoURLIn applies the In predicate on the "logo_url" field.
+func LogoURLIn(vs ...string) predicate.User {
+	return predicate.User(sql.FieldIn(FieldLogoURL, vs...))
 }
 
-// LogoNotIn applies the NotIn predicate on the "logo" field.
-func LogoNotIn(vs ...[]byte) predicate.User {
-	return predicate.User(sql.FieldNotIn(FieldLogo, vs...))
+// LogoURLNotIn applies the NotIn predicate on the "logo_url" field.
+func LogoURLNotIn(vs ...string) predicate.User {
+	return predicate.User(sql.FieldNotIn(FieldLogoURL, vs...))
 }
 
-// LogoGT applies the GT predicate on the "logo" field.
-func LogoGT(v []byte) predicate.User {
-	return predicate.User(sql.FieldGT(FieldLogo, v))
+// LogoURLGT applies the GT predicate on the "logo_url" field.
+func LogoURLGT(v string) predicate.User {
+	return predicate.User(sql.FieldGT(FieldLogoURL, v))
 }
 
-// LogoGTE applies the GTE predicate on the "logo" field.
-func LogoGTE(v []byte) predicate.User {
-	return predicate.User(sql.FieldGTE(FieldLogo, v))
+// LogoURLGTE applies the GTE predicate on the "logo_url" field.
+func LogoURLGTE(v string) predicate.User {
+	return predicate.User(sql.FieldGTE(FieldLogoURL, v))
 }
 
-// LogoLT applies the LT predicate on the "logo" field.
-func LogoLT(v []byte) predicate.User {
-	return predicate.User(sql.FieldLT(FieldLogo, v))
+// LogoURLLT applies the LT predicate on the "logo_url" field.
+func LogoURLLT(v string) predicate.User {
+	return predicate.User(sql.FieldLT(FieldLogoURL, v))
 }
 
-// LogoLTE applies the LTE predicate on the "logo" field.
-func LogoLTE(v []byte) predicate.User {
-	return predicate.User(sql.FieldLTE(FieldLogo, v))
+// LogoURLLTE applies the LTE predicate on the "logo_url" field.
+func LogoURLLTE(v string) predicate.User {
+	return predicate.User(sql.FieldLTE(FieldLogoURL, v))
 }
 
-// LogoIsNil applies the IsNil predicate on the "logo" field.
-func LogoIsNil() predicate.User {
-	return predicate.User(sql.FieldIsNull(FieldLogo))
+// LogoURLContains applies the Contains predicate on the "logo_url" field.
+func LogoURLContains(v string) predicate.User {
+	return predicate.User(sql.FieldContains(FieldLogoURL, v))
 }
 
-// LogoNotNil applies the NotNil predicate on the "logo" field.
-func LogoNotNil() predicate.User {
-	return predicate.User(sql.FieldNotNull(FieldLogo))
+// LogoURLHasPrefix applies the HasPrefix predicate on the "logo_url" field.
+func LogoURLHasPrefix(v string) predicate.User {
+	return predicate.User(sql.FieldHasPrefix(FieldLogoURL, v))
+}
+
+// LogoURLHasSuffix applies the HasSuffix predicate on the "logo_url" field.
+func LogoURLHasSuffix(v string) predicate.User {
+	return predicate.User(sql.FieldHasSuffix(FieldLogoURL, v))
+}
+
+// LogoURLIsNil applies the IsNil predicate on the "logo_url" field.
+func LogoURLIsNil() predicate.User {
+	return predicate.User(sql.FieldIsNull(FieldLogoURL))
+}
+
+// LogoURLNotNil applies the NotNil predicate on the "logo_url" field.
+func LogoURLNotNil() predicate.User {
+	return predicate.User(sql.FieldNotNull(FieldLogoURL))
+}
+
+// LogoURLEqualFold applies the EqualFold predicate on the "logo_url" field.
+func LogoURLEqualFold(v string) predicate.User {
+	return predicate.User(sql.FieldEqualFold(FieldLogoURL, v))
+}
+
+// LogoURLContainsFold applies the ContainsFold predicate on the "logo_url" field.
+func LogoURLContainsFold(v string) predicate.User {
+	return predicate.User(sql.FieldContainsFold(FieldLogoURL, v))
 }
 
 // GithubAccountIDEQ applies the EQ predicate on the "github_account_id" field.

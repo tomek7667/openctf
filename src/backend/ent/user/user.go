@@ -31,8 +31,8 @@ const (
 	FieldPassword = "password"
 	// FieldCreatedAt holds the string denoting the created_at field in the database.
 	FieldCreatedAt = "created_at"
-	// FieldLogo holds the string denoting the logo field in the database.
-	FieldLogo = "logo"
+	// FieldLogoURL holds the string denoting the logo_url field in the database.
+	FieldLogoURL = "logo_url"
 	// FieldGithubAccountID holds the string denoting the github_account_id field in the database.
 	FieldGithubAccountID = "github_account_id"
 	// FieldGithubUsername holds the string denoting the github_username field in the database.
@@ -65,7 +65,7 @@ var Columns = []string{
 	FieldDescription,
 	FieldPassword,
 	FieldCreatedAt,
-	FieldLogo,
+	FieldLogoURL,
 	FieldGithubAccountID,
 	FieldGithubUsername,
 	FieldGithubName,
@@ -96,8 +96,6 @@ var (
 	EmailValidator func(string) error
 	// DefaultCreatedAt holds the default value on creation for the "created_at" field.
 	DefaultCreatedAt time.Time
-	// LogoValidator is a validator for the "logo" field. It is called by the builders before save.
-	LogoValidator func([]byte) error
 )
 
 // PermissionLevel defines the type for the "permission_level" enum field.
@@ -173,6 +171,11 @@ func ByPassword(opts ...sql.OrderTermOption) OrderOption {
 // ByCreatedAt orders the results by the created_at field.
 func ByCreatedAt(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldCreatedAt, opts...).ToFunc()
+}
+
+// ByLogoURL orders the results by the logo_url field.
+func ByLogoURL(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldLogoURL, opts...).ToFunc()
 }
 
 // ByGithubAccountID orders the results by the github_account_id field.

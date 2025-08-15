@@ -33,8 +33,8 @@ type User struct {
 	Password string `json:"-"`
 	// CreatedAt holds the value of the "created_at" field.
 	CreatedAt time.Time `json:"created_at,omitempty"`
-	// Logo holds the value of the "logo" field.
-	Logo *[]byte `json:"logo,omitempty"`
+	// LogoURL holds the value of the "logo_url" field.
+	LogoURL *string `json:"logo_url,omitempty"`
 	// GithubAccountID holds the value of the "github_account_id" field.
 	GithubAccountID *int64 `json:"github_account_id,omitempty"`
 	// GithubUsername holds the value of the "github_username" field.
@@ -74,11 +74,9 @@ func (*User) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case user.FieldLogo:
-			values[i] = new([]byte)
 		case user.FieldID, user.FieldGithubAccountID:
 			values[i] = new(sql.NullInt64)
-		case user.FieldUsername, user.FieldEmail, user.FieldConfirmationCode, user.FieldPermissionLevel, user.FieldDescription, user.FieldPassword, user.FieldGithubUsername, user.FieldGithubName, user.FieldGithubEmail, user.FieldGithubAvatarURL:
+		case user.FieldUsername, user.FieldEmail, user.FieldConfirmationCode, user.FieldPermissionLevel, user.FieldDescription, user.FieldPassword, user.FieldLogoURL, user.FieldGithubUsername, user.FieldGithubName, user.FieldGithubEmail, user.FieldGithubAvatarURL:
 			values[i] = new(sql.NullString)
 		case user.FieldEmailConfirmedAt, user.FieldCreatedAt:
 			values[i] = new(sql.NullTime)
@@ -154,11 +152,12 @@ func (_m *User) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				_m.CreatedAt = value.Time
 			}
-		case user.FieldLogo:
-			if value, ok := values[i].(*[]byte); !ok {
-				return fmt.Errorf("unexpected type %T for field logo", values[i])
-			} else if value != nil {
-				_m.Logo = value
+		case user.FieldLogoURL:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field logo_url", values[i])
+			} else if value.Valid {
+				_m.LogoURL = new(string)
+				*_m.LogoURL = value.String
 			}
 		case user.FieldGithubAccountID:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
@@ -262,9 +261,9 @@ func (_m *User) String() string {
 	builder.WriteString("created_at=")
 	builder.WriteString(_m.CreatedAt.Format(time.ANSIC))
 	builder.WriteString(", ")
-	if v := _m.Logo; v != nil {
-		builder.WriteString("logo=")
-		builder.WriteString(fmt.Sprintf("%v", *v))
+	if v := _m.LogoURL; v != nil {
+		builder.WriteString("logo_url=")
+		builder.WriteString(*v)
 	}
 	builder.WriteString(", ")
 	if v := _m.GithubAccountID; v != nil {

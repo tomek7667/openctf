@@ -173,6 +173,7 @@ var (
 		{Name: "recruiting", Type: field.TypeBool, Default: false},
 		{Name: "contact_info", Type: field.TypeString, Nullable: true},
 		{Name: "looking_for", Type: field.TypeJSON, Nullable: true},
+		{Name: "created_at", Type: field.TypeTime},
 		{Name: "ctftime_id", Type: field.TypeInt, Nullable: true},
 		{Name: "ctftime_verified_at", Type: field.TypeTime, Nullable: true},
 		{Name: "verified_at", Type: field.TypeTime, Nullable: true},
@@ -187,15 +188,36 @@ var (
 		ForeignKeys: []*schema.ForeignKey{
 			{
 				Symbol:     "teams_users_captain",
-				Columns:    []*schema.Column{TeamsColumns[15]},
+				Columns:    []*schema.Column{TeamsColumns[16]},
 				RefColumns: []*schema.Column{UsersColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 			{
 				Symbol:     "teams_users_verified_by",
-				Columns:    []*schema.Column{TeamsColumns[16]},
+				Columns:    []*schema.Column{TeamsColumns[17]},
 				RefColumns: []*schema.Column{UsersColumns[0]},
 				OnDelete:   schema.SetNull,
+			},
+		},
+	}
+	// TeamAchievementsColumns holds the columns for the "team_achievements" table.
+	TeamAchievementsColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "name", Type: field.TypeString, Unique: true},
+		{Name: "unlocked_at", Type: field.TypeTime},
+		{Name: "team_achievement_team", Type: field.TypeInt},
+	}
+	// TeamAchievementsTable holds the schema information for the "team_achievements" table.
+	TeamAchievementsTable = &schema.Table{
+		Name:       "team_achievements",
+		Columns:    TeamAchievementsColumns,
+		PrimaryKey: []*schema.Column{TeamAchievementsColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{
+			{
+				Symbol:     "team_achievements_teams_team",
+				Columns:    []*schema.Column{TeamAchievementsColumns[3]},
+				RefColumns: []*schema.Column{TeamsColumns[0]},
+				OnDelete:   schema.Cascade,
 			},
 		},
 	}
@@ -210,7 +232,7 @@ var (
 		{Name: "description", Type: field.TypeString, Nullable: true},
 		{Name: "password", Type: field.TypeString},
 		{Name: "created_at", Type: field.TypeTime},
-		{Name: "logo", Type: field.TypeBytes, Nullable: true, Size: 52428800},
+		{Name: "logo_url", Type: field.TypeString, Nullable: true},
 		{Name: "github_account_id", Type: field.TypeInt64, Nullable: true},
 		{Name: "github_username", Type: field.TypeString, Nullable: true},
 		{Name: "github_name", Type: field.TypeString, Nullable: true},
@@ -321,6 +343,7 @@ var (
 		ContestRatingsTable,
 		PlacesTable,
 		TeamsTable,
+		TeamAchievementsTable,
 		UsersTable,
 		UserProfilesTable,
 		WeightRatingsTable,
@@ -338,6 +361,7 @@ func init() {
 	PlacesTable.ForeignKeys[1].RefTable = TeamsTable
 	TeamsTable.ForeignKeys[0].RefTable = UsersTable
 	TeamsTable.ForeignKeys[1].RefTable = UsersTable
+	TeamAchievementsTable.ForeignKeys[0].RefTable = TeamsTable
 	UserProfilesTable.ForeignKeys[0].RefTable = UsersTable
 	WeightRatingsTable.ForeignKeys[0].RefTable = TeamsTable
 	WeightRatingsTable.ForeignKeys[1].RefTable = ContestsTable

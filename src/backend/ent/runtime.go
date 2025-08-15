@@ -10,6 +10,7 @@ import (
 	"openctfbackend/ent/place"
 	"openctfbackend/ent/schema"
 	"openctfbackend/ent/team"
+	"openctfbackend/ent/teamachievement"
 	"openctfbackend/ent/user"
 	"openctfbackend/ent/userprofile"
 	"openctfbackend/ent/weightrating"
@@ -110,6 +111,16 @@ func init() {
 	teamDescRecruiting := teamFields[8].Descriptor()
 	// team.DefaultRecruiting holds the default value on creation for the recruiting field.
 	team.DefaultRecruiting = teamDescRecruiting.Default.(bool)
+	// teamDescCreatedAt is the schema descriptor for created_at field.
+	teamDescCreatedAt := teamFields[11].Descriptor()
+	// team.DefaultCreatedAt holds the default value on creation for the created_at field.
+	team.DefaultCreatedAt = teamDescCreatedAt.Default.(time.Time)
+	teamachievementFields := schema.TeamAchievement{}.Fields()
+	_ = teamachievementFields
+	// teamachievementDescUnlockedAt is the schema descriptor for unlocked_at field.
+	teamachievementDescUnlockedAt := teamachievementFields[1].Descriptor()
+	// teamachievement.DefaultUnlockedAt holds the default value on creation for the unlocked_at field.
+	teamachievement.DefaultUnlockedAt = teamachievementDescUnlockedAt.Default.(time.Time)
 	userFields := schema.User{}.Fields()
 	_ = userFields
 	// userDescUsername is the schema descriptor for username field.
@@ -124,10 +135,6 @@ func init() {
 	userDescCreatedAt := userFields[7].Descriptor()
 	// user.DefaultCreatedAt holds the default value on creation for the created_at field.
 	user.DefaultCreatedAt = userDescCreatedAt.Default.(time.Time)
-	// userDescLogo is the schema descriptor for logo field.
-	userDescLogo := userFields[8].Descriptor()
-	// user.LogoValidator is a validator for the "logo" field. It is called by the builders before save.
-	user.LogoValidator = userDescLogo.Validators[0].(func([]byte) error)
 	userprofileFields := schema.UserProfile{}.Fields()
 	_ = userprofileFields
 	// userprofileDescLocation is the schema descriptor for location field.

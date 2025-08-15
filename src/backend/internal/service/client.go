@@ -21,7 +21,9 @@ func New(credentials string) (*Client, error) {
 	if err != nil {
 		return nil, errors.Join(fmt.Errorf("failed opening connection to pg"), err)
 	}
-	if err := client.Schema.Create(context.Background(), migrate.WithDropIndex(true),
+	if err := client.Schema.Create(
+		context.Background(),
+		migrate.WithDropIndex(true),
 		migrate.WithDropColumn(true),
 	); err != nil {
 		slog.Error("schema create failed", "err", err)

@@ -53,10 +53,64 @@ export interface Member {
 	github_avatar_url: string;
 }
 
-export async function createTeam(
+export interface TeamDetails {
+	id: number;
+	name: string;
+	description: string | null;
+	ctftime_id: number | null;
+	ctftime_verified_at: string | null;
+	verified_at: string | null;
+	country_code: string;
+	team_logo_url: string | null;
+	banner_image_url: string | null;
+	discord_url: string | null;
+	github_url: string | null;
+	recruiting: boolean;
+	contact_info: string | null;
+	looking_for: string[];
+	website_url: string | null;
+	avg_place: number | null;
+	years_active: number;
+	contest_history: TeamsDetailsContest[];
+	achievements: TeamsDetailsAchievement[];
+	members: TeamsDetailsUser[];
+	captain: TeamsDetailsUser;
+	verified_by: TeamsDetailsUser;
+}
+
+export interface TeamsDetailsContest {
+	id: number;
+	name: string;
+	year: number;
+	start: string;
+	end: string;
+	place: number;
+	rating: number | null;
+	openctf_points: number;
+	assigned_weight_points: number;
+	participants: number;
+}
+
+export interface TeamsDetailsAchievement {
+	id: number;
+	name: string;
+	unlocked_at: string;
+}
+
+export interface TeamsDetailsUser {
+	id: number;
+	username: string;
+	description: string | null;
+	logo_url: string | null;
+	email_confirmed_at: string | null;
+	created_at: string;
+	email: string;
+}
+
+export const createTeam = async (
 	token: string,
 	dto: CreateTeamDto
-): Promise<Team> {
+): Promise<Team> => {
 	const response = await fetch(`${BASE_URL}/api/teams/create`, {
 		method: "POST",
 		headers: {
@@ -71,4 +125,4 @@ export async function createTeam(
 	}
 	const { team } = data as { team: Team };
 	return team;
-}
+};

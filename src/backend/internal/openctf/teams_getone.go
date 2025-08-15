@@ -32,7 +32,7 @@ func (h *Handler) TeamsGetOne(ctx *gin.Context) {
 		})
 		return
 	}
-	team, err := h.ServiceClient.GetTeam(ctx, teamId)
+	teamDetails, err := h.ServiceClient.GetTeamDetails(ctx, teamId)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, map[string]any{
 			"success": false,
@@ -42,6 +42,6 @@ func (h *Handler) TeamsGetOne(ctx *gin.Context) {
 		return
 	}
 	rest.FailOrReturn(ctx, map[string]any{
-		"team": team,
+		"team": teamDetails,
 	}, err)
 }

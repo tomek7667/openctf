@@ -3,6 +3,8 @@
 package team
 
 import (
+	"time"
+
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 )
@@ -34,6 +36,8 @@ const (
 	FieldContactInfo = "contact_info"
 	// FieldLookingFor holds the string denoting the looking_for field in the database.
 	FieldLookingFor = "looking_for"
+	// FieldCreatedAt holds the string denoting the created_at field in the database.
+	FieldCreatedAt = "created_at"
 	// FieldCtftimeID holds the string denoting the ctftime_id field in the database.
 	FieldCtftimeID = "ctftime_id"
 	// FieldCtftimeVerifiedAt holds the string denoting the ctftime_verified_at field in the database.
@@ -83,6 +87,7 @@ var Columns = []string{
 	FieldRecruiting,
 	FieldContactInfo,
 	FieldLookingFor,
+	FieldCreatedAt,
 	FieldCtftimeID,
 	FieldCtftimeVerifiedAt,
 	FieldVerifiedAt,
@@ -121,6 +126,8 @@ var (
 	DefaultCountryCode string
 	// DefaultRecruiting holds the default value on creation for the "recruiting" field.
 	DefaultRecruiting bool
+	// DefaultCreatedAt holds the default value on creation for the "created_at" field.
+	DefaultCreatedAt time.Time
 )
 
 // OrderOption defines the ordering options for the Team queries.
@@ -179,6 +186,11 @@ func ByRecruiting(opts ...sql.OrderTermOption) OrderOption {
 // ByContactInfo orders the results by the contact_info field.
 func ByContactInfo(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldContactInfo, opts...).ToFunc()
+}
+
+// ByCreatedAt orders the results by the created_at field.
+func ByCreatedAt(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldCreatedAt, opts...).ToFunc()
 }
 
 // ByCtftimeID orders the results by the ctftime_id field.

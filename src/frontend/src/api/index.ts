@@ -1,5 +1,4 @@
 export * from "./auth";
-export * from "./teams_mock";
 export * from "./teams";
 export * from "./contests";
 export * from "./weightPool";

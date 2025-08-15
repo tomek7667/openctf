@@ -145,15 +145,23 @@ func (_u *UserUpdate) SetNillablePassword(v *string) *UserUpdate {
 	return _u
 }
 
-// SetLogo sets the "logo" field.
-func (_u *UserUpdate) SetLogo(v []byte) *UserUpdate {
-	_u.mutation.SetLogo(v)
+// SetLogoURL sets the "logo_url" field.
+func (_u *UserUpdate) SetLogoURL(v string) *UserUpdate {
+	_u.mutation.SetLogoURL(v)
 	return _u
 }
 
-// ClearLogo clears the value of the "logo" field.
-func (_u *UserUpdate) ClearLogo() *UserUpdate {
-	_u.mutation.ClearLogo()
+// SetNillableLogoURL sets the "logo_url" field if the given value is not nil.
+func (_u *UserUpdate) SetNillableLogoURL(v *string) *UserUpdate {
+	if v != nil {
+		_u.SetLogoURL(*v)
+	}
+	return _u
+}
+
+// ClearLogoURL clears the value of the "logo_url" field.
+func (_u *UserUpdate) ClearLogoURL() *UserUpdate {
+	_u.mutation.ClearLogoURL()
 	return _u
 }
 
@@ -349,11 +357,6 @@ func (_u *UserUpdate) check() error {
 			return &ValidationError{Name: "permission_level", err: fmt.Errorf(`ent: validator failed for field "User.permission_level": %w`, err)}
 		}
 	}
-	if v, ok := _u.mutation.Logo(); ok {
-		if err := user.LogoValidator(v); err != nil {
-			return &ValidationError{Name: "logo", err: fmt.Errorf(`ent: validator failed for field "User.logo": %w`, err)}
-		}
-	}
 	return nil
 }
 
@@ -399,11 +402,11 @@ func (_u *UserUpdate) sqlSave(ctx context.Context) (_node int, err error) {
 	if value, ok := _u.mutation.Password(); ok {
 		_spec.SetField(user.FieldPassword, field.TypeString, value)
 	}
-	if value, ok := _u.mutation.Logo(); ok {
-		_spec.SetField(user.FieldLogo, field.TypeBytes, value)
+	if value, ok := _u.mutation.LogoURL(); ok {
+		_spec.SetField(user.FieldLogoURL, field.TypeString, value)
 	}
-	if _u.mutation.LogoCleared() {
-		_spec.ClearField(user.FieldLogo, field.TypeBytes)
+	if _u.mutation.LogoURLCleared() {
+		_spec.ClearField(user.FieldLogoURL, field.TypeString)
 	}
 	if value, ok := _u.mutation.GithubAccountID(); ok {
 		_spec.SetField(user.FieldGithubAccountID, field.TypeInt64, value)
@@ -619,15 +622,23 @@ func (_u *UserUpdateOne) SetNillablePassword(v *string) *UserUpdateOne {
 	return _u
 }
 
-// SetLogo sets the "logo" field.
-func (_u *UserUpdateOne) SetLogo(v []byte) *UserUpdateOne {
-	_u.mutation.SetLogo(v)
+// SetLogoURL sets the "logo_url" field.
+func (_u *UserUpdateOne) SetLogoURL(v string) *UserUpdateOne {
+	_u.mutation.SetLogoURL(v)
 	return _u
 }
 
-// ClearLogo clears the value of the "logo" field.
-func (_u *UserUpdateOne) ClearLogo() *UserUpdateOne {
-	_u.mutation.ClearLogo()
+// SetNillableLogoURL sets the "logo_url" field if the given value is not nil.
+func (_u *UserUpdateOne) SetNillableLogoURL(v *string) *UserUpdateOne {
+	if v != nil {
+		_u.SetLogoURL(*v)
+	}
+	return _u
+}
+
+// ClearLogoURL clears the value of the "logo_url" field.
+func (_u *UserUpdateOne) ClearLogoURL() *UserUpdateOne {
+	_u.mutation.ClearLogoURL()
 	return _u
 }
 
@@ -836,11 +847,6 @@ func (_u *UserUpdateOne) check() error {
 			return &ValidationError{Name: "permission_level", err: fmt.Errorf(`ent: validator failed for field "User.permission_level": %w`, err)}
 		}
 	}
-	if v, ok := _u.mutation.Logo(); ok {
-		if err := user.LogoValidator(v); err != nil {
-			return &ValidationError{Name: "logo", err: fmt.Errorf(`ent: validator failed for field "User.logo": %w`, err)}
-		}
-	}
 	return nil
 }
 
@@ -903,11 +909,11 @@ func (_u *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) {
 	if value, ok := _u.mutation.Password(); ok {
 		_spec.SetField(user.FieldPassword, field.TypeString, value)
 	}
-	if value, ok := _u.mutation.Logo(); ok {
-		_spec.SetField(user.FieldLogo, field.TypeBytes, value)
+	if value, ok := _u.mutation.LogoURL(); ok {
+		_spec.SetField(user.FieldLogoURL, field.TypeString, value)
 	}
-	if _u.mutation.LogoCleared() {
-		_spec.ClearField(user.FieldLogo, field.TypeBytes)
+	if _u.mutation.LogoURLCleared() {
+		_spec.ClearField(user.FieldLogoURL, field.TypeString)
 	}
 	if value, ok := _u.mutation.GithubAccountID(); ok {
 		_spec.SetField(user.FieldGithubAccountID, field.TypeInt64, value)

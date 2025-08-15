@@ -41,6 +41,8 @@ type Team struct {
 	ContactInfo *string `json:"contact_info"`
 	// LookingFor holds the value of the "looking_for" field.
 	LookingFor []string `json:"looking_for"`
+	// CreatedAt holds the value of the "created_at" field.
+	CreatedAt time.Time `json:"created_at"`
 	// CtftimeID holds the value of the "ctftime_id" field.
 	CtftimeID *int `json:"ctftime_id"`
 	// CtftimeVerifiedAt holds the value of the "ctftime_verified_at" field.
@@ -112,7 +114,7 @@ func (*Team) scanValues(columns []string) ([]any, error) {
 			values[i] = new(sql.NullInt64)
 		case team.FieldName, team.FieldDescription, team.FieldCountryCode, team.FieldTeamLogoURL, team.FieldBannerImageURL, team.FieldWebsiteURL, team.FieldDiscordURL, team.FieldGithubURL, team.FieldContactInfo:
 			values[i] = new(sql.NullString)
-		case team.FieldCtftimeVerifiedAt, team.FieldVerifiedAt:
+		case team.FieldCreatedAt, team.FieldCtftimeVerifiedAt, team.FieldVerifiedAt:
 			values[i] = new(sql.NullTime)
 		case team.ForeignKeys[0]: // team_captain
 			values[i] = new(sql.NullInt64)
@@ -213,6 +215,12 @@ func (_m *Team) assignValues(columns []string, values []any) error {
 				if err := json.Unmarshal(*value, &_m.LookingFor); err != nil {
 					return fmt.Errorf("unmarshal field looking_for: %w", err)
 				}
+			}
+		case team.FieldCreatedAt:
+			if value, ok := values[i].(*sql.NullTime); !ok {
+				return fmt.Errorf("unexpected type %T for field created_at", values[i])
+			} else if value.Valid {
+				_m.CreatedAt = value.Time
 			}
 		case team.FieldCtftimeID:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
@@ -346,6 +354,9 @@ func (_m *Team) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("looking_for=")
 	builder.WriteString(fmt.Sprintf("%v", _m.LookingFor))
+	builder.WriteString(", ")
+	builder.WriteString("created_at=")
+	builder.WriteString(_m.CreatedAt.Format(time.ANSIC))
 	builder.WriteString(", ")
 	if v := _m.CtftimeID; v != nil {
 		builder.WriteString("ctftime_id=")

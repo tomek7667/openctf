@@ -111,9 +111,17 @@ func (_c *UserCreate) SetNillableCreatedAt(v *time.Time) *UserCreate {
 	return _c
 }
 
-// SetLogo sets the "logo" field.
-func (_c *UserCreate) SetLogo(v []byte) *UserCreate {
-	_c.mutation.SetLogo(v)
+// SetLogoURL sets the "logo_url" field.
+func (_c *UserCreate) SetLogoURL(v string) *UserCreate {
+	_c.mutation.SetLogoURL(v)
+	return _c
+}
+
+// SetNillableLogoURL sets the "logo_url" field if the given value is not nil.
+func (_c *UserCreate) SetNillableLogoURL(v *string) *UserCreate {
+	if v != nil {
+		_c.SetLogoURL(*v)
+	}
 	return _c
 }
 
@@ -279,11 +287,6 @@ func (_c *UserCreate) check() error {
 	if _, ok := _c.mutation.CreatedAt(); !ok {
 		return &ValidationError{Name: "created_at", err: errors.New(`ent: missing required field "User.created_at"`)}
 	}
-	if v, ok := _c.mutation.Logo(); ok {
-		if err := user.LogoValidator(v); err != nil {
-			return &ValidationError{Name: "logo", err: fmt.Errorf(`ent: validator failed for field "User.logo": %w`, err)}
-		}
-	}
 	return nil
 }
 
@@ -343,9 +346,9 @@ func (_c *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 		_spec.SetField(user.FieldCreatedAt, field.TypeTime, value)
 		_node.CreatedAt = value
 	}
-	if value, ok := _c.mutation.Logo(); ok {
-		_spec.SetField(user.FieldLogo, field.TypeBytes, value)
-		_node.Logo = &value
+	if value, ok := _c.mutation.LogoURL(); ok {
+		_spec.SetField(user.FieldLogoURL, field.TypeString, value)
+		_node.LogoURL = &value
 	}
 	if value, ok := _c.mutation.GithubAccountID(); ok {
 		_spec.SetField(user.FieldGithubAccountID, field.TypeInt64, value)
@@ -537,21 +540,21 @@ func (u *UserUpsert) UpdatePassword() *UserUpsert {
 	return u
 }
 
-// SetLogo sets the "logo" field.
-func (u *UserUpsert) SetLogo(v []byte) *UserUpsert {
-	u.Set(user.FieldLogo, v)
+// SetLogoURL sets the "logo_url" field.
+func (u *UserUpsert) SetLogoURL(v string) *UserUpsert {
+	u.Set(user.FieldLogoURL, v)
 	return u
 }
 
-// UpdateLogo sets the "logo" field to the value that was provided on create.
-func (u *UserUpsert) UpdateLogo() *UserUpsert {
-	u.SetExcluded(user.FieldLogo)
+// UpdateLogoURL sets the "logo_url" field to the value that was provided on create.
+func (u *UserUpsert) UpdateLogoURL() *UserUpsert {
+	u.SetExcluded(user.FieldLogoURL)
 	return u
 }
 
-// ClearLogo clears the value of the "logo" field.
-func (u *UserUpsert) ClearLogo() *UserUpsert {
-	u.SetNull(user.FieldLogo)
+// ClearLogoURL clears the value of the "logo_url" field.
+func (u *UserUpsert) ClearLogoURL() *UserUpsert {
+	u.SetNull(user.FieldLogoURL)
 	return u
 }
 
@@ -815,24 +818,24 @@ func (u *UserUpsertOne) UpdatePassword() *UserUpsertOne {
 	})
 }
 
-// SetLogo sets the "logo" field.
-func (u *UserUpsertOne) SetLogo(v []byte) *UserUpsertOne {
+// SetLogoURL sets the "logo_url" field.
+func (u *UserUpsertOne) SetLogoURL(v string) *UserUpsertOne {
 	return u.Update(func(s *UserUpsert) {
-		s.SetLogo(v)
+		s.SetLogoURL(v)
 	})
 }
 
-// UpdateLogo sets the "logo" field to the value that was provided on create.
-func (u *UserUpsertOne) UpdateLogo() *UserUpsertOne {
+// UpdateLogoURL sets the "logo_url" field to the value that was provided on create.
+func (u *UserUpsertOne) UpdateLogoURL() *UserUpsertOne {
 	return u.Update(func(s *UserUpsert) {
-		s.UpdateLogo()
+		s.UpdateLogoURL()
 	})
 }
 
-// ClearLogo clears the value of the "logo" field.
-func (u *UserUpsertOne) ClearLogo() *UserUpsertOne {
+// ClearLogoURL clears the value of the "logo_url" field.
+func (u *UserUpsertOne) ClearLogoURL() *UserUpsertOne {
 	return u.Update(func(s *UserUpsert) {
-		s.ClearLogo()
+		s.ClearLogoURL()
 	})
 }
 
@@ -1278,24 +1281,24 @@ func (u *UserUpsertBulk) UpdatePassword() *UserUpsertBulk {
 	})
 }
 
-// SetLogo sets the "logo" field.
-func (u *UserUpsertBulk) SetLogo(v []byte) *UserUpsertBulk {
+// SetLogoURL sets the "logo_url" field.
+func (u *UserUpsertBulk) SetLogoURL(v string) *UserUpsertBulk {
 	return u.Update(func(s *UserUpsert) {
-		s.SetLogo(v)
+		s.SetLogoURL(v)
 	})
 }
 
-// UpdateLogo sets the "logo" field to the value that was provided on create.
-func (u *UserUpsertBulk) UpdateLogo() *UserUpsertBulk {
+// UpdateLogoURL sets the "logo_url" field to the value that was provided on create.
+func (u *UserUpsertBulk) UpdateLogoURL() *UserUpsertBulk {
 	return u.Update(func(s *UserUpsert) {
-		s.UpdateLogo()
+		s.UpdateLogoURL()
 	})
 }
 
-// ClearLogo clears the value of the "logo" field.
-func (u *UserUpsertBulk) ClearLogo() *UserUpsertBulk {
+// ClearLogoURL clears the value of the "logo_url" field.
+func (u *UserUpsertBulk) ClearLogoURL() *UserUpsertBulk {
 	return u.Update(func(s *UserUpsert) {
-		s.ClearLogo()
+		s.ClearLogoURL()
 	})
 }
 

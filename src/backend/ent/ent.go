@@ -10,11 +10,13 @@ import (
 	"openctfbackend/ent/activity"
 	"openctfbackend/ent/aggregatedcontestsdifficulties"
 	"openctfbackend/ent/aggregatedplatformstatistics"
+	"openctfbackend/ent/aggregatedteamsdetails"
 	"openctfbackend/ent/aggregateduserstatistics"
 	"openctfbackend/ent/contest"
 	"openctfbackend/ent/contestrating"
 	"openctfbackend/ent/place"
 	"openctfbackend/ent/team"
+	"openctfbackend/ent/teamachievement"
 	"openctfbackend/ent/user"
 	"openctfbackend/ent/userprofile"
 	"openctfbackend/ent/weightrating"
@@ -88,11 +90,13 @@ func checkColumn(t, c string) error {
 			activity.Table:                       activity.ValidColumn,
 			aggregatedcontestsdifficulties.Table: aggregatedcontestsdifficulties.ValidColumn,
 			aggregatedplatformstatistics.Table:   aggregatedplatformstatistics.ValidColumn,
+			aggregatedteamsdetails.Table:         aggregatedteamsdetails.ValidColumn,
 			aggregateduserstatistics.Table:       aggregateduserstatistics.ValidColumn,
 			contest.Table:                        contest.ValidColumn,
 			contestrating.Table:                  contestrating.ValidColumn,
 			place.Table:                          place.ValidColumn,
 			team.Table:                           team.ValidColumn,
+			teamachievement.Table:                teamachievement.ValidColumn,
 			user.Table:                           user.ValidColumn,
 			userprofile.Table:                    userprofile.ValidColumn,
 			weightrating.Table:                   weightrating.ValidColumn,

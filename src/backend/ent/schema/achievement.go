@@ -14,7 +14,7 @@ type Achievement struct {
 	ent.Schema
 }
 
-// Fields of the Achievement.
+// Fields of the TeamAchievement.
 func (Achievement) Fields() []ent.Field {
 	return TrimOmitEmptyTag([]ent.Field{
 		field.String("name").Unique(),
@@ -24,7 +24,7 @@ func (Achievement) Fields() []ent.Field {
 	})
 }
 
-// Edges of the Achievement.
+// Edges of the TeamAchievement.
 func (Achievement) Edges() []ent.Edge {
 	return []ent.Edge{
 		edge.To("user", User.Type).Unique().Required().Annotations(entsql.OnDelete(entsql.Cascade)),

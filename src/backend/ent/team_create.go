@@ -161,6 +161,20 @@ func (_c *TeamCreate) SetLookingFor(v []string) *TeamCreate {
 	return _c
 }
 
+// SetCreatedAt sets the "created_at" field.
+func (_c *TeamCreate) SetCreatedAt(v time.Time) *TeamCreate {
+	_c.mutation.SetCreatedAt(v)
+	return _c
+}
+
+// SetNillableCreatedAt sets the "created_at" field if the given value is not nil.
+func (_c *TeamCreate) SetNillableCreatedAt(v *time.Time) *TeamCreate {
+	if v != nil {
+		_c.SetCreatedAt(*v)
+	}
+	return _c
+}
+
 // SetCtftimeID sets the "ctftime_id" field.
 func (_c *TeamCreate) SetCtftimeID(v int) *TeamCreate {
 	_c.mutation.SetCtftimeID(v)
@@ -299,6 +313,10 @@ func (_c *TeamCreate) defaults() {
 		v := team.DefaultRecruiting
 		_c.mutation.SetRecruiting(v)
 	}
+	if _, ok := _c.mutation.CreatedAt(); !ok {
+		v := team.DefaultCreatedAt
+		_c.mutation.SetCreatedAt(v)
+	}
 }
 
 // check runs all checks and user-defined validators on the builder.
@@ -311,6 +329,9 @@ func (_c *TeamCreate) check() error {
 	}
 	if _, ok := _c.mutation.Recruiting(); !ok {
 		return &ValidationError{Name: "recruiting", err: errors.New(`ent: missing required field "Team.recruiting"`)}
+	}
+	if _, ok := _c.mutation.CreatedAt(); !ok {
+		return &ValidationError{Name: "created_at", err: errors.New(`ent: missing required field "Team.created_at"`)}
 	}
 	return nil
 }
@@ -382,6 +403,10 @@ func (_c *TeamCreate) createSpec() (*Team, *sqlgraph.CreateSpec) {
 	if value, ok := _c.mutation.LookingFor(); ok {
 		_spec.SetField(team.FieldLookingFor, field.TypeJSON, value)
 		_node.LookingFor = value
+	}
+	if value, ok := _c.mutation.CreatedAt(); ok {
+		_spec.SetField(team.FieldCreatedAt, field.TypeTime, value)
+		_node.CreatedAt = value
 	}
 	if value, ok := _c.mutation.CtftimeID(); ok {
 		_spec.SetField(team.FieldCtftimeID, field.TypeInt, value)
@@ -747,6 +772,11 @@ func (u *TeamUpsert) ClearVerifiedAt() *TeamUpsert {
 //		Exec(ctx)
 func (u *TeamUpsertOne) UpdateNewValues() *TeamUpsertOne {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
+	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(s *sql.UpdateSet) {
+		if _, exists := u.create.mutation.CreatedAt(); exists {
+			s.SetIgnore(team.FieldCreatedAt)
+		}
+	}))
 	return u
 }
 
@@ -1231,6 +1261,13 @@ type TeamUpsertBulk struct {
 //		Exec(ctx)
 func (u *TeamUpsertBulk) UpdateNewValues() *TeamUpsertBulk {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
+	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(s *sql.UpdateSet) {
+		for _, b := range u.create.builders {
+			if _, exists := b.mutation.CreatedAt(); exists {
+				s.SetIgnore(team.FieldCreatedAt)
+			}
+		}
+	}))
 	return u
 }
 

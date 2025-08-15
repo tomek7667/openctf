@@ -105,6 +105,11 @@ func ContactInfo(v string) predicate.Team {
 	return predicate.Team(sql.FieldEQ(FieldContactInfo, v))
 }
 
+// CreatedAt applies equality check predicate on the "created_at" field. It's identical to CreatedAtEQ.
+func CreatedAt(v time.Time) predicate.Team {
+	return predicate.Team(sql.FieldEQ(FieldCreatedAt, v))
+}
+
 // CtftimeID applies equality check predicate on the "ctftime_id" field. It's identical to CtftimeIDEQ.
 func CtftimeID(v int) predicate.Team {
 	return predicate.Team(sql.FieldEQ(FieldCtftimeID, v))
@@ -793,6 +798,46 @@ func LookingForIsNil() predicate.Team {
 // LookingForNotNil applies the NotNil predicate on the "looking_for" field.
 func LookingForNotNil() predicate.Team {
 	return predicate.Team(sql.FieldNotNull(FieldLookingFor))
+}
+
+// CreatedAtEQ applies the EQ predicate on the "created_at" field.
+func CreatedAtEQ(v time.Time) predicate.Team {
+	return predicate.Team(sql.FieldEQ(FieldCreatedAt, v))
+}
+
+// CreatedAtNEQ applies the NEQ predicate on the "created_at" field.
+func CreatedAtNEQ(v time.Time) predicate.Team {
+	return predicate.Team(sql.FieldNEQ(FieldCreatedAt, v))
+}
+
+// CreatedAtIn applies the In predicate on the "created_at" field.
+func CreatedAtIn(vs ...time.Time) predicate.Team {
+	return predicate.Team(sql.FieldIn(FieldCreatedAt, vs...))
+}
+
+// CreatedAtNotIn applies the NotIn predicate on the "created_at" field.
+func CreatedAtNotIn(vs ...time.Time) predicate.Team {
+	return predicate.Team(sql.FieldNotIn(FieldCreatedAt, vs...))
+}
+
+// CreatedAtGT applies the GT predicate on the "created_at" field.
+func CreatedAtGT(v time.Time) predicate.Team {
+	return predicate.Team(sql.FieldGT(FieldCreatedAt, v))
+}
+
+// CreatedAtGTE applies the GTE predicate on the "created_at" field.
+func CreatedAtGTE(v time.Time) predicate.Team {
+	return predicate.Team(sql.FieldGTE(FieldCreatedAt, v))
+}
+
+// CreatedAtLT applies the LT predicate on the "created_at" field.
+func CreatedAtLT(v time.Time) predicate.Team {
+	return predicate.Team(sql.FieldLT(FieldCreatedAt, v))
+}
+
+// CreatedAtLTE applies the LTE predicate on the "created_at" field.
+func CreatedAtLTE(v time.Time) predicate.Team {
+	return predicate.Team(sql.FieldLTE(FieldCreatedAt, v))
 }
 
 // CtftimeIDEQ applies the EQ predicate on the "ctftime_id" field.

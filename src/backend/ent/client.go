@@ -17,6 +17,7 @@ import (
 	"openctfbackend/ent/contestrating"
 	"openctfbackend/ent/place"
 	"openctfbackend/ent/team"
+	"openctfbackend/ent/teamachievement"
 	"openctfbackend/ent/user"
 	"openctfbackend/ent/userprofile"
 	"openctfbackend/ent/weightrating"
@@ -42,6 +43,8 @@ type Client struct {
 	AggregatedContestsDifficulties *AggregatedContestsDifficultiesClient
 	// AggregatedPlatformStatistics is the client for interacting with the AggregatedPlatformStatistics builders.
 	AggregatedPlatformStatistics *AggregatedPlatformStatisticsClient
+	// AggregatedTeamsDetails is the client for interacting with the AggregatedTeamsDetails builders.
+	AggregatedTeamsDetails *AggregatedTeamsDetailsClient
 	// AggregatedUserStatistics is the client for interacting with the AggregatedUserStatistics builders.
 	AggregatedUserStatistics *AggregatedUserStatisticsClient
 	// Contest is the client for interacting with the Contest builders.
@@ -52,6 +55,8 @@ type Client struct {
 	Place *PlaceClient
 	// Team is the client for interacting with the Team builders.
 	Team *TeamClient
+	// TeamAchievement is the client for interacting with the TeamAchievement builders.
+	TeamAchievement *TeamAchievementClient
 	// User is the client for interacting with the User builders.
 	User *UserClient
 	// UserProfile is the client for interacting with the UserProfile builders.
@@ -73,11 +78,13 @@ func (c *Client) init() {
 	c.Activity = NewActivityClient(c.config)
 	c.AggregatedContestsDifficulties = NewAggregatedContestsDifficultiesClient(c.config)
 	c.AggregatedPlatformStatistics = NewAggregatedPlatformStatisticsClient(c.config)
+	c.AggregatedTeamsDetails = NewAggregatedTeamsDetailsClient(c.config)
 	c.AggregatedUserStatistics = NewAggregatedUserStatisticsClient(c.config)
 	c.Contest = NewContestClient(c.config)
 	c.ContestRating = NewContestRatingClient(c.config)
 	c.Place = NewPlaceClient(c.config)
 	c.Team = NewTeamClient(c.config)
+	c.TeamAchievement = NewTeamAchievementClient(c.config)
 	c.User = NewUserClient(c.config)
 	c.UserProfile = NewUserProfileClient(c.config)
 	c.WeightRating = NewWeightRatingClient(c.config)
@@ -177,11 +184,13 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 		Activity:                       NewActivityClient(cfg),
 		AggregatedContestsDifficulties: NewAggregatedContestsDifficultiesClient(cfg),
 		AggregatedPlatformStatistics:   NewAggregatedPlatformStatisticsClient(cfg),
+		AggregatedTeamsDetails:         NewAggregatedTeamsDetailsClient(cfg),
 		AggregatedUserStatistics:       NewAggregatedUserStatisticsClient(cfg),
 		Contest:                        NewContestClient(cfg),
 		ContestRating:                  NewContestRatingClient(cfg),
 		Place:                          NewPlaceClient(cfg),
 		Team:                           NewTeamClient(cfg),
+		TeamAchievement:                NewTeamAchievementClient(cfg),
 		User:                           NewUserClient(cfg),
 		UserProfile:                    NewUserProfileClient(cfg),
 		WeightRating:                   NewWeightRatingClient(cfg),
@@ -208,11 +217,13 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 		Activity:                       NewActivityClient(cfg),
 		AggregatedContestsDifficulties: NewAggregatedContestsDifficultiesClient(cfg),
 		AggregatedPlatformStatistics:   NewAggregatedPlatformStatisticsClient(cfg),
+		AggregatedTeamsDetails:         NewAggregatedTeamsDetailsClient(cfg),
 		AggregatedUserStatistics:       NewAggregatedUserStatisticsClient(cfg),
 		Contest:                        NewContestClient(cfg),
 		ContestRating:                  NewContestRatingClient(cfg),
 		Place:                          NewPlaceClient(cfg),
 		Team:                           NewTeamClient(cfg),
+		TeamAchievement:                NewTeamAchievementClient(cfg),
 		User:                           NewUserClient(cfg),
 		UserProfile:                    NewUserProfileClient(cfg),
 		WeightRating:                   NewWeightRatingClient(cfg),
@@ -245,8 +256,8 @@ func (c *Client) Close() error {
 // In order to add hooks to a specific client, call: `client.Node.Use(...)`.
 func (c *Client) Use(hooks ...Hook) {
 	for _, n := range []interface{ Use(...Hook) }{
-		c.Achievement, c.Activity, c.Contest, c.ContestRating, c.Place, c.Team, c.User,
-		c.UserProfile, c.WeightRating,
+		c.Achievement, c.Activity, c.Contest, c.ContestRating, c.Place, c.Team,
+		c.TeamAchievement, c.User, c.UserProfile, c.WeightRating,
 	} {
 		n.Use(hooks...)
 	}
@@ -257,8 +268,9 @@ func (c *Client) Use(hooks ...Hook) {
 func (c *Client) Intercept(interceptors ...Interceptor) {
 	for _, n := range []interface{ Intercept(...Interceptor) }{
 		c.Achievement, c.Activity, c.AggregatedContestsDifficulties,
-		c.AggregatedPlatformStatistics, c.AggregatedUserStatistics, c.Contest,
-		c.ContestRating, c.Place, c.Team, c.User, c.UserProfile, c.WeightRating,
+		c.AggregatedPlatformStatistics, c.AggregatedTeamsDetails,
+		c.AggregatedUserStatistics, c.Contest, c.ContestRating, c.Place, c.Team,
+		c.TeamAchievement, c.User, c.UserProfile, c.WeightRating,
 	} {
 		n.Intercept(interceptors...)
 	}
@@ -279,6 +291,8 @@ func (c *Client) Mutate(ctx context.Context, m Mutation) (Value, error) {
 		return c.Place.mutate(ctx, m)
 	case *TeamMutation:
 		return c.Team.mutate(ctx, m)
+	case *TeamAchievementMutation:
+		return c.TeamAchievement.mutate(ctx, m)
 	case *UserMutation:
 		return c.User.mutate(ctx, m)
 	case *UserProfileMutation:
@@ -646,6 +660,36 @@ func (c *AggregatedPlatformStatisticsClient) Query() *AggregatedPlatformStatisti
 // Interceptors returns the client interceptors.
 func (c *AggregatedPlatformStatisticsClient) Interceptors() []Interceptor {
 	return c.inters.AggregatedPlatformStatistics
+}
+
+// AggregatedTeamsDetailsClient is a client for the AggregatedTeamsDetails schema.
+type AggregatedTeamsDetailsClient struct {
+	config
+}
+
+// NewAggregatedTeamsDetailsClient returns a client for the AggregatedTeamsDetails from the given config.
+func NewAggregatedTeamsDetailsClient(c config) *AggregatedTeamsDetailsClient {
+	return &AggregatedTeamsDetailsClient{config: c}
+}
+
+// Intercept adds a list of query interceptors to the interceptors stack.
+// A call to `Intercept(f, g, h)` equals to `aggregatedteamsdetails.Intercept(f(g(h())))`.
+func (c *AggregatedTeamsDetailsClient) Intercept(interceptors ...Interceptor) {
+	c.inters.AggregatedTeamsDetails = append(c.inters.AggregatedTeamsDetails, interceptors...)
+}
+
+// Query returns a query builder for AggregatedTeamsDetails.
+func (c *AggregatedTeamsDetailsClient) Query() *AggregatedTeamsDetailsQuery {
+	return &AggregatedTeamsDetailsQuery{
+		config: c.config,
+		ctx:    &QueryContext{Type: TypeAggregatedTeamsDetails},
+		inters: c.Interceptors(),
+	}
+}
+
+// Interceptors returns the client interceptors.
+func (c *AggregatedTeamsDetailsClient) Interceptors() []Interceptor {
+	return c.inters.AggregatedTeamsDetails
 }
 
 // AggregatedUserStatisticsClient is a client for the AggregatedUserStatistics schema.
@@ -1338,6 +1382,155 @@ func (c *TeamClient) mutate(ctx context.Context, m *TeamMutation) (Value, error)
 	}
 }
 
+// TeamAchievementClient is a client for the TeamAchievement schema.
+type TeamAchievementClient struct {
+	config
+}
+
+// NewTeamAchievementClient returns a client for the TeamAchievement from the given config.
+func NewTeamAchievementClient(c config) *TeamAchievementClient {
+	return &TeamAchievementClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `teamachievement.Hooks(f(g(h())))`.
+func (c *TeamAchievementClient) Use(hooks ...Hook) {
+	c.hooks.TeamAchievement = append(c.hooks.TeamAchievement, hooks...)
+}
+
+// Intercept adds a list of query interceptors to the interceptors stack.
+// A call to `Intercept(f, g, h)` equals to `teamachievement.Intercept(f(g(h())))`.
+func (c *TeamAchievementClient) Intercept(interceptors ...Interceptor) {
+	c.inters.TeamAchievement = append(c.inters.TeamAchievement, interceptors...)
+}
+
+// Create returns a builder for creating a TeamAchievement entity.
+func (c *TeamAchievementClient) Create() *TeamAchievementCreate {
+	mutation := newTeamAchievementMutation(c.config, OpCreate)
+	return &TeamAchievementCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of TeamAchievement entities.
+func (c *TeamAchievementClient) CreateBulk(builders ...*TeamAchievementCreate) *TeamAchievementCreateBulk {
+	return &TeamAchievementCreateBulk{config: c.config, builders: builders}
+}
+
+// MapCreateBulk creates a bulk creation builder from the given slice. For each item in the slice, the function creates
+// a builder and applies setFunc on it.
+func (c *TeamAchievementClient) MapCreateBulk(slice any, setFunc func(*TeamAchievementCreate, int)) *TeamAchievementCreateBulk {
+	rv := reflect.ValueOf(slice)
+	if rv.Kind() != reflect.Slice {
+		return &TeamAchievementCreateBulk{err: fmt.Errorf("calling to TeamAchievementClient.MapCreateBulk with wrong type %T, need slice", slice)}
+	}
+	builders := make([]*TeamAchievementCreate, rv.Len())
+	for i := 0; i < rv.Len(); i++ {
+		builders[i] = c.Create()
+		setFunc(builders[i], i)
+	}
+	return &TeamAchievementCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for TeamAchievement.
+func (c *TeamAchievementClient) Update() *TeamAchievementUpdate {
+	mutation := newTeamAchievementMutation(c.config, OpUpdate)
+	return &TeamAchievementUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *TeamAchievementClient) UpdateOne(_m *TeamAchievement) *TeamAchievementUpdateOne {
+	mutation := newTeamAchievementMutation(c.config, OpUpdateOne, withTeamAchievement(_m))
+	return &TeamAchievementUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *TeamAchievementClient) UpdateOneID(id int) *TeamAchievementUpdateOne {
+	mutation := newTeamAchievementMutation(c.config, OpUpdateOne, withTeamAchievementID(id))
+	return &TeamAchievementUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for TeamAchievement.
+func (c *TeamAchievementClient) Delete() *TeamAchievementDelete {
+	mutation := newTeamAchievementMutation(c.config, OpDelete)
+	return &TeamAchievementDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *TeamAchievementClient) DeleteOne(_m *TeamAchievement) *TeamAchievementDeleteOne {
+	return c.DeleteOneID(_m.ID)
+}
+
+// DeleteOneID returns a builder for deleting the given entity by its id.
+func (c *TeamAchievementClient) DeleteOneID(id int) *TeamAchievementDeleteOne {
+	builder := c.Delete().Where(teamachievement.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &TeamAchievementDeleteOne{builder}
+}
+
+// Query returns a query builder for TeamAchievement.
+func (c *TeamAchievementClient) Query() *TeamAchievementQuery {
+	return &TeamAchievementQuery{
+		config: c.config,
+		ctx:    &QueryContext{Type: TypeTeamAchievement},
+		inters: c.Interceptors(),
+	}
+}
+
+// Get returns a TeamAchievement entity by its id.
+func (c *TeamAchievementClient) Get(ctx context.Context, id int) (*TeamAchievement, error) {
+	return c.Query().Where(teamachievement.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *TeamAchievementClient) GetX(ctx context.Context, id int) *TeamAchievement {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// QueryTeam queries the team edge of a TeamAchievement.
+func (c *TeamAchievementClient) QueryTeam(_m *TeamAchievement) *TeamQuery {
+	query := (&TeamClient{config: c.config}).Query()
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
+		id := _m.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(teamachievement.Table, teamachievement.FieldID, id),
+			sqlgraph.To(team.Table, team.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, false, teamachievement.TeamTable, teamachievement.TeamColumn),
+		)
+		fromV = sqlgraph.Neighbors(_m.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// Hooks returns the client hooks.
+func (c *TeamAchievementClient) Hooks() []Hook {
+	return c.hooks.TeamAchievement
+}
+
+// Interceptors returns the client interceptors.
+func (c *TeamAchievementClient) Interceptors() []Interceptor {
+	return c.inters.TeamAchievement
+}
+
+func (c *TeamAchievementClient) mutate(ctx context.Context, m *TeamAchievementMutation) (Value, error) {
+	switch m.Op() {
+	case OpCreate:
+		return (&TeamAchievementCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdate:
+		return (&TeamAchievementUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdateOne:
+		return (&TeamAchievementUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpDelete, OpDeleteOne:
+		return (&TeamAchievementDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
+	default:
+		return nil, fmt.Errorf("ent: unknown TeamAchievement mutation op: %q", m.Op())
+	}
+}
+
 // UserClient is a client for the User schema.
 type UserClient struct {
 	config
@@ -1804,13 +1997,14 @@ func (c *WeightRatingClient) mutate(ctx context.Context, m *WeightRatingMutation
 // hooks and interceptors per client, for fast access.
 type (
 	hooks struct {
-		Achievement, Activity, Contest, ContestRating, Place, Team, User, UserProfile,
-		WeightRating []ent.Hook
+		Achievement, Activity, Contest, ContestRating, Place, Team, TeamAchievement,
+		User, UserProfile, WeightRating []ent.Hook
 	}
 	inters struct {
 		Achievement, Activity, AggregatedContestsDifficulties,
-		AggregatedPlatformStatistics, AggregatedUserStatistics, Contest, ContestRating,
-		Place, Team, User, UserProfile, WeightRating []ent.Interceptor
+		AggregatedPlatformStatistics, AggregatedTeamsDetails, AggregatedUserStatistics,
+		Contest, ContestRating, Place, Team, TeamAchievement, User, UserProfile,
+		WeightRating []ent.Interceptor
 	}
 )
 

@@ -1,6 +1,8 @@
 package schema
 
 import (
+	"time"
+
 	"entgo.io/ent"
 	"entgo.io/ent/schema/edge"
 	"entgo.io/ent/schema/field"
@@ -23,6 +25,7 @@ func (Team) Fields() []ent.Field {
 		field.Bool("recruiting").Default(false),
 		field.String("contact_info").Nillable().Optional(),
 		field.JSON("looking_for", []string{}).Optional(),
+		field.Time("created_at").Default(time.Now()).Immutable(),
 
 		field.Int("ctftime_id").Nillable().Optional(),
 		field.Time("ctftime_verified_at").Nillable().Optional(),
