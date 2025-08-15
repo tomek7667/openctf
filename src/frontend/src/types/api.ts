@@ -144,13 +144,6 @@ export interface ListTeamsDto {
 	countryCodes?: string[];
 }
 
-export interface CreateTeamDto {
-	name: string;
-	description: string;
-	ctftimeId?: number;
-	logo?: Uint8Array;
-}
-
 export interface ListContestsDto {
 	offset?: number;
 	limit?: number;

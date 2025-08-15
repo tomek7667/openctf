@@ -22,7 +22,7 @@ import { Badge } from "@/components/ui/Badge";
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 import { MainLayout } from "@/components/layout/MainLayout";
 import { getPopularCountries, COUNTRIES } from "@/lib/countries";
-import { getTeams, Team, TeamFilters } from "@/api/teams";
+import { getTeams, Team, TeamFilters } from "@/api/teams_mock";
 import { useAuthStore } from "@/store/authStore";
 import { clsx } from "clsx";
 import { Flag } from "@/components/ui/Flag";

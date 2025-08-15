@@ -21,7 +21,7 @@ type CreateTeamDto struct {
 	Recruiting     bool     `json:"recruiting"`
 	ContactInfo    *string  `json:"contact_info"`
 	LookingFor     []string `json:"looking_for"`
-	CtftimeID      *int     `json:"ctftimeId,omitempty"`
+	CtftimeID      *int     `json:"ctftime_id,omitempty"`
 }
 
 func (c *Client) CreateTeam(ctx context.Context, captain *ent.User, dto *CreateTeamDto) (*ent.Team, error) {

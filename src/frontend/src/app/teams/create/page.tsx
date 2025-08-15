@@ -9,68 +9,39 @@ import { Input } from "@/components/ui/Input";
 import { Badge } from "@/components/ui/Badge";
 import { ArrowLeft, Users, Save, X, Settings } from "@/components/ui/icons";
 import { useAuthStore } from "@/store/authStore";
-import { createTeam, Team } from "@/api/teams";
 import { getPopularCountries } from "@/lib/countries";
 import { Flag } from "@/components/ui/Flag";
+import { createTeam, CreateTeamDto } from "@/api/teams";
+import useToast from "@/hooks/useToast";
 
 const availableSkills = [
 	"Web Security",
 	"Cryptography",
 	"Reverse Engineering",
 	"Binary Exploitation",
-	"Digital Forensics",
-	"Network Security",
-	"Mobile Security",
-	"Hardware Hacking",
-	"OSINT",
-	"Malware Analysis",
-	"Penetration Testing",
-	"Social Engineering",
-	"Python",
-	"JavaScript",
-	"C/C++",
-	"Assembly",
-	"Go",
-	"Rust",
-	"Java",
+	"Miscellaneous",
 ];
 
 export default function CreateTeamPage() {
 	const router = useRouter();
-	const { user, isAuthenticated } = useAuthStore();
-
+	const { isAuthenticated, token } = useAuthStore();
 	const [loading, setLoading] = useState(false);
 	const [step, setStep] = useState(1);
-
-	// Form data
-	const [teamData, setTeamData] = useState({
+	const [teamData, setTeamData] = useState<CreateTeamDto>({
 		name: "",
 		description: "",
-		logoUrl: "",
-		bannerUrl: "",
-
-		country: "",
-		maxMembers: 10,
-		website: "",
-		discord: "",
-		github: "",
-
-		// Recruitment settings
-		isRecruiting: false,
-		recruitmentDescription: "",
-		requiredSkills: [] as string[],
-		preferredSkills: [] as string[],
-		minExperience: "",
-		timeCommitment: "",
-		contactMethod: "application" as "application" | "invitation_only",
-
-		// Team settings
-		allowApplications: true,
-		requireApproval: true,
+		team_logo_url: "",
+		banner_image_url: "",
+		country_code: "",
+		website_url: "",
+		discord_url: "",
+		github_url: "",
+		recruiting: false,
+		contact_info: "",
+		looking_for: [],
+		ctftime_id: null,
 	});
-
 	const [newRequiredSkill, setNewRequiredSkill] = useState("");
-	const [newPreferredSkill, setNewPreferredSkill] = useState("");
 	const [countrySearch, setCountrySearch] = useState("");
 	const [showCountryDropdown, setShowCountryDropdown] = useState(false);
 	const [selectedCountry, setSelectedCountry] = useState<{
@@ -83,7 +54,7 @@ export default function CreateTeamPage() {
 	const [showPreferredSkillsDropdown, setShowPreferredSkillsDropdown] =
 		useState(false);
 	const [highlightedRequiredIndex, setHighlightedRequiredIndex] = useState(0);
-	const [highlightedPreferredIndex, setHighlightedPreferredIndex] = useState(0);
+	const { toast } = useToast();
 
 	useEffect(() => {
 		if (!isAuthenticated) {
@@ -114,74 +85,35 @@ export default function CreateTeamPage() {
 	const removeRequiredSkill = (skill: string) => {
 		setTeamData((prev) => ({
 			...prev,
-			requiredSkills: prev.requiredSkills.filter((s) => s !== skill),
+			looking_for: prev.looking_for.filter((s) => s !== skill),
 		}));
 	};
 
-	const removePreferredSkill = (skill: string) => {
-		setTeamData((prev) => ({
-			...prev,
-			preferredSkills: prev.preferredSkills.filter((s) => s !== skill),
-		}));
-	};
+	if (!token) {
+		return null;
+	}
 
 	const handleSubmit = async () => {
-		if (!teamData.name.trim() || !teamData.description.trim()) {
+		if (!teamData.name.trim()) {
 			return;
 		}
 
 		setLoading(true);
 		try {
-			const team: Partial<Team> = {
-				name: teamData.name,
-				description: teamData.description,
-				...(teamData.logoUrl.trim() && { logoUrl: teamData.logoUrl.trim() }),
-				...(teamData.bannerUrl.trim() && {
-					bannerUrl: teamData.bannerUrl.trim(),
-				}),
-				privacy: "public",
-				...(teamData.country && { country: teamData.country }),
-				socialLinks: {
-					...(teamData.website.trim() && { website: teamData.website.trim() }),
-					...(teamData.discord.trim() && { discord: teamData.discord.trim() }),
-					...(teamData.github.trim() && { github: teamData.github.trim() }),
-				},
-				recruitment: {
-					isRecruiting: teamData.isRecruiting,
-					...(teamData.recruitmentDescription && {
-						description: teamData.recruitmentDescription,
-					}),
-					requiredSkills: teamData.requiredSkills,
-					preferredSkills: teamData.preferredSkills,
-					...(teamData.minExperience && {
-						minExperience: teamData.minExperience,
-					}),
-					...(teamData.timeCommitment && {
-						timeCommitment: teamData.timeCommitment,
-					}),
-					contactMethod: teamData.contactMethod,
-				},
-				settings: {
-					allowApplications: teamData.allowApplications,
-					requireApproval: teamData.requireApproval,
-					visibilityLevel: "public",
-				},
-			};
-
-			const response = await createTeam(team, user?.id?.toString() || "");
-			if (response.success && response.data) {
-				router.push(`/teams/${response.data.id}`);
-			}
-		} catch (error) {
+			const team = await createTeam(token!, teamData);
+			toast.success(`congratulations`, `team "${team.name}" created`);
+			router.push(`/teams/${team.id}`);
+		} catch (error: any) {
 			console.error("Error creating team:", error);
+			toast.error(
+				"error creating a team",
+				error?.message ??
+					"an unknown error occurred. Either try again or contact the administrator"
+			);
 		} finally {
 			setLoading(false);
 		}
 	};
-
-	if (!isAuthenticated) {
-		return null;
-	}
 
 	return (
 		<MainLayout>
@@ -284,7 +216,7 @@ export default function CreateTeamPage() {
 												DESCRIPTION *
 											</label>
 											<Input
-												value={teamData.description}
+												value={teamData.description ?? ""}
 												onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
 													setTeamData((prev) => ({
 														...prev,
@@ -313,7 +245,10 @@ export default function CreateTeamPage() {
 													onChange={(e) => {
 														setCountrySearch(e.target.value);
 														setSelectedCountry(null);
-														setTeamData((prev) => ({ ...prev, country: "" }));
+														setTeamData((prev) => ({
+															...prev,
+															country_code: "",
+														}));
 														setShowCountryDropdown(true);
 														setHighlightedIndex(0);
 													}}
@@ -345,7 +280,7 @@ export default function CreateTeamPage() {
 																const country = filtered[highlightedIndex];
 																setTeamData((prev) => ({
 																	...prev,
-																	country: country.code,
+																	country_code: country.code,
 																}));
 																setSelectedCountry(country);
 																setCountrySearch("");
@@ -375,7 +310,7 @@ export default function CreateTeamPage() {
 																		e.preventDefault();
 																		setTeamData((prev) => ({
 																			...prev,
-																			country: country.code,
+																			country_code: country.code,
 																		}));
 																		setSelectedCountry(country);
 																		setCountrySearch("");
@@ -430,11 +365,11 @@ export default function CreateTeamPage() {
 												TEAM LOGO URL
 											</label>
 											<Input
-												value={teamData.logoUrl}
+												value={teamData.team_logo_url ?? ""}
 												onChange={(e) =>
 													setTeamData((prev) => ({
 														...prev,
-														logoUrl: e.target.value,
+														team_logo_url: e.target.value,
 													}))
 												}
 												placeholder="https://example.com/logo.png"
@@ -447,11 +382,11 @@ export default function CreateTeamPage() {
 												BANNER IMAGE URL
 											</label>
 											<Input
-												value={teamData.bannerUrl}
+												value={teamData.banner_image_url ?? ""}
 												onChange={(e) =>
 													setTeamData((prev) => ({
 														...prev,
-														bannerUrl: e.target.value,
+														banner_image_url: e.target.value,
 													}))
 												}
 												placeholder="https://example.com/banner.png"
@@ -465,11 +400,11 @@ export default function CreateTeamPage() {
 													WEBSITE
 												</label>
 												<Input
-													value={teamData.website}
+													value={teamData.website_url ?? ""}
 													onChange={(e) =>
 														setTeamData((prev) => ({
 															...prev,
-															website: e.target.value,
+															website_url: e.target.value,
 														}))
 													}
 													placeholder="https://team.example.com"
@@ -482,11 +417,11 @@ export default function CreateTeamPage() {
 													DISCORD
 												</label>
 												<Input
-													value={teamData.discord}
+													value={teamData.discord_url ?? ""}
 													onChange={(e) =>
 														setTeamData((prev) => ({
 															...prev,
-															discord: e.target.value,
+															discord_url: e.target.value,
 														}))
 													}
 													placeholder="https://discord.gg/team"
@@ -499,11 +434,11 @@ export default function CreateTeamPage() {
 													GITHUB
 												</label>
 												<Input
-													value={teamData.github}
+													value={teamData.github_url ?? ""}
 													onChange={(e) =>
 														setTeamData((prev) => ({
 															...prev,
-															github: e.target.value,
+															github_url: e.target.value,
 														}))
 													}
 													placeholder="https://github.com/team"
@@ -517,9 +452,7 @@ export default function CreateTeamPage() {
 								<div className="flex justify-end">
 									<Button
 										onClick={() => setStep(2)}
-										disabled={
-											!teamData.name.trim() || !teamData.description.trim()
-										}
+										disabled={!teamData.name.trim()}
 										className="font-mono bg-green-500 hover:bg-green-600 text-black font-bold"
 									>
 										NEXT: RECRUITMENT
@@ -547,31 +480,31 @@ export default function CreateTeamPage() {
 											onClick={() =>
 												setTeamData((prev) => ({
 													...prev,
-													isRecruiting: !prev.isRecruiting,
+													recruiting: !prev.recruiting,
 												}))
 											}
 											className={`font-mono ${
-												teamData.isRecruiting
+												teamData.recruiting
 													? "border-green-500/50 text-green-400"
 													: "border-gray-500/50 text-gray-400"
 											}`}
 										>
-											{teamData.isRecruiting ? "RECRUITING" : "NOT RECRUITING"}
+											{teamData.recruiting ? "RECRUITING" : "NOT RECRUITING"}
 										</Button>
 									</div>
 
-									{teamData.isRecruiting && (
+									{teamData.recruiting && (
 										<div className="space-y-4">
 											<div>
 												<label className="block text-sm font-mono text-green-400 mb-2">
 													CONTACT INFO
 												</label>
 												<Input
-													value={teamData.recruitmentDescription}
+													value={teamData.contact_info ?? ""}
 													onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
 														setTeamData((prev) => ({
 															...prev,
-															recruitmentDescription: e.target.value,
+															contact_info: e.target.value,
 														}))
 													}
 													placeholder="How to contact your team (Discord, email, etc.)..."
@@ -585,7 +518,7 @@ export default function CreateTeamPage() {
 								</div>
 
 								{/* Skills Requirements */}
-								{teamData.isRecruiting && (
+								{teamData.recruiting && (
 									<div className="bg-gray-800/30 backdrop-blur border border-green-500/30 rounded-lg p-6">
 										<h2 className="font-mono text-green-400 font-bold mb-6">
 											SKILL REQUIREMENTS
@@ -594,7 +527,7 @@ export default function CreateTeamPage() {
 										{/* Required Skills */}
 										<div className="mb-6">
 											<label className="block text-sm font-mono text-green-400 mb-3">
-												REQUIRED SKILLS
+												LOOKING FOR
 											</label>
 											<div className="relative mb-3">
 												<Input
@@ -611,7 +544,7 @@ export default function CreateTeamPage() {
 																skill
 																	.toLowerCase()
 																	.includes(newRequiredSkill.toLowerCase()) &&
-																!teamData.requiredSkills.includes(skill)
+																!teamData.looking_for.includes(skill)
 														);
 
 														if (e.key === "ArrowDown") {
@@ -634,10 +567,7 @@ export default function CreateTeamPage() {
 																	filtered[highlightedRequiredIndex];
 																setTeamData((prev) => ({
 																	...prev,
-																	requiredSkills: [
-																		...prev.requiredSkills,
-																		skill,
-																	],
+																	looking_for: [...prev.looking_for, skill],
 																}));
 																setNewRequiredSkill("");
 																setShowRequiredSkillsDropdown(false);
@@ -656,7 +586,7 @@ export default function CreateTeamPage() {
 																	skill
 																		.toLowerCase()
 																		.includes(newRequiredSkill.toLowerCase()) &&
-																	!teamData.requiredSkills.includes(skill)
+																	!teamData.looking_for.includes(skill)
 															)
 															.map((skill, index) => (
 																<button
@@ -666,10 +596,7 @@ export default function CreateTeamPage() {
 																		e.preventDefault();
 																		setTeamData((prev) => ({
 																			...prev,
-																			requiredSkills: [
-																				...prev.requiredSkills,
-																				skill,
-																			],
+																			looking_for: [...prev.looking_for, skill],
 																		}));
 																		setNewRequiredSkill("");
 																		setShowRequiredSkillsDropdown(false);
@@ -691,128 +618,12 @@ export default function CreateTeamPage() {
 												)}
 											</div>
 											<div className="flex flex-wrap gap-2">
-												{teamData.requiredSkills.map((skill) => (
+												{teamData.looking_for.map((skill) => (
 													<Badge
 														key={skill}
 														variant="outline"
 														className="font-mono text-red-400 border-red-500/50 cursor-pointer group"
 														onClick={() => removeRequiredSkill(skill)}
-													>
-														{skill}
-														<X className="h-3 w-3 ml-1 group-hover:text-red-400" />
-													</Badge>
-												))}
-											</div>
-										</div>
-
-										{/* Preferred Skills */}
-										<div>
-											<label className="block text-sm font-mono text-green-400 mb-3">
-												PREFERRED SKILLS
-											</label>
-											<div className="relative mb-3">
-												<Input
-													value={newPreferredSkill}
-													onChange={(e) => {
-														setNewPreferredSkill(e.target.value);
-														setShowPreferredSkillsDropdown(true);
-														setHighlightedPreferredIndex(0);
-													}}
-													onFocus={() => setShowPreferredSkillsDropdown(true)}
-													onKeyDown={(e) => {
-														const filtered = availableSkills.filter(
-															(skill) =>
-																skill
-																	.toLowerCase()
-																	.includes(newPreferredSkill.toLowerCase()) &&
-																!teamData.preferredSkills.includes(skill)
-														);
-
-														if (e.key === "ArrowDown") {
-															e.preventDefault();
-															setHighlightedPreferredIndex((prev) =>
-																prev < filtered.length - 1 ? prev + 1 : 0
-															);
-														} else if (e.key === "ArrowUp") {
-															e.preventDefault();
-															setHighlightedPreferredIndex((prev) =>
-																prev > 0 ? prev - 1 : filtered.length - 1
-															);
-														} else if (e.key === "Enter") {
-															e.preventDefault();
-															if (
-																filtered.length > 0 &&
-																filtered[highlightedPreferredIndex]
-															) {
-																const skill =
-																	filtered[highlightedPreferredIndex];
-																setTeamData((prev) => ({
-																	...prev,
-																	preferredSkills: [
-																		...prev.preferredSkills,
-																		skill,
-																	],
-																}));
-																setNewPreferredSkill("");
-																setShowPreferredSkillsDropdown(false);
-																setHighlightedPreferredIndex(0);
-															}
-														}
-													}}
-													placeholder="Search and add preferred skill..."
-													className="font-mono bg-gray-800/50 border-green-500/30 text-white placeholder-gray-400"
-												/>
-												{showPreferredSkillsDropdown && newPreferredSkill && (
-													<div className="absolute z-[200] w-full mt-1 bg-gray-800 border border-green-500/30 rounded-lg max-h-48 overflow-y-auto shadow-2xl">
-														{availableSkills
-															.filter(
-																(skill) =>
-																	skill
-																		.toLowerCase()
-																		.includes(
-																			newPreferredSkill.toLowerCase()
-																		) &&
-																	!teamData.preferredSkills.includes(skill)
-															)
-															.map((skill, index) => (
-																<button
-																	key={skill}
-																	type="button"
-																	onMouseDown={(e) => {
-																		e.preventDefault();
-																		setTeamData((prev) => ({
-																			...prev,
-																			preferredSkills: [
-																				...prev.preferredSkills,
-																				skill,
-																			],
-																		}));
-																		setNewPreferredSkill("");
-																		setShowPreferredSkillsDropdown(false);
-																		setHighlightedPreferredIndex(0);
-																	}}
-																	onMouseEnter={() =>
-																		setHighlightedPreferredIndex(index)
-																	}
-																	className={`w-full text-left px-3 py-2 font-mono text-white first:rounded-t-lg last:rounded-b-lg ${
-																		index === highlightedPreferredIndex
-																			? "bg-green-500/30"
-																			: "hover:bg-green-500/20"
-																	}`}
-																>
-																	{skill}
-																</button>
-															))}
-													</div>
-												)}
-											</div>
-											<div className="flex flex-wrap gap-2">
-												{teamData.preferredSkills.map((skill) => (
-													<Badge
-														key={skill}
-														variant="outline"
-														className="font-mono text-green-400 border-green-500/50 cursor-pointer group"
-														onClick={() => removePreferredSkill(skill)}
 													>
 														{skill}
 														<X className="h-3 w-3 ml-1 group-hover:text-red-400" />
@@ -872,36 +683,26 @@ export default function CreateTeamPage() {
 											<span className="text-gray-400">Recruiting:</span>
 											<span
 												className={
-													teamData.isRecruiting
+													teamData.recruiting
 														? "text-green-400"
 														: "text-red-400"
 												}
 											>
-												{teamData.isRecruiting ? "YES" : "NO"}
+												{teamData.recruiting ? "YES" : "NO"}
 											</span>
 										</div>
-										{teamData.isRecruiting && (
+										{teamData.recruiting && (
 											<>
 												<div className="flex justify-between">
-													<span className="text-gray-400">
-														Required Skills:
-													</span>
+													<span className="text-gray-400">Looking for:</span>
 													<span className="text-white">
-														{teamData.requiredSkills.length}
-													</span>
-												</div>
-												<div className="flex justify-between">
-													<span className="text-gray-400">
-														Preferred Skills:
-													</span>
-													<span className="text-white">
-														{teamData.preferredSkills.length}
+														{teamData.looking_for.length}
 													</span>
 												</div>
 												<div className="flex justify-between">
 													<span className="text-gray-400">Contact Info:</span>
 													<span className="text-white">
-														{teamData.recruitmentDescription
+														{teamData.contact_info
 															? "Provided"
 															: "Not provided"}
 													</span>
