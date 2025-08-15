@@ -16,6 +16,6 @@ export default async function TeamPage({
 		const team = await getTeamDetails(teamId);
 		return <TeamPageClient team={team} />;
 	} catch (err: any) {
-		return <GoBack err={err} />;
+		return <GoBack err={err?.message} />;
 	}
 }
