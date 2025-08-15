@@ -43,6 +43,124 @@ func (_c *TeamCreate) SetNillableDescription(v *string) *TeamCreate {
 	return _c
 }
 
+// SetCountryCode sets the "country_code" field.
+func (_c *TeamCreate) SetCountryCode(v string) *TeamCreate {
+	_c.mutation.SetCountryCode(v)
+	return _c
+}
+
+// SetNillableCountryCode sets the "country_code" field if the given value is not nil.
+func (_c *TeamCreate) SetNillableCountryCode(v *string) *TeamCreate {
+	if v != nil {
+		_c.SetCountryCode(*v)
+	}
+	return _c
+}
+
+// SetTeamLogoURL sets the "team_logo_url" field.
+func (_c *TeamCreate) SetTeamLogoURL(v string) *TeamCreate {
+	_c.mutation.SetTeamLogoURL(v)
+	return _c
+}
+
+// SetNillableTeamLogoURL sets the "team_logo_url" field if the given value is not nil.
+func (_c *TeamCreate) SetNillableTeamLogoURL(v *string) *TeamCreate {
+	if v != nil {
+		_c.SetTeamLogoURL(*v)
+	}
+	return _c
+}
+
+// SetBannerImageURL sets the "banner_image_url" field.
+func (_c *TeamCreate) SetBannerImageURL(v string) *TeamCreate {
+	_c.mutation.SetBannerImageURL(v)
+	return _c
+}
+
+// SetNillableBannerImageURL sets the "banner_image_url" field if the given value is not nil.
+func (_c *TeamCreate) SetNillableBannerImageURL(v *string) *TeamCreate {
+	if v != nil {
+		_c.SetBannerImageURL(*v)
+	}
+	return _c
+}
+
+// SetWebsiteURL sets the "website_url" field.
+func (_c *TeamCreate) SetWebsiteURL(v string) *TeamCreate {
+	_c.mutation.SetWebsiteURL(v)
+	return _c
+}
+
+// SetNillableWebsiteURL sets the "website_url" field if the given value is not nil.
+func (_c *TeamCreate) SetNillableWebsiteURL(v *string) *TeamCreate {
+	if v != nil {
+		_c.SetWebsiteURL(*v)
+	}
+	return _c
+}
+
+// SetDiscordURL sets the "discord_url" field.
+func (_c *TeamCreate) SetDiscordURL(v string) *TeamCreate {
+	_c.mutation.SetDiscordURL(v)
+	return _c
+}
+
+// SetNillableDiscordURL sets the "discord_url" field if the given value is not nil.
+func (_c *TeamCreate) SetNillableDiscordURL(v *string) *TeamCreate {
+	if v != nil {
+		_c.SetDiscordURL(*v)
+	}
+	return _c
+}
+
+// SetGithubURL sets the "github_url" field.
+func (_c *TeamCreate) SetGithubURL(v string) *TeamCreate {
+	_c.mutation.SetGithubURL(v)
+	return _c
+}
+
+// SetNillableGithubURL sets the "github_url" field if the given value is not nil.
+func (_c *TeamCreate) SetNillableGithubURL(v *string) *TeamCreate {
+	if v != nil {
+		_c.SetGithubURL(*v)
+	}
+	return _c
+}
+
+// SetRecruiting sets the "recruiting" field.
+func (_c *TeamCreate) SetRecruiting(v bool) *TeamCreate {
+	_c.mutation.SetRecruiting(v)
+	return _c
+}
+
+// SetNillableRecruiting sets the "recruiting" field if the given value is not nil.
+func (_c *TeamCreate) SetNillableRecruiting(v *bool) *TeamCreate {
+	if v != nil {
+		_c.SetRecruiting(*v)
+	}
+	return _c
+}
+
+// SetContactInfo sets the "contact_info" field.
+func (_c *TeamCreate) SetContactInfo(v string) *TeamCreate {
+	_c.mutation.SetContactInfo(v)
+	return _c
+}
+
+// SetNillableContactInfo sets the "contact_info" field if the given value is not nil.
+func (_c *TeamCreate) SetNillableContactInfo(v *string) *TeamCreate {
+	if v != nil {
+		_c.SetContactInfo(*v)
+	}
+	return _c
+}
+
+// SetLookingFor sets the "looking_for" field.
+func (_c *TeamCreate) SetLookingFor(v []string) *TeamCreate {
+	_c.mutation.SetLookingFor(v)
+	return _c
+}
+
 // SetCtftimeID sets the "ctftime_id" field.
 func (_c *TeamCreate) SetCtftimeID(v int) *TeamCreate {
 	_c.mutation.SetCtftimeID(v)
@@ -71,12 +189,6 @@ func (_c *TeamCreate) SetNillableCtftimeVerifiedAt(v *time.Time) *TeamCreate {
 	return _c
 }
 
-// SetLogo sets the "logo" field.
-func (_c *TeamCreate) SetLogo(v []byte) *TeamCreate {
-	_c.mutation.SetLogo(v)
-	return _c
-}
-
 // SetVerifiedAt sets the "verified_at" field.
 func (_c *TeamCreate) SetVerifiedAt(v time.Time) *TeamCreate {
 	_c.mutation.SetVerifiedAt(v)
@@ -87,20 +199,6 @@ func (_c *TeamCreate) SetVerifiedAt(v time.Time) *TeamCreate {
 func (_c *TeamCreate) SetNillableVerifiedAt(v *time.Time) *TeamCreate {
 	if v != nil {
 		_c.SetVerifiedAt(*v)
-	}
-	return _c
-}
-
-// SetCountryCode sets the "country_code" field.
-func (_c *TeamCreate) SetCountryCode(v string) *TeamCreate {
-	_c.mutation.SetCountryCode(v)
-	return _c
-}
-
-// SetNillableCountryCode sets the "country_code" field if the given value is not nil.
-func (_c *TeamCreate) SetNillableCountryCode(v *string) *TeamCreate {
-	if v != nil {
-		_c.SetCountryCode(*v)
 	}
 	return _c
 }
@@ -197,6 +295,10 @@ func (_c *TeamCreate) defaults() {
 		v := team.DefaultCountryCode
 		_c.mutation.SetCountryCode(v)
 	}
+	if _, ok := _c.mutation.Recruiting(); !ok {
+		v := team.DefaultRecruiting
+		_c.mutation.SetRecruiting(v)
+	}
 }
 
 // check runs all checks and user-defined validators on the builder.
@@ -204,13 +306,11 @@ func (_c *TeamCreate) check() error {
 	if _, ok := _c.mutation.Name(); !ok {
 		return &ValidationError{Name: "name", err: errors.New(`ent: missing required field "Team.name"`)}
 	}
-	if v, ok := _c.mutation.Logo(); ok {
-		if err := team.LogoValidator(v); err != nil {
-			return &ValidationError{Name: "logo", err: fmt.Errorf(`ent: validator failed for field "Team.logo": %w`, err)}
-		}
-	}
 	if _, ok := _c.mutation.CountryCode(); !ok {
 		return &ValidationError{Name: "country_code", err: errors.New(`ent: missing required field "Team.country_code"`)}
+	}
+	if _, ok := _c.mutation.Recruiting(); !ok {
+		return &ValidationError{Name: "recruiting", err: errors.New(`ent: missing required field "Team.recruiting"`)}
 	}
 	return nil
 }
@@ -247,6 +347,42 @@ func (_c *TeamCreate) createSpec() (*Team, *sqlgraph.CreateSpec) {
 		_spec.SetField(team.FieldDescription, field.TypeString, value)
 		_node.Description = &value
 	}
+	if value, ok := _c.mutation.CountryCode(); ok {
+		_spec.SetField(team.FieldCountryCode, field.TypeString, value)
+		_node.CountryCode = value
+	}
+	if value, ok := _c.mutation.TeamLogoURL(); ok {
+		_spec.SetField(team.FieldTeamLogoURL, field.TypeString, value)
+		_node.TeamLogoURL = &value
+	}
+	if value, ok := _c.mutation.BannerImageURL(); ok {
+		_spec.SetField(team.FieldBannerImageURL, field.TypeString, value)
+		_node.BannerImageURL = &value
+	}
+	if value, ok := _c.mutation.WebsiteURL(); ok {
+		_spec.SetField(team.FieldWebsiteURL, field.TypeString, value)
+		_node.WebsiteURL = &value
+	}
+	if value, ok := _c.mutation.DiscordURL(); ok {
+		_spec.SetField(team.FieldDiscordURL, field.TypeString, value)
+		_node.DiscordURL = &value
+	}
+	if value, ok := _c.mutation.GithubURL(); ok {
+		_spec.SetField(team.FieldGithubURL, field.TypeString, value)
+		_node.GithubURL = &value
+	}
+	if value, ok := _c.mutation.Recruiting(); ok {
+		_spec.SetField(team.FieldRecruiting, field.TypeBool, value)
+		_node.Recruiting = value
+	}
+	if value, ok := _c.mutation.ContactInfo(); ok {
+		_spec.SetField(team.FieldContactInfo, field.TypeString, value)
+		_node.ContactInfo = &value
+	}
+	if value, ok := _c.mutation.LookingFor(); ok {
+		_spec.SetField(team.FieldLookingFor, field.TypeJSON, value)
+		_node.LookingFor = value
+	}
 	if value, ok := _c.mutation.CtftimeID(); ok {
 		_spec.SetField(team.FieldCtftimeID, field.TypeInt, value)
 		_node.CtftimeID = &value
@@ -255,17 +391,9 @@ func (_c *TeamCreate) createSpec() (*Team, *sqlgraph.CreateSpec) {
 		_spec.SetField(team.FieldCtftimeVerifiedAt, field.TypeTime, value)
 		_node.CtftimeVerifiedAt = &value
 	}
-	if value, ok := _c.mutation.Logo(); ok {
-		_spec.SetField(team.FieldLogo, field.TypeBytes, value)
-		_node.Logo = &value
-	}
 	if value, ok := _c.mutation.VerifiedAt(); ok {
 		_spec.SetField(team.FieldVerifiedAt, field.TypeTime, value)
 		_node.VerifiedAt = &value
-	}
-	if value, ok := _c.mutation.CountryCode(); ok {
-		_spec.SetField(team.FieldCountryCode, field.TypeString, value)
-		_node.CountryCode = value
 	}
 	if nodes := _c.mutation.CaptainIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
@@ -399,6 +527,156 @@ func (u *TeamUpsert) ClearDescription() *TeamUpsert {
 	return u
 }
 
+// SetCountryCode sets the "country_code" field.
+func (u *TeamUpsert) SetCountryCode(v string) *TeamUpsert {
+	u.Set(team.FieldCountryCode, v)
+	return u
+}
+
+// UpdateCountryCode sets the "country_code" field to the value that was provided on create.
+func (u *TeamUpsert) UpdateCountryCode() *TeamUpsert {
+	u.SetExcluded(team.FieldCountryCode)
+	return u
+}
+
+// SetTeamLogoURL sets the "team_logo_url" field.
+func (u *TeamUpsert) SetTeamLogoURL(v string) *TeamUpsert {
+	u.Set(team.FieldTeamLogoURL, v)
+	return u
+}
+
+// UpdateTeamLogoURL sets the "team_logo_url" field to the value that was provided on create.
+func (u *TeamUpsert) UpdateTeamLogoURL() *TeamUpsert {
+	u.SetExcluded(team.FieldTeamLogoURL)
+	return u
+}
+
+// ClearTeamLogoURL clears the value of the "team_logo_url" field.
+func (u *TeamUpsert) ClearTeamLogoURL() *TeamUpsert {
+	u.SetNull(team.FieldTeamLogoURL)
+	return u
+}
+
+// SetBannerImageURL sets the "banner_image_url" field.
+func (u *TeamUpsert) SetBannerImageURL(v string) *TeamUpsert {
+	u.Set(team.FieldBannerImageURL, v)
+	return u
+}
+
+// UpdateBannerImageURL sets the "banner_image_url" field to the value that was provided on create.
+func (u *TeamUpsert) UpdateBannerImageURL() *TeamUpsert {
+	u.SetExcluded(team.FieldBannerImageURL)
+	return u
+}
+
+// ClearBannerImageURL clears the value of the "banner_image_url" field.
+func (u *TeamUpsert) ClearBannerImageURL() *TeamUpsert {
+	u.SetNull(team.FieldBannerImageURL)
+	return u
+}
+
+// SetWebsiteURL sets the "website_url" field.
+func (u *TeamUpsert) SetWebsiteURL(v string) *TeamUpsert {
+	u.Set(team.FieldWebsiteURL, v)
+	return u
+}
+
+// UpdateWebsiteURL sets the "website_url" field to the value that was provided on create.
+func (u *TeamUpsert) UpdateWebsiteURL() *TeamUpsert {
+	u.SetExcluded(team.FieldWebsiteURL)
+	return u
+}
+
+// ClearWebsiteURL clears the value of the "website_url" field.
+func (u *TeamUpsert) ClearWebsiteURL() *TeamUpsert {
+	u.SetNull(team.FieldWebsiteURL)
+	return u
+}
+
+// SetDiscordURL sets the "discord_url" field.
+func (u *TeamUpsert) SetDiscordURL(v string) *TeamUpsert {
+	u.Set(team.FieldDiscordURL, v)
+	return u
+}
+
+// UpdateDiscordURL sets the "discord_url" field to the value that was provided on create.
+func (u *TeamUpsert) UpdateDiscordURL() *TeamUpsert {
+	u.SetExcluded(team.FieldDiscordURL)
+	return u
+}
+
+// ClearDiscordURL clears the value of the "discord_url" field.
+func (u *TeamUpsert) ClearDiscordURL() *TeamUpsert {
+	u.SetNull(team.FieldDiscordURL)
+	return u
+}
+
+// SetGithubURL sets the "github_url" field.
+func (u *TeamUpsert) SetGithubURL(v string) *TeamUpsert {
+	u.Set(team.FieldGithubURL, v)
+	return u
+}
+
+// UpdateGithubURL sets the "github_url" field to the value that was provided on create.
+func (u *TeamUpsert) UpdateGithubURL() *TeamUpsert {
+	u.SetExcluded(team.FieldGithubURL)
+	return u
+}
+
+// ClearGithubURL clears the value of the "github_url" field.
+func (u *TeamUpsert) ClearGithubURL() *TeamUpsert {
+	u.SetNull(team.FieldGithubURL)
+	return u
+}
+
+// SetRecruiting sets the "recruiting" field.
+func (u *TeamUpsert) SetRecruiting(v bool) *TeamUpsert {
+	u.Set(team.FieldRecruiting, v)
+	return u
+}
+
+// UpdateRecruiting sets the "recruiting" field to the value that was provided on create.
+func (u *TeamUpsert) UpdateRecruiting() *TeamUpsert {
+	u.SetExcluded(team.FieldRecruiting)
+	return u
+}
+
+// SetContactInfo sets the "contact_info" field.
+func (u *TeamUpsert) SetContactInfo(v string) *TeamUpsert {
+	u.Set(team.FieldContactInfo, v)
+	return u
+}
+
+// UpdateContactInfo sets the "contact_info" field to the value that was provided on create.
+func (u *TeamUpsert) UpdateContactInfo() *TeamUpsert {
+	u.SetExcluded(team.FieldContactInfo)
+	return u
+}
+
+// ClearContactInfo clears the value of the "contact_info" field.
+func (u *TeamUpsert) ClearContactInfo() *TeamUpsert {
+	u.SetNull(team.FieldContactInfo)
+	return u
+}
+
+// SetLookingFor sets the "looking_for" field.
+func (u *TeamUpsert) SetLookingFor(v []string) *TeamUpsert {
+	u.Set(team.FieldLookingFor, v)
+	return u
+}
+
+// UpdateLookingFor sets the "looking_for" field to the value that was provided on create.
+func (u *TeamUpsert) UpdateLookingFor() *TeamUpsert {
+	u.SetExcluded(team.FieldLookingFor)
+	return u
+}
+
+// ClearLookingFor clears the value of the "looking_for" field.
+func (u *TeamUpsert) ClearLookingFor() *TeamUpsert {
+	u.SetNull(team.FieldLookingFor)
+	return u
+}
+
 // SetCtftimeID sets the "ctftime_id" field.
 func (u *TeamUpsert) SetCtftimeID(v int) *TeamUpsert {
 	u.Set(team.FieldCtftimeID, v)
@@ -441,24 +719,6 @@ func (u *TeamUpsert) ClearCtftimeVerifiedAt() *TeamUpsert {
 	return u
 }
 
-// SetLogo sets the "logo" field.
-func (u *TeamUpsert) SetLogo(v []byte) *TeamUpsert {
-	u.Set(team.FieldLogo, v)
-	return u
-}
-
-// UpdateLogo sets the "logo" field to the value that was provided on create.
-func (u *TeamUpsert) UpdateLogo() *TeamUpsert {
-	u.SetExcluded(team.FieldLogo)
-	return u
-}
-
-// ClearLogo clears the value of the "logo" field.
-func (u *TeamUpsert) ClearLogo() *TeamUpsert {
-	u.SetNull(team.FieldLogo)
-	return u
-}
-
 // SetVerifiedAt sets the "verified_at" field.
 func (u *TeamUpsert) SetVerifiedAt(v time.Time) *TeamUpsert {
 	u.Set(team.FieldVerifiedAt, v)
@@ -474,18 +734,6 @@ func (u *TeamUpsert) UpdateVerifiedAt() *TeamUpsert {
 // ClearVerifiedAt clears the value of the "verified_at" field.
 func (u *TeamUpsert) ClearVerifiedAt() *TeamUpsert {
 	u.SetNull(team.FieldVerifiedAt)
-	return u
-}
-
-// SetCountryCode sets the "country_code" field.
-func (u *TeamUpsert) SetCountryCode(v string) *TeamUpsert {
-	u.Set(team.FieldCountryCode, v)
-	return u
-}
-
-// UpdateCountryCode sets the "country_code" field to the value that was provided on create.
-func (u *TeamUpsert) UpdateCountryCode() *TeamUpsert {
-	u.SetExcluded(team.FieldCountryCode)
 	return u
 }
 
@@ -564,6 +812,181 @@ func (u *TeamUpsertOne) ClearDescription() *TeamUpsertOne {
 	})
 }
 
+// SetCountryCode sets the "country_code" field.
+func (u *TeamUpsertOne) SetCountryCode(v string) *TeamUpsertOne {
+	return u.Update(func(s *TeamUpsert) {
+		s.SetCountryCode(v)
+	})
+}
+
+// UpdateCountryCode sets the "country_code" field to the value that was provided on create.
+func (u *TeamUpsertOne) UpdateCountryCode() *TeamUpsertOne {
+	return u.Update(func(s *TeamUpsert) {
+		s.UpdateCountryCode()
+	})
+}
+
+// SetTeamLogoURL sets the "team_logo_url" field.
+func (u *TeamUpsertOne) SetTeamLogoURL(v string) *TeamUpsertOne {
+	return u.Update(func(s *TeamUpsert) {
+		s.SetTeamLogoURL(v)
+	})
+}
+
+// UpdateTeamLogoURL sets the "team_logo_url" field to the value that was provided on create.
+func (u *TeamUpsertOne) UpdateTeamLogoURL() *TeamUpsertOne {
+	return u.Update(func(s *TeamUpsert) {
+		s.UpdateTeamLogoURL()
+	})
+}
+
+// ClearTeamLogoURL clears the value of the "team_logo_url" field.
+func (u *TeamUpsertOne) ClearTeamLogoURL() *TeamUpsertOne {
+	return u.Update(func(s *TeamUpsert) {
+		s.ClearTeamLogoURL()
+	})
+}
+
+// SetBannerImageURL sets the "banner_image_url" field.
+func (u *TeamUpsertOne) SetBannerImageURL(v string) *TeamUpsertOne {
+	return u.Update(func(s *TeamUpsert) {
+		s.SetBannerImageURL(v)
+	})
+}
+
+// UpdateBannerImageURL sets the "banner_image_url" field to the value that was provided on create.
+func (u *TeamUpsertOne) UpdateBannerImageURL() *TeamUpsertOne {
+	return u.Update(func(s *TeamUpsert) {
+		s.UpdateBannerImageURL()
+	})
+}
+
+// ClearBannerImageURL clears the value of the "banner_image_url" field.
+func (u *TeamUpsertOne) ClearBannerImageURL() *TeamUpsertOne {
+	return u.Update(func(s *TeamUpsert) {
+		s.ClearBannerImageURL()
+	})
+}
+
+// SetWebsiteURL sets the "website_url" field.
+func (u *TeamUpsertOne) SetWebsiteURL(v string) *TeamUpsertOne {
+	return u.Update(func(s *TeamUpsert) {
+		s.SetWebsiteURL(v)
+	})
+}
+
+// UpdateWebsiteURL sets the "website_url" field to the value that was provided on create.
+func (u *TeamUpsertOne) UpdateWebsiteURL() *TeamUpsertOne {
+	return u.Update(func(s *TeamUpsert) {
+		s.UpdateWebsiteURL()
+	})
+}
+
+// ClearWebsiteURL clears the value of the "website_url" field.
+func (u *TeamUpsertOne) ClearWebsiteURL() *TeamUpsertOne {
+	return u.Update(func(s *TeamUpsert) {
+		s.ClearWebsiteURL()
+	})
+}
+
+// SetDiscordURL sets the "discord_url" field.
+func (u *TeamUpsertOne) SetDiscordURL(v string) *TeamUpsertOne {
+	return u.Update(func(s *TeamUpsert) {
+		s.SetDiscordURL(v)
+	})
+}
+
+// UpdateDiscordURL sets the "discord_url" field to the value that was provided on create.
+func (u *TeamUpsertOne) UpdateDiscordURL() *TeamUpsertOne {
+	return u.Update(func(s *TeamUpsert) {
+		s.UpdateDiscordURL()
+	})
+}
+
+// ClearDiscordURL clears the value of the "discord_url" field.
+func (u *TeamUpsertOne) ClearDiscordURL() *TeamUpsertOne {
+	return u.Update(func(s *TeamUpsert) {
+		s.ClearDiscordURL()
+	})
+}
+
+// SetGithubURL sets the "github_url" field.
+func (u *TeamUpsertOne) SetGithubURL(v string) *TeamUpsertOne {
+	return u.Update(func(s *TeamUpsert) {
+		s.SetGithubURL(v)
+	})
+}
+
+// UpdateGithubURL sets the "github_url" field to the value that was provided on create.
+func (u *TeamUpsertOne) UpdateGithubURL() *TeamUpsertOne {
+	return u.Update(func(s *TeamUpsert) {
+		s.UpdateGithubURL()
+	})
+}
+
+// ClearGithubURL clears the value of the "github_url" field.
+func (u *TeamUpsertOne) ClearGithubURL() *TeamUpsertOne {
+	return u.Update(func(s *TeamUpsert) {
+		s.ClearGithubURL()
+	})
+}
+
+// SetRecruiting sets the "recruiting" field.
+func (u *TeamUpsertOne) SetRecruiting(v bool) *TeamUpsertOne {
+	return u.Update(func(s *TeamUpsert) {
+		s.SetRecruiting(v)
+	})
+}
+
+// UpdateRecruiting sets the "recruiting" field to the value that was provided on create.
+func (u *TeamUpsertOne) UpdateRecruiting() *TeamUpsertOne {
+	return u.Update(func(s *TeamUpsert) {
+		s.UpdateRecruiting()
+	})
+}
+
+// SetContactInfo sets the "contact_info" field.
+func (u *TeamUpsertOne) SetContactInfo(v string) *TeamUpsertOne {
+	return u.Update(func(s *TeamUpsert) {
+		s.SetContactInfo(v)
+	})
+}
+
+// UpdateContactInfo sets the "contact_info" field to the value that was provided on create.
+func (u *TeamUpsertOne) UpdateContactInfo() *TeamUpsertOne {
+	return u.Update(func(s *TeamUpsert) {
+		s.UpdateContactInfo()
+	})
+}
+
+// ClearContactInfo clears the value of the "contact_info" field.
+func (u *TeamUpsertOne) ClearContactInfo() *TeamUpsertOne {
+	return u.Update(func(s *TeamUpsert) {
+		s.ClearContactInfo()
+	})
+}
+
+// SetLookingFor sets the "looking_for" field.
+func (u *TeamUpsertOne) SetLookingFor(v []string) *TeamUpsertOne {
+	return u.Update(func(s *TeamUpsert) {
+		s.SetLookingFor(v)
+	})
+}
+
+// UpdateLookingFor sets the "looking_for" field to the value that was provided on create.
+func (u *TeamUpsertOne) UpdateLookingFor() *TeamUpsertOne {
+	return u.Update(func(s *TeamUpsert) {
+		s.UpdateLookingFor()
+	})
+}
+
+// ClearLookingFor clears the value of the "looking_for" field.
+func (u *TeamUpsertOne) ClearLookingFor() *TeamUpsertOne {
+	return u.Update(func(s *TeamUpsert) {
+		s.ClearLookingFor()
+	})
+}
+
 // SetCtftimeID sets the "ctftime_id" field.
 func (u *TeamUpsertOne) SetCtftimeID(v int) *TeamUpsertOne {
 	return u.Update(func(s *TeamUpsert) {
@@ -613,27 +1036,6 @@ func (u *TeamUpsertOne) ClearCtftimeVerifiedAt() *TeamUpsertOne {
 	})
 }
 
-// SetLogo sets the "logo" field.
-func (u *TeamUpsertOne) SetLogo(v []byte) *TeamUpsertOne {
-	return u.Update(func(s *TeamUpsert) {
-		s.SetLogo(v)
-	})
-}
-
-// UpdateLogo sets the "logo" field to the value that was provided on create.
-func (u *TeamUpsertOne) UpdateLogo() *TeamUpsertOne {
-	return u.Update(func(s *TeamUpsert) {
-		s.UpdateLogo()
-	})
-}
-
-// ClearLogo clears the value of the "logo" field.
-func (u *TeamUpsertOne) ClearLogo() *TeamUpsertOne {
-	return u.Update(func(s *TeamUpsert) {
-		s.ClearLogo()
-	})
-}
-
 // SetVerifiedAt sets the "verified_at" field.
 func (u *TeamUpsertOne) SetVerifiedAt(v time.Time) *TeamUpsertOne {
 	return u.Update(func(s *TeamUpsert) {
@@ -652,20 +1054,6 @@ func (u *TeamUpsertOne) UpdateVerifiedAt() *TeamUpsertOne {
 func (u *TeamUpsertOne) ClearVerifiedAt() *TeamUpsertOne {
 	return u.Update(func(s *TeamUpsert) {
 		s.ClearVerifiedAt()
-	})
-}
-
-// SetCountryCode sets the "country_code" field.
-func (u *TeamUpsertOne) SetCountryCode(v string) *TeamUpsertOne {
-	return u.Update(func(s *TeamUpsert) {
-		s.SetCountryCode(v)
-	})
-}
-
-// UpdateCountryCode sets the "country_code" field to the value that was provided on create.
-func (u *TeamUpsertOne) UpdateCountryCode() *TeamUpsertOne {
-	return u.Update(func(s *TeamUpsert) {
-		s.UpdateCountryCode()
 	})
 }
 
@@ -908,6 +1296,181 @@ func (u *TeamUpsertBulk) ClearDescription() *TeamUpsertBulk {
 	})
 }
 
+// SetCountryCode sets the "country_code" field.
+func (u *TeamUpsertBulk) SetCountryCode(v string) *TeamUpsertBulk {
+	return u.Update(func(s *TeamUpsert) {
+		s.SetCountryCode(v)
+	})
+}
+
+// UpdateCountryCode sets the "country_code" field to the value that was provided on create.
+func (u *TeamUpsertBulk) UpdateCountryCode() *TeamUpsertBulk {
+	return u.Update(func(s *TeamUpsert) {
+		s.UpdateCountryCode()
+	})
+}
+
+// SetTeamLogoURL sets the "team_logo_url" field.
+func (u *TeamUpsertBulk) SetTeamLogoURL(v string) *TeamUpsertBulk {
+	return u.Update(func(s *TeamUpsert) {
+		s.SetTeamLogoURL(v)
+	})
+}
+
+// UpdateTeamLogoURL sets the "team_logo_url" field to the value that was provided on create.
+func (u *TeamUpsertBulk) UpdateTeamLogoURL() *TeamUpsertBulk {
+	return u.Update(func(s *TeamUpsert) {
+		s.UpdateTeamLogoURL()
+	})
+}
+
+// ClearTeamLogoURL clears the value of the "team_logo_url" field.
+func (u *TeamUpsertBulk) ClearTeamLogoURL() *TeamUpsertBulk {
+	return u.Update(func(s *TeamUpsert) {
+		s.ClearTeamLogoURL()
+	})
+}
+
+// SetBannerImageURL sets the "banner_image_url" field.
+func (u *TeamUpsertBulk) SetBannerImageURL(v string) *TeamUpsertBulk {
+	return u.Update(func(s *TeamUpsert) {
+		s.SetBannerImageURL(v)
+	})
+}
+
+// UpdateBannerImageURL sets the "banner_image_url" field to the value that was provided on create.
+func (u *TeamUpsertBulk) UpdateBannerImageURL() *TeamUpsertBulk {
+	return u.Update(func(s *TeamUpsert) {
+		s.UpdateBannerImageURL()
+	})
+}
+
+// ClearBannerImageURL clears the value of the "banner_image_url" field.
+func (u *TeamUpsertBulk) ClearBannerImageURL() *TeamUpsertBulk {
+	return u.Update(func(s *TeamUpsert) {
+		s.ClearBannerImageURL()
+	})
+}
+
+// SetWebsiteURL sets the "website_url" field.
+func (u *TeamUpsertBulk) SetWebsiteURL(v string) *TeamUpsertBulk {
+	return u.Update(func(s *TeamUpsert) {
+		s.SetWebsiteURL(v)
+	})
+}
+
+// UpdateWebsiteURL sets the "website_url" field to the value that was provided on create.
+func (u *TeamUpsertBulk) UpdateWebsiteURL() *TeamUpsertBulk {
+	return u.Update(func(s *TeamUpsert) {
+		s.UpdateWebsiteURL()
+	})
+}
+
+// ClearWebsiteURL clears the value of the "website_url" field.
+func (u *TeamUpsertBulk) ClearWebsiteURL() *TeamUpsertBulk {
+	return u.Update(func(s *TeamUpsert) {
+		s.ClearWebsiteURL()
+	})
+}
+
+// SetDiscordURL sets the "discord_url" field.
+func (u *TeamUpsertBulk) SetDiscordURL(v string) *TeamUpsertBulk {
+	return u.Update(func(s *TeamUpsert) {
+		s.SetDiscordURL(v)
+	})
+}
+
+// UpdateDiscordURL sets the "discord_url" field to the value that was provided on create.
+func (u *TeamUpsertBulk) UpdateDiscordURL() *TeamUpsertBulk {
+	return u.Update(func(s *TeamUpsert) {
+		s.UpdateDiscordURL()
+	})
+}
+
+// ClearDiscordURL clears the value of the "discord_url" field.
+func (u *TeamUpsertBulk) ClearDiscordURL() *TeamUpsertBulk {
+	return u.Update(func(s *TeamUpsert) {
+		s.ClearDiscordURL()
+	})
+}
+
+// SetGithubURL sets the "github_url" field.
+func (u *TeamUpsertBulk) SetGithubURL(v string) *TeamUpsertBulk {
+	return u.Update(func(s *TeamUpsert) {
+		s.SetGithubURL(v)
+	})
+}
+
+// UpdateGithubURL sets the "github_url" field to the value that was provided on create.
+func (u *TeamUpsertBulk) UpdateGithubURL() *TeamUpsertBulk {
+	return u.Update(func(s *TeamUpsert) {
+		s.UpdateGithubURL()
+	})
+}
+
+// ClearGithubURL clears the value of the "github_url" field.
+func (u *TeamUpsertBulk) ClearGithubURL() *TeamUpsertBulk {
+	return u.Update(func(s *TeamUpsert) {
+		s.ClearGithubURL()
+	})
+}
+
+// SetRecruiting sets the "recruiting" field.
+func (u *TeamUpsertBulk) SetRecruiting(v bool) *TeamUpsertBulk {
+	return u.Update(func(s *TeamUpsert) {
+		s.SetRecruiting(v)
+	})
+}
+
+// UpdateRecruiting sets the "recruiting" field to the value that was provided on create.
+func (u *TeamUpsertBulk) UpdateRecruiting() *TeamUpsertBulk {
+	return u.Update(func(s *TeamUpsert) {
+		s.UpdateRecruiting()
+	})
+}
+
+// SetContactInfo sets the "contact_info" field.
+func (u *TeamUpsertBulk) SetContactInfo(v string) *TeamUpsertBulk {
+	return u.Update(func(s *TeamUpsert) {
+		s.SetContactInfo(v)
+	})
+}
+
+// UpdateContactInfo sets the "contact_info" field to the value that was provided on create.
+func (u *TeamUpsertBulk) UpdateContactInfo() *TeamUpsertBulk {
+	return u.Update(func(s *TeamUpsert) {
+		s.UpdateContactInfo()
+	})
+}
+
+// ClearContactInfo clears the value of the "contact_info" field.
+func (u *TeamUpsertBulk) ClearContactInfo() *TeamUpsertBulk {
+	return u.Update(func(s *TeamUpsert) {
+		s.ClearContactInfo()
+	})
+}
+
+// SetLookingFor sets the "looking_for" field.
+func (u *TeamUpsertBulk) SetLookingFor(v []string) *TeamUpsertBulk {
+	return u.Update(func(s *TeamUpsert) {
+		s.SetLookingFor(v)
+	})
+}
+
+// UpdateLookingFor sets the "looking_for" field to the value that was provided on create.
+func (u *TeamUpsertBulk) UpdateLookingFor() *TeamUpsertBulk {
+	return u.Update(func(s *TeamUpsert) {
+		s.UpdateLookingFor()
+	})
+}
+
+// ClearLookingFor clears the value of the "looking_for" field.
+func (u *TeamUpsertBulk) ClearLookingFor() *TeamUpsertBulk {
+	return u.Update(func(s *TeamUpsert) {
+		s.ClearLookingFor()
+	})
+}
+
 // SetCtftimeID sets the "ctftime_id" field.
 func (u *TeamUpsertBulk) SetCtftimeID(v int) *TeamUpsertBulk {
 	return u.Update(func(s *TeamUpsert) {
@@ -957,27 +1520,6 @@ func (u *TeamUpsertBulk) ClearCtftimeVerifiedAt() *TeamUpsertBulk {
 	})
 }
 
-// SetLogo sets the "logo" field.
-func (u *TeamUpsertBulk) SetLogo(v []byte) *TeamUpsertBulk {
-	return u.Update(func(s *TeamUpsert) {
-		s.SetLogo(v)
-	})
-}
-
-// UpdateLogo sets the "logo" field to the value that was provided on create.
-func (u *TeamUpsertBulk) UpdateLogo() *TeamUpsertBulk {
-	return u.Update(func(s *TeamUpsert) {
-		s.UpdateLogo()
-	})
-}
-
-// ClearLogo clears the value of the "logo" field.
-func (u *TeamUpsertBulk) ClearLogo() *TeamUpsertBulk {
-	return u.Update(func(s *TeamUpsert) {
-		s.ClearLogo()
-	})
-}
-
 // SetVerifiedAt sets the "verified_at" field.
 func (u *TeamUpsertBulk) SetVerifiedAt(v time.Time) *TeamUpsertBulk {
 	return u.Update(func(s *TeamUpsert) {
@@ -996,20 +1538,6 @@ func (u *TeamUpsertBulk) UpdateVerifiedAt() *TeamUpsertBulk {
 func (u *TeamUpsertBulk) ClearVerifiedAt() *TeamUpsertBulk {
 	return u.Update(func(s *TeamUpsert) {
 		s.ClearVerifiedAt()
-	})
-}
-
-// SetCountryCode sets the "country_code" field.
-func (u *TeamUpsertBulk) SetCountryCode(v string) *TeamUpsertBulk {
-	return u.Update(func(s *TeamUpsert) {
-		s.SetCountryCode(v)
-	})
-}
-
-// UpdateCountryCode sets the "country_code" field to the value that was provided on create.
-func (u *TeamUpsertBulk) UpdateCountryCode() *TeamUpsertBulk {
-	return u.Update(func(s *TeamUpsert) {
-		s.UpdateCountryCode()
 	})
 }
 

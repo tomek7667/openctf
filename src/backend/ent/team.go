@@ -3,6 +3,7 @@
 package ent
 
 import (
+	"encoding/json"
 	"fmt"
 	"openctfbackend/ent/team"
 	"openctfbackend/ent/user"
@@ -22,16 +23,30 @@ type Team struct {
 	Name string `json:"name"`
 	// Description holds the value of the "description" field.
 	Description *string `json:"description"`
+	// CountryCode holds the value of the "country_code" field.
+	CountryCode string `json:"country_code"`
+	// TeamLogoURL holds the value of the "team_logo_url" field.
+	TeamLogoURL *string `json:"team_logo_url"`
+	// BannerImageURL holds the value of the "banner_image_url" field.
+	BannerImageURL *string `json:"banner_image_url"`
+	// WebsiteURL holds the value of the "website_url" field.
+	WebsiteURL *string `json:"website_url"`
+	// DiscordURL holds the value of the "discord_url" field.
+	DiscordURL *string `json:"discord_url"`
+	// GithubURL holds the value of the "github_url" field.
+	GithubURL *string `json:"github_url"`
+	// Recruiting holds the value of the "recruiting" field.
+	Recruiting bool `json:"recruiting"`
+	// ContactInfo holds the value of the "contact_info" field.
+	ContactInfo *string `json:"contact_info"`
+	// LookingFor holds the value of the "looking_for" field.
+	LookingFor []string `json:"looking_for"`
 	// CtftimeID holds the value of the "ctftime_id" field.
 	CtftimeID *int `json:"ctftime_id"`
 	// CtftimeVerifiedAt holds the value of the "ctftime_verified_at" field.
 	CtftimeVerifiedAt *time.Time `json:"ctftime_verified_at"`
-	// Logo holds the value of the "logo" field.
-	Logo *[]byte `json:"logo"`
 	// VerifiedAt holds the value of the "verified_at" field.
 	VerifiedAt *time.Time `json:"verified_at"`
-	// CountryCode holds the value of the "country_code" field.
-	CountryCode string `json:"country_code"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the TeamQuery when eager-loading is set.
 	Edges            TeamEdges `json:"edges"`
@@ -89,11 +104,13 @@ func (*Team) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case team.FieldLogo:
+		case team.FieldLookingFor:
 			values[i] = new([]byte)
+		case team.FieldRecruiting:
+			values[i] = new(sql.NullBool)
 		case team.FieldID, team.FieldCtftimeID:
 			values[i] = new(sql.NullInt64)
-		case team.FieldName, team.FieldDescription, team.FieldCountryCode:
+		case team.FieldName, team.FieldDescription, team.FieldCountryCode, team.FieldTeamLogoURL, team.FieldBannerImageURL, team.FieldWebsiteURL, team.FieldDiscordURL, team.FieldGithubURL, team.FieldContactInfo:
 			values[i] = new(sql.NullString)
 		case team.FieldCtftimeVerifiedAt, team.FieldVerifiedAt:
 			values[i] = new(sql.NullTime)
@@ -135,6 +152,68 @@ func (_m *Team) assignValues(columns []string, values []any) error {
 				_m.Description = new(string)
 				*_m.Description = value.String
 			}
+		case team.FieldCountryCode:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field country_code", values[i])
+			} else if value.Valid {
+				_m.CountryCode = value.String
+			}
+		case team.FieldTeamLogoURL:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field team_logo_url", values[i])
+			} else if value.Valid {
+				_m.TeamLogoURL = new(string)
+				*_m.TeamLogoURL = value.String
+			}
+		case team.FieldBannerImageURL:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field banner_image_url", values[i])
+			} else if value.Valid {
+				_m.BannerImageURL = new(string)
+				*_m.BannerImageURL = value.String
+			}
+		case team.FieldWebsiteURL:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field website_url", values[i])
+			} else if value.Valid {
+				_m.WebsiteURL = new(string)
+				*_m.WebsiteURL = value.String
+			}
+		case team.FieldDiscordURL:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field discord_url", values[i])
+			} else if value.Valid {
+				_m.DiscordURL = new(string)
+				*_m.DiscordURL = value.String
+			}
+		case team.FieldGithubURL:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field github_url", values[i])
+			} else if value.Valid {
+				_m.GithubURL = new(string)
+				*_m.GithubURL = value.String
+			}
+		case team.FieldRecruiting:
+			if value, ok := values[i].(*sql.NullBool); !ok {
+				return fmt.Errorf("unexpected type %T for field recruiting", values[i])
+			} else if value.Valid {
+				_m.Recruiting = value.Bool
+			}
+		case team.FieldContactInfo:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field contact_info", values[i])
+			} else if value.Valid {
+				_m.ContactInfo = new(string)
+				*_m.ContactInfo = value.String
+			}
+		case team.FieldLookingFor:
+			if value, ok := values[i].(*[]byte); !ok {
+				return fmt.Errorf("unexpected type %T for field looking_for", values[i])
+			} else if value != nil && len(*value) > 0 {
+				if err := json.Unmarshal(*value, &_m.LookingFor); err != nil {
+					return fmt.Errorf("unmarshal field looking_for: %w", err)
+				}
+			}
 		case team.FieldCtftimeID:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field ctftime_id", values[i])
@@ -149,24 +228,12 @@ func (_m *Team) assignValues(columns []string, values []any) error {
 				_m.CtftimeVerifiedAt = new(time.Time)
 				*_m.CtftimeVerifiedAt = value.Time
 			}
-		case team.FieldLogo:
-			if value, ok := values[i].(*[]byte); !ok {
-				return fmt.Errorf("unexpected type %T for field logo", values[i])
-			} else if value != nil {
-				_m.Logo = value
-			}
 		case team.FieldVerifiedAt:
 			if value, ok := values[i].(*sql.NullTime); !ok {
 				return fmt.Errorf("unexpected type %T for field verified_at", values[i])
 			} else if value.Valid {
 				_m.VerifiedAt = new(time.Time)
 				*_m.VerifiedAt = value.Time
-			}
-		case team.FieldCountryCode:
-			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field country_code", values[i])
-			} else if value.Valid {
-				_m.CountryCode = value.String
 			}
 		case team.ForeignKeys[0]:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
@@ -241,6 +308,45 @@ func (_m *Team) String() string {
 		builder.WriteString(*v)
 	}
 	builder.WriteString(", ")
+	builder.WriteString("country_code=")
+	builder.WriteString(_m.CountryCode)
+	builder.WriteString(", ")
+	if v := _m.TeamLogoURL; v != nil {
+		builder.WriteString("team_logo_url=")
+		builder.WriteString(*v)
+	}
+	builder.WriteString(", ")
+	if v := _m.BannerImageURL; v != nil {
+		builder.WriteString("banner_image_url=")
+		builder.WriteString(*v)
+	}
+	builder.WriteString(", ")
+	if v := _m.WebsiteURL; v != nil {
+		builder.WriteString("website_url=")
+		builder.WriteString(*v)
+	}
+	builder.WriteString(", ")
+	if v := _m.DiscordURL; v != nil {
+		builder.WriteString("discord_url=")
+		builder.WriteString(*v)
+	}
+	builder.WriteString(", ")
+	if v := _m.GithubURL; v != nil {
+		builder.WriteString("github_url=")
+		builder.WriteString(*v)
+	}
+	builder.WriteString(", ")
+	builder.WriteString("recruiting=")
+	builder.WriteString(fmt.Sprintf("%v", _m.Recruiting))
+	builder.WriteString(", ")
+	if v := _m.ContactInfo; v != nil {
+		builder.WriteString("contact_info=")
+		builder.WriteString(*v)
+	}
+	builder.WriteString(", ")
+	builder.WriteString("looking_for=")
+	builder.WriteString(fmt.Sprintf("%v", _m.LookingFor))
+	builder.WriteString(", ")
 	if v := _m.CtftimeID; v != nil {
 		builder.WriteString("ctftime_id=")
 		builder.WriteString(fmt.Sprintf("%v", *v))
@@ -251,18 +357,10 @@ func (_m *Team) String() string {
 		builder.WriteString(v.Format(time.ANSIC))
 	}
 	builder.WriteString(", ")
-	if v := _m.Logo; v != nil {
-		builder.WriteString("logo=")
-		builder.WriteString(fmt.Sprintf("%v", *v))
-	}
-	builder.WriteString(", ")
 	if v := _m.VerifiedAt; v != nil {
 		builder.WriteString("verified_at=")
 		builder.WriteString(v.Format(time.ANSIC))
 	}
-	builder.WriteString(", ")
-	builder.WriteString("country_code=")
-	builder.WriteString(_m.CountryCode)
 	builder.WriteByte(')')
 	return builder.String()
 }

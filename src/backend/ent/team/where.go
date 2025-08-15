@@ -65,6 +65,46 @@ func Description(v string) predicate.Team {
 	return predicate.Team(sql.FieldEQ(FieldDescription, v))
 }
 
+// CountryCode applies equality check predicate on the "country_code" field. It's identical to CountryCodeEQ.
+func CountryCode(v string) predicate.Team {
+	return predicate.Team(sql.FieldEQ(FieldCountryCode, v))
+}
+
+// TeamLogoURL applies equality check predicate on the "team_logo_url" field. It's identical to TeamLogoURLEQ.
+func TeamLogoURL(v string) predicate.Team {
+	return predicate.Team(sql.FieldEQ(FieldTeamLogoURL, v))
+}
+
+// BannerImageURL applies equality check predicate on the "banner_image_url" field. It's identical to BannerImageURLEQ.
+func BannerImageURL(v string) predicate.Team {
+	return predicate.Team(sql.FieldEQ(FieldBannerImageURL, v))
+}
+
+// WebsiteURL applies equality check predicate on the "website_url" field. It's identical to WebsiteURLEQ.
+func WebsiteURL(v string) predicate.Team {
+	return predicate.Team(sql.FieldEQ(FieldWebsiteURL, v))
+}
+
+// DiscordURL applies equality check predicate on the "discord_url" field. It's identical to DiscordURLEQ.
+func DiscordURL(v string) predicate.Team {
+	return predicate.Team(sql.FieldEQ(FieldDiscordURL, v))
+}
+
+// GithubURL applies equality check predicate on the "github_url" field. It's identical to GithubURLEQ.
+func GithubURL(v string) predicate.Team {
+	return predicate.Team(sql.FieldEQ(FieldGithubURL, v))
+}
+
+// Recruiting applies equality check predicate on the "recruiting" field. It's identical to RecruitingEQ.
+func Recruiting(v bool) predicate.Team {
+	return predicate.Team(sql.FieldEQ(FieldRecruiting, v))
+}
+
+// ContactInfo applies equality check predicate on the "contact_info" field. It's identical to ContactInfoEQ.
+func ContactInfo(v string) predicate.Team {
+	return predicate.Team(sql.FieldEQ(FieldContactInfo, v))
+}
+
 // CtftimeID applies equality check predicate on the "ctftime_id" field. It's identical to CtftimeIDEQ.
 func CtftimeID(v int) predicate.Team {
 	return predicate.Team(sql.FieldEQ(FieldCtftimeID, v))
@@ -75,19 +115,9 @@ func CtftimeVerifiedAt(v time.Time) predicate.Team {
 	return predicate.Team(sql.FieldEQ(FieldCtftimeVerifiedAt, v))
 }
 
-// Logo applies equality check predicate on the "logo" field. It's identical to LogoEQ.
-func Logo(v []byte) predicate.Team {
-	return predicate.Team(sql.FieldEQ(FieldLogo, v))
-}
-
 // VerifiedAt applies equality check predicate on the "verified_at" field. It's identical to VerifiedAtEQ.
 func VerifiedAt(v time.Time) predicate.Team {
 	return predicate.Team(sql.FieldEQ(FieldVerifiedAt, v))
-}
-
-// CountryCode applies equality check predicate on the "country_code" field. It's identical to CountryCodeEQ.
-func CountryCode(v string) predicate.Team {
-	return predicate.Team(sql.FieldEQ(FieldCountryCode, v))
 }
 
 // NameEQ applies the EQ predicate on the "name" field.
@@ -230,6 +260,541 @@ func DescriptionContainsFold(v string) predicate.Team {
 	return predicate.Team(sql.FieldContainsFold(FieldDescription, v))
 }
 
+// CountryCodeEQ applies the EQ predicate on the "country_code" field.
+func CountryCodeEQ(v string) predicate.Team {
+	return predicate.Team(sql.FieldEQ(FieldCountryCode, v))
+}
+
+// CountryCodeNEQ applies the NEQ predicate on the "country_code" field.
+func CountryCodeNEQ(v string) predicate.Team {
+	return predicate.Team(sql.FieldNEQ(FieldCountryCode, v))
+}
+
+// CountryCodeIn applies the In predicate on the "country_code" field.
+func CountryCodeIn(vs ...string) predicate.Team {
+	return predicate.Team(sql.FieldIn(FieldCountryCode, vs...))
+}
+
+// CountryCodeNotIn applies the NotIn predicate on the "country_code" field.
+func CountryCodeNotIn(vs ...string) predicate.Team {
+	return predicate.Team(sql.FieldNotIn(FieldCountryCode, vs...))
+}
+
+// CountryCodeGT applies the GT predicate on the "country_code" field.
+func CountryCodeGT(v string) predicate.Team {
+	return predicate.Team(sql.FieldGT(FieldCountryCode, v))
+}
+
+// CountryCodeGTE applies the GTE predicate on the "country_code" field.
+func CountryCodeGTE(v string) predicate.Team {
+	return predicate.Team(sql.FieldGTE(FieldCountryCode, v))
+}
+
+// CountryCodeLT applies the LT predicate on the "country_code" field.
+func CountryCodeLT(v string) predicate.Team {
+	return predicate.Team(sql.FieldLT(FieldCountryCode, v))
+}
+
+// CountryCodeLTE applies the LTE predicate on the "country_code" field.
+func CountryCodeLTE(v string) predicate.Team {
+	return predicate.Team(sql.FieldLTE(FieldCountryCode, v))
+}
+
+// CountryCodeContains applies the Contains predicate on the "country_code" field.
+func CountryCodeContains(v string) predicate.Team {
+	return predicate.Team(sql.FieldContains(FieldCountryCode, v))
+}
+
+// CountryCodeHasPrefix applies the HasPrefix predicate on the "country_code" field.
+func CountryCodeHasPrefix(v string) predicate.Team {
+	return predicate.Team(sql.FieldHasPrefix(FieldCountryCode, v))
+}
+
+// CountryCodeHasSuffix applies the HasSuffix predicate on the "country_code" field.
+func CountryCodeHasSuffix(v string) predicate.Team {
+	return predicate.Team(sql.FieldHasSuffix(FieldCountryCode, v))
+}
+
+// CountryCodeEqualFold applies the EqualFold predicate on the "country_code" field.
+func CountryCodeEqualFold(v string) predicate.Team {
+	return predicate.Team(sql.FieldEqualFold(FieldCountryCode, v))
+}
+
+// CountryCodeContainsFold applies the ContainsFold predicate on the "country_code" field.
+func CountryCodeContainsFold(v string) predicate.Team {
+	return predicate.Team(sql.FieldContainsFold(FieldCountryCode, v))
+}
+
+// TeamLogoURLEQ applies the EQ predicate on the "team_logo_url" field.
+func TeamLogoURLEQ(v string) predicate.Team {
+	return predicate.Team(sql.FieldEQ(FieldTeamLogoURL, v))
+}
+
+// TeamLogoURLNEQ applies the NEQ predicate on the "team_logo_url" field.
+func TeamLogoURLNEQ(v string) predicate.Team {
+	return predicate.Team(sql.FieldNEQ(FieldTeamLogoURL, v))
+}
+
+// TeamLogoURLIn applies the In predicate on the "team_logo_url" field.
+func TeamLogoURLIn(vs ...string) predicate.Team {
+	return predicate.Team(sql.FieldIn(FieldTeamLogoURL, vs...))
+}
+
+// TeamLogoURLNotIn applies the NotIn predicate on the "team_logo_url" field.
+func TeamLogoURLNotIn(vs ...string) predicate.Team {
+	return predicate.Team(sql.FieldNotIn(FieldTeamLogoURL, vs...))
+}
+
+// TeamLogoURLGT applies the GT predicate on the "team_logo_url" field.
+func TeamLogoURLGT(v string) predicate.Team {
+	return predicate.Team(sql.FieldGT(FieldTeamLogoURL, v))
+}
+
+// TeamLogoURLGTE applies the GTE predicate on the "team_logo_url" field.
+func TeamLogoURLGTE(v string) predicate.Team {
+	return predicate.Team(sql.FieldGTE(FieldTeamLogoURL, v))
+}
+
+// TeamLogoURLLT applies the LT predicate on the "team_logo_url" field.
+func TeamLogoURLLT(v string) predicate.Team {
+	return predicate.Team(sql.FieldLT(FieldTeamLogoURL, v))
+}
+
+// TeamLogoURLLTE applies the LTE predicate on the "team_logo_url" field.
+func TeamLogoURLLTE(v string) predicate.Team {
+	return predicate.Team(sql.FieldLTE(FieldTeamLogoURL, v))
+}
+
+// TeamLogoURLContains applies the Contains predicate on the "team_logo_url" field.
+func TeamLogoURLContains(v string) predicate.Team {
+	return predicate.Team(sql.FieldContains(FieldTeamLogoURL, v))
+}
+
+// TeamLogoURLHasPrefix applies the HasPrefix predicate on the "team_logo_url" field.
+func TeamLogoURLHasPrefix(v string) predicate.Team {
+	return predicate.Team(sql.FieldHasPrefix(FieldTeamLogoURL, v))
+}
+
+// TeamLogoURLHasSuffix applies the HasSuffix predicate on the "team_logo_url" field.
+func TeamLogoURLHasSuffix(v string) predicate.Team {
+	return predicate.Team(sql.FieldHasSuffix(FieldTeamLogoURL, v))
+}
+
+// TeamLogoURLIsNil applies the IsNil predicate on the "team_logo_url" field.
+func TeamLogoURLIsNil() predicate.Team {
+	return predicate.Team(sql.FieldIsNull(FieldTeamLogoURL))
+}
+
+// TeamLogoURLNotNil applies the NotNil predicate on the "team_logo_url" field.
+func TeamLogoURLNotNil() predicate.Team {
+	return predicate.Team(sql.FieldNotNull(FieldTeamLogoURL))
+}
+
+// TeamLogoURLEqualFold applies the EqualFold predicate on the "team_logo_url" field.
+func TeamLogoURLEqualFold(v string) predicate.Team {
+	return predicate.Team(sql.FieldEqualFold(FieldTeamLogoURL, v))
+}
+
+// TeamLogoURLContainsFold applies the ContainsFold predicate on the "team_logo_url" field.
+func TeamLogoURLContainsFold(v string) predicate.Team {
+	return predicate.Team(sql.FieldContainsFold(FieldTeamLogoURL, v))
+}
+
+// BannerImageURLEQ applies the EQ predicate on the "banner_image_url" field.
+func BannerImageURLEQ(v string) predicate.Team {
+	return predicate.Team(sql.FieldEQ(FieldBannerImageURL, v))
+}
+
+// BannerImageURLNEQ applies the NEQ predicate on the "banner_image_url" field.
+func BannerImageURLNEQ(v string) predicate.Team {
+	return predicate.Team(sql.FieldNEQ(FieldBannerImageURL, v))
+}
+
+// BannerImageURLIn applies the In predicate on the "banner_image_url" field.
+func BannerImageURLIn(vs ...string) predicate.Team {
+	return predicate.Team(sql.FieldIn(FieldBannerImageURL, vs...))
+}
+
+// BannerImageURLNotIn applies the NotIn predicate on the "banner_image_url" field.
+func BannerImageURLNotIn(vs ...string) predicate.Team {
+	return predicate.Team(sql.FieldNotIn(FieldBannerImageURL, vs...))
+}
+
+// BannerImageURLGT applies the GT predicate on the "banner_image_url" field.
+func BannerImageURLGT(v string) predicate.Team {
+	return predicate.Team(sql.FieldGT(FieldBannerImageURL, v))
+}
+
+// BannerImageURLGTE applies the GTE predicate on the "banner_image_url" field.
+func BannerImageURLGTE(v string) predicate.Team {
+	return predicate.Team(sql.FieldGTE(FieldBannerImageURL, v))
+}
+
+// BannerImageURLLT applies the LT predicate on the "banner_image_url" field.
+func BannerImageURLLT(v string) predicate.Team {
+	return predicate.Team(sql.FieldLT(FieldBannerImageURL, v))
+}
+
+// BannerImageURLLTE applies the LTE predicate on the "banner_image_url" field.
+func BannerImageURLLTE(v string) predicate.Team {
+	return predicate.Team(sql.FieldLTE(FieldBannerImageURL, v))
+}
+
+// BannerImageURLContains applies the Contains predicate on the "banner_image_url" field.
+func BannerImageURLContains(v string) predicate.Team {
+	return predicate.Team(sql.FieldContains(FieldBannerImageURL, v))
+}
+
+// BannerImageURLHasPrefix applies the HasPrefix predicate on the "banner_image_url" field.
+func BannerImageURLHasPrefix(v string) predicate.Team {
+	return predicate.Team(sql.FieldHasPrefix(FieldBannerImageURL, v))
+}
+
+// BannerImageURLHasSuffix applies the HasSuffix predicate on the "banner_image_url" field.
+func BannerImageURLHasSuffix(v string) predicate.Team {
+	return predicate.Team(sql.FieldHasSuffix(FieldBannerImageURL, v))
+}
+
+// BannerImageURLIsNil applies the IsNil predicate on the "banner_image_url" field.
+func BannerImageURLIsNil() predicate.Team {
+	return predicate.Team(sql.FieldIsNull(FieldBannerImageURL))
+}
+
+// BannerImageURLNotNil applies the NotNil predicate on the "banner_image_url" field.
+func BannerImageURLNotNil() predicate.Team {
+	return predicate.Team(sql.FieldNotNull(FieldBannerImageURL))
+}
+
+// BannerImageURLEqualFold applies the EqualFold predicate on the "banner_image_url" field.
+func BannerImageURLEqualFold(v string) predicate.Team {
+	return predicate.Team(sql.FieldEqualFold(FieldBannerImageURL, v))
+}
+
+// BannerImageURLContainsFold applies the ContainsFold predicate on the "banner_image_url" field.
+func BannerImageURLContainsFold(v string) predicate.Team {
+	return predicate.Team(sql.FieldContainsFold(FieldBannerImageURL, v))
+}
+
+// WebsiteURLEQ applies the EQ predicate on the "website_url" field.
+func WebsiteURLEQ(v string) predicate.Team {
+	return predicate.Team(sql.FieldEQ(FieldWebsiteURL, v))
+}
+
+// WebsiteURLNEQ applies the NEQ predicate on the "website_url" field.
+func WebsiteURLNEQ(v string) predicate.Team {
+	return predicate.Team(sql.FieldNEQ(FieldWebsiteURL, v))
+}
+
+// WebsiteURLIn applies the In predicate on the "website_url" field.
+func WebsiteURLIn(vs ...string) predicate.Team {
+	return predicate.Team(sql.FieldIn(FieldWebsiteURL, vs...))
+}
+
+// WebsiteURLNotIn applies the NotIn predicate on the "website_url" field.
+func WebsiteURLNotIn(vs ...string) predicate.Team {
+	return predicate.Team(sql.FieldNotIn(FieldWebsiteURL, vs...))
+}
+
+// WebsiteURLGT applies the GT predicate on the "website_url" field.
+func WebsiteURLGT(v string) predicate.Team {
+	return predicate.Team(sql.FieldGT(FieldWebsiteURL, v))
+}
+
+// WebsiteURLGTE applies the GTE predicate on the "website_url" field.
+func WebsiteURLGTE(v string) predicate.Team {
+	return predicate.Team(sql.FieldGTE(FieldWebsiteURL, v))
+}
+
+// WebsiteURLLT applies the LT predicate on the "website_url" field.
+func WebsiteURLLT(v string) predicate.Team {
+	return predicate.Team(sql.FieldLT(FieldWebsiteURL, v))
+}
+
+// WebsiteURLLTE applies the LTE predicate on the "website_url" field.
+func WebsiteURLLTE(v string) predicate.Team {
+	return predicate.Team(sql.FieldLTE(FieldWebsiteURL, v))
+}
+
+// WebsiteURLContains applies the Contains predicate on the "website_url" field.
+func WebsiteURLContains(v string) predicate.Team {
+	return predicate.Team(sql.FieldContains(FieldWebsiteURL, v))
+}
+
+// WebsiteURLHasPrefix applies the HasPrefix predicate on the "website_url" field.
+func WebsiteURLHasPrefix(v string) predicate.Team {
+	return predicate.Team(sql.FieldHasPrefix(FieldWebsiteURL, v))
+}
+
+// WebsiteURLHasSuffix applies the HasSuffix predicate on the "website_url" field.
+func WebsiteURLHasSuffix(v string) predicate.Team {
+	return predicate.Team(sql.FieldHasSuffix(FieldWebsiteURL, v))
+}
+
+// WebsiteURLIsNil applies the IsNil predicate on the "website_url" field.
+func WebsiteURLIsNil() predicate.Team {
+	return predicate.Team(sql.FieldIsNull(FieldWebsiteURL))
+}
+
+// WebsiteURLNotNil applies the NotNil predicate on the "website_url" field.
+func WebsiteURLNotNil() predicate.Team {
+	return predicate.Team(sql.FieldNotNull(FieldWebsiteURL))
+}
+
+// WebsiteURLEqualFold applies the EqualFold predicate on the "website_url" field.
+func WebsiteURLEqualFold(v string) predicate.Team {
+	return predicate.Team(sql.FieldEqualFold(FieldWebsiteURL, v))
+}
+
+// WebsiteURLContainsFold applies the ContainsFold predicate on the "website_url" field.
+func WebsiteURLContainsFold(v string) predicate.Team {
+	return predicate.Team(sql.FieldContainsFold(FieldWebsiteURL, v))
+}
+
+// DiscordURLEQ applies the EQ predicate on the "discord_url" field.
+func DiscordURLEQ(v string) predicate.Team {
+	return predicate.Team(sql.FieldEQ(FieldDiscordURL, v))
+}
+
+// DiscordURLNEQ applies the NEQ predicate on the "discord_url" field.
+func DiscordURLNEQ(v string) predicate.Team {
+	return predicate.Team(sql.FieldNEQ(FieldDiscordURL, v))
+}
+
+// DiscordURLIn applies the In predicate on the "discord_url" field.
+func DiscordURLIn(vs ...string) predicate.Team {
+	return predicate.Team(sql.FieldIn(FieldDiscordURL, vs...))
+}
+
+// DiscordURLNotIn applies the NotIn predicate on the "discord_url" field.
+func DiscordURLNotIn(vs ...string) predicate.Team {
+	return predicate.Team(sql.FieldNotIn(FieldDiscordURL, vs...))
+}
+
+// DiscordURLGT applies the GT predicate on the "discord_url" field.
+func DiscordURLGT(v string) predicate.Team {
+	return predicate.Team(sql.FieldGT(FieldDiscordURL, v))
+}
+
+// DiscordURLGTE applies the GTE predicate on the "discord_url" field.
+func DiscordURLGTE(v string) predicate.Team {
+	return predicate.Team(sql.FieldGTE(FieldDiscordURL, v))
+}
+
+// DiscordURLLT applies the LT predicate on the "discord_url" field.
+func DiscordURLLT(v string) predicate.Team {
+	return predicate.Team(sql.FieldLT(FieldDiscordURL, v))
+}
+
+// DiscordURLLTE applies the LTE predicate on the "discord_url" field.
+func DiscordURLLTE(v string) predicate.Team {
+	return predicate.Team(sql.FieldLTE(FieldDiscordURL, v))
+}
+
+// DiscordURLContains applies the Contains predicate on the "discord_url" field.
+func DiscordURLContains(v string) predicate.Team {
+	return predicate.Team(sql.FieldContains(FieldDiscordURL, v))
+}
+
+// DiscordURLHasPrefix applies the HasPrefix predicate on the "discord_url" field.
+func DiscordURLHasPrefix(v string) predicate.Team {
+	return predicate.Team(sql.FieldHasPrefix(FieldDiscordURL, v))
+}
+
+// DiscordURLHasSuffix applies the HasSuffix predicate on the "discord_url" field.
+func DiscordURLHasSuffix(v string) predicate.Team {
+	return predicate.Team(sql.FieldHasSuffix(FieldDiscordURL, v))
+}
+
+// DiscordURLIsNil applies the IsNil predicate on the "discord_url" field.
+func DiscordURLIsNil() predicate.Team {
+	return predicate.Team(sql.FieldIsNull(FieldDiscordURL))
+}
+
+// DiscordURLNotNil applies the NotNil predicate on the "discord_url" field.
+func DiscordURLNotNil() predicate.Team {
+	return predicate.Team(sql.FieldNotNull(FieldDiscordURL))
+}
+
+// DiscordURLEqualFold applies the EqualFold predicate on the "discord_url" field.
+func DiscordURLEqualFold(v string) predicate.Team {
+	return predicate.Team(sql.FieldEqualFold(FieldDiscordURL, v))
+}
+
+// DiscordURLContainsFold applies the ContainsFold predicate on the "discord_url" field.
+func DiscordURLContainsFold(v string) predicate.Team {
+	return predicate.Team(sql.FieldContainsFold(FieldDiscordURL, v))
+}
+
+// GithubURLEQ applies the EQ predicate on the "github_url" field.
+func GithubURLEQ(v string) predicate.Team {
+	return predicate.Team(sql.FieldEQ(FieldGithubURL, v))
+}
+
+// GithubURLNEQ applies the NEQ predicate on the "github_url" field.
+func GithubURLNEQ(v string) predicate.Team {
+	return predicate.Team(sql.FieldNEQ(FieldGithubURL, v))
+}
+
+// GithubURLIn applies the In predicate on the "github_url" field.
+func GithubURLIn(vs ...string) predicate.Team {
+	return predicate.Team(sql.FieldIn(FieldGithubURL, vs...))
+}
+
+// GithubURLNotIn applies the NotIn predicate on the "github_url" field.
+func GithubURLNotIn(vs ...string) predicate.Team {
+	return predicate.Team(sql.FieldNotIn(FieldGithubURL, vs...))
+}
+
+// GithubURLGT applies the GT predicate on the "github_url" field.
+func GithubURLGT(v string) predicate.Team {
+	return predicate.Team(sql.FieldGT(FieldGithubURL, v))
+}
+
+// GithubURLGTE applies the GTE predicate on the "github_url" field.
+func GithubURLGTE(v string) predicate.Team {
+	return predicate.Team(sql.FieldGTE(FieldGithubURL, v))
+}
+
+// GithubURLLT applies the LT predicate on the "github_url" field.
+func GithubURLLT(v string) predicate.Team {
+	return predicate.Team(sql.FieldLT(FieldGithubURL, v))
+}
+
+// GithubURLLTE applies the LTE predicate on the "github_url" field.
+func GithubURLLTE(v string) predicate.Team {
+	return predicate.Team(sql.FieldLTE(FieldGithubURL, v))
+}
+
+// GithubURLContains applies the Contains predicate on the "github_url" field.
+func GithubURLContains(v string) predicate.Team {
+	return predicate.Team(sql.FieldContains(FieldGithubURL, v))
+}
+
+// GithubURLHasPrefix applies the HasPrefix predicate on the "github_url" field.
+func GithubURLHasPrefix(v string) predicate.Team {
+	return predicate.Team(sql.FieldHasPrefix(FieldGithubURL, v))
+}
+
+// GithubURLHasSuffix applies the HasSuffix predicate on the "github_url" field.
+func GithubURLHasSuffix(v string) predicate.Team {
+	return predicate.Team(sql.FieldHasSuffix(FieldGithubURL, v))
+}
+
+// GithubURLIsNil applies the IsNil predicate on the "github_url" field.
+func GithubURLIsNil() predicate.Team {
+	return predicate.Team(sql.FieldIsNull(FieldGithubURL))
+}
+
+// GithubURLNotNil applies the NotNil predicate on the "github_url" field.
+func GithubURLNotNil() predicate.Team {
+	return predicate.Team(sql.FieldNotNull(FieldGithubURL))
+}
+
+// GithubURLEqualFold applies the EqualFold predicate on the "github_url" field.
+func GithubURLEqualFold(v string) predicate.Team {
+	return predicate.Team(sql.FieldEqualFold(FieldGithubURL, v))
+}
+
+// GithubURLContainsFold applies the ContainsFold predicate on the "github_url" field.
+func GithubURLContainsFold(v string) predicate.Team {
+	return predicate.Team(sql.FieldContainsFold(FieldGithubURL, v))
+}
+
+// RecruitingEQ applies the EQ predicate on the "recruiting" field.
+func RecruitingEQ(v bool) predicate.Team {
+	return predicate.Team(sql.FieldEQ(FieldRecruiting, v))
+}
+
+// RecruitingNEQ applies the NEQ predicate on the "recruiting" field.
+func RecruitingNEQ(v bool) predicate.Team {
+	return predicate.Team(sql.FieldNEQ(FieldRecruiting, v))
+}
+
+// ContactInfoEQ applies the EQ predicate on the "contact_info" field.
+func ContactInfoEQ(v string) predicate.Team {
+	return predicate.Team(sql.FieldEQ(FieldContactInfo, v))
+}
+
+// ContactInfoNEQ applies the NEQ predicate on the "contact_info" field.
+func ContactInfoNEQ(v string) predicate.Team {
+	return predicate.Team(sql.FieldNEQ(FieldContactInfo, v))
+}
+
+// ContactInfoIn applies the In predicate on the "contact_info" field.
+func ContactInfoIn(vs ...string) predicate.Team {
+	return predicate.Team(sql.FieldIn(FieldContactInfo, vs...))
+}
+
+// ContactInfoNotIn applies the NotIn predicate on the "contact_info" field.
+func ContactInfoNotIn(vs ...string) predicate.Team {
+	return predicate.Team(sql.FieldNotIn(FieldContactInfo, vs...))
+}
+
+// ContactInfoGT applies the GT predicate on the "contact_info" field.
+func ContactInfoGT(v string) predicate.Team {
+	return predicate.Team(sql.FieldGT(FieldContactInfo, v))
+}
+
+// ContactInfoGTE applies the GTE predicate on the "contact_info" field.
+func ContactInfoGTE(v string) predicate.Team {
+	return predicate.Team(sql.FieldGTE(FieldContactInfo, v))
+}
+
+// ContactInfoLT applies the LT predicate on the "contact_info" field.
+func ContactInfoLT(v string) predicate.Team {
+	return predicate.Team(sql.FieldLT(FieldContactInfo, v))
+}
+
+// ContactInfoLTE applies the LTE predicate on the "contact_info" field.
+func ContactInfoLTE(v string) predicate.Team {
+	return predicate.Team(sql.FieldLTE(FieldContactInfo, v))
+}
+
+// ContactInfoContains applies the Contains predicate on the "contact_info" field.
+func ContactInfoContains(v string) predicate.Team {
+	return predicate.Team(sql.FieldContains(FieldContactInfo, v))
+}
+
+// ContactInfoHasPrefix applies the HasPrefix predicate on the "contact_info" field.
+func ContactInfoHasPrefix(v string) predicate.Team {
+	return predicate.Team(sql.FieldHasPrefix(FieldContactInfo, v))
+}
+
+// ContactInfoHasSuffix applies the HasSuffix predicate on the "contact_info" field.
+func ContactInfoHasSuffix(v string) predicate.Team {
+	return predicate.Team(sql.FieldHasSuffix(FieldContactInfo, v))
+}
+
+// ContactInfoIsNil applies the IsNil predicate on the "contact_info" field.
+func ContactInfoIsNil() predicate.Team {
+	return predicate.Team(sql.FieldIsNull(FieldContactInfo))
+}
+
+// ContactInfoNotNil applies the NotNil predicate on the "contact_info" field.
+func ContactInfoNotNil() predicate.Team {
+	return predicate.Team(sql.FieldNotNull(FieldContactInfo))
+}
+
+// ContactInfoEqualFold applies the EqualFold predicate on the "contact_info" field.
+func ContactInfoEqualFold(v string) predicate.Team {
+	return predicate.Team(sql.FieldEqualFold(FieldContactInfo, v))
+}
+
+// ContactInfoContainsFold applies the ContainsFold predicate on the "contact_info" field.
+func ContactInfoContainsFold(v string) predicate.Team {
+	return predicate.Team(sql.FieldContainsFold(FieldContactInfo, v))
+}
+
+// LookingForIsNil applies the IsNil predicate on the "looking_for" field.
+func LookingForIsNil() predicate.Team {
+	return predicate.Team(sql.FieldIsNull(FieldLookingFor))
+}
+
+// LookingForNotNil applies the NotNil predicate on the "looking_for" field.
+func LookingForNotNil() predicate.Team {
+	return predicate.Team(sql.FieldNotNull(FieldLookingFor))
+}
+
 // CtftimeIDEQ applies the EQ predicate on the "ctftime_id" field.
 func CtftimeIDEQ(v int) predicate.Team {
 	return predicate.Team(sql.FieldEQ(FieldCtftimeID, v))
@@ -330,56 +895,6 @@ func CtftimeVerifiedAtNotNil() predicate.Team {
 	return predicate.Team(sql.FieldNotNull(FieldCtftimeVerifiedAt))
 }
 
-// LogoEQ applies the EQ predicate on the "logo" field.
-func LogoEQ(v []byte) predicate.Team {
-	return predicate.Team(sql.FieldEQ(FieldLogo, v))
-}
-
-// LogoNEQ applies the NEQ predicate on the "logo" field.
-func LogoNEQ(v []byte) predicate.Team {
-	return predicate.Team(sql.FieldNEQ(FieldLogo, v))
-}
-
-// LogoIn applies the In predicate on the "logo" field.
-func LogoIn(vs ...[]byte) predicate.Team {
-	return predicate.Team(sql.FieldIn(FieldLogo, vs...))
-}
-
-// LogoNotIn applies the NotIn predicate on the "logo" field.
-func LogoNotIn(vs ...[]byte) predicate.Team {
-	return predicate.Team(sql.FieldNotIn(FieldLogo, vs...))
-}
-
-// LogoGT applies the GT predicate on the "logo" field.
-func LogoGT(v []byte) predicate.Team {
-	return predicate.Team(sql.FieldGT(FieldLogo, v))
-}
-
-// LogoGTE applies the GTE predicate on the "logo" field.
-func LogoGTE(v []byte) predicate.Team {
-	return predicate.Team(sql.FieldGTE(FieldLogo, v))
-}
-
-// LogoLT applies the LT predicate on the "logo" field.
-func LogoLT(v []byte) predicate.Team {
-	return predicate.Team(sql.FieldLT(FieldLogo, v))
-}
-
-// LogoLTE applies the LTE predicate on the "logo" field.
-func LogoLTE(v []byte) predicate.Team {
-	return predicate.Team(sql.FieldLTE(FieldLogo, v))
-}
-
-// LogoIsNil applies the IsNil predicate on the "logo" field.
-func LogoIsNil() predicate.Team {
-	return predicate.Team(sql.FieldIsNull(FieldLogo))
-}
-
-// LogoNotNil applies the NotNil predicate on the "logo" field.
-func LogoNotNil() predicate.Team {
-	return predicate.Team(sql.FieldNotNull(FieldLogo))
-}
-
 // VerifiedAtEQ applies the EQ predicate on the "verified_at" field.
 func VerifiedAtEQ(v time.Time) predicate.Team {
 	return predicate.Team(sql.FieldEQ(FieldVerifiedAt, v))
@@ -428,71 +943,6 @@ func VerifiedAtIsNil() predicate.Team {
 // VerifiedAtNotNil applies the NotNil predicate on the "verified_at" field.
 func VerifiedAtNotNil() predicate.Team {
 	return predicate.Team(sql.FieldNotNull(FieldVerifiedAt))
-}
-
-// CountryCodeEQ applies the EQ predicate on the "country_code" field.
-func CountryCodeEQ(v string) predicate.Team {
-	return predicate.Team(sql.FieldEQ(FieldCountryCode, v))
-}
-
-// CountryCodeNEQ applies the NEQ predicate on the "country_code" field.
-func CountryCodeNEQ(v string) predicate.Team {
-	return predicate.Team(sql.FieldNEQ(FieldCountryCode, v))
-}
-
-// CountryCodeIn applies the In predicate on the "country_code" field.
-func CountryCodeIn(vs ...string) predicate.Team {
-	return predicate.Team(sql.FieldIn(FieldCountryCode, vs...))
-}
-
-// CountryCodeNotIn applies the NotIn predicate on the "country_code" field.
-func CountryCodeNotIn(vs ...string) predicate.Team {
-	return predicate.Team(sql.FieldNotIn(FieldCountryCode, vs...))
-}
-
-// CountryCodeGT applies the GT predicate on the "country_code" field.
-func CountryCodeGT(v string) predicate.Team {
-	return predicate.Team(sql.FieldGT(FieldCountryCode, v))
-}
-
-// CountryCodeGTE applies the GTE predicate on the "country_code" field.
-func CountryCodeGTE(v string) predicate.Team {
-	return predicate.Team(sql.FieldGTE(FieldCountryCode, v))
-}
-
-// CountryCodeLT applies the LT predicate on the "country_code" field.
-func CountryCodeLT(v string) predicate.Team {
-	return predicate.Team(sql.FieldLT(FieldCountryCode, v))
-}
-
-// CountryCodeLTE applies the LTE predicate on the "country_code" field.
-func CountryCodeLTE(v string) predicate.Team {
-	return predicate.Team(sql.FieldLTE(FieldCountryCode, v))
-}
-
-// CountryCodeContains applies the Contains predicate on the "country_code" field.
-func CountryCodeContains(v string) predicate.Team {
-	return predicate.Team(sql.FieldContains(FieldCountryCode, v))
-}
-
-// CountryCodeHasPrefix applies the HasPrefix predicate on the "country_code" field.
-func CountryCodeHasPrefix(v string) predicate.Team {
-	return predicate.Team(sql.FieldHasPrefix(FieldCountryCode, v))
-}
-
-// CountryCodeHasSuffix applies the HasSuffix predicate on the "country_code" field.
-func CountryCodeHasSuffix(v string) predicate.Team {
-	return predicate.Team(sql.FieldHasSuffix(FieldCountryCode, v))
-}
-
-// CountryCodeEqualFold applies the EqualFold predicate on the "country_code" field.
-func CountryCodeEqualFold(v string) predicate.Team {
-	return predicate.Team(sql.FieldEqualFold(FieldCountryCode, v))
-}
-
-// CountryCodeContainsFold applies the ContainsFold predicate on the "country_code" field.
-func CountryCodeContainsFold(v string) predicate.Team {
-	return predicate.Team(sql.FieldContainsFold(FieldCountryCode, v))
 }
 
 // HasCaptain applies the HasEdge predicate on the "captain" edge.

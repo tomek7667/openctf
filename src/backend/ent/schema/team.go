@@ -14,11 +14,19 @@ func (Team) Fields() []ent.Field {
 	return TrimOmitEmptyTag([]ent.Field{
 		field.String("name").Unique(),
 		field.String("description").Nillable().Optional(),
+		field.String("country_code").Default("global"),
+		field.String("team_logo_url").Nillable().Optional(),
+		field.String("banner_image_url").Nillable().Optional(),
+		field.String("website_url").Nillable().Optional(),
+		field.String("discord_url").Nillable().Optional(),
+		field.String("github_url").Nillable().Optional(),
+		field.Bool("recruiting").Default(false),
+		field.String("contact_info").Nillable().Optional(),
+		field.JSON("looking_for", []string{}).Optional(),
+
 		field.Int("ctftime_id").Nillable().Optional(),
 		field.Time("ctftime_verified_at").Nillable().Optional(),
-		field.Bytes("logo").MaxLen(50 * 1024 * 1024).Nillable().Optional(), // Max 50 MB
 		field.Time("verified_at").Nillable().Optional(),
-		field.String("country_code").Default("global"),
 	})
 }
 

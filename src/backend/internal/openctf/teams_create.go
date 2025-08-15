@@ -47,15 +47,13 @@ func (h *Handler) TeamsCreate(ctx *gin.Context, user *ent.User) {
 			return
 		}
 		if ctftimeTeam.Logo != "" {
-			logo, err := utils.GetImage(ctftimeTeam.Logo)
+			_, err := utils.GetImage(ctftimeTeam.Logo)
 			if err != nil {
 				slog.Warn(
 					"found ctftime team when creating a new team, but retrieving logo failed",
 					"err", err,
 					"ctftime team", ctftimeTeam,
 				)
-			} else {
-				dto.Logo = logo
 			}
 		}
 	}

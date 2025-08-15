@@ -16,16 +16,30 @@ const (
 	FieldName = "name"
 	// FieldDescription holds the string denoting the description field in the database.
 	FieldDescription = "description"
+	// FieldCountryCode holds the string denoting the country_code field in the database.
+	FieldCountryCode = "country_code"
+	// FieldTeamLogoURL holds the string denoting the team_logo_url field in the database.
+	FieldTeamLogoURL = "team_logo_url"
+	// FieldBannerImageURL holds the string denoting the banner_image_url field in the database.
+	FieldBannerImageURL = "banner_image_url"
+	// FieldWebsiteURL holds the string denoting the website_url field in the database.
+	FieldWebsiteURL = "website_url"
+	// FieldDiscordURL holds the string denoting the discord_url field in the database.
+	FieldDiscordURL = "discord_url"
+	// FieldGithubURL holds the string denoting the github_url field in the database.
+	FieldGithubURL = "github_url"
+	// FieldRecruiting holds the string denoting the recruiting field in the database.
+	FieldRecruiting = "recruiting"
+	// FieldContactInfo holds the string denoting the contact_info field in the database.
+	FieldContactInfo = "contact_info"
+	// FieldLookingFor holds the string denoting the looking_for field in the database.
+	FieldLookingFor = "looking_for"
 	// FieldCtftimeID holds the string denoting the ctftime_id field in the database.
 	FieldCtftimeID = "ctftime_id"
 	// FieldCtftimeVerifiedAt holds the string denoting the ctftime_verified_at field in the database.
 	FieldCtftimeVerifiedAt = "ctftime_verified_at"
-	// FieldLogo holds the string denoting the logo field in the database.
-	FieldLogo = "logo"
 	// FieldVerifiedAt holds the string denoting the verified_at field in the database.
 	FieldVerifiedAt = "verified_at"
-	// FieldCountryCode holds the string denoting the country_code field in the database.
-	FieldCountryCode = "country_code"
 	// EdgeCaptain holds the string denoting the captain edge name in mutations.
 	EdgeCaptain = "captain"
 	// EdgeVerifiedBy holds the string denoting the verified_by edge name in mutations.
@@ -60,11 +74,18 @@ var Columns = []string{
 	FieldID,
 	FieldName,
 	FieldDescription,
+	FieldCountryCode,
+	FieldTeamLogoURL,
+	FieldBannerImageURL,
+	FieldWebsiteURL,
+	FieldDiscordURL,
+	FieldGithubURL,
+	FieldRecruiting,
+	FieldContactInfo,
+	FieldLookingFor,
 	FieldCtftimeID,
 	FieldCtftimeVerifiedAt,
-	FieldLogo,
 	FieldVerifiedAt,
-	FieldCountryCode,
 }
 
 // ForeignKeys holds the SQL foreign-keys that are owned by the "teams"
@@ -96,10 +117,10 @@ func ValidColumn(column string) bool {
 }
 
 var (
-	// LogoValidator is a validator for the "logo" field. It is called by the builders before save.
-	LogoValidator func([]byte) error
 	// DefaultCountryCode holds the default value on creation for the "country_code" field.
 	DefaultCountryCode string
+	// DefaultRecruiting holds the default value on creation for the "recruiting" field.
+	DefaultRecruiting bool
 )
 
 // OrderOption defines the ordering options for the Team queries.
@@ -120,6 +141,46 @@ func ByDescription(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldDescription, opts...).ToFunc()
 }
 
+// ByCountryCode orders the results by the country_code field.
+func ByCountryCode(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldCountryCode, opts...).ToFunc()
+}
+
+// ByTeamLogoURL orders the results by the team_logo_url field.
+func ByTeamLogoURL(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldTeamLogoURL, opts...).ToFunc()
+}
+
+// ByBannerImageURL orders the results by the banner_image_url field.
+func ByBannerImageURL(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldBannerImageURL, opts...).ToFunc()
+}
+
+// ByWebsiteURL orders the results by the website_url field.
+func ByWebsiteURL(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldWebsiteURL, opts...).ToFunc()
+}
+
+// ByDiscordURL orders the results by the discord_url field.
+func ByDiscordURL(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldDiscordURL, opts...).ToFunc()
+}
+
+// ByGithubURL orders the results by the github_url field.
+func ByGithubURL(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldGithubURL, opts...).ToFunc()
+}
+
+// ByRecruiting orders the results by the recruiting field.
+func ByRecruiting(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldRecruiting, opts...).ToFunc()
+}
+
+// ByContactInfo orders the results by the contact_info field.
+func ByContactInfo(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldContactInfo, opts...).ToFunc()
+}
+
 // ByCtftimeID orders the results by the ctftime_id field.
 func ByCtftimeID(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldCtftimeID, opts...).ToFunc()
@@ -133,11 +194,6 @@ func ByCtftimeVerifiedAt(opts ...sql.OrderTermOption) OrderOption {
 // ByVerifiedAt orders the results by the verified_at field.
 func ByVerifiedAt(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldVerifiedAt, opts...).ToFunc()
-}
-
-// ByCountryCode orders the results by the country_code field.
-func ByCountryCode(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldCountryCode, opts...).ToFunc()
 }
 
 // ByCaptainField orders the results by captain field.

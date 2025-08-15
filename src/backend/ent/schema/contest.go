@@ -4,6 +4,7 @@ import (
 	"regexp"
 
 	"entgo.io/ent"
+	"entgo.io/ent/dialect/entsql"
 	"entgo.io/ent/schema/edge"
 	"entgo.io/ent/schema/field"
 )
@@ -14,7 +15,7 @@ type Contest struct {
 
 func (Contest) Fields() []ent.Field {
 	return TrimOmitEmptyTag([]ent.Field{
-		field.String("name").Match(regexp.MustCompile("[a-z0-9 _-]+$")).Unique(),
+		field.String("name").Match(regexp.MustCompile("[a-z0-9A-Z _-]+$")).Unique(),
 		field.String("description").Nillable().Optional(),
 		field.String("rules").Nillable().Optional(),
 		field.String("prizes").Nillable().Optional(),
@@ -31,6 +32,6 @@ func (Contest) Fields() []ent.Field {
 func (Contest) Edges() []ent.Edge {
 	return []ent.Edge{
 		edge.To("organizers", Team.Type).Unique(),
-		edge.To("places", Place.Type),
+		edge.To("places", Place.Type).Annotations(entsql.OnDelete(entsql.Cascade)),
 	}
 }

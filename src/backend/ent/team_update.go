@@ -13,6 +13,7 @@ import (
 
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
+	"entgo.io/ent/dialect/sql/sqljson"
 	"entgo.io/ent/schema/field"
 )
 
@@ -63,6 +64,172 @@ func (_u *TeamUpdate) ClearDescription() *TeamUpdate {
 	return _u
 }
 
+// SetCountryCode sets the "country_code" field.
+func (_u *TeamUpdate) SetCountryCode(v string) *TeamUpdate {
+	_u.mutation.SetCountryCode(v)
+	return _u
+}
+
+// SetNillableCountryCode sets the "country_code" field if the given value is not nil.
+func (_u *TeamUpdate) SetNillableCountryCode(v *string) *TeamUpdate {
+	if v != nil {
+		_u.SetCountryCode(*v)
+	}
+	return _u
+}
+
+// SetTeamLogoURL sets the "team_logo_url" field.
+func (_u *TeamUpdate) SetTeamLogoURL(v string) *TeamUpdate {
+	_u.mutation.SetTeamLogoURL(v)
+	return _u
+}
+
+// SetNillableTeamLogoURL sets the "team_logo_url" field if the given value is not nil.
+func (_u *TeamUpdate) SetNillableTeamLogoURL(v *string) *TeamUpdate {
+	if v != nil {
+		_u.SetTeamLogoURL(*v)
+	}
+	return _u
+}
+
+// ClearTeamLogoURL clears the value of the "team_logo_url" field.
+func (_u *TeamUpdate) ClearTeamLogoURL() *TeamUpdate {
+	_u.mutation.ClearTeamLogoURL()
+	return _u
+}
+
+// SetBannerImageURL sets the "banner_image_url" field.
+func (_u *TeamUpdate) SetBannerImageURL(v string) *TeamUpdate {
+	_u.mutation.SetBannerImageURL(v)
+	return _u
+}
+
+// SetNillableBannerImageURL sets the "banner_image_url" field if the given value is not nil.
+func (_u *TeamUpdate) SetNillableBannerImageURL(v *string) *TeamUpdate {
+	if v != nil {
+		_u.SetBannerImageURL(*v)
+	}
+	return _u
+}
+
+// ClearBannerImageURL clears the value of the "banner_image_url" field.
+func (_u *TeamUpdate) ClearBannerImageURL() *TeamUpdate {
+	_u.mutation.ClearBannerImageURL()
+	return _u
+}
+
+// SetWebsiteURL sets the "website_url" field.
+func (_u *TeamUpdate) SetWebsiteURL(v string) *TeamUpdate {
+	_u.mutation.SetWebsiteURL(v)
+	return _u
+}
+
+// SetNillableWebsiteURL sets the "website_url" field if the given value is not nil.
+func (_u *TeamUpdate) SetNillableWebsiteURL(v *string) *TeamUpdate {
+	if v != nil {
+		_u.SetWebsiteURL(*v)
+	}
+	return _u
+}
+
+// ClearWebsiteURL clears the value of the "website_url" field.
+func (_u *TeamUpdate) ClearWebsiteURL() *TeamUpdate {
+	_u.mutation.ClearWebsiteURL()
+	return _u
+}
+
+// SetDiscordURL sets the "discord_url" field.
+func (_u *TeamUpdate) SetDiscordURL(v string) *TeamUpdate {
+	_u.mutation.SetDiscordURL(v)
+	return _u
+}
+
+// SetNillableDiscordURL sets the "discord_url" field if the given value is not nil.
+func (_u *TeamUpdate) SetNillableDiscordURL(v *string) *TeamUpdate {
+	if v != nil {
+		_u.SetDiscordURL(*v)
+	}
+	return _u
+}
+
+// ClearDiscordURL clears the value of the "discord_url" field.
+func (_u *TeamUpdate) ClearDiscordURL() *TeamUpdate {
+	_u.mutation.ClearDiscordURL()
+	return _u
+}
+
+// SetGithubURL sets the "github_url" field.
+func (_u *TeamUpdate) SetGithubURL(v string) *TeamUpdate {
+	_u.mutation.SetGithubURL(v)
+	return _u
+}
+
+// SetNillableGithubURL sets the "github_url" field if the given value is not nil.
+func (_u *TeamUpdate) SetNillableGithubURL(v *string) *TeamUpdate {
+	if v != nil {
+		_u.SetGithubURL(*v)
+	}
+	return _u
+}
+
+// ClearGithubURL clears the value of the "github_url" field.
+func (_u *TeamUpdate) ClearGithubURL() *TeamUpdate {
+	_u.mutation.ClearGithubURL()
+	return _u
+}
+
+// SetRecruiting sets the "recruiting" field.
+func (_u *TeamUpdate) SetRecruiting(v bool) *TeamUpdate {
+	_u.mutation.SetRecruiting(v)
+	return _u
+}
+
+// SetNillableRecruiting sets the "recruiting" field if the given value is not nil.
+func (_u *TeamUpdate) SetNillableRecruiting(v *bool) *TeamUpdate {
+	if v != nil {
+		_u.SetRecruiting(*v)
+	}
+	return _u
+}
+
+// SetContactInfo sets the "contact_info" field.
+func (_u *TeamUpdate) SetContactInfo(v string) *TeamUpdate {
+	_u.mutation.SetContactInfo(v)
+	return _u
+}
+
+// SetNillableContactInfo sets the "contact_info" field if the given value is not nil.
+func (_u *TeamUpdate) SetNillableContactInfo(v *string) *TeamUpdate {
+	if v != nil {
+		_u.SetContactInfo(*v)
+	}
+	return _u
+}
+
+// ClearContactInfo clears the value of the "contact_info" field.
+func (_u *TeamUpdate) ClearContactInfo() *TeamUpdate {
+	_u.mutation.ClearContactInfo()
+	return _u
+}
+
+// SetLookingFor sets the "looking_for" field.
+func (_u *TeamUpdate) SetLookingFor(v []string) *TeamUpdate {
+	_u.mutation.SetLookingFor(v)
+	return _u
+}
+
+// AppendLookingFor appends value to the "looking_for" field.
+func (_u *TeamUpdate) AppendLookingFor(v []string) *TeamUpdate {
+	_u.mutation.AppendLookingFor(v)
+	return _u
+}
+
+// ClearLookingFor clears the value of the "looking_for" field.
+func (_u *TeamUpdate) ClearLookingFor() *TeamUpdate {
+	_u.mutation.ClearLookingFor()
+	return _u
+}
+
 // SetCtftimeID sets the "ctftime_id" field.
 func (_u *TeamUpdate) SetCtftimeID(v int) *TeamUpdate {
 	_u.mutation.ResetCtftimeID()
@@ -110,18 +277,6 @@ func (_u *TeamUpdate) ClearCtftimeVerifiedAt() *TeamUpdate {
 	return _u
 }
 
-// SetLogo sets the "logo" field.
-func (_u *TeamUpdate) SetLogo(v []byte) *TeamUpdate {
-	_u.mutation.SetLogo(v)
-	return _u
-}
-
-// ClearLogo clears the value of the "logo" field.
-func (_u *TeamUpdate) ClearLogo() *TeamUpdate {
-	_u.mutation.ClearLogo()
-	return _u
-}
-
 // SetVerifiedAt sets the "verified_at" field.
 func (_u *TeamUpdate) SetVerifiedAt(v time.Time) *TeamUpdate {
 	_u.mutation.SetVerifiedAt(v)
@@ -139,20 +294,6 @@ func (_u *TeamUpdate) SetNillableVerifiedAt(v *time.Time) *TeamUpdate {
 // ClearVerifiedAt clears the value of the "verified_at" field.
 func (_u *TeamUpdate) ClearVerifiedAt() *TeamUpdate {
 	_u.mutation.ClearVerifiedAt()
-	return _u
-}
-
-// SetCountryCode sets the "country_code" field.
-func (_u *TeamUpdate) SetCountryCode(v string) *TeamUpdate {
-	_u.mutation.SetCountryCode(v)
-	return _u
-}
-
-// SetNillableCountryCode sets the "country_code" field if the given value is not nil.
-func (_u *TeamUpdate) SetNillableCountryCode(v *string) *TeamUpdate {
-	if v != nil {
-		_u.SetCountryCode(*v)
-	}
 	return _u
 }
 
@@ -274,20 +415,7 @@ func (_u *TeamUpdate) ExecX(ctx context.Context) {
 	}
 }
 
-// check runs all checks and user-defined validators on the builder.
-func (_u *TeamUpdate) check() error {
-	if v, ok := _u.mutation.Logo(); ok {
-		if err := team.LogoValidator(v); err != nil {
-			return &ValidationError{Name: "logo", err: fmt.Errorf(`ent: validator failed for field "Team.logo": %w`, err)}
-		}
-	}
-	return nil
-}
-
 func (_u *TeamUpdate) sqlSave(ctx context.Context) (_node int, err error) {
-	if err := _u.check(); err != nil {
-		return _node, err
-	}
 	_spec := sqlgraph.NewUpdateSpec(team.Table, team.Columns, sqlgraph.NewFieldSpec(team.FieldID, field.TypeInt))
 	if ps := _u.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
@@ -305,6 +433,59 @@ func (_u *TeamUpdate) sqlSave(ctx context.Context) (_node int, err error) {
 	if _u.mutation.DescriptionCleared() {
 		_spec.ClearField(team.FieldDescription, field.TypeString)
 	}
+	if value, ok := _u.mutation.CountryCode(); ok {
+		_spec.SetField(team.FieldCountryCode, field.TypeString, value)
+	}
+	if value, ok := _u.mutation.TeamLogoURL(); ok {
+		_spec.SetField(team.FieldTeamLogoURL, field.TypeString, value)
+	}
+	if _u.mutation.TeamLogoURLCleared() {
+		_spec.ClearField(team.FieldTeamLogoURL, field.TypeString)
+	}
+	if value, ok := _u.mutation.BannerImageURL(); ok {
+		_spec.SetField(team.FieldBannerImageURL, field.TypeString, value)
+	}
+	if _u.mutation.BannerImageURLCleared() {
+		_spec.ClearField(team.FieldBannerImageURL, field.TypeString)
+	}
+	if value, ok := _u.mutation.WebsiteURL(); ok {
+		_spec.SetField(team.FieldWebsiteURL, field.TypeString, value)
+	}
+	if _u.mutation.WebsiteURLCleared() {
+		_spec.ClearField(team.FieldWebsiteURL, field.TypeString)
+	}
+	if value, ok := _u.mutation.DiscordURL(); ok {
+		_spec.SetField(team.FieldDiscordURL, field.TypeString, value)
+	}
+	if _u.mutation.DiscordURLCleared() {
+		_spec.ClearField(team.FieldDiscordURL, field.TypeString)
+	}
+	if value, ok := _u.mutation.GithubURL(); ok {
+		_spec.SetField(team.FieldGithubURL, field.TypeString, value)
+	}
+	if _u.mutation.GithubURLCleared() {
+		_spec.ClearField(team.FieldGithubURL, field.TypeString)
+	}
+	if value, ok := _u.mutation.Recruiting(); ok {
+		_spec.SetField(team.FieldRecruiting, field.TypeBool, value)
+	}
+	if value, ok := _u.mutation.ContactInfo(); ok {
+		_spec.SetField(team.FieldContactInfo, field.TypeString, value)
+	}
+	if _u.mutation.ContactInfoCleared() {
+		_spec.ClearField(team.FieldContactInfo, field.TypeString)
+	}
+	if value, ok := _u.mutation.LookingFor(); ok {
+		_spec.SetField(team.FieldLookingFor, field.TypeJSON, value)
+	}
+	if value, ok := _u.mutation.AppendedLookingFor(); ok {
+		_spec.AddModifier(func(u *sql.UpdateBuilder) {
+			sqljson.Append(u, team.FieldLookingFor, value)
+		})
+	}
+	if _u.mutation.LookingForCleared() {
+		_spec.ClearField(team.FieldLookingFor, field.TypeJSON)
+	}
 	if value, ok := _u.mutation.CtftimeID(); ok {
 		_spec.SetField(team.FieldCtftimeID, field.TypeInt, value)
 	}
@@ -320,20 +501,11 @@ func (_u *TeamUpdate) sqlSave(ctx context.Context) (_node int, err error) {
 	if _u.mutation.CtftimeVerifiedAtCleared() {
 		_spec.ClearField(team.FieldCtftimeVerifiedAt, field.TypeTime)
 	}
-	if value, ok := _u.mutation.Logo(); ok {
-		_spec.SetField(team.FieldLogo, field.TypeBytes, value)
-	}
-	if _u.mutation.LogoCleared() {
-		_spec.ClearField(team.FieldLogo, field.TypeBytes)
-	}
 	if value, ok := _u.mutation.VerifiedAt(); ok {
 		_spec.SetField(team.FieldVerifiedAt, field.TypeTime, value)
 	}
 	if _u.mutation.VerifiedAtCleared() {
 		_spec.ClearField(team.FieldVerifiedAt, field.TypeTime)
-	}
-	if value, ok := _u.mutation.CountryCode(); ok {
-		_spec.SetField(team.FieldCountryCode, field.TypeString, value)
 	}
 	if _u.mutation.CaptainCleared() {
 		edge := &sqlgraph.EdgeSpec{
@@ -492,6 +664,172 @@ func (_u *TeamUpdateOne) ClearDescription() *TeamUpdateOne {
 	return _u
 }
 
+// SetCountryCode sets the "country_code" field.
+func (_u *TeamUpdateOne) SetCountryCode(v string) *TeamUpdateOne {
+	_u.mutation.SetCountryCode(v)
+	return _u
+}
+
+// SetNillableCountryCode sets the "country_code" field if the given value is not nil.
+func (_u *TeamUpdateOne) SetNillableCountryCode(v *string) *TeamUpdateOne {
+	if v != nil {
+		_u.SetCountryCode(*v)
+	}
+	return _u
+}
+
+// SetTeamLogoURL sets the "team_logo_url" field.
+func (_u *TeamUpdateOne) SetTeamLogoURL(v string) *TeamUpdateOne {
+	_u.mutation.SetTeamLogoURL(v)
+	return _u
+}
+
+// SetNillableTeamLogoURL sets the "team_logo_url" field if the given value is not nil.
+func (_u *TeamUpdateOne) SetNillableTeamLogoURL(v *string) *TeamUpdateOne {
+	if v != nil {
+		_u.SetTeamLogoURL(*v)
+	}
+	return _u
+}
+
+// ClearTeamLogoURL clears the value of the "team_logo_url" field.
+func (_u *TeamUpdateOne) ClearTeamLogoURL() *TeamUpdateOne {
+	_u.mutation.ClearTeamLogoURL()
+	return _u
+}
+
+// SetBannerImageURL sets the "banner_image_url" field.
+func (_u *TeamUpdateOne) SetBannerImageURL(v string) *TeamUpdateOne {
+	_u.mutation.SetBannerImageURL(v)
+	return _u
+}
+
+// SetNillableBannerImageURL sets the "banner_image_url" field if the given value is not nil.
+func (_u *TeamUpdateOne) SetNillableBannerImageURL(v *string) *TeamUpdateOne {
+	if v != nil {
+		_u.SetBannerImageURL(*v)
+	}
+	return _u
+}
+
+// ClearBannerImageURL clears the value of the "banner_image_url" field.
+func (_u *TeamUpdateOne) ClearBannerImageURL() *TeamUpdateOne {
+	_u.mutation.ClearBannerImageURL()
+	return _u
+}
+
+// SetWebsiteURL sets the "website_url" field.
+func (_u *TeamUpdateOne) SetWebsiteURL(v string) *TeamUpdateOne {
+	_u.mutation.SetWebsiteURL(v)
+	return _u
+}
+
+// SetNillableWebsiteURL sets the "website_url" field if the given value is not nil.
+func (_u *TeamUpdateOne) SetNillableWebsiteURL(v *string) *TeamUpdateOne {
+	if v != nil {
+		_u.SetWebsiteURL(*v)
+	}
+	return _u
+}
+
+// ClearWebsiteURL clears the value of the "website_url" field.
+func (_u *TeamUpdateOne) ClearWebsiteURL() *TeamUpdateOne {
+	_u.mutation.ClearWebsiteURL()
+	return _u
+}
+
+// SetDiscordURL sets the "discord_url" field.
+func (_u *TeamUpdateOne) SetDiscordURL(v string) *TeamUpdateOne {
+	_u.mutation.SetDiscordURL(v)
+	return _u
+}
+
+// SetNillableDiscordURL sets the "discord_url" field if the given value is not nil.
+func (_u *TeamUpdateOne) SetNillableDiscordURL(v *string) *TeamUpdateOne {
+	if v != nil {
+		_u.SetDiscordURL(*v)
+	}
+	return _u
+}
+
+// ClearDiscordURL clears the value of the "discord_url" field.
+func (_u *TeamUpdateOne) ClearDiscordURL() *TeamUpdateOne {
+	_u.mutation.ClearDiscordURL()
+	return _u
+}
+
+// SetGithubURL sets the "github_url" field.
+func (_u *TeamUpdateOne) SetGithubURL(v string) *TeamUpdateOne {
+	_u.mutation.SetGithubURL(v)
+	return _u
+}
+
+// SetNillableGithubURL sets the "github_url" field if the given value is not nil.
+func (_u *TeamUpdateOne) SetNillableGithubURL(v *string) *TeamUpdateOne {
+	if v != nil {
+		_u.SetGithubURL(*v)
+	}
+	return _u
+}
+
+// ClearGithubURL clears the value of the "github_url" field.
+func (_u *TeamUpdateOne) ClearGithubURL() *TeamUpdateOne {
+	_u.mutation.ClearGithubURL()
+	return _u
+}
+
+// SetRecruiting sets the "recruiting" field.
+func (_u *TeamUpdateOne) SetRecruiting(v bool) *TeamUpdateOne {
+	_u.mutation.SetRecruiting(v)
+	return _u
+}
+
+// SetNillableRecruiting sets the "recruiting" field if the given value is not nil.
+func (_u *TeamUpdateOne) SetNillableRecruiting(v *bool) *TeamUpdateOne {
+	if v != nil {
+		_u.SetRecruiting(*v)
+	}
+	return _u
+}
+
+// SetContactInfo sets the "contact_info" field.
+func (_u *TeamUpdateOne) SetContactInfo(v string) *TeamUpdateOne {
+	_u.mutation.SetContactInfo(v)
+	return _u
+}
+
+// SetNillableContactInfo sets the "contact_info" field if the given value is not nil.
+func (_u *TeamUpdateOne) SetNillableContactInfo(v *string) *TeamUpdateOne {
+	if v != nil {
+		_u.SetContactInfo(*v)
+	}
+	return _u
+}
+
+// ClearContactInfo clears the value of the "contact_info" field.
+func (_u *TeamUpdateOne) ClearContactInfo() *TeamUpdateOne {
+	_u.mutation.ClearContactInfo()
+	return _u
+}
+
+// SetLookingFor sets the "looking_for" field.
+func (_u *TeamUpdateOne) SetLookingFor(v []string) *TeamUpdateOne {
+	_u.mutation.SetLookingFor(v)
+	return _u
+}
+
+// AppendLookingFor appends value to the "looking_for" field.
+func (_u *TeamUpdateOne) AppendLookingFor(v []string) *TeamUpdateOne {
+	_u.mutation.AppendLookingFor(v)
+	return _u
+}
+
+// ClearLookingFor clears the value of the "looking_for" field.
+func (_u *TeamUpdateOne) ClearLookingFor() *TeamUpdateOne {
+	_u.mutation.ClearLookingFor()
+	return _u
+}
+
 // SetCtftimeID sets the "ctftime_id" field.
 func (_u *TeamUpdateOne) SetCtftimeID(v int) *TeamUpdateOne {
 	_u.mutation.ResetCtftimeID()
@@ -539,18 +877,6 @@ func (_u *TeamUpdateOne) ClearCtftimeVerifiedAt() *TeamUpdateOne {
 	return _u
 }
 
-// SetLogo sets the "logo" field.
-func (_u *TeamUpdateOne) SetLogo(v []byte) *TeamUpdateOne {
-	_u.mutation.SetLogo(v)
-	return _u
-}
-
-// ClearLogo clears the value of the "logo" field.
-func (_u *TeamUpdateOne) ClearLogo() *TeamUpdateOne {
-	_u.mutation.ClearLogo()
-	return _u
-}
-
 // SetVerifiedAt sets the "verified_at" field.
 func (_u *TeamUpdateOne) SetVerifiedAt(v time.Time) *TeamUpdateOne {
 	_u.mutation.SetVerifiedAt(v)
@@ -568,20 +894,6 @@ func (_u *TeamUpdateOne) SetNillableVerifiedAt(v *time.Time) *TeamUpdateOne {
 // ClearVerifiedAt clears the value of the "verified_at" field.
 func (_u *TeamUpdateOne) ClearVerifiedAt() *TeamUpdateOne {
 	_u.mutation.ClearVerifiedAt()
-	return _u
-}
-
-// SetCountryCode sets the "country_code" field.
-func (_u *TeamUpdateOne) SetCountryCode(v string) *TeamUpdateOne {
-	_u.mutation.SetCountryCode(v)
-	return _u
-}
-
-// SetNillableCountryCode sets the "country_code" field if the given value is not nil.
-func (_u *TeamUpdateOne) SetNillableCountryCode(v *string) *TeamUpdateOne {
-	if v != nil {
-		_u.SetCountryCode(*v)
-	}
 	return _u
 }
 
@@ -716,20 +1028,7 @@ func (_u *TeamUpdateOne) ExecX(ctx context.Context) {
 	}
 }
 
-// check runs all checks and user-defined validators on the builder.
-func (_u *TeamUpdateOne) check() error {
-	if v, ok := _u.mutation.Logo(); ok {
-		if err := team.LogoValidator(v); err != nil {
-			return &ValidationError{Name: "logo", err: fmt.Errorf(`ent: validator failed for field "Team.logo": %w`, err)}
-		}
-	}
-	return nil
-}
-
 func (_u *TeamUpdateOne) sqlSave(ctx context.Context) (_node *Team, err error) {
-	if err := _u.check(); err != nil {
-		return _node, err
-	}
 	_spec := sqlgraph.NewUpdateSpec(team.Table, team.Columns, sqlgraph.NewFieldSpec(team.FieldID, field.TypeInt))
 	id, ok := _u.mutation.ID()
 	if !ok {
@@ -764,6 +1063,59 @@ func (_u *TeamUpdateOne) sqlSave(ctx context.Context) (_node *Team, err error) {
 	if _u.mutation.DescriptionCleared() {
 		_spec.ClearField(team.FieldDescription, field.TypeString)
 	}
+	if value, ok := _u.mutation.CountryCode(); ok {
+		_spec.SetField(team.FieldCountryCode, field.TypeString, value)
+	}
+	if value, ok := _u.mutation.TeamLogoURL(); ok {
+		_spec.SetField(team.FieldTeamLogoURL, field.TypeString, value)
+	}
+	if _u.mutation.TeamLogoURLCleared() {
+		_spec.ClearField(team.FieldTeamLogoURL, field.TypeString)
+	}
+	if value, ok := _u.mutation.BannerImageURL(); ok {
+		_spec.SetField(team.FieldBannerImageURL, field.TypeString, value)
+	}
+	if _u.mutation.BannerImageURLCleared() {
+		_spec.ClearField(team.FieldBannerImageURL, field.TypeString)
+	}
+	if value, ok := _u.mutation.WebsiteURL(); ok {
+		_spec.SetField(team.FieldWebsiteURL, field.TypeString, value)
+	}
+	if _u.mutation.WebsiteURLCleared() {
+		_spec.ClearField(team.FieldWebsiteURL, field.TypeString)
+	}
+	if value, ok := _u.mutation.DiscordURL(); ok {
+		_spec.SetField(team.FieldDiscordURL, field.TypeString, value)
+	}
+	if _u.mutation.DiscordURLCleared() {
+		_spec.ClearField(team.FieldDiscordURL, field.TypeString)
+	}
+	if value, ok := _u.mutation.GithubURL(); ok {
+		_spec.SetField(team.FieldGithubURL, field.TypeString, value)
+	}
+	if _u.mutation.GithubURLCleared() {
+		_spec.ClearField(team.FieldGithubURL, field.TypeString)
+	}
+	if value, ok := _u.mutation.Recruiting(); ok {
+		_spec.SetField(team.FieldRecruiting, field.TypeBool, value)
+	}
+	if value, ok := _u.mutation.ContactInfo(); ok {
+		_spec.SetField(team.FieldContactInfo, field.TypeString, value)
+	}
+	if _u.mutation.ContactInfoCleared() {
+		_spec.ClearField(team.FieldContactInfo, field.TypeString)
+	}
+	if value, ok := _u.mutation.LookingFor(); ok {
+		_spec.SetField(team.FieldLookingFor, field.TypeJSON, value)
+	}
+	if value, ok := _u.mutation.AppendedLookingFor(); ok {
+		_spec.AddModifier(func(u *sql.UpdateBuilder) {
+			sqljson.Append(u, team.FieldLookingFor, value)
+		})
+	}
+	if _u.mutation.LookingForCleared() {
+		_spec.ClearField(team.FieldLookingFor, field.TypeJSON)
+	}
 	if value, ok := _u.mutation.CtftimeID(); ok {
 		_spec.SetField(team.FieldCtftimeID, field.TypeInt, value)
 	}
@@ -779,20 +1131,11 @@ func (_u *TeamUpdateOne) sqlSave(ctx context.Context) (_node *Team, err error) {
 	if _u.mutation.CtftimeVerifiedAtCleared() {
 		_spec.ClearField(team.FieldCtftimeVerifiedAt, field.TypeTime)
 	}
-	if value, ok := _u.mutation.Logo(); ok {
-		_spec.SetField(team.FieldLogo, field.TypeBytes, value)
-	}
-	if _u.mutation.LogoCleared() {
-		_spec.ClearField(team.FieldLogo, field.TypeBytes)
-	}
 	if value, ok := _u.mutation.VerifiedAt(); ok {
 		_spec.SetField(team.FieldVerifiedAt, field.TypeTime, value)
 	}
 	if _u.mutation.VerifiedAtCleared() {
 		_spec.ClearField(team.FieldVerifiedAt, field.TypeTime)
-	}
-	if value, ok := _u.mutation.CountryCode(); ok {
-		_spec.SetField(team.FieldCountryCode, field.TypeString, value)
 	}
 	if _u.mutation.CaptainCleared() {
 		edge := &sqlgraph.EdgeSpec{

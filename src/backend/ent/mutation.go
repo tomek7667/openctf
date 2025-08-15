@@ -3925,12 +3925,20 @@ type TeamMutation struct {
 	id                  *int
 	name                *string
 	description         *string
+	country_code        *string
+	team_logo_url       *string
+	banner_image_url    *string
+	website_url         *string
+	discord_url         *string
+	github_url          *string
+	recruiting          *bool
+	contact_info        *string
+	looking_for         *[]string
+	appendlooking_for   []string
 	ctftime_id          *int
 	addctftime_id       *int
 	ctftime_verified_at *time.Time
-	logo                *[]byte
 	verified_at         *time.Time
-	country_code        *string
 	clearedFields       map[string]struct{}
 	captain             *int
 	clearedcaptain      bool
@@ -4127,6 +4135,437 @@ func (m *TeamMutation) ResetDescription() {
 	delete(m.clearedFields, team.FieldDescription)
 }
 
+// SetCountryCode sets the "country_code" field.
+func (m *TeamMutation) SetCountryCode(s string) {
+	m.country_code = &s
+}
+
+// CountryCode returns the value of the "country_code" field in the mutation.
+func (m *TeamMutation) CountryCode() (r string, exists bool) {
+	v := m.country_code
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldCountryCode returns the old "country_code" field's value of the Team entity.
+// If the Team object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *TeamMutation) OldCountryCode(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldCountryCode is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldCountryCode requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldCountryCode: %w", err)
+	}
+	return oldValue.CountryCode, nil
+}
+
+// ResetCountryCode resets all changes to the "country_code" field.
+func (m *TeamMutation) ResetCountryCode() {
+	m.country_code = nil
+}
+
+// SetTeamLogoURL sets the "team_logo_url" field.
+func (m *TeamMutation) SetTeamLogoURL(s string) {
+	m.team_logo_url = &s
+}
+
+// TeamLogoURL returns the value of the "team_logo_url" field in the mutation.
+func (m *TeamMutation) TeamLogoURL() (r string, exists bool) {
+	v := m.team_logo_url
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldTeamLogoURL returns the old "team_logo_url" field's value of the Team entity.
+// If the Team object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *TeamMutation) OldTeamLogoURL(ctx context.Context) (v *string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldTeamLogoURL is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldTeamLogoURL requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldTeamLogoURL: %w", err)
+	}
+	return oldValue.TeamLogoURL, nil
+}
+
+// ClearTeamLogoURL clears the value of the "team_logo_url" field.
+func (m *TeamMutation) ClearTeamLogoURL() {
+	m.team_logo_url = nil
+	m.clearedFields[team.FieldTeamLogoURL] = struct{}{}
+}
+
+// TeamLogoURLCleared returns if the "team_logo_url" field was cleared in this mutation.
+func (m *TeamMutation) TeamLogoURLCleared() bool {
+	_, ok := m.clearedFields[team.FieldTeamLogoURL]
+	return ok
+}
+
+// ResetTeamLogoURL resets all changes to the "team_logo_url" field.
+func (m *TeamMutation) ResetTeamLogoURL() {
+	m.team_logo_url = nil
+	delete(m.clearedFields, team.FieldTeamLogoURL)
+}
+
+// SetBannerImageURL sets the "banner_image_url" field.
+func (m *TeamMutation) SetBannerImageURL(s string) {
+	m.banner_image_url = &s
+}
+
+// BannerImageURL returns the value of the "banner_image_url" field in the mutation.
+func (m *TeamMutation) BannerImageURL() (r string, exists bool) {
+	v := m.banner_image_url
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldBannerImageURL returns the old "banner_image_url" field's value of the Team entity.
+// If the Team object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *TeamMutation) OldBannerImageURL(ctx context.Context) (v *string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldBannerImageURL is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldBannerImageURL requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldBannerImageURL: %w", err)
+	}
+	return oldValue.BannerImageURL, nil
+}
+
+// ClearBannerImageURL clears the value of the "banner_image_url" field.
+func (m *TeamMutation) ClearBannerImageURL() {
+	m.banner_image_url = nil
+	m.clearedFields[team.FieldBannerImageURL] = struct{}{}
+}
+
+// BannerImageURLCleared returns if the "banner_image_url" field was cleared in this mutation.
+func (m *TeamMutation) BannerImageURLCleared() bool {
+	_, ok := m.clearedFields[team.FieldBannerImageURL]
+	return ok
+}
+
+// ResetBannerImageURL resets all changes to the "banner_image_url" field.
+func (m *TeamMutation) ResetBannerImageURL() {
+	m.banner_image_url = nil
+	delete(m.clearedFields, team.FieldBannerImageURL)
+}
+
+// SetWebsiteURL sets the "website_url" field.
+func (m *TeamMutation) SetWebsiteURL(s string) {
+	m.website_url = &s
+}
+
+// WebsiteURL returns the value of the "website_url" field in the mutation.
+func (m *TeamMutation) WebsiteURL() (r string, exists bool) {
+	v := m.website_url
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldWebsiteURL returns the old "website_url" field's value of the Team entity.
+// If the Team object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *TeamMutation) OldWebsiteURL(ctx context.Context) (v *string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldWebsiteURL is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldWebsiteURL requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldWebsiteURL: %w", err)
+	}
+	return oldValue.WebsiteURL, nil
+}
+
+// ClearWebsiteURL clears the value of the "website_url" field.
+func (m *TeamMutation) ClearWebsiteURL() {
+	m.website_url = nil
+	m.clearedFields[team.FieldWebsiteURL] = struct{}{}
+}
+
+// WebsiteURLCleared returns if the "website_url" field was cleared in this mutation.
+func (m *TeamMutation) WebsiteURLCleared() bool {
+	_, ok := m.clearedFields[team.FieldWebsiteURL]
+	return ok
+}
+
+// ResetWebsiteURL resets all changes to the "website_url" field.
+func (m *TeamMutation) ResetWebsiteURL() {
+	m.website_url = nil
+	delete(m.clearedFields, team.FieldWebsiteURL)
+}
+
+// SetDiscordURL sets the "discord_url" field.
+func (m *TeamMutation) SetDiscordURL(s string) {
+	m.discord_url = &s
+}
+
+// DiscordURL returns the value of the "discord_url" field in the mutation.
+func (m *TeamMutation) DiscordURL() (r string, exists bool) {
+	v := m.discord_url
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldDiscordURL returns the old "discord_url" field's value of the Team entity.
+// If the Team object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *TeamMutation) OldDiscordURL(ctx context.Context) (v *string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldDiscordURL is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldDiscordURL requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldDiscordURL: %w", err)
+	}
+	return oldValue.DiscordURL, nil
+}
+
+// ClearDiscordURL clears the value of the "discord_url" field.
+func (m *TeamMutation) ClearDiscordURL() {
+	m.discord_url = nil
+	m.clearedFields[team.FieldDiscordURL] = struct{}{}
+}
+
+// DiscordURLCleared returns if the "discord_url" field was cleared in this mutation.
+func (m *TeamMutation) DiscordURLCleared() bool {
+	_, ok := m.clearedFields[team.FieldDiscordURL]
+	return ok
+}
+
+// ResetDiscordURL resets all changes to the "discord_url" field.
+func (m *TeamMutation) ResetDiscordURL() {
+	m.discord_url = nil
+	delete(m.clearedFields, team.FieldDiscordURL)
+}
+
+// SetGithubURL sets the "github_url" field.
+func (m *TeamMutation) SetGithubURL(s string) {
+	m.github_url = &s
+}
+
+// GithubURL returns the value of the "github_url" field in the mutation.
+func (m *TeamMutation) GithubURL() (r string, exists bool) {
+	v := m.github_url
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldGithubURL returns the old "github_url" field's value of the Team entity.
+// If the Team object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *TeamMutation) OldGithubURL(ctx context.Context) (v *string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldGithubURL is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldGithubURL requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldGithubURL: %w", err)
+	}
+	return oldValue.GithubURL, nil
+}
+
+// ClearGithubURL clears the value of the "github_url" field.
+func (m *TeamMutation) ClearGithubURL() {
+	m.github_url = nil
+	m.clearedFields[team.FieldGithubURL] = struct{}{}
+}
+
+// GithubURLCleared returns if the "github_url" field was cleared in this mutation.
+func (m *TeamMutation) GithubURLCleared() bool {
+	_, ok := m.clearedFields[team.FieldGithubURL]
+	return ok
+}
+
+// ResetGithubURL resets all changes to the "github_url" field.
+func (m *TeamMutation) ResetGithubURL() {
+	m.github_url = nil
+	delete(m.clearedFields, team.FieldGithubURL)
+}
+
+// SetRecruiting sets the "recruiting" field.
+func (m *TeamMutation) SetRecruiting(b bool) {
+	m.recruiting = &b
+}
+
+// Recruiting returns the value of the "recruiting" field in the mutation.
+func (m *TeamMutation) Recruiting() (r bool, exists bool) {
+	v := m.recruiting
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldRecruiting returns the old "recruiting" field's value of the Team entity.
+// If the Team object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *TeamMutation) OldRecruiting(ctx context.Context) (v bool, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldRecruiting is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldRecruiting requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldRecruiting: %w", err)
+	}
+	return oldValue.Recruiting, nil
+}
+
+// ResetRecruiting resets all changes to the "recruiting" field.
+func (m *TeamMutation) ResetRecruiting() {
+	m.recruiting = nil
+}
+
+// SetContactInfo sets the "contact_info" field.
+func (m *TeamMutation) SetContactInfo(s string) {
+	m.contact_info = &s
+}
+
+// ContactInfo returns the value of the "contact_info" field in the mutation.
+func (m *TeamMutation) ContactInfo() (r string, exists bool) {
+	v := m.contact_info
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldContactInfo returns the old "contact_info" field's value of the Team entity.
+// If the Team object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *TeamMutation) OldContactInfo(ctx context.Context) (v *string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldContactInfo is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldContactInfo requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldContactInfo: %w", err)
+	}
+	return oldValue.ContactInfo, nil
+}
+
+// ClearContactInfo clears the value of the "contact_info" field.
+func (m *TeamMutation) ClearContactInfo() {
+	m.contact_info = nil
+	m.clearedFields[team.FieldContactInfo] = struct{}{}
+}
+
+// ContactInfoCleared returns if the "contact_info" field was cleared in this mutation.
+func (m *TeamMutation) ContactInfoCleared() bool {
+	_, ok := m.clearedFields[team.FieldContactInfo]
+	return ok
+}
+
+// ResetContactInfo resets all changes to the "contact_info" field.
+func (m *TeamMutation) ResetContactInfo() {
+	m.contact_info = nil
+	delete(m.clearedFields, team.FieldContactInfo)
+}
+
+// SetLookingFor sets the "looking_for" field.
+func (m *TeamMutation) SetLookingFor(s []string) {
+	m.looking_for = &s
+	m.appendlooking_for = nil
+}
+
+// LookingFor returns the value of the "looking_for" field in the mutation.
+func (m *TeamMutation) LookingFor() (r []string, exists bool) {
+	v := m.looking_for
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldLookingFor returns the old "looking_for" field's value of the Team entity.
+// If the Team object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *TeamMutation) OldLookingFor(ctx context.Context) (v []string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldLookingFor is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldLookingFor requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldLookingFor: %w", err)
+	}
+	return oldValue.LookingFor, nil
+}
+
+// AppendLookingFor adds s to the "looking_for" field.
+func (m *TeamMutation) AppendLookingFor(s []string) {
+	m.appendlooking_for = append(m.appendlooking_for, s...)
+}
+
+// AppendedLookingFor returns the list of values that were appended to the "looking_for" field in this mutation.
+func (m *TeamMutation) AppendedLookingFor() ([]string, bool) {
+	if len(m.appendlooking_for) == 0 {
+		return nil, false
+	}
+	return m.appendlooking_for, true
+}
+
+// ClearLookingFor clears the value of the "looking_for" field.
+func (m *TeamMutation) ClearLookingFor() {
+	m.looking_for = nil
+	m.appendlooking_for = nil
+	m.clearedFields[team.FieldLookingFor] = struct{}{}
+}
+
+// LookingForCleared returns if the "looking_for" field was cleared in this mutation.
+func (m *TeamMutation) LookingForCleared() bool {
+	_, ok := m.clearedFields[team.FieldLookingFor]
+	return ok
+}
+
+// ResetLookingFor resets all changes to the "looking_for" field.
+func (m *TeamMutation) ResetLookingFor() {
+	m.looking_for = nil
+	m.appendlooking_for = nil
+	delete(m.clearedFields, team.FieldLookingFor)
+}
+
 // SetCtftimeID sets the "ctftime_id" field.
 func (m *TeamMutation) SetCtftimeID(i int) {
 	m.ctftime_id = &i
@@ -4246,55 +4685,6 @@ func (m *TeamMutation) ResetCtftimeVerifiedAt() {
 	delete(m.clearedFields, team.FieldCtftimeVerifiedAt)
 }
 
-// SetLogo sets the "logo" field.
-func (m *TeamMutation) SetLogo(b []byte) {
-	m.logo = &b
-}
-
-// Logo returns the value of the "logo" field in the mutation.
-func (m *TeamMutation) Logo() (r []byte, exists bool) {
-	v := m.logo
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldLogo returns the old "logo" field's value of the Team entity.
-// If the Team object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *TeamMutation) OldLogo(ctx context.Context) (v *[]byte, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldLogo is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldLogo requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldLogo: %w", err)
-	}
-	return oldValue.Logo, nil
-}
-
-// ClearLogo clears the value of the "logo" field.
-func (m *TeamMutation) ClearLogo() {
-	m.logo = nil
-	m.clearedFields[team.FieldLogo] = struct{}{}
-}
-
-// LogoCleared returns if the "logo" field was cleared in this mutation.
-func (m *TeamMutation) LogoCleared() bool {
-	_, ok := m.clearedFields[team.FieldLogo]
-	return ok
-}
-
-// ResetLogo resets all changes to the "logo" field.
-func (m *TeamMutation) ResetLogo() {
-	m.logo = nil
-	delete(m.clearedFields, team.FieldLogo)
-}
-
 // SetVerifiedAt sets the "verified_at" field.
 func (m *TeamMutation) SetVerifiedAt(t time.Time) {
 	m.verified_at = &t
@@ -4342,42 +4732,6 @@ func (m *TeamMutation) VerifiedAtCleared() bool {
 func (m *TeamMutation) ResetVerifiedAt() {
 	m.verified_at = nil
 	delete(m.clearedFields, team.FieldVerifiedAt)
-}
-
-// SetCountryCode sets the "country_code" field.
-func (m *TeamMutation) SetCountryCode(s string) {
-	m.country_code = &s
-}
-
-// CountryCode returns the value of the "country_code" field in the mutation.
-func (m *TeamMutation) CountryCode() (r string, exists bool) {
-	v := m.country_code
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldCountryCode returns the old "country_code" field's value of the Team entity.
-// If the Team object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *TeamMutation) OldCountryCode(ctx context.Context) (v string, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldCountryCode is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldCountryCode requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldCountryCode: %w", err)
-	}
-	return oldValue.CountryCode, nil
-}
-
-// ResetCountryCode resets all changes to the "country_code" field.
-func (m *TeamMutation) ResetCountryCode() {
-	m.country_code = nil
 }
 
 // SetCaptainID sets the "captain" edge to the User entity by id.
@@ -4546,12 +4900,39 @@ func (m *TeamMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *TeamMutation) Fields() []string {
-	fields := make([]string, 0, 7)
+	fields := make([]string, 0, 14)
 	if m.name != nil {
 		fields = append(fields, team.FieldName)
 	}
 	if m.description != nil {
 		fields = append(fields, team.FieldDescription)
+	}
+	if m.country_code != nil {
+		fields = append(fields, team.FieldCountryCode)
+	}
+	if m.team_logo_url != nil {
+		fields = append(fields, team.FieldTeamLogoURL)
+	}
+	if m.banner_image_url != nil {
+		fields = append(fields, team.FieldBannerImageURL)
+	}
+	if m.website_url != nil {
+		fields = append(fields, team.FieldWebsiteURL)
+	}
+	if m.discord_url != nil {
+		fields = append(fields, team.FieldDiscordURL)
+	}
+	if m.github_url != nil {
+		fields = append(fields, team.FieldGithubURL)
+	}
+	if m.recruiting != nil {
+		fields = append(fields, team.FieldRecruiting)
+	}
+	if m.contact_info != nil {
+		fields = append(fields, team.FieldContactInfo)
+	}
+	if m.looking_for != nil {
+		fields = append(fields, team.FieldLookingFor)
 	}
 	if m.ctftime_id != nil {
 		fields = append(fields, team.FieldCtftimeID)
@@ -4559,14 +4940,8 @@ func (m *TeamMutation) Fields() []string {
 	if m.ctftime_verified_at != nil {
 		fields = append(fields, team.FieldCtftimeVerifiedAt)
 	}
-	if m.logo != nil {
-		fields = append(fields, team.FieldLogo)
-	}
 	if m.verified_at != nil {
 		fields = append(fields, team.FieldVerifiedAt)
-	}
-	if m.country_code != nil {
-		fields = append(fields, team.FieldCountryCode)
 	}
 	return fields
 }
@@ -4580,16 +4955,30 @@ func (m *TeamMutation) Field(name string) (ent.Value, bool) {
 		return m.Name()
 	case team.FieldDescription:
 		return m.Description()
+	case team.FieldCountryCode:
+		return m.CountryCode()
+	case team.FieldTeamLogoURL:
+		return m.TeamLogoURL()
+	case team.FieldBannerImageURL:
+		return m.BannerImageURL()
+	case team.FieldWebsiteURL:
+		return m.WebsiteURL()
+	case team.FieldDiscordURL:
+		return m.DiscordURL()
+	case team.FieldGithubURL:
+		return m.GithubURL()
+	case team.FieldRecruiting:
+		return m.Recruiting()
+	case team.FieldContactInfo:
+		return m.ContactInfo()
+	case team.FieldLookingFor:
+		return m.LookingFor()
 	case team.FieldCtftimeID:
 		return m.CtftimeID()
 	case team.FieldCtftimeVerifiedAt:
 		return m.CtftimeVerifiedAt()
-	case team.FieldLogo:
-		return m.Logo()
 	case team.FieldVerifiedAt:
 		return m.VerifiedAt()
-	case team.FieldCountryCode:
-		return m.CountryCode()
 	}
 	return nil, false
 }
@@ -4603,16 +4992,30 @@ func (m *TeamMutation) OldField(ctx context.Context, name string) (ent.Value, er
 		return m.OldName(ctx)
 	case team.FieldDescription:
 		return m.OldDescription(ctx)
+	case team.FieldCountryCode:
+		return m.OldCountryCode(ctx)
+	case team.FieldTeamLogoURL:
+		return m.OldTeamLogoURL(ctx)
+	case team.FieldBannerImageURL:
+		return m.OldBannerImageURL(ctx)
+	case team.FieldWebsiteURL:
+		return m.OldWebsiteURL(ctx)
+	case team.FieldDiscordURL:
+		return m.OldDiscordURL(ctx)
+	case team.FieldGithubURL:
+		return m.OldGithubURL(ctx)
+	case team.FieldRecruiting:
+		return m.OldRecruiting(ctx)
+	case team.FieldContactInfo:
+		return m.OldContactInfo(ctx)
+	case team.FieldLookingFor:
+		return m.OldLookingFor(ctx)
 	case team.FieldCtftimeID:
 		return m.OldCtftimeID(ctx)
 	case team.FieldCtftimeVerifiedAt:
 		return m.OldCtftimeVerifiedAt(ctx)
-	case team.FieldLogo:
-		return m.OldLogo(ctx)
 	case team.FieldVerifiedAt:
 		return m.OldVerifiedAt(ctx)
-	case team.FieldCountryCode:
-		return m.OldCountryCode(ctx)
 	}
 	return nil, fmt.Errorf("unknown Team field %s", name)
 }
@@ -4636,6 +5039,69 @@ func (m *TeamMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetDescription(v)
 		return nil
+	case team.FieldCountryCode:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCountryCode(v)
+		return nil
+	case team.FieldTeamLogoURL:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetTeamLogoURL(v)
+		return nil
+	case team.FieldBannerImageURL:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetBannerImageURL(v)
+		return nil
+	case team.FieldWebsiteURL:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetWebsiteURL(v)
+		return nil
+	case team.FieldDiscordURL:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetDiscordURL(v)
+		return nil
+	case team.FieldGithubURL:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetGithubURL(v)
+		return nil
+	case team.FieldRecruiting:
+		v, ok := value.(bool)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetRecruiting(v)
+		return nil
+	case team.FieldContactInfo:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetContactInfo(v)
+		return nil
+	case team.FieldLookingFor:
+		v, ok := value.([]string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetLookingFor(v)
+		return nil
 	case team.FieldCtftimeID:
 		v, ok := value.(int)
 		if !ok {
@@ -4650,26 +5116,12 @@ func (m *TeamMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetCtftimeVerifiedAt(v)
 		return nil
-	case team.FieldLogo:
-		v, ok := value.([]byte)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetLogo(v)
-		return nil
 	case team.FieldVerifiedAt:
 		v, ok := value.(time.Time)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetVerifiedAt(v)
-		return nil
-	case team.FieldCountryCode:
-		v, ok := value.(string)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetCountryCode(v)
 		return nil
 	}
 	return fmt.Errorf("unknown Team field %s", name)
@@ -4719,14 +5171,32 @@ func (m *TeamMutation) ClearedFields() []string {
 	if m.FieldCleared(team.FieldDescription) {
 		fields = append(fields, team.FieldDescription)
 	}
+	if m.FieldCleared(team.FieldTeamLogoURL) {
+		fields = append(fields, team.FieldTeamLogoURL)
+	}
+	if m.FieldCleared(team.FieldBannerImageURL) {
+		fields = append(fields, team.FieldBannerImageURL)
+	}
+	if m.FieldCleared(team.FieldWebsiteURL) {
+		fields = append(fields, team.FieldWebsiteURL)
+	}
+	if m.FieldCleared(team.FieldDiscordURL) {
+		fields = append(fields, team.FieldDiscordURL)
+	}
+	if m.FieldCleared(team.FieldGithubURL) {
+		fields = append(fields, team.FieldGithubURL)
+	}
+	if m.FieldCleared(team.FieldContactInfo) {
+		fields = append(fields, team.FieldContactInfo)
+	}
+	if m.FieldCleared(team.FieldLookingFor) {
+		fields = append(fields, team.FieldLookingFor)
+	}
 	if m.FieldCleared(team.FieldCtftimeID) {
 		fields = append(fields, team.FieldCtftimeID)
 	}
 	if m.FieldCleared(team.FieldCtftimeVerifiedAt) {
 		fields = append(fields, team.FieldCtftimeVerifiedAt)
-	}
-	if m.FieldCleared(team.FieldLogo) {
-		fields = append(fields, team.FieldLogo)
 	}
 	if m.FieldCleared(team.FieldVerifiedAt) {
 		fields = append(fields, team.FieldVerifiedAt)
@@ -4748,14 +5218,32 @@ func (m *TeamMutation) ClearField(name string) error {
 	case team.FieldDescription:
 		m.ClearDescription()
 		return nil
+	case team.FieldTeamLogoURL:
+		m.ClearTeamLogoURL()
+		return nil
+	case team.FieldBannerImageURL:
+		m.ClearBannerImageURL()
+		return nil
+	case team.FieldWebsiteURL:
+		m.ClearWebsiteURL()
+		return nil
+	case team.FieldDiscordURL:
+		m.ClearDiscordURL()
+		return nil
+	case team.FieldGithubURL:
+		m.ClearGithubURL()
+		return nil
+	case team.FieldContactInfo:
+		m.ClearContactInfo()
+		return nil
+	case team.FieldLookingFor:
+		m.ClearLookingFor()
+		return nil
 	case team.FieldCtftimeID:
 		m.ClearCtftimeID()
 		return nil
 	case team.FieldCtftimeVerifiedAt:
 		m.ClearCtftimeVerifiedAt()
-		return nil
-	case team.FieldLogo:
-		m.ClearLogo()
 		return nil
 	case team.FieldVerifiedAt:
 		m.ClearVerifiedAt()
@@ -4774,20 +5262,41 @@ func (m *TeamMutation) ResetField(name string) error {
 	case team.FieldDescription:
 		m.ResetDescription()
 		return nil
+	case team.FieldCountryCode:
+		m.ResetCountryCode()
+		return nil
+	case team.FieldTeamLogoURL:
+		m.ResetTeamLogoURL()
+		return nil
+	case team.FieldBannerImageURL:
+		m.ResetBannerImageURL()
+		return nil
+	case team.FieldWebsiteURL:
+		m.ResetWebsiteURL()
+		return nil
+	case team.FieldDiscordURL:
+		m.ResetDiscordURL()
+		return nil
+	case team.FieldGithubURL:
+		m.ResetGithubURL()
+		return nil
+	case team.FieldRecruiting:
+		m.ResetRecruiting()
+		return nil
+	case team.FieldContactInfo:
+		m.ResetContactInfo()
+		return nil
+	case team.FieldLookingFor:
+		m.ResetLookingFor()
+		return nil
 	case team.FieldCtftimeID:
 		m.ResetCtftimeID()
 		return nil
 	case team.FieldCtftimeVerifiedAt:
 		m.ResetCtftimeVerifiedAt()
 		return nil
-	case team.FieldLogo:
-		m.ResetLogo()
-		return nil
 	case team.FieldVerifiedAt:
 		m.ResetVerifiedAt()
-		return nil
-	case team.FieldCountryCode:
-		m.ResetCountryCode()
 		return nil
 	}
 	return fmt.Errorf("unknown Team field %s", name)
