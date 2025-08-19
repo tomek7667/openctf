@@ -5,11 +5,10 @@ package ent
 import (
 	"encoding/json"
 	"fmt"
-	"strings"
-	"time"
-
 	"openctfbackend/ent/aggregatedteamsdetails"
 	"openctfbackend/ent/schema"
+	"strings"
+	"time"
 
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"

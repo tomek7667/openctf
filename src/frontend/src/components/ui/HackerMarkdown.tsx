@@ -8,17 +8,19 @@ import rehypeRaw from "rehype-raw";
 
 interface HackerMarkdownProps {
 	content: string;
+	className?: string;
 	setToastMessage?: (message: string) => void;
 	setShowToast?: (show: boolean) => void;
 }
 
 export function HackerMarkdown({
 	content,
+	className,
 	setToastMessage,
 	setShowToast,
 }: HackerMarkdownProps) {
 	return (
-		<div className="max-w-none">
+		<div className={`max-w-none ${className ?? ""}`}>
 			<ReactMarkdown
 				remarkPlugins={[remarkGfm]}
 				rehypePlugins={[

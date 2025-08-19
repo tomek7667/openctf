@@ -36,6 +36,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { clsx } from "clsx";
 import { ContestStatus, Place } from "@/types/api";
 import useToast from "@/hooks/useToast";
+import { HackerMarkdown } from "@/components/ui/HackerMarkdown";
 
 const getStatusColor = (status: string) => {
 	switch (status) {
@@ -462,7 +463,7 @@ export default function ContestDetailsPage() {
 
 									{contest.description && (
 										<p className="text-muted-foreground leading-relaxed mb-6">
-											{contest.description}
+											<HackerMarkdown content={contest.description} />
 										</p>
 									)}
 
@@ -486,7 +487,10 @@ export default function ContestDetailsPage() {
 												<h3 className="font-bold font-mono text-primary mb-2">
 													&gt; RULES
 												</h3>
-												<div className="space-y-2">{contest.rules}</div>
+												<HackerMarkdown
+													className="space-y-2"
+													content={contest.rules}
+												/>
 											</div>
 										)}
 
@@ -495,7 +499,10 @@ export default function ContestDetailsPage() {
 												<h3 className="font-bold font-mono text-primary mb-2">
 													&gt; PRIZES
 												</h3>
-												<div className="space-y-2">{contest.prizes}</div>
+												<HackerMarkdown
+													className="space-y-2"
+													content={contest.prizes}
+												/>
 											</div>
 										)}
 									</div>
