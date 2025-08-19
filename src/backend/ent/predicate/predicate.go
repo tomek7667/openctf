@@ -21,8 +21,8 @@ type AggregatedContestsDifficulties func(*sql.Selector)
 // AggregatedPlatformStatistics is the predicate function for aggregatedplatformstatistics builders.
 type AggregatedPlatformStatistics func(*sql.Selector)
 
-// AggregatedTeamsDetails is the predicate function for aggregatedteamsdetails builders.
-type AggregatedTeamsDetails func(*sql.Selector)
+// AggregatedTeamDetails is the predicate function for aggregatedteamdetails builders.
+type AggregatedTeamDetails func(*sql.Selector)
 
 // AggregatedUserStatistics is the predicate function for aggregateduserstatistics builders.
 type AggregatedUserStatistics func(*sql.Selector)

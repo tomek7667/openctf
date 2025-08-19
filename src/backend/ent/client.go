@@ -45,8 +45,8 @@ type Client struct {
 	AggregatedContestsDifficulties *AggregatedContestsDifficultiesClient
 	// AggregatedPlatformStatistics is the client for interacting with the AggregatedPlatformStatistics builders.
 	AggregatedPlatformStatistics *AggregatedPlatformStatisticsClient
-	// AggregatedTeamsDetails is the client for interacting with the AggregatedTeamsDetails builders.
-	AggregatedTeamsDetails *AggregatedTeamsDetailsClient
+	// AggregatedTeamDetails is the client for interacting with the AggregatedTeamDetails builders.
+	AggregatedTeamDetails *AggregatedTeamDetailsClient
 	// AggregatedUserStatistics is the client for interacting with the AggregatedUserStatistics builders.
 	AggregatedUserStatistics *AggregatedUserStatisticsClient
 	// Contest is the client for interacting with the Contest builders.
@@ -81,7 +81,7 @@ func (c *Client) init() {
 	c.AggregatedContest = NewAggregatedContestClient(c.config)
 	c.AggregatedContestsDifficulties = NewAggregatedContestsDifficultiesClient(c.config)
 	c.AggregatedPlatformStatistics = NewAggregatedPlatformStatisticsClient(c.config)
-	c.AggregatedTeamsDetails = NewAggregatedTeamsDetailsClient(c.config)
+	c.AggregatedTeamDetails = NewAggregatedTeamDetailsClient(c.config)
 	c.AggregatedUserStatistics = NewAggregatedUserStatisticsClient(c.config)
 	c.Contest = NewContestClient(c.config)
 	c.ContestRating = NewContestRatingClient(c.config)
@@ -188,7 +188,7 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 		AggregatedContest:              NewAggregatedContestClient(cfg),
 		AggregatedContestsDifficulties: NewAggregatedContestsDifficultiesClient(cfg),
 		AggregatedPlatformStatistics:   NewAggregatedPlatformStatisticsClient(cfg),
-		AggregatedTeamsDetails:         NewAggregatedTeamsDetailsClient(cfg),
+		AggregatedTeamDetails:          NewAggregatedTeamDetailsClient(cfg),
 		AggregatedUserStatistics:       NewAggregatedUserStatisticsClient(cfg),
 		Contest:                        NewContestClient(cfg),
 		ContestRating:                  NewContestRatingClient(cfg),
@@ -222,7 +222,7 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 		AggregatedContest:              NewAggregatedContestClient(cfg),
 		AggregatedContestsDifficulties: NewAggregatedContestsDifficultiesClient(cfg),
 		AggregatedPlatformStatistics:   NewAggregatedPlatformStatisticsClient(cfg),
-		AggregatedTeamsDetails:         NewAggregatedTeamsDetailsClient(cfg),
+		AggregatedTeamDetails:          NewAggregatedTeamDetailsClient(cfg),
 		AggregatedUserStatistics:       NewAggregatedUserStatisticsClient(cfg),
 		Contest:                        NewContestClient(cfg),
 		ContestRating:                  NewContestRatingClient(cfg),
@@ -274,7 +274,7 @@ func (c *Client) Intercept(interceptors ...Interceptor) {
 	for _, n := range []interface{ Intercept(...Interceptor) }{
 		c.Achievement, c.Activity, c.AggregatedContest,
 		c.AggregatedContestsDifficulties, c.AggregatedPlatformStatistics,
-		c.AggregatedTeamsDetails, c.AggregatedUserStatistics, c.Contest,
+		c.AggregatedTeamDetails, c.AggregatedUserStatistics, c.Contest,
 		c.ContestRating, c.Place, c.Team, c.TeamAchievement, c.User, c.UserProfile,
 		c.WeightRating,
 	} {
@@ -698,34 +698,34 @@ func (c *AggregatedPlatformStatisticsClient) Interceptors() []Interceptor {
 	return c.inters.AggregatedPlatformStatistics
 }
 
-// AggregatedTeamsDetailsClient is a client for the AggregatedTeamsDetails schema.
-type AggregatedTeamsDetailsClient struct {
+// AggregatedTeamDetailsClient is a client for the AggregatedTeamDetails schema.
+type AggregatedTeamDetailsClient struct {
 	config
 }
 
-// NewAggregatedTeamsDetailsClient returns a client for the AggregatedTeamsDetails from the given config.
-func NewAggregatedTeamsDetailsClient(c config) *AggregatedTeamsDetailsClient {
-	return &AggregatedTeamsDetailsClient{config: c}
+// NewAggregatedTeamDetailsClient returns a client for the AggregatedTeamDetails from the given config.
+func NewAggregatedTeamDetailsClient(c config) *AggregatedTeamDetailsClient {
+	return &AggregatedTeamDetailsClient{config: c}
 }
 
 // Intercept adds a list of query interceptors to the interceptors stack.
-// A call to `Intercept(f, g, h)` equals to `aggregatedteamsdetails.Intercept(f(g(h())))`.
-func (c *AggregatedTeamsDetailsClient) Intercept(interceptors ...Interceptor) {
-	c.inters.AggregatedTeamsDetails = append(c.inters.AggregatedTeamsDetails, interceptors...)
+// A call to `Intercept(f, g, h)` equals to `aggregatedteamdetails.Intercept(f(g(h())))`.
+func (c *AggregatedTeamDetailsClient) Intercept(interceptors ...Interceptor) {
+	c.inters.AggregatedTeamDetails = append(c.inters.AggregatedTeamDetails, interceptors...)
 }
 
-// Query returns a query builder for AggregatedTeamsDetails.
-func (c *AggregatedTeamsDetailsClient) Query() *AggregatedTeamsDetailsQuery {
-	return &AggregatedTeamsDetailsQuery{
+// Query returns a query builder for AggregatedTeamDetails.
+func (c *AggregatedTeamDetailsClient) Query() *AggregatedTeamDetailsQuery {
+	return &AggregatedTeamDetailsQuery{
 		config: c.config,
-		ctx:    &QueryContext{Type: TypeAggregatedTeamsDetails},
+		ctx:    &QueryContext{Type: TypeAggregatedTeamDetails},
 		inters: c.Interceptors(),
 	}
 }
 
 // Interceptors returns the client interceptors.
-func (c *AggregatedTeamsDetailsClient) Interceptors() []Interceptor {
-	return c.inters.AggregatedTeamsDetails
+func (c *AggregatedTeamDetailsClient) Interceptors() []Interceptor {
+	return c.inters.AggregatedTeamDetails
 }
 
 // AggregatedUserStatisticsClient is a client for the AggregatedUserStatistics schema.
@@ -2038,7 +2038,7 @@ type (
 	}
 	inters struct {
 		Achievement, Activity, AggregatedContest, AggregatedContestsDifficulties,
-		AggregatedPlatformStatistics, AggregatedTeamsDetails, AggregatedUserStatistics,
+		AggregatedPlatformStatistics, AggregatedTeamDetails, AggregatedUserStatistics,
 		Contest, ContestRating, Place, Team, TeamAchievement, User, UserProfile,
 		WeightRating []ent.Interceptor
 	}

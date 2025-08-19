@@ -28,7 +28,7 @@ type ServiceClient interface {
 
 	CreateTeam(ctx context.Context, captain *ent.User, dto *service.CreateTeamDto) (*ent.Team, error)
 	GetTeam(ctx context.Context, teamId int) (*ent.Team, error)
-	GetTeamDetails(ctx context.Context, teamId int) (*ent.AggregatedTeamsDetails, error)
+	GetTeamDetails(ctx context.Context, teamId int) (*ent.AggregatedTeamDetails, error)
 	ListTeams(ctx context.Context, dto *service.ListTeamsDto) ([]*ent.Team, error)
 	Login(ctx context.Context, dto *service.LoginDto) (*ent.User, *string, error)
 	Register(ctx context.Context, dto *service.RegisterDto) (*ent.User, *string, error)

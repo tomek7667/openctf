@@ -69,7 +69,7 @@ SELECT
 	(SELECT COUNT(id) FROM "contests" WHERE NOW() > "start" AND NOW() < "end") AS "total_live_events";
 
 -- Create "aggregated_contests" view
-DROP VIEW "aggregated_contests";
+DROP VIEW IF EXISTS "aggregated_contests";
 CREATE OR REPLACE VIEW "aggregated_contests" (
 	"id", "name", "description", "rules", "prizes",
 	"start", "end", "url", "ctftime_id", "assigned_weight_points",
@@ -96,8 +96,9 @@ SELECT
 FROM
 	contests c;
 
--- Create "aggregated_teams_details" view
-CREATE OR REPLACE VIEW "aggregated_teams_details" (
+-- Create "aggregated_team_details" view
+DROP VIEW IF EXISTS "aggregated_team_details";
+CREATE OR REPLACE VIEW "aggregated_team_details" (
 	"id", "name", "description", "ctftime_id", "ctftime_verified_at",
 	"verified_at", "country_code", "team_logo_url", "banner_image_url",
 	"discord_url", "github_url", "recruiting", "contact_info", "looking_for",

@@ -38,7 +38,7 @@ const (
 	TypeAggregatedContest              = "AggregatedContest"
 	TypeAggregatedContestsDifficulties = "AggregatedContestsDifficulties"
 	TypeAggregatedPlatformStatistics   = "AggregatedPlatformStatistics"
-	TypeAggregatedTeamsDetails         = "AggregatedTeamsDetails"
+	TypeAggregatedTeamDetails          = "AggregatedTeamDetails"
 	TypeAggregatedUserStatistics       = "AggregatedUserStatistics"
 	TypeContest                        = "Contest"
 	TypeContestRating                  = "ContestRating"

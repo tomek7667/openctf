@@ -24,8 +24,8 @@ type Tx struct {
 	AggregatedContestsDifficulties *AggregatedContestsDifficultiesClient
 	// AggregatedPlatformStatistics is the client for interacting with the AggregatedPlatformStatistics builders.
 	AggregatedPlatformStatistics *AggregatedPlatformStatisticsClient
-	// AggregatedTeamsDetails is the client for interacting with the AggregatedTeamsDetails builders.
-	AggregatedTeamsDetails *AggregatedTeamsDetailsClient
+	// AggregatedTeamDetails is the client for interacting with the AggregatedTeamDetails builders.
+	AggregatedTeamDetails *AggregatedTeamDetailsClient
 	// AggregatedUserStatistics is the client for interacting with the AggregatedUserStatistics builders.
 	AggregatedUserStatistics *AggregatedUserStatisticsClient
 	// Contest is the client for interacting with the Contest builders.
@@ -180,7 +180,7 @@ func (tx *Tx) init() {
 	tx.AggregatedContest = NewAggregatedContestClient(tx.config)
 	tx.AggregatedContestsDifficulties = NewAggregatedContestsDifficultiesClient(tx.config)
 	tx.AggregatedPlatformStatistics = NewAggregatedPlatformStatisticsClient(tx.config)
-	tx.AggregatedTeamsDetails = NewAggregatedTeamsDetailsClient(tx.config)
+	tx.AggregatedTeamDetails = NewAggregatedTeamDetailsClient(tx.config)
 	tx.AggregatedUserStatistics = NewAggregatedUserStatisticsClient(tx.config)
 	tx.Contest = NewContestClient(tx.config)
 	tx.ContestRating = NewContestRatingClient(tx.config)
