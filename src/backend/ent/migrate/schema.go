@@ -67,7 +67,7 @@ var (
 		{Name: "url", Type: field.TypeString, Nullable: true},
 		{Name: "ctftime_id", Type: field.TypeInt, Nullable: true},
 		{Name: "assigned_weight_points", Type: field.TypeInt, Default: 0},
-		{Name: "logo", Type: field.TypeBytes, Nullable: true, Size: 52428800},
+		{Name: "logo_url", Type: field.TypeString, Nullable: true},
 		{Name: "contest_organizers", Type: field.TypeInt, Nullable: true},
 	}
 	// ContestsTable holds the schema information for the "contests" table.

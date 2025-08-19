@@ -39,6 +39,8 @@ type Client struct {
 	Achievement *AchievementClient
 	// Activity is the client for interacting with the Activity builders.
 	Activity *ActivityClient
+	// AggregatedContest is the client for interacting with the AggregatedContest builders.
+	AggregatedContest *AggregatedContestClient
 	// AggregatedContestsDifficulties is the client for interacting with the AggregatedContestsDifficulties builders.
 	AggregatedContestsDifficulties *AggregatedContestsDifficultiesClient
 	// AggregatedPlatformStatistics is the client for interacting with the AggregatedPlatformStatistics builders.
@@ -76,6 +78,7 @@ func (c *Client) init() {
 	c.Schema = migrate.NewSchema(c.driver)
 	c.Achievement = NewAchievementClient(c.config)
 	c.Activity = NewActivityClient(c.config)
+	c.AggregatedContest = NewAggregatedContestClient(c.config)
 	c.AggregatedContestsDifficulties = NewAggregatedContestsDifficultiesClient(c.config)
 	c.AggregatedPlatformStatistics = NewAggregatedPlatformStatisticsClient(c.config)
 	c.AggregatedTeamsDetails = NewAggregatedTeamsDetailsClient(c.config)
@@ -182,6 +185,7 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 		config:                         cfg,
 		Achievement:                    NewAchievementClient(cfg),
 		Activity:                       NewActivityClient(cfg),
+		AggregatedContest:              NewAggregatedContestClient(cfg),
 		AggregatedContestsDifficulties: NewAggregatedContestsDifficultiesClient(cfg),
 		AggregatedPlatformStatistics:   NewAggregatedPlatformStatisticsClient(cfg),
 		AggregatedTeamsDetails:         NewAggregatedTeamsDetailsClient(cfg),
@@ -215,6 +219,7 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 		config:                         cfg,
 		Achievement:                    NewAchievementClient(cfg),
 		Activity:                       NewActivityClient(cfg),
+		AggregatedContest:              NewAggregatedContestClient(cfg),
 		AggregatedContestsDifficulties: NewAggregatedContestsDifficultiesClient(cfg),
 		AggregatedPlatformStatistics:   NewAggregatedPlatformStatisticsClient(cfg),
 		AggregatedTeamsDetails:         NewAggregatedTeamsDetailsClient(cfg),
@@ -267,10 +272,11 @@ func (c *Client) Use(hooks ...Hook) {
 // In order to add interceptors to a specific client, call: `client.Node.Intercept(...)`.
 func (c *Client) Intercept(interceptors ...Interceptor) {
 	for _, n := range []interface{ Intercept(...Interceptor) }{
-		c.Achievement, c.Activity, c.AggregatedContestsDifficulties,
-		c.AggregatedPlatformStatistics, c.AggregatedTeamsDetails,
-		c.AggregatedUserStatistics, c.Contest, c.ContestRating, c.Place, c.Team,
-		c.TeamAchievement, c.User, c.UserProfile, c.WeightRating,
+		c.Achievement, c.Activity, c.AggregatedContest,
+		c.AggregatedContestsDifficulties, c.AggregatedPlatformStatistics,
+		c.AggregatedTeamsDetails, c.AggregatedUserStatistics, c.Contest,
+		c.ContestRating, c.Place, c.Team, c.TeamAchievement, c.User, c.UserProfile,
+		c.WeightRating,
 	} {
 		n.Intercept(interceptors...)
 	}
@@ -600,6 +606,36 @@ func (c *ActivityClient) mutate(ctx context.Context, m *ActivityMutation) (Value
 	default:
 		return nil, fmt.Errorf("ent: unknown Activity mutation op: %q", m.Op())
 	}
+}
+
+// AggregatedContestClient is a client for the AggregatedContest schema.
+type AggregatedContestClient struct {
+	config
+}
+
+// NewAggregatedContestClient returns a client for the AggregatedContest from the given config.
+func NewAggregatedContestClient(c config) *AggregatedContestClient {
+	return &AggregatedContestClient{config: c}
+}
+
+// Intercept adds a list of query interceptors to the interceptors stack.
+// A call to `Intercept(f, g, h)` equals to `aggregatedcontest.Intercept(f(g(h())))`.
+func (c *AggregatedContestClient) Intercept(interceptors ...Interceptor) {
+	c.inters.AggregatedContest = append(c.inters.AggregatedContest, interceptors...)
+}
+
+// Query returns a query builder for AggregatedContest.
+func (c *AggregatedContestClient) Query() *AggregatedContestQuery {
+	return &AggregatedContestQuery{
+		config: c.config,
+		ctx:    &QueryContext{Type: TypeAggregatedContest},
+		inters: c.Interceptors(),
+	}
+}
+
+// Interceptors returns the client interceptors.
+func (c *AggregatedContestClient) Interceptors() []Interceptor {
+	return c.inters.AggregatedContest
 }
 
 // AggregatedContestsDifficultiesClient is a client for the AggregatedContestsDifficulties schema.
@@ -2001,7 +2037,7 @@ type (
 		User, UserProfile, WeightRating []ent.Hook
 	}
 	inters struct {
-		Achievement, Activity, AggregatedContestsDifficulties,
+		Achievement, Activity, AggregatedContest, AggregatedContestsDifficulties,
 		AggregatedPlatformStatistics, AggregatedTeamsDetails, AggregatedUserStatistics,
 		Contest, ContestRating, Place, Team, TeamAchievement, User, UserProfile,
 		WeightRating []ent.Interceptor

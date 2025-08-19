@@ -2,7 +2,6 @@ package service
 
 import (
 	"context"
-	"errors"
 	"fmt"
 
 	"openctfbackend/ent"
@@ -13,7 +12,7 @@ type ListContestsDto struct {
 	Limit  int `json:"limit,omitempty" form:"limit,omitempty"`
 }
 
-func (c *Client) ListContests(ctx context.Context, dto *ListContestsDto) ([]*ent.Contest, error) {
+func (c *Client) ListContests(ctx context.Context, dto *ListContestsDto) ([]*ent.AggregatedContest, error) {
 	if dto.Limit > 100 {
 		dto.Limit = 100
 	}
@@ -24,15 +23,13 @@ func (c *Client) ListContests(ctx context.Context, dto *ListContestsDto) ([]*ent
 		dto.Offset = 0
 	}
 
-	t, err := c.C.Contest.
+	t, err := c.C.AggregatedContest.
 		Query().
 		Limit(dto.Limit).
 		Offset(dto.Offset).
-		WithOrganizers().
-		WithPlaces().
 		All(ctx)
 	if err != nil {
-		return nil, errors.Join(fmt.Errorf("failed creating a contest"), err)
+		return nil, fmt.Errorf("failed listing contests: %w", err)
 	}
 	return t, nil
 }

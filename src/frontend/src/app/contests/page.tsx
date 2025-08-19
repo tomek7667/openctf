@@ -19,8 +19,8 @@ import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 import { MainLayout } from "@/components/layout/MainLayout";
 import { ContestCard } from "@/components/contests/ContestCard";
 import { LiveCTFWidget } from "@/components/contests/LiveCTFWidget";
-import { getContests, ParsedContest } from "@/api/contests";
-import { RawContest, ContestStatus, ContestStatusType } from "@/types/api";
+import { getContests, ParsedAggregatedContest } from "@/api/contests";
+import { ContestStatus, ContestStatusType } from "@/types/api";
 import { clsx } from "clsx";
 
 const contestStatuses: {
@@ -64,7 +64,7 @@ interface ContestFilters {
 	year?: undefined | number;
 }
 
-const ContestTableRow = ({ contest }: { contest: RawContest }) => (
+const ContestTableRow = ({ contest }: { contest: ParsedAggregatedContest }) => (
 	<tr
 		className="border-b border-border/50 hover:bg-muted/20 transition-colors cursor-pointer max-h-[500px] overflow-y-auto"
 		onClick={() => (window.location.href = `/contests/${contest.id}`)}
@@ -118,15 +118,17 @@ const ContestTableRow = ({ contest }: { contest: RawContest }) => (
 		<td className="p-4 font-mono text-sm">
 			<div className="flex items-center gap-1">
 				<Users className="h-4 w-4 text-muted-foreground" />
-				{contest.edges?.places?.length ?? "---"}
+				{contest.participants ?? "---"}
 			</div>
 		</td>
 	</tr>
 );
 
 export default function ContestsPage() {
-	const [contests, setContests] = useState<ParsedContest[]>([]);
-	const [filteredContests, setFilteredContests] = useState<ParsedContest[]>([]);
+	const [contests, setContests] = useState<ParsedAggregatedContest[]>([]);
+	const [filteredContests, setFilteredContests] = useState<
+		ParsedAggregatedContest[]
+	>([]);
 	const [isLoading, setIsLoading] = useState(true);
 	const [filters, setFilters] = useState<ContestFilters>({
 		search: "",
@@ -228,7 +230,7 @@ export default function ContestsPage() {
 	const OngoingContestsSection = ({
 		contests,
 	}: {
-		contests: ParsedContest[];
+		contests: ParsedAggregatedContest[];
 	}) => {
 		const [currentPage, setCurrentPage] = useState(1);
 		const itemsPerPage = 6;
@@ -300,7 +302,7 @@ export default function ContestsPage() {
 	const UpcomingContestsSection = ({
 		contests,
 	}: {
-		contests: ParsedContest[];
+		contests: ParsedAggregatedContest[];
 	}) => {
 		const [currentPage, setCurrentPage] = useState(1);
 		const itemsPerPage = 6;
@@ -373,7 +375,7 @@ export default function ContestsPage() {
 	const FinishedContestsSection = ({
 		contests,
 	}: {
-		contests: ParsedContest[];
+		contests: ParsedAggregatedContest[];
 	}) => {
 		const [currentPage, setCurrentPage] = useState(1);
 		const itemsPerPage = 20;

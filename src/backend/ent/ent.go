@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"openctfbackend/ent/achievement"
 	"openctfbackend/ent/activity"
+	"openctfbackend/ent/aggregatedcontest"
 	"openctfbackend/ent/aggregatedcontestsdifficulties"
 	"openctfbackend/ent/aggregatedplatformstatistics"
 	"openctfbackend/ent/aggregatedteamsdetails"
@@ -88,6 +89,7 @@ func checkColumn(t, c string) error {
 		columnCheck = sql.NewColumnCheck(map[string]func(string) bool{
 			achievement.Table:                    achievement.ValidColumn,
 			activity.Table:                       activity.ValidColumn,
+			aggregatedcontest.Table:              aggregatedcontest.ValidColumn,
 			aggregatedcontestsdifficulties.Table: aggregatedcontestsdifficulties.ValidColumn,
 			aggregatedplatformstatistics.Table:   aggregatedplatformstatistics.ValidColumn,
 			aggregatedteamsdetails.Table:         aggregatedteamsdetails.ValidColumn,

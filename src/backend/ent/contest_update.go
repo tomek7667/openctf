@@ -221,15 +221,23 @@ func (_u *ContestUpdate) AddAssignedWeightPoints(v int) *ContestUpdate {
 	return _u
 }
 
-// SetLogo sets the "logo" field.
-func (_u *ContestUpdate) SetLogo(v []byte) *ContestUpdate {
-	_u.mutation.SetLogo(v)
+// SetLogoURL sets the "logo_url" field.
+func (_u *ContestUpdate) SetLogoURL(v string) *ContestUpdate {
+	_u.mutation.SetLogoURL(v)
 	return _u
 }
 
-// ClearLogo clears the value of the "logo" field.
-func (_u *ContestUpdate) ClearLogo() *ContestUpdate {
-	_u.mutation.ClearLogo()
+// SetNillableLogoURL sets the "logo_url" field if the given value is not nil.
+func (_u *ContestUpdate) SetNillableLogoURL(v *string) *ContestUpdate {
+	if v != nil {
+		_u.SetLogoURL(*v)
+	}
+	return _u
+}
+
+// ClearLogoURL clears the value of the "logo_url" field.
+func (_u *ContestUpdate) ClearLogoURL() *ContestUpdate {
+	_u.mutation.ClearLogoURL()
 	return _u
 }
 
@@ -338,11 +346,6 @@ func (_u *ContestUpdate) check() error {
 			return &ValidationError{Name: "url", err: fmt.Errorf(`ent: validator failed for field "Contest.url": %w`, err)}
 		}
 	}
-	if v, ok := _u.mutation.Logo(); ok {
-		if err := contest.LogoValidator(v); err != nil {
-			return &ValidationError{Name: "logo", err: fmt.Errorf(`ent: validator failed for field "Contest.logo": %w`, err)}
-		}
-	}
 	return nil
 }
 
@@ -412,11 +415,11 @@ func (_u *ContestUpdate) sqlSave(ctx context.Context) (_node int, err error) {
 	if value, ok := _u.mutation.AddedAssignedWeightPoints(); ok {
 		_spec.AddField(contest.FieldAssignedWeightPoints, field.TypeInt, value)
 	}
-	if value, ok := _u.mutation.Logo(); ok {
-		_spec.SetField(contest.FieldLogo, field.TypeBytes, value)
+	if value, ok := _u.mutation.LogoURL(); ok {
+		_spec.SetField(contest.FieldLogoURL, field.TypeString, value)
 	}
-	if _u.mutation.LogoCleared() {
-		_spec.ClearField(contest.FieldLogo, field.TypeBytes)
+	if _u.mutation.LogoURLCleared() {
+		_spec.ClearField(contest.FieldLogoURL, field.TypeString)
 	}
 	if _u.mutation.OrganizersCleared() {
 		edge := &sqlgraph.EdgeSpec{
@@ -703,15 +706,23 @@ func (_u *ContestUpdateOne) AddAssignedWeightPoints(v int) *ContestUpdateOne {
 	return _u
 }
 
-// SetLogo sets the "logo" field.
-func (_u *ContestUpdateOne) SetLogo(v []byte) *ContestUpdateOne {
-	_u.mutation.SetLogo(v)
+// SetLogoURL sets the "logo_url" field.
+func (_u *ContestUpdateOne) SetLogoURL(v string) *ContestUpdateOne {
+	_u.mutation.SetLogoURL(v)
 	return _u
 }
 
-// ClearLogo clears the value of the "logo" field.
-func (_u *ContestUpdateOne) ClearLogo() *ContestUpdateOne {
-	_u.mutation.ClearLogo()
+// SetNillableLogoURL sets the "logo_url" field if the given value is not nil.
+func (_u *ContestUpdateOne) SetNillableLogoURL(v *string) *ContestUpdateOne {
+	if v != nil {
+		_u.SetLogoURL(*v)
+	}
+	return _u
+}
+
+// ClearLogoURL clears the value of the "logo_url" field.
+func (_u *ContestUpdateOne) ClearLogoURL() *ContestUpdateOne {
+	_u.mutation.ClearLogoURL()
 	return _u
 }
 
@@ -833,11 +844,6 @@ func (_u *ContestUpdateOne) check() error {
 			return &ValidationError{Name: "url", err: fmt.Errorf(`ent: validator failed for field "Contest.url": %w`, err)}
 		}
 	}
-	if v, ok := _u.mutation.Logo(); ok {
-		if err := contest.LogoValidator(v); err != nil {
-			return &ValidationError{Name: "logo", err: fmt.Errorf(`ent: validator failed for field "Contest.logo": %w`, err)}
-		}
-	}
 	return nil
 }
 
@@ -924,11 +930,11 @@ func (_u *ContestUpdateOne) sqlSave(ctx context.Context) (_node *Contest, err er
 	if value, ok := _u.mutation.AddedAssignedWeightPoints(); ok {
 		_spec.AddField(contest.FieldAssignedWeightPoints, field.TypeInt, value)
 	}
-	if value, ok := _u.mutation.Logo(); ok {
-		_spec.SetField(contest.FieldLogo, field.TypeBytes, value)
+	if value, ok := _u.mutation.LogoURL(); ok {
+		_spec.SetField(contest.FieldLogoURL, field.TypeString, value)
 	}
-	if _u.mutation.LogoCleared() {
-		_spec.ClearField(contest.FieldLogo, field.TypeBytes)
+	if _u.mutation.LogoURLCleared() {
+		_spec.ClearField(contest.FieldLogoURL, field.TypeString)
 	}
 	if _u.mutation.OrganizersCleared() {
 		edge := &sqlgraph.EdgeSpec{

@@ -132,9 +132,17 @@ func (_c *ContestCreate) SetNillableAssignedWeightPoints(v *int) *ContestCreate 
 	return _c
 }
 
-// SetLogo sets the "logo" field.
-func (_c *ContestCreate) SetLogo(v []byte) *ContestCreate {
-	_c.mutation.SetLogo(v)
+// SetLogoURL sets the "logo_url" field.
+func (_c *ContestCreate) SetLogoURL(v string) *ContestCreate {
+	_c.mutation.SetLogoURL(v)
+	return _c
+}
+
+// SetNillableLogoURL sets the "logo_url" field if the given value is not nil.
+func (_c *ContestCreate) SetNillableLogoURL(v *string) *ContestCreate {
+	if v != nil {
+		_c.SetLogoURL(*v)
+	}
 	return _c
 }
 
@@ -240,11 +248,6 @@ func (_c *ContestCreate) check() error {
 	if _, ok := _c.mutation.AssignedWeightPoints(); !ok {
 		return &ValidationError{Name: "assigned_weight_points", err: errors.New(`ent: missing required field "Contest.assigned_weight_points"`)}
 	}
-	if v, ok := _c.mutation.Logo(); ok {
-		if err := contest.LogoValidator(v); err != nil {
-			return &ValidationError{Name: "logo", err: fmt.Errorf(`ent: validator failed for field "Contest.logo": %w`, err)}
-		}
-	}
 	return nil
 }
 
@@ -312,9 +315,9 @@ func (_c *ContestCreate) createSpec() (*Contest, *sqlgraph.CreateSpec) {
 		_spec.SetField(contest.FieldAssignedWeightPoints, field.TypeInt, value)
 		_node.AssignedWeightPoints = value
 	}
-	if value, ok := _c.mutation.Logo(); ok {
-		_spec.SetField(contest.FieldLogo, field.TypeBytes, value)
-		_node.Logo = &value
+	if value, ok := _c.mutation.LogoURL(); ok {
+		_spec.SetField(contest.FieldLogoURL, field.TypeString, value)
+		_node.LogoURL = &value
 	}
 	if nodes := _c.mutation.OrganizersIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
@@ -569,21 +572,21 @@ func (u *ContestUpsert) AddAssignedWeightPoints(v int) *ContestUpsert {
 	return u
 }
 
-// SetLogo sets the "logo" field.
-func (u *ContestUpsert) SetLogo(v []byte) *ContestUpsert {
-	u.Set(contest.FieldLogo, v)
+// SetLogoURL sets the "logo_url" field.
+func (u *ContestUpsert) SetLogoURL(v string) *ContestUpsert {
+	u.Set(contest.FieldLogoURL, v)
 	return u
 }
 
-// UpdateLogo sets the "logo" field to the value that was provided on create.
-func (u *ContestUpsert) UpdateLogo() *ContestUpsert {
-	u.SetExcluded(contest.FieldLogo)
+// UpdateLogoURL sets the "logo_url" field to the value that was provided on create.
+func (u *ContestUpsert) UpdateLogoURL() *ContestUpsert {
+	u.SetExcluded(contest.FieldLogoURL)
 	return u
 }
 
-// ClearLogo clears the value of the "logo" field.
-func (u *ContestUpsert) ClearLogo() *ContestUpsert {
-	u.SetNull(contest.FieldLogo)
+// ClearLogoURL clears the value of the "logo_url" field.
+func (u *ContestUpsert) ClearLogoURL() *ContestUpsert {
+	u.SetNull(contest.FieldLogoURL)
 	return u
 }
 
@@ -823,24 +826,24 @@ func (u *ContestUpsertOne) UpdateAssignedWeightPoints() *ContestUpsertOne {
 	})
 }
 
-// SetLogo sets the "logo" field.
-func (u *ContestUpsertOne) SetLogo(v []byte) *ContestUpsertOne {
+// SetLogoURL sets the "logo_url" field.
+func (u *ContestUpsertOne) SetLogoURL(v string) *ContestUpsertOne {
 	return u.Update(func(s *ContestUpsert) {
-		s.SetLogo(v)
+		s.SetLogoURL(v)
 	})
 }
 
-// UpdateLogo sets the "logo" field to the value that was provided on create.
-func (u *ContestUpsertOne) UpdateLogo() *ContestUpsertOne {
+// UpdateLogoURL sets the "logo_url" field to the value that was provided on create.
+func (u *ContestUpsertOne) UpdateLogoURL() *ContestUpsertOne {
 	return u.Update(func(s *ContestUpsert) {
-		s.UpdateLogo()
+		s.UpdateLogoURL()
 	})
 }
 
-// ClearLogo clears the value of the "logo" field.
-func (u *ContestUpsertOne) ClearLogo() *ContestUpsertOne {
+// ClearLogoURL clears the value of the "logo_url" field.
+func (u *ContestUpsertOne) ClearLogoURL() *ContestUpsertOne {
 	return u.Update(func(s *ContestUpsert) {
-		s.ClearLogo()
+		s.ClearLogoURL()
 	})
 }
 
@@ -1244,24 +1247,24 @@ func (u *ContestUpsertBulk) UpdateAssignedWeightPoints() *ContestUpsertBulk {
 	})
 }
 
-// SetLogo sets the "logo" field.
-func (u *ContestUpsertBulk) SetLogo(v []byte) *ContestUpsertBulk {
+// SetLogoURL sets the "logo_url" field.
+func (u *ContestUpsertBulk) SetLogoURL(v string) *ContestUpsertBulk {
 	return u.Update(func(s *ContestUpsert) {
-		s.SetLogo(v)
+		s.SetLogoURL(v)
 	})
 }
 
-// UpdateLogo sets the "logo" field to the value that was provided on create.
-func (u *ContestUpsertBulk) UpdateLogo() *ContestUpsertBulk {
+// UpdateLogoURL sets the "logo_url" field to the value that was provided on create.
+func (u *ContestUpsertBulk) UpdateLogoURL() *ContestUpsertBulk {
 	return u.Update(func(s *ContestUpsert) {
-		s.UpdateLogo()
+		s.UpdateLogoURL()
 	})
 }
 
-// ClearLogo clears the value of the "logo" field.
-func (u *ContestUpsertBulk) ClearLogo() *ContestUpsertBulk {
+// ClearLogoURL clears the value of the "logo_url" field.
+func (u *ContestUpsertBulk) ClearLogoURL() *ContestUpsertBulk {
 	return u.Update(func(s *ContestUpsert) {
-		s.ClearLogo()
+		s.ClearLogoURL()
 	})
 }
 

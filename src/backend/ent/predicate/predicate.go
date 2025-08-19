@@ -12,6 +12,9 @@ type Achievement func(*sql.Selector)
 // Activity is the predicate function for activity builders.
 type Activity func(*sql.Selector)
 
+// AggregatedContest is the predicate function for aggregatedcontest builders.
+type AggregatedContest func(*sql.Selector)
+
 // AggregatedContestsDifficulties is the predicate function for aggregatedcontestsdifficulties builders.
 type AggregatedContestsDifficulties func(*sql.Selector)
 

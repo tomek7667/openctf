@@ -22,9 +22,30 @@ const getStatus = (start: Date, end: Date): ContestStatusType => {
 	return ContestStatus.Cancelled;
 };
 
+export interface ParsedAggregatedContest extends AggregatedContest {
+	status: ContestStatusType;
+}
+
+export interface AggregatedContest {
+	id: number;
+	name: string;
+	description: string | null;
+	rules: string | null;
+	prizes: string | null;
+	start: string;
+	end: string;
+	url: string | null;
+	ctftime_id: number;
+	assigned_weight_points: number;
+	duration: number;
+	logo_url: string | null;
+	rating: number | null;
+	participants: number | null;
+}
+
 export const getContests = async (
 	dto: ListContestsDto
-): Promise<ParsedContest[]> => {
+): Promise<ParsedAggregatedContest[]> => {
 	const params = new URLSearchParams();
 	if (dto.Offset !== undefined) {
 		params.append("offset", dto.Offset.toString());
@@ -40,7 +61,7 @@ export const getContests = async (
 		throw new Error(message ?? "unknown error occurred");
 	}
 	console.log(`<- ${JSON.stringify(data, null, 2)}`);
-	const { contests } = data as { contests: RawContest[] };
+	const { contests } = data as { contests: AggregatedContest[] };
 	return contests.map((c) => ({
 		...c,
 		status: getStatus(new Date(c.start), new Date(c.end)),

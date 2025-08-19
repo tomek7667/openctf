@@ -35,6 +35,7 @@ const (
 	// Node types.
 	TypeAchievement                    = "Achievement"
 	TypeActivity                       = "Activity"
+	TypeAggregatedContest              = "AggregatedContest"
 	TypeAggregatedContestsDifficulties = "AggregatedContestsDifficulties"
 	TypeAggregatedPlatformStatistics   = "AggregatedPlatformStatistics"
 	TypeAggregatedTeamsDetails         = "AggregatedTeamsDetails"
@@ -1178,7 +1179,7 @@ type ContestMutation struct {
 	addctftime_id             *int
 	assigned_weight_points    *int
 	addassigned_weight_points *int
-	logo                      *[]byte
+	logo_url                  *string
 	clearedFields             map[string]struct{}
 	organizers                *int
 	clearedorganizers         bool
@@ -1774,53 +1775,53 @@ func (m *ContestMutation) ResetAssignedWeightPoints() {
 	m.addassigned_weight_points = nil
 }
 
-// SetLogo sets the "logo" field.
-func (m *ContestMutation) SetLogo(b []byte) {
-	m.logo = &b
+// SetLogoURL sets the "logo_url" field.
+func (m *ContestMutation) SetLogoURL(s string) {
+	m.logo_url = &s
 }
 
-// Logo returns the value of the "logo" field in the mutation.
-func (m *ContestMutation) Logo() (r []byte, exists bool) {
-	v := m.logo
+// LogoURL returns the value of the "logo_url" field in the mutation.
+func (m *ContestMutation) LogoURL() (r string, exists bool) {
+	v := m.logo_url
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldLogo returns the old "logo" field's value of the Contest entity.
+// OldLogoURL returns the old "logo_url" field's value of the Contest entity.
 // If the Contest object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *ContestMutation) OldLogo(ctx context.Context) (v *[]byte, err error) {
+func (m *ContestMutation) OldLogoURL(ctx context.Context) (v *string, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldLogo is only allowed on UpdateOne operations")
+		return v, errors.New("OldLogoURL is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldLogo requires an ID field in the mutation")
+		return v, errors.New("OldLogoURL requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldLogo: %w", err)
+		return v, fmt.Errorf("querying old value for OldLogoURL: %w", err)
 	}
-	return oldValue.Logo, nil
+	return oldValue.LogoURL, nil
 }
 
-// ClearLogo clears the value of the "logo" field.
-func (m *ContestMutation) ClearLogo() {
-	m.logo = nil
-	m.clearedFields[contest.FieldLogo] = struct{}{}
+// ClearLogoURL clears the value of the "logo_url" field.
+func (m *ContestMutation) ClearLogoURL() {
+	m.logo_url = nil
+	m.clearedFields[contest.FieldLogoURL] = struct{}{}
 }
 
-// LogoCleared returns if the "logo" field was cleared in this mutation.
-func (m *ContestMutation) LogoCleared() bool {
-	_, ok := m.clearedFields[contest.FieldLogo]
+// LogoURLCleared returns if the "logo_url" field was cleared in this mutation.
+func (m *ContestMutation) LogoURLCleared() bool {
+	_, ok := m.clearedFields[contest.FieldLogoURL]
 	return ok
 }
 
-// ResetLogo resets all changes to the "logo" field.
-func (m *ContestMutation) ResetLogo() {
-	m.logo = nil
-	delete(m.clearedFields, contest.FieldLogo)
+// ResetLogoURL resets all changes to the "logo_url" field.
+func (m *ContestMutation) ResetLogoURL() {
+	m.logo_url = nil
+	delete(m.clearedFields, contest.FieldLogoURL)
 }
 
 // SetOrganizersID sets the "organizers" edge to the Team entity by id.
@@ -1981,8 +1982,8 @@ func (m *ContestMutation) Fields() []string {
 	if m.assigned_weight_points != nil {
 		fields = append(fields, contest.FieldAssignedWeightPoints)
 	}
-	if m.logo != nil {
-		fields = append(fields, contest.FieldLogo)
+	if m.logo_url != nil {
+		fields = append(fields, contest.FieldLogoURL)
 	}
 	return fields
 }
@@ -2012,8 +2013,8 @@ func (m *ContestMutation) Field(name string) (ent.Value, bool) {
 		return m.CtftimeID()
 	case contest.FieldAssignedWeightPoints:
 		return m.AssignedWeightPoints()
-	case contest.FieldLogo:
-		return m.Logo()
+	case contest.FieldLogoURL:
+		return m.LogoURL()
 	}
 	return nil, false
 }
@@ -2043,8 +2044,8 @@ func (m *ContestMutation) OldField(ctx context.Context, name string) (ent.Value,
 		return m.OldCtftimeID(ctx)
 	case contest.FieldAssignedWeightPoints:
 		return m.OldAssignedWeightPoints(ctx)
-	case contest.FieldLogo:
-		return m.OldLogo(ctx)
+	case contest.FieldLogoURL:
+		return m.OldLogoURL(ctx)
 	}
 	return nil, fmt.Errorf("unknown Contest field %s", name)
 }
@@ -2124,12 +2125,12 @@ func (m *ContestMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetAssignedWeightPoints(v)
 		return nil
-	case contest.FieldLogo:
-		v, ok := value.([]byte)
+	case contest.FieldLogoURL:
+		v, ok := value.(string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetLogo(v)
+		m.SetLogoURL(v)
 		return nil
 	}
 	return fmt.Errorf("unknown Contest field %s", name)
@@ -2215,8 +2216,8 @@ func (m *ContestMutation) ClearedFields() []string {
 	if m.FieldCleared(contest.FieldCtftimeID) {
 		fields = append(fields, contest.FieldCtftimeID)
 	}
-	if m.FieldCleared(contest.FieldLogo) {
-		fields = append(fields, contest.FieldLogo)
+	if m.FieldCleared(contest.FieldLogoURL) {
+		fields = append(fields, contest.FieldLogoURL)
 	}
 	return fields
 }
@@ -2247,8 +2248,8 @@ func (m *ContestMutation) ClearField(name string) error {
 	case contest.FieldCtftimeID:
 		m.ClearCtftimeID()
 		return nil
-	case contest.FieldLogo:
-		m.ClearLogo()
+	case contest.FieldLogoURL:
+		m.ClearLogoURL()
 		return nil
 	}
 	return fmt.Errorf("unknown Contest nullable field %s", name)
@@ -2288,8 +2289,8 @@ func (m *ContestMutation) ResetField(name string) error {
 	case contest.FieldAssignedWeightPoints:
 		m.ResetAssignedWeightPoints()
 		return nil
-	case contest.FieldLogo:
-		m.ResetLogo()
+	case contest.FieldLogoURL:
+		m.ResetLogoURL()
 		return nil
 	}
 	return fmt.Errorf("unknown Contest field %s", name)

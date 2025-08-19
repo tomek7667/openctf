@@ -4,11 +4,11 @@ import React from "react";
 import { motion } from "framer-motion";
 import { Target, Clock } from "@/components/ui/icons";
 import Link from "next/link";
-import { ParsedContest } from "@/api";
+import { ParsedAggregatedContest } from "@/api";
 import { ContestStatus } from "@/types/api";
 
 interface LiveCTFWidgetProps {
-	contests: ParsedContest[];
+	contests: ParsedAggregatedContest[];
 }
 
 export function LiveCTFWidget({ contests }: LiveCTFWidgetProps) {
@@ -27,7 +27,7 @@ export function LiveCTFWidget({ contests }: LiveCTFWidgetProps) {
 			acc[date].push(contest);
 			return acc;
 		},
-		{} as Record<string, ParsedContest[]>
+		{} as Record<string, ParsedAggregatedContest[]>
 	);
 
 	const upcomingToShow = Object.entries(groupedUpcoming)

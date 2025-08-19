@@ -68,6 +68,34 @@ SELECT
 	(SELECT COUNT(id) FROM "contests" WHERE NOW() > "end") AS "total_past_events",
 	(SELECT COUNT(id) FROM "contests" WHERE NOW() > "start" AND NOW() < "end") AS "total_live_events";
 
+-- Create "aggregated_contests" view
+DROP VIEW "aggregated_contests";
+CREATE OR REPLACE VIEW "aggregated_contests" (
+	"id", "name", "description", "rules", "prizes",
+	"start", "end", "url", "ctftime_id", "assigned_weight_points",
+	"logo_url", "contest_organizers", "duration", "rating", "participants"
+) AS
+SELECT
+	c.*,
+	(
+		SELECT
+			AVG(cr.rating)
+		FROM
+			contest_ratings cr
+		WHERE
+			cr.contest_rating_contest = c.id
+	) AS "rating",
+	(
+		SELECT
+			COUNT(p.id)
+		FROM
+			places p
+		WHERE
+			p."contest_places" = c.id
+	) as "participants"
+FROM
+	contests c;
+
 -- Create "aggregated_teams_details" view
 CREATE OR REPLACE VIEW "aggregated_teams_details" (
 	"id", "name", "description", "ctftime_id", "ctftime_verified_at",

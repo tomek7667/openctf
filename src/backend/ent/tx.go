@@ -18,6 +18,8 @@ type Tx struct {
 	Achievement *AchievementClient
 	// Activity is the client for interacting with the Activity builders.
 	Activity *ActivityClient
+	// AggregatedContest is the client for interacting with the AggregatedContest builders.
+	AggregatedContest *AggregatedContestClient
 	// AggregatedContestsDifficulties is the client for interacting with the AggregatedContestsDifficulties builders.
 	AggregatedContestsDifficulties *AggregatedContestsDifficultiesClient
 	// AggregatedPlatformStatistics is the client for interacting with the AggregatedPlatformStatistics builders.
@@ -175,6 +177,7 @@ func (tx *Tx) Client() *Client {
 func (tx *Tx) init() {
 	tx.Achievement = NewAchievementClient(tx.config)
 	tx.Activity = NewActivityClient(tx.config)
+	tx.AggregatedContest = NewAggregatedContestClient(tx.config)
 	tx.AggregatedContestsDifficulties = NewAggregatedContestsDifficultiesClient(tx.config)
 	tx.AggregatedPlatformStatistics = NewAggregatedPlatformStatisticsClient(tx.config)
 	tx.AggregatedTeamsDetails = NewAggregatedTeamsDetailsClient(tx.config)

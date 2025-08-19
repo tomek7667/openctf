@@ -39,7 +39,7 @@ type ServiceClient interface {
 	VerifyToken(ctx context.Context, token string) (*ent.User, error)
 	CreateContest(ctx context.Context, organizers *ent.Team, dto *service.CreateContestDto) (*ent.Contest, error)
 	GetContest(ctx context.Context, contestId int) (*ent.Contest, error)
-	ListContests(ctx context.Context, dto *service.ListContestsDto) ([]*ent.Contest, error)
+	ListContests(ctx context.Context, dto *service.ListContestsDto) ([]*ent.AggregatedContest, error)
 	RateContestOpinion(
 		ctx context.Context,
 		requester *ent.User,

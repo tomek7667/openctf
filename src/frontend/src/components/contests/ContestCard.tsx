@@ -16,10 +16,10 @@ import {
 import { Card, CardContent, CardHeader } from "@/components/ui/Card";
 import { ContestStatus } from "@/types/api";
 import { clsx } from "clsx";
-import { ParsedContest } from "@/api";
+import { ParsedAggregatedContest } from "@/api";
 
 interface ContestCardProps {
-	contest: ParsedContest;
+	contest: ParsedAggregatedContest;
 	index?: undefined | number;
 }
 
@@ -198,7 +198,7 @@ export function ContestCard({ contest, index = 0 }: ContestCardProps) {
 						<div className="flex items-center gap-4 text-sm text-muted-foreground pt-2 border-t border-border/50">
 							<div className="flex items-center gap-1">
 								<Users className="h-4 w-4" />
-								<span>{contest.edges?.places?.length ?? "---"}</span>
+								<span>{contest.participants ?? "---"}</span>
 							</div>
 							{contest.ctftime_id && (
 								<div className="flex items-center gap-1">

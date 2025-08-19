@@ -5,6 +5,7 @@ package ent
 import (
 	"openctfbackend/ent/achievement"
 	"openctfbackend/ent/activity"
+	"openctfbackend/ent/aggregatedcontest"
 	"openctfbackend/ent/contest"
 	"openctfbackend/ent/contestrating"
 	"openctfbackend/ent/place"
@@ -37,6 +38,20 @@ func init() {
 	activityDescDate := activityFields[3].Descriptor()
 	// activity.DefaultDate holds the default value on creation for the date field.
 	activity.DefaultDate = activityDescDate.Default.(time.Time)
+	aggregatedcontestFields := schema.AggregatedContest{}.Fields()
+	_ = aggregatedcontestFields
+	// aggregatedcontestDescName is the schema descriptor for name field.
+	aggregatedcontestDescName := aggregatedcontestFields[1].Descriptor()
+	// aggregatedcontest.NameValidator is a validator for the "name" field. It is called by the builders before save.
+	aggregatedcontest.NameValidator = aggregatedcontestDescName.Validators[0].(func(string) error)
+	// aggregatedcontestDescURL is the schema descriptor for url field.
+	aggregatedcontestDescURL := aggregatedcontestFields[8].Descriptor()
+	// aggregatedcontest.URLValidator is a validator for the "url" field. It is called by the builders before save.
+	aggregatedcontest.URLValidator = aggregatedcontestDescURL.Validators[0].(func(string) error)
+	// aggregatedcontestDescAssignedWeightPoints is the schema descriptor for assigned_weight_points field.
+	aggregatedcontestDescAssignedWeightPoints := aggregatedcontestFields[10].Descriptor()
+	// aggregatedcontest.DefaultAssignedWeightPoints holds the default value on creation for the assigned_weight_points field.
+	aggregatedcontest.DefaultAssignedWeightPoints = aggregatedcontestDescAssignedWeightPoints.Default.(int)
 	contestFields := schema.Contest{}.Fields()
 	_ = contestFields
 	// contestDescName is the schema descriptor for name field.
@@ -51,10 +66,6 @@ func init() {
 	contestDescAssignedWeightPoints := contestFields[9].Descriptor()
 	// contest.DefaultAssignedWeightPoints holds the default value on creation for the assigned_weight_points field.
 	contest.DefaultAssignedWeightPoints = contestDescAssignedWeightPoints.Default.(int)
-	// contestDescLogo is the schema descriptor for logo field.
-	contestDescLogo := contestFields[10].Descriptor()
-	// contest.LogoValidator is a validator for the "logo" field. It is called by the builders before save.
-	contest.LogoValidator = contestDescLogo.Validators[0].(func([]byte) error)
 	contestratingFields := schema.ContestRating{}.Fields()
 	_ = contestratingFields
 	// contestratingDescRating is the schema descriptor for rating field.

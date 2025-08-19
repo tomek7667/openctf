@@ -38,8 +38,8 @@ type Contest struct {
 	CtftimeID *int `json:"ctftime_id"`
 	// AssignedWeightPoints holds the value of the "assigned_weight_points" field.
 	AssignedWeightPoints int `json:"assigned_weight_points"`
-	// Logo holds the value of the "logo" field.
-	Logo *[]byte `json:"logo"`
+	// LogoURL holds the value of the "logo_url" field.
+	LogoURL *string `json:"logo_url"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the ContestQuery when eager-loading is set.
 	Edges              ContestEdges `json:"edges"`
@@ -83,13 +83,11 @@ func (*Contest) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case contest.FieldLogo:
-			values[i] = new([]byte)
 		case contest.FieldDuration:
 			values[i] = new(sql.NullFloat64)
 		case contest.FieldID, contest.FieldCtftimeID, contest.FieldAssignedWeightPoints:
 			values[i] = new(sql.NullInt64)
-		case contest.FieldName, contest.FieldDescription, contest.FieldRules, contest.FieldPrizes, contest.FieldURL:
+		case contest.FieldName, contest.FieldDescription, contest.FieldRules, contest.FieldPrizes, contest.FieldURL, contest.FieldLogoURL:
 			values[i] = new(sql.NullString)
 		case contest.FieldStart, contest.FieldEnd:
 			values[i] = new(sql.NullTime)
@@ -181,11 +179,12 @@ func (_m *Contest) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				_m.AssignedWeightPoints = int(value.Int64)
 			}
-		case contest.FieldLogo:
-			if value, ok := values[i].(*[]byte); !ok {
-				return fmt.Errorf("unexpected type %T for field logo", values[i])
-			} else if value != nil {
-				_m.Logo = value
+		case contest.FieldLogoURL:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field logo_url", values[i])
+			} else if value.Valid {
+				_m.LogoURL = new(string)
+				*_m.LogoURL = value.String
 			}
 		case contest.ForeignKeys[0]:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
@@ -280,9 +279,9 @@ func (_m *Contest) String() string {
 	builder.WriteString("assigned_weight_points=")
 	builder.WriteString(fmt.Sprintf("%v", _m.AssignedWeightPoints))
 	builder.WriteString(", ")
-	if v := _m.Logo; v != nil {
-		builder.WriteString("logo=")
-		builder.WriteString(fmt.Sprintf("%v", *v))
+	if v := _m.LogoURL; v != nil {
+		builder.WriteString("logo_url=")
+		builder.WriteString(*v)
 	}
 	builder.WriteByte(')')
 	return builder.String()
