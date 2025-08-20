@@ -5,6 +5,7 @@ import (
 
 	"openctfbackend/ent"
 	"openctfbackend/ent/contest"
+	"openctfbackend/ent/place"
 )
 
 func (c *Client) GetContest(ctx context.Context, contestId int) (*ent.Contest, error) {
@@ -12,6 +13,10 @@ func (c *Client) GetContest(ctx context.Context, contestId int) (*ent.Contest, e
 		Query().
 		Where(contest.ID(contestId)).
 		WithOrganizers().
-		WithPlaces().
+		WithPlaces(func(pq *ent.PlaceQuery) {
+			pq.
+				WithAssociatedTeam().
+				Order(ent.Asc(place.FieldPlace))
+		}).
 		First(ctx)
 }

@@ -7,6 +7,7 @@ import (
 	"database/sql/driver"
 	"fmt"
 	"math"
+
 	"openctfbackend/ent/contest"
 	"openctfbackend/ent/place"
 	"openctfbackend/ent/predicate"
@@ -486,6 +487,7 @@ func (_q *ContestQuery) loadOrganizers(ctx context.Context, query *TeamQuery, no
 	}
 	return nil
 }
+
 func (_q *ContestQuery) loadPlaces(ctx context.Context, query *PlaceQuery, nodes []*Contest, init func(*Contest), assign func(*Contest, *Place)) error {
 	fks := make([]driver.Value, 0, len(nodes))
 	nodeids := make(map[int]*Contest)

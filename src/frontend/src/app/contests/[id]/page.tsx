@@ -3,7 +3,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import { motion } from "framer-motion";
-import Link from "next/link";
 import {
 	format,
 	formatDistanceToNow,
@@ -37,6 +36,7 @@ import { clsx } from "clsx";
 import { ContestStatus, Place } from "@/types/api";
 import useToast from "@/hooks/useToast";
 import { HackerMarkdown } from "@/components/ui/HackerMarkdown";
+import Link from "next/link";
 
 const getStatusColor = (status: string) => {
 	switch (status) {
@@ -128,13 +128,6 @@ function PlaceRow({
 		return "";
 	};
 
-	const getPointsColor = (rank: number) => {
-		if (rank === 1) return "font-bold text-yellow-400 glow-text";
-		if (rank === 2) return "font-bold text-gray-300";
-		if (rank === 3) return "font-bold text-amber-600";
-		return "font-bold text-primary";
-	};
-
 	return (
 		<motion.tr
 			initial={{ opacity: 0, x: -20 }}
@@ -143,53 +136,105 @@ function PlaceRow({
 			className={`border-b transition-all duration-300 hover:bg-primary/5 ${getRowStyle(place.place)}`}
 		>
 			<td className="p-3 w-16">
-				<Link
-					href={`/teams/${place.team_name.toLowerCase().replace(/\s+/g, "-")}`}
-					className="flex items-center justify-center cursor-pointer"
-				>
-					{getRankDisplay(place.place)}
-				</Link>
+				{place.edges?.associated_team ? (
+					<Link
+						href={`/teams/${place.edges.associated_team.id}`}
+						className="flex items-center justify-center cursor-pointer"
+					>
+						{getRankDisplay(place.place)}
+					</Link>
+				) : (
+					<div className="flex items-center justify-center">
+						{getRankDisplay(place.place)}
+					</div>
+				)}
 			</td>
 			<td className="p-3">
-				<Link
-					href={`/teams/${place.team_name.toLowerCase().replace(/\s+/g, "-")}`}
-					className="block cursor-pointer"
-				>
-					<div
-						className={`font-mono font-bold text-sm ${getTeamNameColor(place.place)}`}
+				{place.edges?.associated_team ? (
+					<Link
+						href={`/teams/${place.edges.associated_team.id}`}
+						className="block cursor-pointer"
 					>
-						{place.team_name}
-						{getTitle(place.place) && (
-							<span className={`ml-2 ${getTitleColor(place.place)}`}>
-								{getTitle(place.place)}
+						<div>
+							<span
+								className={`font-mono font-bold text-sm text-lime-300 ${getTeamNameColor(place.place)} underline`}
+							>
+								{place.team_name != place.edges.associated_team.name ? (
+									<>{place.edges.associated_team.name}</>
+								) : (
+									<>
+										{place.team_name}
+										{getTitle(place.place) && (
+											<span className={`ml-2 ${getTitleColor(place.place)}`}>
+												{getTitle(place.place)}
+											</span>
+										)}
+									</>
+								)}
 							</span>
+							{place.team_name != place.edges.associated_team.name && (
+								<>
+									<span className="text-gray-400 text-sm"> as </span>
+									<span className="text-gray-200 text-sm">
+										{place.team_name}
+									</span>
+								</>
+							)}
+							{place.ctftime_team_id && (
+								<div className="text-xs text-muted-foreground font-mono">
+									CTFtime: {place.ctftime_team_id}
+								</div>
+							)}
+						</div>
+					</Link>
+				) : (
+					<div className="block">
+						<div
+							className={`font-mono font-bold text-sm ${getTeamNameColor(place.place)}`}
+						>
+							{place.team_name}
+							{getTitle(place.place) && (
+								<span className={`ml-2 ${getTitleColor(place.place)}`}>
+									{getTitle(place.place)}
+								</span>
+							)}
+						</div>
+						{place.ctftime_team_id && (
+							<div className="text-xs text-muted-foreground font-mono">
+								CTFtime: {place.ctftime_team_id}
+							</div>
 						)}
 					</div>
-					{place.ctftime_team_id && (
-						<div className="text-xs text-muted-foreground font-mono">
-							CTFtime: {place.ctftime_team_id}
-						</div>
-					)}
-				</Link>
+				)}
 			</td>
 			<td className="p-3 font-mono text-lg font-bold text-right">
-				<Link
-					href={`/teams/${place.team_name.toLowerCase().replace(/\s+/g, "-")}`}
-					className="block cursor-pointer"
-				>
-					{place.contest_points}
-				</Link>
+				{place.edges?.associated_team ? (
+					<Link
+						href={`/teams/${place.edges.associated_team.id}`}
+						className="block cursor-pointer"
+					>
+						{place.contest_points}
+					</Link>
+				) : (
+					<div className="block">{place.contest_points}</div>
+				)}
 			</td>
 			<td className="p-3 font-mono text-lg text-right">
 				<div className="flex items-center justify-end gap-2">
-					<Link
-						href={`/teams/${place.team_name.toLowerCase().replace(/\s+/g, "-")}`}
-						className="cursor-pointer"
-					>
-						<span className={getPointsColor(place.place)}>
+					{place.edges?.associated_team ? (
+						<Link
+							href={`/teams/${place.edges.associated_team.id}`}
+							className="cursor-pointer"
+						>
+							<span className={getWeightColor(place.assigned_weight_points)}>
+								{place.assigned_weight_points}
+							</span>
+						</Link>
+					) : (
+						<span className={getWeightColor(place.assigned_weight_points)}>
 							{place.assigned_weight_points}
 						</span>
-					</Link>
+					)}
 					{userTeam === place.team_name && (
 						<TwitterShareButton
 							contestName={contestName}

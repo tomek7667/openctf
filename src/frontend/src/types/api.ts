@@ -47,20 +47,28 @@ export interface Place {
 	openctf_points: number | null;
 	associated_contest_id: number;
 	assigned_weight_points: number;
+	edges?: {
+		associated_team?: Team;
+	};
 }
 
 export interface Team {
 	id: number;
 	name: string;
-	description?: string;
-	ctftime_id?: number;
-	ctftime_verified_at?: string;
-	logo?: string;
-	verified_at?: string;
+	description: string | null;
 	country_code: string;
-	captain?: User;
-	verified_by?: User;
-	members?: User[];
+	team_logo_url: string | null;
+	banner_image_url: string | null;
+	website_url: string | null;
+	discord_url: string | null;
+	github_url: string | null;
+	recruiting: boolean;
+	contact_info: string | null;
+	looking_for: string[];
+	created_at: string;
+	ctftime_id: number | null;
+	ctftime_verified_at: string | null;
+	verified_at: string | null;
 }
 
 export interface ContestRating {

@@ -11,6 +11,7 @@ import {
 	Users,
 	Target,
 	Shield,
+	Star,
 } from "@/components/ui/icons";
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
@@ -121,6 +122,21 @@ const ContestTableRow = ({ contest }: { contest: ParsedAggregatedContest }) => (
 				{contest.participants ?? "---"}
 			</div>
 		</td>
+		<td className="p-4 font-mono text-sm">
+			<div className="flex items-center gap-1">
+				{Array.from({ length: 5 }, (_, i) => (
+					<Star
+						key={i}
+						className={clsx(
+							"h-4 w-4",
+							i < (contest?.rating ?? 0)
+								? "text-yellow-400 fill-yellow-400"
+								: "text-gray-600"
+						)}
+					/>
+				))}
+			</div>
+		</td>
 	</tr>
 );
 
@@ -180,7 +196,12 @@ export default function ContestsPage() {
 		// Rating filter
 		if (filters.minRating !== undefined) {
 			filtered = filtered.filter(
-				(_contest) => false // No rating system in current Contest interface
+				(contest) => (contest.rating ?? 0) >= (filters.minRating ?? 0)
+			);
+		}
+		if (filters.maxRating !== undefined) {
+			filtered = filtered.filter(
+				(contest) => (contest.rating ?? 0) <= (filters.maxRating ?? 0)
 			);
 		}
 
@@ -444,13 +465,16 @@ export default function ContestsPage() {
 										End
 									</th>
 									<th className="p-4 text-left font-mono text-sm font-bold">
-										Duration
+										<Clock />
 									</th>
 									<th className="p-4 text-left font-mono text-sm font-bold">
 										Weight
 									</th>
 									<th className="p-4 text-left font-mono text-sm font-bold">
 										Teams
+									</th>
+									<th className="p-4 text-left font-mono text-sm font-bold">
+										Rating
 									</th>
 								</tr>
 							</thead>
