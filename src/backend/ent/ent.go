@@ -13,6 +13,7 @@ import (
 	"openctfbackend/ent/aggregatedplatformstatistics"
 	"openctfbackend/ent/aggregatedteamdetails"
 	"openctfbackend/ent/aggregateduserstatistics"
+	"openctfbackend/ent/aggregatedyearlyteam"
 	"openctfbackend/ent/contest"
 	"openctfbackend/ent/contestrating"
 	"openctfbackend/ent/place"
@@ -94,6 +95,7 @@ func checkColumn(t, c string) error {
 			aggregatedplatformstatistics.Table:   aggregatedplatformstatistics.ValidColumn,
 			aggregatedteamdetails.Table:          aggregatedteamdetails.ValidColumn,
 			aggregateduserstatistics.Table:       aggregateduserstatistics.ValidColumn,
+			aggregatedyearlyteam.Table:           aggregatedyearlyteam.ValidColumn,
 			contest.Table:                        contest.ValidColumn,
 			contestrating.Table:                  contestrating.ValidColumn,
 			place.Table:                          place.ValidColumn,

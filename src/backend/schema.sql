@@ -96,6 +96,26 @@ SELECT
 FROM
 	contests c;
 
+-- Create "aggregated_yearly_teams" view
+DROP VIEW IF EXISTS "aggregated_yearly_teams";
+CREATE OR REPLACE VIEW "aggregated_yearly_teams" AS
+SELECT
+	t.*,
+	EXTRACT(YEAR FROM c.end) AS "year",
+	SUM(p.assigned_weight_points) AS "team_points"
+FROM
+	teams t
+LEFT JOIN
+	places p ON
+	p.place_associated_team = t.id
+INNER JOIN
+	contests c ON
+	c.id = p.contest_places
+GROUP BY
+	t.id,
+	t.name,
+	EXTRACT(YEAR FROM c.end);
+
 -- Create "aggregated_team_details" view
 DROP VIEW IF EXISTS "aggregated_team_details";
 CREATE OR REPLACE VIEW "aggregated_team_details" (

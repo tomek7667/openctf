@@ -2,7 +2,6 @@ package service
 
 import (
 	"context"
-	"errors"
 	"fmt"
 
 	"openctfbackend/ent"
@@ -41,7 +40,7 @@ func (c *Client) ListTeams(ctx context.Context, dto *ListTeamsDto) ([]*ent.Team,
 	t, err := tq.
 		All(ctx)
 	if err != nil {
-		return nil, errors.Join(fmt.Errorf("failed creating a team"), err)
+		return nil, fmt.Errorf("failed creating a team: %w", err)
 	}
 	return t, nil
 }

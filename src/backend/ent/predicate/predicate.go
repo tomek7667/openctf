@@ -27,6 +27,9 @@ type AggregatedTeamDetails func(*sql.Selector)
 // AggregatedUserStatistics is the predicate function for aggregateduserstatistics builders.
 type AggregatedUserStatistics func(*sql.Selector)
 
+// AggregatedYearlyTeam is the predicate function for aggregatedyearlyteam builders.
+type AggregatedYearlyTeam func(*sql.Selector)
+
 // Contest is the predicate function for contest builders.
 type Contest func(*sql.Selector)
 

@@ -74,6 +74,7 @@ type ServiceClient interface {
 	) (*ent.User, *string, error)
 	ChangePassword(ctx context.Context, _user *ent.User, dto *service.ChangePasswordDto) (*ent.User, *string, error)
 	GetPlatformStatistics(ctx context.Context) (*ent.AggregatedPlatformStatistics, error)
+	GetCurrentYearLeaderboard(ctx context.Context, dto *service.GetCurrentYearLeaderboardDto) ([]*ent.AggregatedYearlyTeam, error)
 }
 
 type CtftimeClient interface {

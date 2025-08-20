@@ -49,6 +49,8 @@ type Client struct {
 	AggregatedTeamDetails *AggregatedTeamDetailsClient
 	// AggregatedUserStatistics is the client for interacting with the AggregatedUserStatistics builders.
 	AggregatedUserStatistics *AggregatedUserStatisticsClient
+	// AggregatedYearlyTeam is the client for interacting with the AggregatedYearlyTeam builders.
+	AggregatedYearlyTeam *AggregatedYearlyTeamClient
 	// Contest is the client for interacting with the Contest builders.
 	Contest *ContestClient
 	// ContestRating is the client for interacting with the ContestRating builders.
@@ -83,6 +85,7 @@ func (c *Client) init() {
 	c.AggregatedPlatformStatistics = NewAggregatedPlatformStatisticsClient(c.config)
 	c.AggregatedTeamDetails = NewAggregatedTeamDetailsClient(c.config)
 	c.AggregatedUserStatistics = NewAggregatedUserStatisticsClient(c.config)
+	c.AggregatedYearlyTeam = NewAggregatedYearlyTeamClient(c.config)
 	c.Contest = NewContestClient(c.config)
 	c.ContestRating = NewContestRatingClient(c.config)
 	c.Place = NewPlaceClient(c.config)
@@ -190,6 +193,7 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 		AggregatedPlatformStatistics:   NewAggregatedPlatformStatisticsClient(cfg),
 		AggregatedTeamDetails:          NewAggregatedTeamDetailsClient(cfg),
 		AggregatedUserStatistics:       NewAggregatedUserStatisticsClient(cfg),
+		AggregatedYearlyTeam:           NewAggregatedYearlyTeamClient(cfg),
 		Contest:                        NewContestClient(cfg),
 		ContestRating:                  NewContestRatingClient(cfg),
 		Place:                          NewPlaceClient(cfg),
@@ -224,6 +228,7 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 		AggregatedPlatformStatistics:   NewAggregatedPlatformStatisticsClient(cfg),
 		AggregatedTeamDetails:          NewAggregatedTeamDetailsClient(cfg),
 		AggregatedUserStatistics:       NewAggregatedUserStatisticsClient(cfg),
+		AggregatedYearlyTeam:           NewAggregatedYearlyTeamClient(cfg),
 		Contest:                        NewContestClient(cfg),
 		ContestRating:                  NewContestRatingClient(cfg),
 		Place:                          NewPlaceClient(cfg),
@@ -274,9 +279,9 @@ func (c *Client) Intercept(interceptors ...Interceptor) {
 	for _, n := range []interface{ Intercept(...Interceptor) }{
 		c.Achievement, c.Activity, c.AggregatedContest,
 		c.AggregatedContestsDifficulties, c.AggregatedPlatformStatistics,
-		c.AggregatedTeamDetails, c.AggregatedUserStatistics, c.Contest,
-		c.ContestRating, c.Place, c.Team, c.TeamAchievement, c.User, c.UserProfile,
-		c.WeightRating,
+		c.AggregatedTeamDetails, c.AggregatedUserStatistics, c.AggregatedYearlyTeam,
+		c.Contest, c.ContestRating, c.Place, c.Team, c.TeamAchievement, c.User,
+		c.UserProfile, c.WeightRating,
 	} {
 		n.Intercept(interceptors...)
 	}
@@ -756,6 +761,36 @@ func (c *AggregatedUserStatisticsClient) Query() *AggregatedUserStatisticsQuery 
 // Interceptors returns the client interceptors.
 func (c *AggregatedUserStatisticsClient) Interceptors() []Interceptor {
 	return c.inters.AggregatedUserStatistics
+}
+
+// AggregatedYearlyTeamClient is a client for the AggregatedYearlyTeam schema.
+type AggregatedYearlyTeamClient struct {
+	config
+}
+
+// NewAggregatedYearlyTeamClient returns a client for the AggregatedYearlyTeam from the given config.
+func NewAggregatedYearlyTeamClient(c config) *AggregatedYearlyTeamClient {
+	return &AggregatedYearlyTeamClient{config: c}
+}
+
+// Intercept adds a list of query interceptors to the interceptors stack.
+// A call to `Intercept(f, g, h)` equals to `aggregatedyearlyteam.Intercept(f(g(h())))`.
+func (c *AggregatedYearlyTeamClient) Intercept(interceptors ...Interceptor) {
+	c.inters.AggregatedYearlyTeam = append(c.inters.AggregatedYearlyTeam, interceptors...)
+}
+
+// Query returns a query builder for AggregatedYearlyTeam.
+func (c *AggregatedYearlyTeamClient) Query() *AggregatedYearlyTeamQuery {
+	return &AggregatedYearlyTeamQuery{
+		config: c.config,
+		ctx:    &QueryContext{Type: TypeAggregatedYearlyTeam},
+		inters: c.Interceptors(),
+	}
+}
+
+// Interceptors returns the client interceptors.
+func (c *AggregatedYearlyTeamClient) Interceptors() []Interceptor {
+	return c.inters.AggregatedYearlyTeam
 }
 
 // ContestClient is a client for the Contest schema.
@@ -2039,8 +2074,8 @@ type (
 	inters struct {
 		Achievement, Activity, AggregatedContest, AggregatedContestsDifficulties,
 		AggregatedPlatformStatistics, AggregatedTeamDetails, AggregatedUserStatistics,
-		Contest, ContestRating, Place, Team, TeamAchievement, User, UserProfile,
-		WeightRating []ent.Interceptor
+		AggregatedYearlyTeam, Contest, ContestRating, Place, Team, TeamAchievement,
+		User, UserProfile, WeightRating []ent.Interceptor
 	}
 )
 

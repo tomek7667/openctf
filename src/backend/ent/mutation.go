@@ -40,6 +40,7 @@ const (
 	TypeAggregatedPlatformStatistics   = "AggregatedPlatformStatistics"
 	TypeAggregatedTeamDetails          = "AggregatedTeamDetails"
 	TypeAggregatedUserStatistics       = "AggregatedUserStatistics"
+	TypeAggregatedYearlyTeam           = "AggregatedYearlyTeam"
 	TypeContest                        = "Contest"
 	TypeContestRating                  = "ContestRating"
 	TypePlace                          = "Place"
