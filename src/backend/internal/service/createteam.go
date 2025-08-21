@@ -25,7 +25,11 @@ type CreateTeamDto struct {
 }
 
 func (c *Client) CreateTeam(ctx context.Context, captain *ent.User, dto *CreateTeamDto) (*ent.Team, error) {
-	teamCreate := c.C.Team.
+	tx, err := c.C.BeginTx(ctx, nil)
+	if err != nil {
+		return nil, fmt.Errorf("beginning transaction failed: %w", err)
+	}
+	teamCreate := tx.Team.
 		Create().
 		SetName(dto.Name).
 		SetCountryCode(dto.CountryCode).
@@ -66,6 +70,14 @@ func (c *Client) CreateTeam(ctx context.Context, captain *ent.User, dto *CreateT
 	if err != nil {
 		return nil, errors.Join(fmt.Errorf("failed creating a team"), err)
 	}
+	_, err = c.AddActivity(ctx, tx, TeamActivityType, "Created a team", dto.Name, captain.ID)
+	if err != nil {
+		return nil, fmt.Errorf("failed to add activity for team creation: %w", err)
+	}
+	if err := tx.Commit(); err != nil {
+		return nil, fmt.Errorf("committing transaction failed: %w", err)
+	}
+
 	t, err = c.C.Team.
 		Query().
 		WithCaptain().
