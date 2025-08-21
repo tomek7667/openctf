@@ -24,7 +24,7 @@ func (AggregatedYearlyTeam) Annotations() []schema.Annotation {
 WITH team_year AS (
   SELECT
     t.*,
-    EXTRACT(YEAR FROM c.end) AS "year",
+    COALESCE((EXTRACT(YEAR FROM c.end)), EXTRACT(YEAR FROM NOW())) AS "year",
     SUM(p.assigned_weight_points) AS "team_points",
 	(
 		SELECT
@@ -48,7 +48,7 @@ WITH team_year AS (
   FROM teams t
   LEFT JOIN places p ON
   	p.place_associated_team = t.id
-  INNER JOIN contests c ON
+  LEFT JOIN contests c ON
   	c.id = p.contest_places
   GROUP BY
   	t.id,
