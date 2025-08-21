@@ -148,7 +148,7 @@ const TeamTableRow = ({ team }: { team: TeamLeaderboard }) => {
 				<div className="flex items-center gap-3">
 					<div
 						className={clsx(
-							"w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold font-mono",
+							"w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold font-mono flex-shrink-0",
 							team.rank <= 10
 								? "bg-yellow-400/20 text-yellow-400"
 								: team.rank <= 50
@@ -158,7 +158,7 @@ const TeamTableRow = ({ team }: { team: TeamLeaderboard }) => {
 					>
 						{team.rank}
 					</div>
-					<div>
+					<div className="min-w-0">
 						<div className="flex items-center gap-2">
 							<span className="font-bold text-foreground font-mono text-base">
 								{team.name}
@@ -176,12 +176,7 @@ const TeamTableRow = ({ team }: { team: TeamLeaderboard }) => {
 							)}
 						</div>
 						<div className="text-sm text-muted-foreground truncate">
-							{team.description} Lorem ipsum dolor sit amet consectetur
-							adipisicing elit. Illo tenetur molestias accusamus exercitationem
-							ex aliquam maxime aspernatur, iste pariatur sed mollitia nobis.
-							Voluptatum, vitae dolores praesentium deleniti excepturi pariatur
-							reprehenderit blanditiis molestiae consequuntur aut amet odit
-							nostrum commodi, expedita cupiditate.
+							{team.description}
 						</div>
 					</div>
 				</div>
@@ -690,10 +685,10 @@ export default function TeamsPageClient({
 										</div>
 									</div>
 									<div className="overflow-x-auto">
-										<table className="w-full">
+										<table className="w-full table-fixed">
 											<thead className="bg-muted/30">
 												<tr className="border-b border-border/50">
-													<th className="p-3 text-left font-mono text-sm font-bold w-auto">
+													<th className="p-3 text-left font-mono text-sm font-bold w-96">
 														Team
 													</th>
 													<th className="p-3 text-left font-mono text-sm font-bold w-24">
