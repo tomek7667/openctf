@@ -245,7 +245,7 @@ export default function TeamsPageClient({
 }) {
 	const { isAuthenticated } = useAuthStore();
 	const [teams, setTeams] = useState<TeamLeaderboard[]>(teamsList);
-	const [isLoading, setIsLoading] = useState(true);
+	const [isLoading, setIsLoading] = useState(false);
 	const [isInitialLoad, setIsInitialLoad] = useState(true);
 	const [showCountryFilter, setShowCountryFilter] = useState(false);
 	const [showAllCountries, setShowAllCountries] = useState(false);
