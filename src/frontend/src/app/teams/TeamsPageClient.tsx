@@ -451,6 +451,7 @@ export default function TeamsPageClient({
 								>
 									Clear
 								</Button>
+								{/* TODO: Under the filters add years, but that needs the API returning the information of distinct years which were registered on the openctf platform. */}
 							</div>
 
 							{/* Country Filter Panel */}
