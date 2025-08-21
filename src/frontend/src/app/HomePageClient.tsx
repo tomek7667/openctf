@@ -13,7 +13,7 @@ import {
 	BarChart,
 } from "@/components/ui/icons";
 import { TeamLeaderboard } from "@/components/leaderboard/TeamLeaderboard";
-import { PlatformStats } from "@/ssr/api/stats";
+import { PlatformStats } from "@/api/statistics";
 
 interface FeatureCardProps {
 	icon: React.ComponentType<{ className?: undefined | string }>;

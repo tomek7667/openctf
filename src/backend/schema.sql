@@ -60,10 +60,27 @@ FROM
 	"users" u;
 
 -- Create "aggregated_platform_statistics" view
-CREATE OR REPLACE VIEW "aggregated_platform_statistics" ("total_users", "total_teams", "total_upcoming_events", "total_past_events", "total_live_events") AS
+DROP VIEW IF EXISTS "aggregated_platform_statistics";
+CREATE OR REPLACE VIEW "aggregated_platform_statistics" AS
 SELECT
 	(SELECT COUNT(id) FROM "users") AS "total_users",
 	(SELECT COUNT(id) FROM "teams") AS "total_teams",
+	(
+		SELECT 
+			COUNT(t.id)
+		FROM
+			"teams" t
+		WHERE
+			t.recruiting = TRUE
+	) AS "total_teams_recruiting",
+	(
+		SELECT 
+			COUNT(DISTINCT t.country_code)
+		FROM
+			"teams" t
+		WHERE
+			t.country_code IS NOT NULL AND t.country_code != '' AND t.country_code != 'global'
+	) AS "total_teams_distinct_countries",
 	(SELECT COUNT(id) FROM "contests" WHERE NOW() < "start") AS "total_upcoming_events",
 	(SELECT COUNT(id) FROM "contests" WHERE NOW() > "end") AS "total_past_events",
 	(SELECT COUNT(id) FROM "contests" WHERE NOW() > "start" AND NOW() < "end") AS "total_live_events";

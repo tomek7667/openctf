@@ -59,7 +59,7 @@ type AggregatedYearlyTeam struct {
 	// AvgPlace holds the value of the "avg_place" field.
 	AvgPlace *float64 `json:"avg_place"`
 	// ContestsCount holds the value of the "contests_count" field.
-	ContestsCount *int `json:"contests_count"`
+	ContestsCount int `json:"contests_count"`
 	// ContestsWon holds the value of the "contests_won" field.
 	ContestsWon  int `json:"contests_won"`
 	selectValues sql.SelectValues
@@ -242,8 +242,7 @@ func (_m *AggregatedYearlyTeam) assignValues(columns []string, values []any) err
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field contests_count", values[i])
 			} else if value.Valid {
-				_m.ContestsCount = new(int)
-				*_m.ContestsCount = int(value.Int64)
+				_m.ContestsCount = int(value.Int64)
 			}
 		case aggregatedyearlyteam.FieldContestsWon:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
@@ -368,10 +367,8 @@ func (_m *AggregatedYearlyTeam) String() string {
 		builder.WriteString(fmt.Sprintf("%v", *v))
 	}
 	builder.WriteString(", ")
-	if v := _m.ContestsCount; v != nil {
-		builder.WriteString("contests_count=")
-		builder.WriteString(fmt.Sprintf("%v", *v))
-	}
+	builder.WriteString("contests_count=")
+	builder.WriteString(fmt.Sprintf("%v", _m.ContestsCount))
 	builder.WriteString(", ")
 	builder.WriteString("contests_won=")
 	builder.WriteString(fmt.Sprintf("%v", _m.ContestsWon))

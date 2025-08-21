@@ -18,6 +18,16 @@ func TotalTeams(v int) predicate.AggregatedPlatformStatistics {
 	return predicate.AggregatedPlatformStatistics(sql.FieldEQ(FieldTotalTeams, v))
 }
 
+// TotalTeamsRecruiting applies equality check predicate on the "total_teams_recruiting" field. It's identical to TotalTeamsRecruitingEQ.
+func TotalTeamsRecruiting(v int) predicate.AggregatedPlatformStatistics {
+	return predicate.AggregatedPlatformStatistics(sql.FieldEQ(FieldTotalTeamsRecruiting, v))
+}
+
+// TotalTeamsDistinctCountries applies equality check predicate on the "total_teams_distinct_countries" field. It's identical to TotalTeamsDistinctCountriesEQ.
+func TotalTeamsDistinctCountries(v int) predicate.AggregatedPlatformStatistics {
+	return predicate.AggregatedPlatformStatistics(sql.FieldEQ(FieldTotalTeamsDistinctCountries, v))
+}
+
 // TotalUpcomingEvents applies equality check predicate on the "total_upcoming_events" field. It's identical to TotalUpcomingEventsEQ.
 func TotalUpcomingEvents(v int) predicate.AggregatedPlatformStatistics {
 	return predicate.AggregatedPlatformStatistics(sql.FieldEQ(FieldTotalUpcomingEvents, v))
@@ -111,6 +121,86 @@ func TotalTeamsLT(v int) predicate.AggregatedPlatformStatistics {
 // TotalTeamsLTE applies the LTE predicate on the "total_teams" field.
 func TotalTeamsLTE(v int) predicate.AggregatedPlatformStatistics {
 	return predicate.AggregatedPlatformStatistics(sql.FieldLTE(FieldTotalTeams, v))
+}
+
+// TotalTeamsRecruitingEQ applies the EQ predicate on the "total_teams_recruiting" field.
+func TotalTeamsRecruitingEQ(v int) predicate.AggregatedPlatformStatistics {
+	return predicate.AggregatedPlatformStatistics(sql.FieldEQ(FieldTotalTeamsRecruiting, v))
+}
+
+// TotalTeamsRecruitingNEQ applies the NEQ predicate on the "total_teams_recruiting" field.
+func TotalTeamsRecruitingNEQ(v int) predicate.AggregatedPlatformStatistics {
+	return predicate.AggregatedPlatformStatistics(sql.FieldNEQ(FieldTotalTeamsRecruiting, v))
+}
+
+// TotalTeamsRecruitingIn applies the In predicate on the "total_teams_recruiting" field.
+func TotalTeamsRecruitingIn(vs ...int) predicate.AggregatedPlatformStatistics {
+	return predicate.AggregatedPlatformStatistics(sql.FieldIn(FieldTotalTeamsRecruiting, vs...))
+}
+
+// TotalTeamsRecruitingNotIn applies the NotIn predicate on the "total_teams_recruiting" field.
+func TotalTeamsRecruitingNotIn(vs ...int) predicate.AggregatedPlatformStatistics {
+	return predicate.AggregatedPlatformStatistics(sql.FieldNotIn(FieldTotalTeamsRecruiting, vs...))
+}
+
+// TotalTeamsRecruitingGT applies the GT predicate on the "total_teams_recruiting" field.
+func TotalTeamsRecruitingGT(v int) predicate.AggregatedPlatformStatistics {
+	return predicate.AggregatedPlatformStatistics(sql.FieldGT(FieldTotalTeamsRecruiting, v))
+}
+
+// TotalTeamsRecruitingGTE applies the GTE predicate on the "total_teams_recruiting" field.
+func TotalTeamsRecruitingGTE(v int) predicate.AggregatedPlatformStatistics {
+	return predicate.AggregatedPlatformStatistics(sql.FieldGTE(FieldTotalTeamsRecruiting, v))
+}
+
+// TotalTeamsRecruitingLT applies the LT predicate on the "total_teams_recruiting" field.
+func TotalTeamsRecruitingLT(v int) predicate.AggregatedPlatformStatistics {
+	return predicate.AggregatedPlatformStatistics(sql.FieldLT(FieldTotalTeamsRecruiting, v))
+}
+
+// TotalTeamsRecruitingLTE applies the LTE predicate on the "total_teams_recruiting" field.
+func TotalTeamsRecruitingLTE(v int) predicate.AggregatedPlatformStatistics {
+	return predicate.AggregatedPlatformStatistics(sql.FieldLTE(FieldTotalTeamsRecruiting, v))
+}
+
+// TotalTeamsDistinctCountriesEQ applies the EQ predicate on the "total_teams_distinct_countries" field.
+func TotalTeamsDistinctCountriesEQ(v int) predicate.AggregatedPlatformStatistics {
+	return predicate.AggregatedPlatformStatistics(sql.FieldEQ(FieldTotalTeamsDistinctCountries, v))
+}
+
+// TotalTeamsDistinctCountriesNEQ applies the NEQ predicate on the "total_teams_distinct_countries" field.
+func TotalTeamsDistinctCountriesNEQ(v int) predicate.AggregatedPlatformStatistics {
+	return predicate.AggregatedPlatformStatistics(sql.FieldNEQ(FieldTotalTeamsDistinctCountries, v))
+}
+
+// TotalTeamsDistinctCountriesIn applies the In predicate on the "total_teams_distinct_countries" field.
+func TotalTeamsDistinctCountriesIn(vs ...int) predicate.AggregatedPlatformStatistics {
+	return predicate.AggregatedPlatformStatistics(sql.FieldIn(FieldTotalTeamsDistinctCountries, vs...))
+}
+
+// TotalTeamsDistinctCountriesNotIn applies the NotIn predicate on the "total_teams_distinct_countries" field.
+func TotalTeamsDistinctCountriesNotIn(vs ...int) predicate.AggregatedPlatformStatistics {
+	return predicate.AggregatedPlatformStatistics(sql.FieldNotIn(FieldTotalTeamsDistinctCountries, vs...))
+}
+
+// TotalTeamsDistinctCountriesGT applies the GT predicate on the "total_teams_distinct_countries" field.
+func TotalTeamsDistinctCountriesGT(v int) predicate.AggregatedPlatformStatistics {
+	return predicate.AggregatedPlatformStatistics(sql.FieldGT(FieldTotalTeamsDistinctCountries, v))
+}
+
+// TotalTeamsDistinctCountriesGTE applies the GTE predicate on the "total_teams_distinct_countries" field.
+func TotalTeamsDistinctCountriesGTE(v int) predicate.AggregatedPlatformStatistics {
+	return predicate.AggregatedPlatformStatistics(sql.FieldGTE(FieldTotalTeamsDistinctCountries, v))
+}
+
+// TotalTeamsDistinctCountriesLT applies the LT predicate on the "total_teams_distinct_countries" field.
+func TotalTeamsDistinctCountriesLT(v int) predicate.AggregatedPlatformStatistics {
+	return predicate.AggregatedPlatformStatistics(sql.FieldLT(FieldTotalTeamsDistinctCountries, v))
+}
+
+// TotalTeamsDistinctCountriesLTE applies the LTE predicate on the "total_teams_distinct_countries" field.
+func TotalTeamsDistinctCountriesLTE(v int) predicate.AggregatedPlatformStatistics {
+	return predicate.AggregatedPlatformStatistics(sql.FieldLTE(FieldTotalTeamsDistinctCountries, v))
 }
 
 // TotalUpcomingEventsEQ applies the EQ predicate on the "total_upcoming_events" field.

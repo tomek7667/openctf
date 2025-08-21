@@ -1294,16 +1294,6 @@ func ContestsCountLTE(v int) predicate.AggregatedYearlyTeam {
 	return predicate.AggregatedYearlyTeam(sql.FieldLTE(FieldContestsCount, v))
 }
 
-// ContestsCountIsNil applies the IsNil predicate on the "contests_count" field.
-func ContestsCountIsNil() predicate.AggregatedYearlyTeam {
-	return predicate.AggregatedYearlyTeam(sql.FieldIsNull(FieldContestsCount))
-}
-
-// ContestsCountNotNil applies the NotNil predicate on the "contests_count" field.
-func ContestsCountNotNil() predicate.AggregatedYearlyTeam {
-	return predicate.AggregatedYearlyTeam(sql.FieldNotNull(FieldContestsCount))
-}
-
 // ContestsWonEQ applies the EQ predicate on the "contests_won" field.
 func ContestsWonEQ(v int) predicate.AggregatedYearlyTeam {
 	return predicate.AggregatedYearlyTeam(sql.FieldEQ(FieldContestsWon, v))

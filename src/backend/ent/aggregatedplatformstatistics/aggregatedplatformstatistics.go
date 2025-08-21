@@ -13,6 +13,10 @@ const (
 	FieldTotalUsers = "total_users"
 	// FieldTotalTeams holds the string denoting the total_teams field in the database.
 	FieldTotalTeams = "total_teams"
+	// FieldTotalTeamsRecruiting holds the string denoting the total_teams_recruiting field in the database.
+	FieldTotalTeamsRecruiting = "total_teams_recruiting"
+	// FieldTotalTeamsDistinctCountries holds the string denoting the total_teams_distinct_countries field in the database.
+	FieldTotalTeamsDistinctCountries = "total_teams_distinct_countries"
 	// FieldTotalUpcomingEvents holds the string denoting the total_upcoming_events field in the database.
 	FieldTotalUpcomingEvents = "total_upcoming_events"
 	// FieldTotalPastEvents holds the string denoting the total_past_events field in the database.
@@ -27,6 +31,8 @@ const (
 var Columns = []string{
 	FieldTotalUsers,
 	FieldTotalTeams,
+	FieldTotalTeamsRecruiting,
+	FieldTotalTeamsDistinctCountries,
 	FieldTotalUpcomingEvents,
 	FieldTotalPastEvents,
 	FieldTotalLiveEvents,
@@ -53,6 +59,16 @@ func ByTotalUsers(opts ...sql.OrderTermOption) OrderOption {
 // ByTotalTeams orders the results by the total_teams field.
 func ByTotalTeams(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldTotalTeams, opts...).ToFunc()
+}
+
+// ByTotalTeamsRecruiting orders the results by the total_teams_recruiting field.
+func ByTotalTeamsRecruiting(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldTotalTeamsRecruiting, opts...).ToFunc()
+}
+
+// ByTotalTeamsDistinctCountries orders the results by the total_teams_distinct_countries field.
+func ByTotalTeamsDistinctCountries(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldTotalTeamsDistinctCountries, opts...).ToFunc()
 }
 
 // ByTotalUpcomingEvents orders the results by the total_upcoming_events field.

@@ -1,12 +1,5 @@
+import { PlatformStats } from "@/api/statistics";
 import { LOCAL_API_BASE_URL } from "./constant";
-
-export interface PlatformStats {
-	total_users: number;
-	total_teams: number;
-	total_upcoming_events: number;
-	total_past_events: number;
-	total_live_events: number;
-}
 
 export const getPlatformStats = async (): Promise<PlatformStats> => {
 	const url = `${LOCAL_API_BASE_URL}/api/statistics`;

@@ -26,13 +26,26 @@ export interface TeamLeaderboard {
 	contests_won: number;
 }
 
+export const DEFAULT_TEAMS_LIMIT = 30;
+
 export interface GetCurrentYearLeaderboardDto {
 	Offset?: number;
 	Limit?: number;
 	Year?: number;
+	CountryCodes: string[];
+	Recruiting?: boolean;
+	SortBy?: string;
+	MinRating?: number;
+	Search?: string;
 }
 
-export const getLeaderboardList = async (dto: GetCurrentYearLeaderboardDto) => {
+export interface LeaderboardResponse {
+	leaderboard: TeamLeaderboard[];
+}
+
+export const getLeaderboardList = async (
+	dto: GetCurrentYearLeaderboardDto
+): Promise<LeaderboardResponse> => {
 	const params = new URLSearchParams();
 	if (dto.Offset !== undefined) {
 		params.append("offset", dto.Offset.toString());
@@ -43,14 +56,29 @@ export const getLeaderboardList = async (dto: GetCurrentYearLeaderboardDto) => {
 	if (dto.Year !== undefined) {
 		params.append("year", dto.Year.toString());
 	}
+	if (dto.CountryCodes && dto.CountryCodes.length > 0) {
+		params.append("country_codes", dto.CountryCodes.join(","));
+	}
+	if (dto.Recruiting !== undefined) {
+		params.append("recruiting", dto.Recruiting.toString());
+	}
+	if (dto.SortBy) {
+		params.append("sort_by", dto.SortBy);
+	}
+	if (dto.MinRating !== undefined) {
+		params.append("min_rating", dto.MinRating.toString());
+	}
+	if (dto.Search) {
+		params.append("search", dto.Search);
+	}
+
 	const url = `${BASE_URL}/api/teams/leaderboard?${params.toString()}`;
 	const response = await fetch(url);
 	const { data, success, message } = await response.json();
 	if (!success) {
 		throw new Error(message ?? "unknown error occurred");
 	}
-	const { leaderboard } = data as { leaderboard: TeamLeaderboard[] };
-	return leaderboard;
+	return data as LeaderboardResponse;
 };
 
 export interface CreateTeamDto {

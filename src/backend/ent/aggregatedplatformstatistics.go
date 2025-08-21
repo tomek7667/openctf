@@ -18,6 +18,10 @@ type AggregatedPlatformStatistics struct {
 	TotalUsers int `json:"total_users"`
 	// TotalTeams holds the value of the "total_teams" field.
 	TotalTeams int `json:"total_teams"`
+	// TotalTeamsRecruiting holds the value of the "total_teams_recruiting" field.
+	TotalTeamsRecruiting int `json:"total_teams_recruiting"`
+	// TotalTeamsDistinctCountries holds the value of the "total_teams_distinct_countries" field.
+	TotalTeamsDistinctCountries int `json:"total_teams_distinct_countries"`
 	// TotalUpcomingEvents holds the value of the "total_upcoming_events" field.
 	TotalUpcomingEvents int `json:"total_upcoming_events"`
 	// TotalPastEvents holds the value of the "total_past_events" field.
@@ -32,7 +36,7 @@ func (*AggregatedPlatformStatistics) scanValues(columns []string) ([]any, error)
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case aggregatedplatformstatistics.FieldTotalUsers, aggregatedplatformstatistics.FieldTotalTeams, aggregatedplatformstatistics.FieldTotalUpcomingEvents, aggregatedplatformstatistics.FieldTotalPastEvents, aggregatedplatformstatistics.FieldTotalLiveEvents:
+		case aggregatedplatformstatistics.FieldTotalUsers, aggregatedplatformstatistics.FieldTotalTeams, aggregatedplatformstatistics.FieldTotalTeamsRecruiting, aggregatedplatformstatistics.FieldTotalTeamsDistinctCountries, aggregatedplatformstatistics.FieldTotalUpcomingEvents, aggregatedplatformstatistics.FieldTotalPastEvents, aggregatedplatformstatistics.FieldTotalLiveEvents:
 			values[i] = new(sql.NullInt64)
 		default:
 			values[i] = new(sql.UnknownType)
@@ -60,6 +64,18 @@ func (_m *AggregatedPlatformStatistics) assignValues(columns []string, values []
 				return fmt.Errorf("unexpected type %T for field total_teams", values[i])
 			} else if value.Valid {
 				_m.TotalTeams = int(value.Int64)
+			}
+		case aggregatedplatformstatistics.FieldTotalTeamsRecruiting:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field total_teams_recruiting", values[i])
+			} else if value.Valid {
+				_m.TotalTeamsRecruiting = int(value.Int64)
+			}
+		case aggregatedplatformstatistics.FieldTotalTeamsDistinctCountries:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field total_teams_distinct_countries", values[i])
+			} else if value.Valid {
+				_m.TotalTeamsDistinctCountries = int(value.Int64)
 			}
 		case aggregatedplatformstatistics.FieldTotalUpcomingEvents:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
@@ -112,6 +128,12 @@ func (_m *AggregatedPlatformStatistics) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("total_teams=")
 	builder.WriteString(fmt.Sprintf("%v", _m.TotalTeams))
+	builder.WriteString(", ")
+	builder.WriteString("total_teams_recruiting=")
+	builder.WriteString(fmt.Sprintf("%v", _m.TotalTeamsRecruiting))
+	builder.WriteString(", ")
+	builder.WriteString("total_teams_distinct_countries=")
+	builder.WriteString(fmt.Sprintf("%v", _m.TotalTeamsDistinctCountries))
 	builder.WriteString(", ")
 	builder.WriteString("total_upcoming_events=")
 	builder.WriteString(fmt.Sprintf("%v", _m.TotalUpcomingEvents))

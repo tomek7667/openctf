@@ -8,7 +8,6 @@ import {
 	Users,
 	Shield,
 	Star,
-	Trophy,
 	ChevronLeft,
 	ChevronRight,
 	Globe,
@@ -21,25 +20,17 @@ import { Badge } from "@/components/ui/Badge";
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 import { MainLayout } from "@/components/layout/MainLayout";
 import { getPopularCountries, COUNTRIES } from "@/lib/countries";
-import { getTeams, TeamFilters } from "@/api/teams_mock";
 import { useAuthStore } from "@/store/authStore";
 import { clsx } from "clsx";
 import { Flag } from "@/components/ui/Flag";
-import { TeamLeaderboard } from "@/api";
-
-interface PaginationState {
-	currentPage: number;
-	pageSize: number;
-	totalPages: number;
-	total: number;
-}
-
-interface TeamFiltersState {
-	search: string;
-	countries: string[];
-	minRating?: number;
-	recruiting?: boolean;
-}
+import {
+	DEFAULT_TEAMS_LIMIT,
+	GetCurrentYearLeaderboardDto,
+	getLeaderboardList,
+	TeamLeaderboard,
+} from "@/api";
+import useToast from "@/hooks/useToast";
+import { PlatformStats } from "@/api/statistics";
 
 const getPrivacyIcon = (recruiting: boolean) => {
 	if (recruiting) return Shield;
@@ -123,10 +114,10 @@ const CountryFilter = ({
 							)}
 							title={country.name}
 						>
-							<div className="text-sm">
+							<div className="text-sm flex justify-center items-center">
 								<Flag code={country.code} />
 							</div>
-							<div className="text-xs truncate">{country.code}</div>
+							<div className="text-xs truncate text-center">{country.code}</div>
 						</button>
 					))}
 				</div>
@@ -200,84 +191,42 @@ const TeamTableRow = ({ team }: { team: TeamLeaderboard }) => {
 
 const Pagination = ({
 	pagination,
-	onPageChange,
+	onOffsetChange,
 	isLoading,
+	teamsCount,
 }: {
-	pagination: PaginationState;
-	onPageChange: (page: number) => void;
+	pagination: GetCurrentYearLeaderboardDto;
+	onOffsetChange: (offset: number) => void;
 	isLoading: boolean;
+	teamsCount: number;
 }) => {
-	const { currentPage, totalPages } = pagination;
-
-	const generatePageNumbers = () => {
-		const pages = [];
-		const maxVisible = 7;
-
-		if (totalPages <= maxVisible) {
-			for (let i = 1; i <= totalPages; i++) {
-				pages.push(i);
-			}
-		} else {
-			if (currentPage <= 4) {
-				for (let i = 1; i <= 5; i++) pages.push(i);
-				pages.push("...");
-				pages.push(totalPages);
-			} else if (currentPage >= totalPages - 3) {
-				pages.push(1);
-				pages.push("...");
-				for (let i = totalPages - 4; i <= totalPages; i++) pages.push(i);
-			} else {
-				pages.push(1);
-				pages.push("...");
-				for (let i = currentPage - 1; i <= currentPage + 1; i++) pages.push(i);
-				pages.push("...");
-				pages.push(totalPages);
-			}
-		}
-
-		return pages;
-	};
+	const limit = pagination.Limit || DEFAULT_TEAMS_LIMIT;
+	const offset = pagination.Offset || 0;
+	const currentPage = Math.floor(offset / limit) + 1;
+	const hasNextPage = teamsCount === limit;
 
 	return (
 		<div className="flex items-center justify-between py-4">
 			<div className="text-xs text-muted-foreground font-mono">
-				Page {currentPage} of {totalPages} ({pagination.total} teams)
+				Showing {teamsCount} teams (Page {currentPage})
 			</div>
 
 			<div className="flex items-center gap-1">
 				<Button
 					variant="outline"
 					size="sm"
-					onClick={() => onPageChange(currentPage - 1)}
-					disabled={currentPage === 1 || isLoading}
+					onClick={() => onOffsetChange(Math.max(0, offset - limit))}
+					disabled={offset === 0 || isLoading}
 					className="font-mono text-xs h-8 px-2"
 				>
 					<ChevronLeft className="h-3 w-3" />
 				</Button>
 
-				{generatePageNumbers().map((page, index) => (
-					<React.Fragment key={index}>
-						{page === "..." ? (
-							<span className="px-2 text-xs text-muted-foreground">...</span>
-						) : (
-							<Button
-								variant={currentPage === page ? "primary" : "outline"}
-								size="sm"
-								onClick={() => onPageChange(page as number)}
-								disabled={isLoading}
-								className="font-mono text-xs h-8 w-8 p-0"
-							>
-								{page}
-							</Button>
-						)}
-					</React.Fragment>
-				))}
-
 				<Button
 					variant="outline"
 					size="sm"
-					onClick={() => onPageChange(currentPage + 1)}
-					disabled={currentPage === totalPages || isLoading}
+					onClick={() => onOffsetChange(offset + limit)}
+					disabled={!hasNextPage || isLoading}
 					className="font-mono text-xs h-8 px-2"
 				>
 					<ChevronRight className="h-3 w-3" />
@@ -289,153 +238,90 @@ const Pagination = ({
 
 export default function TeamsPageClient({
 	teamsList,
+	platformStats,
 }: {
 	teamsList: TeamLeaderboard[];
+	platformStats: PlatformStats;
 }) {
 	const { isAuthenticated } = useAuthStore();
 	const [teams, setTeams] = useState<TeamLeaderboard[]>(teamsList);
-	// const [userTeams, setUserTeams] = useState<Team[]>([]);
 	const [isLoading, setIsLoading] = useState(true);
+	const [isInitialLoad, setIsInitialLoad] = useState(true);
 	const [showCountryFilter, setShowCountryFilter] = useState(false);
 	const [showAllCountries, setShowAllCountries] = useState(false);
-	const [filters, setFilters] = useState<TeamFiltersState>({
-		search: "",
-		countries: [],
+	const [dto, setDto] = useState<GetCurrentYearLeaderboardDto>({
+		CountryCodes: [],
 	});
-	const [pagination, setPagination] = useState<PaginationState>({
-		currentPage: 1,
-		pageSize: 25,
-		totalPages: 1,
-		total: 0,
-	});
+	const { toast } = useToast();
 
-	// Fetch teams with pagination and filters
-	// const fetchTeams = useCallback(
-	// 	async (page: number = 1, resetFilters = false) => {
-	// 		try {
-	// 			setIsLoading(true);
+	const fetchTeams = useCallback(async () => {
+		try {
+			setIsLoading(true);
 
-	// 			const teamFilters: TeamFilters = {};
-	// 			if (filters.search) teamFilters.search = filters.search;
-	// 			if (
-	// 				filters.countries.length > 0 &&
-	// 				!resetFilters &&
-	// 				filters.countries[0]
-	// 			)
-	// 				teamFilters.country = filters.countries[0];
-	// 			if (filters.minRating) teamFilters.minRating = filters.minRating;
-	// 			if (filters.isRecruiting !== undefined)
-	// 				teamFilters.isRecruiting = filters.isRecruiting;
-	// 			teamFilters.sortBy = "rating";
+			const response = await getLeaderboardList(dto);
+			setTeams(response.leaderboard);
+		} catch (err: any) {
+			console.error("Error fetching teams:", err);
+			toast.error(
+				"Failed to load teams",
+				err?.message ??
+					"Something went wrong. Please contact the administrators"
+			);
+		} finally {
+			setIsLoading(false);
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [dto]);
 
-	// 			const response = await getTeams(teamFilters, page, pagination.pageSize);
-	// 			if (response.success && response.data) {
-	// 				// Add ranking to teams based on rating
-	// 				const teamsWithRanking: TeamLeaderboard[] = response.data.teams.map(
-	// 					(team, index) => ({
-	// 						...team,
-	// 						rank: (page - 1) * pagination.pageSize + index + 1,
-	// 					})
-	// 				);
+	useEffect(() => {
+		if (!isInitialLoad) {
+			console.log("handle filter changes called");
+			fetchTeams();
+		} else {
+			setIsInitialLoad(false);
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [dto, fetchTeams]);
 
-	// 				setTeams(teamsWithRanking);
-	// 				setPagination({
-	// 					currentPage: page,
-	// 					pageSize: pagination.pageSize,
-	// 					totalPages: response.data.totalPages,
-	// 					total: response.data.total,
-	// 				});
-	// 			}
-
-	// 			// Load user's teams if authenticated
-	// 			if (isAuthenticated && user?.id) {
-	// 				// TODO: implement getting user teams
-	// 				// const userTeamsResponse = await getUserTeams(user.id.toString());
-	// 				// if (userTeamsResponse.success && userTeamsResponse.data) {
-	// 				// 	setUserTeams(userTeamsResponse.data);
-	// 				// }
-	// 			}
-	// 		} catch (error) {
-	// 			console.error("Error fetching teams:", error);
-	// 		} finally {
-	// 			setIsLoading(false);
-	// 		}
-	// 	},
-	// 	[
-	// 		pagination.pageSize,
-	// 		filters.countries,
-	// 		filters.search,
-	// 		filters.minRating,
-	// 		filters.isRecruiting,
-	// 		isAuthenticated,
-	// 		user?.id,
-	// 	]
-	// );
-
-	// Initial load
-	// useEffect(() => {
-	// 	fetchTeams(1);
-	// }, [fetchTeams]);
-
-	// Handle filter changes
-	// useEffect(() => {
-	// 	fetchTeams(1); // Reset to first page when filters change
-	// }, [
-	// 	filters.countries,
-	// 	filters.search,
-	// 	filters.minRating,
-	// 	filters.isRecruiting,
-	// 	fetchTeams,
-	// ]);
-
-	const updateFilter = (key: keyof TeamFiltersState, value: any) => {
-		setFilters((prev) => ({ ...prev, [key]: value }));
+	const updateFilter = (
+		key: keyof GetCurrentYearLeaderboardDto,
+		value: any
+	) => {
+		setDto((prev) => ({ ...prev, [key]: value }));
 	};
 
 	const toggleCountryFilter = (countryCode: string) => {
-		setFilters((prev) => ({
+		setDto((prev) => ({
 			...prev,
-			countries: prev.countries.includes(countryCode)
-				? prev.countries.filter((c) => c !== countryCode)
-				: [...prev.countries, countryCode],
+			CountryCodes: prev.CountryCodes.includes(countryCode)
+				? prev.CountryCodes.filter((c) => c !== countryCode)
+				: [...prev.CountryCodes, countryCode],
 		}));
 	};
 
 	const clearFilters = () => {
-		setFilters({
-			search: "",
-			countries: [],
+		setDto({
+			CountryCodes: [],
 		});
-		// fetchTeams(1, true);
 	};
 
-	const handlePageChange = (page: number) => {
-		// fetchTeams(page);
+	const handleOffsetChange = (offset: number) => {
+		setDto((prev) => ({
+			...prev,
+			Offset: offset,
+			Limit: prev.Limit || DEFAULT_TEAMS_LIMIT,
+		}));
 	};
-
-	const filteredTeams = teams.filter((team) => {
-		if (filters.recruiting && team.recruiting !== filters.recruiting) {
-			return false;
-		}
-		return true;
-	});
 
 	// Get top 5 teams
-	const topTeams = filteredTeams.slice(0, 5);
+	const topTeams = teams.slice(0, 5);
 
 	// Stats
 	const stats = {
-		total: pagination.total,
-		recruiting: teams.filter((t) => t.recruiting).length,
-		withOpenSlots: teams.filter((t) => t.recruiting).length,
-		countries: new Set(teams.map((t) => t.country_code).filter(Boolean)).size,
+		total: platformStats.total_teams,
+		recruiting: platformStats.total_teams_recruiting,
+		countries: platformStats.total_teams_distinct_countries,
 	};
-
-	const hasActiveFilters =
-		filters.search ||
-		filters.countries.length > 0 ||
-		filters.minRating ||
-		filters.recruiting !== undefined;
 
 	return (
 		<MainLayout>
@@ -463,12 +349,6 @@ export default function TeamsPageClient({
 									isLoading={isLoading}
 								/>
 								<CompactStatCard
-									icon={Trophy}
-									label="Open Slots"
-									value={stats.withOpenSlots}
-									isLoading={isLoading}
-								/>
-								<CompactStatCard
 									icon={Globe}
 									label="Countries"
 									value={stats.countries}
@@ -489,8 +369,8 @@ export default function TeamsPageClient({
 									<Search className="absolute left-2 top-1/2 transform -translate-y-1/2 h-3 w-3 text-muted-foreground" />
 									<Input
 										placeholder="Search teams..."
-										value={filters.search}
-										onChange={(e) => updateFilter("search", e.target.value)}
+										value={dto.Search}
+										onChange={(e) => updateFilter("Search", e.target.value)}
 										className="pl-7 py-1 text-sm font-mono h-8"
 									/>
 								</div>
@@ -498,14 +378,12 @@ export default function TeamsPageClient({
 								{/* Quick Filters */}
 								<div className="flex flex-wrap gap-1">
 									<Badge
-										variant={
-											filters.recruiting === true ? "default" : "outline"
-										}
+										variant={dto.Recruiting === true ? "default" : "outline"}
 										className="cursor-pointer text-xs font-mono h-8 px-2"
 										onClick={() =>
 											updateFilter(
-												"recruiting",
-												filters.recruiting === true ? undefined : true
+												"Recruiting",
+												dto.Recruiting === true ? undefined : true
 											)
 										}
 									>
@@ -513,17 +391,32 @@ export default function TeamsPageClient({
 										Recruiting
 									</Badge>
 									<Badge
-										variant={filters.minRating ? "default" : "outline"}
+										variant={dto.MinRating === 2000 ? "default" : "outline"}
 										className="cursor-pointer text-xs font-mono h-8 px-2"
-										onClick={() =>
-											updateFilter(
-												"minRating",
-												filters.minRating ? undefined : 2000
-											)
-										}
+										onClick={() => {
+											if (dto.MinRating === 2000) {
+												updateFilter("MinRating", undefined);
+											} else {
+												updateFilter("MinRating", 2000);
+											}
+										}}
 									>
 										<Star className="h-3 w-3 mr-1" />
 										2K+
+									</Badge>
+									<Badge
+										variant={dto.MinRating === 1000 ? "default" : "outline"}
+										className="cursor-pointer text-xs font-mono h-8 px-2"
+										onClick={() => {
+											if (dto.MinRating === 1000) {
+												updateFilter("MinRating", undefined);
+											} else {
+												updateFilter("MinRating", 1000);
+											}
+										}}
+									>
+										<Star className="h-3 w-3 mr-1" />
+										1K+
 									</Badge>
 								</div>
 
@@ -536,8 +429,8 @@ export default function TeamsPageClient({
 								>
 									<Globe className="h-3 w-3 mr-1" />
 									Countries{" "}
-									{filters.countries.length > 0 &&
-										`(${filters.countries.length})`}
+									{dto.CountryCodes.length > 0 &&
+										`(${dto.CountryCodes.length})`}
 								</Button>
 
 								{/* Create Team Button */}
@@ -550,16 +443,14 @@ export default function TeamsPageClient({
 									</Link>
 								)}
 
-								{hasActiveFilters && (
-									<Button
-										variant="outline"
-										size="sm"
-										onClick={clearFilters}
-										className="font-mono text-xs h-8 px-2"
-									>
-										Clear
-									</Button>
-								)}
+								<Button
+									variant="outline"
+									size="sm"
+									onClick={clearFilters}
+									className="font-mono text-xs h-8 px-2"
+								>
+									Clear
+								</Button>
 							</div>
 
 							{/* Country Filter Panel */}
@@ -574,7 +465,7 @@ export default function TeamsPageClient({
 									>
 										<div className="p-3 bg-card/50 rounded border border-border/50">
 											<CountryFilter
-												selectedCountries={filters.countries}
+												selectedCountries={dto.CountryCodes}
 												onToggle={toggleCountryFilter}
 												showAll={showAllCountries}
 												onToggleShowAll={() =>
@@ -585,12 +476,6 @@ export default function TeamsPageClient({
 									</motion.div>
 								)}
 							</AnimatePresence>
-
-							{hasActiveFilters && (
-								<div className="text-xs text-muted-foreground font-mono">
-									{filteredTeams.length} of {teams.length} teams shown
-								</div>
-							)}
 						</div>
 					</div>
 				</section>
@@ -663,7 +548,7 @@ export default function TeamsPageClient({
 										<div className="flex items-center gap-2">
 											<Users className="h-4 w-4 text-blue-400" />
 											<h2 className="text-sm font-bold font-mono text-blue-400">
-												ALL TEAMS ({filteredTeams.length})
+												ALL TEAMS ({platformStats.total_teams})
 											</h2>
 										</div>
 									</div>
@@ -692,7 +577,7 @@ export default function TeamsPageClient({
 												</tr>
 											</thead>
 											<tbody>
-												{filteredTeams.map((team) => (
+												{teams.map((team) => (
 													<TeamTableRow key={team.id} team={team} />
 												))}
 											</tbody>
@@ -702,15 +587,15 @@ export default function TeamsPageClient({
 									{/* Pagination */}
 									<div className="p-3 bg-muted/20 border-t border-border">
 										<Pagination
-											pagination={pagination}
-											onPageChange={handlePageChange}
+											pagination={dto}
+											onOffsetChange={handleOffsetChange}
 											isLoading={isLoading}
+											teamsCount={teams.length}
 										/>
 									</div>
 								</div>
 
-								{/* No Results */}
-								{filteredTeams.length === 0 && !isLoading && (
+								{teams.length === 0 && !isLoading && (
 									<div className="text-center py-8">
 										<div className="text-muted-foreground font-mono text-sm">
 											No teams found.{" "}
