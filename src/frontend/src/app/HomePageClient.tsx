@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/icons";
 import { TeamLeaderboard } from "@/components/leaderboard/TeamLeaderboard";
 import { PlatformStats } from "@/api/statistics";
+import { TeamLeaderboardType } from "@/api";
 
 interface FeatureCardProps {
 	icon: React.ComponentType<{ className?: undefined | string }>;
@@ -110,7 +111,13 @@ const StatCard = ({
 	</motion.div>
 );
 
-export default function HomePageClient({ stats }: { stats: PlatformStats }) {
+export default function HomePageClient({
+	stats,
+	leaderboard,
+}: {
+	stats: PlatformStats;
+	leaderboard: TeamLeaderboardType[];
+}) {
 	const features = [
 		{
 			icon: Trophy,
@@ -265,7 +272,7 @@ export default function HomePageClient({ stats }: { stats: PlatformStats }) {
 			</section>
 
 			{/* Team Leaderboard */}
-			<TeamLeaderboard />
+			<TeamLeaderboard teams={leaderboard} />
 
 			{/* Features Section */}
 			<section className="py-24 px-4">

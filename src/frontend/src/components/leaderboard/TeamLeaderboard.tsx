@@ -1,21 +1,9 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { Trophy, Users, Flag, Star } from "@/components/ui/icons";
-import { getTopTeams, LeaderboardTeam } from "@/api/leaderboard";
-
-interface TeamData {
-	place: number;
-	name: string;
-	country: string;
-	totalPoints: number;
-	contestsWon: number;
-	monthlyPoints: number;
-	isVerified: boolean;
-	members: number;
-}
+import { TeamLeaderboardType } from "@/api";
 
 const getPlaceIcon = (place: number) => {
 	switch (place) {
@@ -64,7 +52,7 @@ const getPodiumHeight = (place: number) => {
 	}
 };
 
-const TopThreePodium = ({ teams }: { teams: TeamData[] }) => {
+const TopThreePodium = ({ teams }: { teams: TeamLeaderboardType[] }) => {
 	const topThree = teams.slice(0, 3);
 
 	return (
@@ -92,7 +80,7 @@ const TopThreePodium = ({ teams }: { teams: TeamData[] }) => {
 					{topThree[1]?.name}
 				</div>
 				<div className="text-xs text-primary">
-					{topThree[1]?.totalPoints.toFixed(1)} pts
+					{topThree[1]?.team_points.toFixed(1)} pts
 				</div>
 			</motion.div>
 
@@ -117,7 +105,7 @@ const TopThreePodium = ({ teams }: { teams: TeamData[] }) => {
 					{topThree[0]?.name}
 				</div>
 				<div className="text-xs text-primary">
-					{topThree[0]?.totalPoints.toFixed(1)} pts
+					{topThree[0]?.team_points.toFixed(1)} pts
 				</div>
 			</motion.div>
 
@@ -144,50 +132,31 @@ const TopThreePodium = ({ teams }: { teams: TeamData[] }) => {
 					{topThree[2]?.name}
 				</div>
 				<div className="text-xs text-primary">
-					{topThree[2]?.totalPoints.toFixed(1)} pts
+					{topThree[2]?.team_points.toFixed(1)} pts
 				</div>
 			</motion.div>
 		</div>
 	);
 };
 
-const TeamRowSkeleton = ({ index }: { index: number }) => (
-	<motion.div
-		initial={{ opacity: 0, x: -20 }}
-		animate={{ opacity: 1, x: 0 }}
-		transition={{ delay: index * 0.1 }}
-		className="p-4 mb-2 rounded-none border bg-card/50 border-primary/20 font-mono"
-	>
-		<div className="flex items-center justify-between">
-			<div className="flex items-center space-x-4">
-				<div className="flex items-center justify-center w-10 h-10">
-					<div className="w-6 h-6 bg-primary/20 rounded animate-pulse" />
-				</div>
-				<div className="flex flex-col space-y-2">
-					<div className="h-5 bg-primary/20 rounded w-32 animate-pulse" />
-					<div className="h-3 bg-primary/10 rounded w-24 animate-pulse" />
-				</div>
-			</div>
-			<div className="text-right space-y-2">
-				<div className="h-6 bg-primary/20 rounded w-16 animate-pulse" />
-				<div className="h-3 bg-primary/10 rounded w-20 animate-pulse" />
-			</div>
-		</div>
-	</motion.div>
-);
-
-const TeamRow = ({ team, index }: { team: TeamData; index: number }) => (
-	<Link href={`/teams/${team.name.toLowerCase().replace(/\s+/g, '-')}`}>
+const TeamRow = ({
+	team,
+	index,
+}: {
+	team: TeamLeaderboardType;
+	index: number;
+}) => (
+	<Link href={`/teams/${team.name.toLowerCase().replace(/\s+/g, "-")}`}>
 		<motion.div
 			initial={{ opacity: 0, x: -20 }}
 			animate={{ opacity: 1, x: 0 }}
 			transition={{ delay: index * 0.1 }}
-			className={`p-4 mb-2 rounded-none border transition-all duration-300 hover:scale-[1.01] hover:shadow-lg hover:shadow-primary/10 cursor-pointer font-mono ${getPlaceStyle(team.place)}`}
+			className={`p-4 mb-2 rounded-none border transition-all duration-300 hover:scale-[1.01] hover:shadow-lg hover:shadow-primary/10 cursor-pointer font-mono ${getPlaceStyle(team.rank)}`}
 		>
 			<div className="flex items-center justify-between">
 				<div className="flex items-center space-x-4">
 					<div className="flex items-center justify-center w-10 h-10">
-						{getPlaceIcon(team.place)}
+						{getPlaceIcon(team.rank)}
 					</div>
 
 					<div className="flex flex-col">
@@ -195,9 +164,9 @@ const TeamRow = ({ team, index }: { team: TeamData; index: number }) => (
 							<span className="font-bold text-lg text-foreground">
 								{team.name}
 							</span>
-							{team.isVerified && <Star className="h-4 w-4 text-primary" />}
+							{team.verified_at && <Star className="h-4 w-4 text-primary" />}
 							<span className="text-xs text-muted-foreground font-mono">
-								[{team.country}]
+								[{team.country_code}]
 							</span>
 						</div>
 						<div className="flex items-center space-x-4 text-xs text-muted-foreground">
@@ -207,7 +176,7 @@ const TeamRow = ({ team, index }: { team: TeamData; index: number }) => (
 							</span>
 							<span className="flex items-center space-x-1">
 								<Flag className="h-3 w-3" />
-								<span>{team.contestsWon} wins</span>
+								<span>{team.contests_won} wins</span>
 							</span>
 						</div>
 					</div>
@@ -215,52 +184,23 @@ const TeamRow = ({ team, index }: { team: TeamData; index: number }) => (
 
 				<div className="text-right">
 					<div className="text-2xl font-bold text-primary glow-text">
-						{team.totalPoints.toFixed(1)}
+						{team.team_points.toFixed(1)}
 					</div>
-					<div className="text-xs text-muted-foreground">
+					{/* todo: add same view as yearly, but grouped by year+month, so we can see the increase monthly */}
+					{/* <div className="text-xs text-muted-foreground">
 						+{team.monthlyPoints.toFixed(1)} this month
-					</div>
+					</div> */}
 				</div>
 			</div>
 		</motion.div>
 	</Link>
 );
 
-export function TeamLeaderboard() {
-	const [teams, setTeams] = useState<LeaderboardTeam[]>([]);
-	const [isLoading, setIsLoading] = useState(true);
-	// const { toast } = useToast()
+export function TeamLeaderboard({ teams }: { teams: TeamLeaderboardType[] }) {
 	const currentMonth = new Date().toLocaleString("en-US", {
 		month: "long",
 		year: "numeric",
 	});
-
-	useEffect(() => {
-		const fetchTeams = async () => {
-			try {
-				setIsLoading(true);
-				const data = await getTopTeams(10);
-				setTeams(data);
-			} catch (error) {
-				console.error("Error fetching leaderboard:", error);
-			} finally {
-				setIsLoading(false);
-			}
-		};
-
-		fetchTeams();
-	}, []);
-
-	const teamData: TeamData[] = teams.map((team) => ({
-		place: team.place,
-		name: team.name,
-		country: team.country,
-		totalPoints: team.totalPoints,
-		contestsWon: team.contestsWon,
-		monthlyPoints: team.monthlyPoints,
-		isVerified: team.isVerified,
-		members: team.members,
-	}));
 
 	return (
 		<section className="py-16 px-4">
@@ -292,21 +232,7 @@ export function TeamLeaderboard() {
 				</motion.div>
 
 				{/* Top 3 Podium */}
-				{isLoading ? (
-					<div className="flex items-end justify-center gap-4 mb-8">
-						{[0, 1, 2].map((i) => (
-							<div key={i} className="text-center">
-								<div
-									className={`${i === 1 ? "h-32 w-32" : i === 0 ? "h-24 w-24" : "h-20 w-20"} bg-primary/10 rounded-t-lg animate-pulse mb-2`}
-								/>
-								<div className="h-4 bg-primary/20 rounded w-16 animate-pulse mb-1" />
-								<div className="h-3 bg-primary/10 rounded w-12 animate-pulse" />
-							</div>
-						))}
-					</div>
-				) : teamData.length >= 3 ? (
-					<TopThreePodium teams={teamData} />
-				) : null}
+				{teams.length >= 3 ? <TopThreePodium teams={teams} /> : null}
 
 				{/* Full Leaderboard */}
 				<motion.div
@@ -322,15 +248,9 @@ export function TeamLeaderboard() {
 						<div className="h-px bg-primary/30 mb-4"></div>
 					</div>
 
-					{isLoading ? (
+					{teams.length > 0 ? (
 						<>
-							{Array.from({ length: 10 }).map((_, index) => (
-								<TeamRowSkeleton key={index} index={index} />
-							))}
-						</>
-					) : teamData.length > 0 ? (
-						<>
-							{teamData.map((team, index) => (
+							{teams.map((team, index) => (
 								<TeamRow key={team.name} team={team} index={index} />
 							))}
 						</>

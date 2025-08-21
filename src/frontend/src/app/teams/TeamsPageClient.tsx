@@ -27,7 +27,7 @@ import {
 	DEFAULT_TEAMS_LIMIT,
 	GetCurrentYearLeaderboardDto,
 	getLeaderboardList,
-	TeamLeaderboard,
+	TeamLeaderboardType,
 } from "@/api";
 import useToast from "@/hooks/useToast";
 import { PlatformStats } from "@/api/statistics";
@@ -126,7 +126,7 @@ const CountryFilter = ({
 	);
 };
 
-const TeamTableRow = ({ team }: { team: TeamLeaderboard }) => {
+const TeamTableRow = ({ team }: { team: TeamLeaderboardType }) => {
 	const PrivacyIcon = getPrivacyIcon(team.recruiting);
 
 	return (
@@ -240,11 +240,11 @@ export default function TeamsPageClient({
 	teamsList,
 	platformStats,
 }: {
-	teamsList: TeamLeaderboard[];
+	teamsList: TeamLeaderboardType[];
 	platformStats: PlatformStats;
 }) {
 	const { isAuthenticated } = useAuthStore();
-	const [teams, setTeams] = useState<TeamLeaderboard[]>(teamsList);
+	const [teams, setTeams] = useState<TeamLeaderboardType[]>(teamsList);
 	const [isLoading, setIsLoading] = useState(false);
 	const [isInitialLoad, setIsInitialLoad] = useState(true);
 	const [showCountryFilter, setShowCountryFilter] = useState(false);

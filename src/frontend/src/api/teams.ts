@@ -1,6 +1,6 @@
 import { BASE_URL } from "./constant";
 
-export interface TeamLeaderboard {
+export interface TeamLeaderboardType {
 	id: number;
 	name: string;
 	description: string;
@@ -40,7 +40,7 @@ export interface GetCurrentYearLeaderboardDto {
 }
 
 export interface LeaderboardResponse {
-	leaderboard: TeamLeaderboard[];
+	leaderboard: TeamLeaderboardType[];
 }
 
 export const getLeaderboardList = async (

@@ -7,6 +7,7 @@ export default async function TeamsPage() {
 	try {
 		const teamsList = await getLeaderboardList();
 		const platformStats = await getPlatformStats();
+
 		return (
 			<TeamsPageClient teamsList={teamsList} platformStats={platformStats} />
 		);

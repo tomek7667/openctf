@@ -25,7 +25,7 @@ WITH team_year AS (
   SELECT
     t.*,
     COALESCE((EXTRACT(YEAR FROM c.end)), EXTRACT(YEAR FROM NOW())) AS "year",
-    SUM(p.assigned_weight_points) AS "team_points",
+    COALESCE(SUM(p.assigned_weight_points), 0) AS "team_points",
 	(
 		SELECT
 			COUNT(tm.user_id)
