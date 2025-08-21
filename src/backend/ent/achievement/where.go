@@ -65,11 +65,6 @@ func Description(v string) predicate.Achievement {
 	return predicate.Achievement(sql.FieldEQ(FieldDescription, v))
 }
 
-// Rarity applies equality check predicate on the "rarity" field. It's identical to RarityEQ.
-func Rarity(v string) predicate.Achievement {
-	return predicate.Achievement(sql.FieldEQ(FieldRarity, v))
-}
-
 // UnlockedAt applies equality check predicate on the "unlocked_at" field. It's identical to UnlockedAtEQ.
 func UnlockedAt(v time.Time) predicate.Achievement {
 	return predicate.Achievement(sql.FieldEQ(FieldUnlockedAt, v))
@@ -206,68 +201,23 @@ func DescriptionContainsFold(v string) predicate.Achievement {
 }
 
 // RarityEQ applies the EQ predicate on the "rarity" field.
-func RarityEQ(v string) predicate.Achievement {
+func RarityEQ(v Rarity) predicate.Achievement {
 	return predicate.Achievement(sql.FieldEQ(FieldRarity, v))
 }
 
 // RarityNEQ applies the NEQ predicate on the "rarity" field.
-func RarityNEQ(v string) predicate.Achievement {
+func RarityNEQ(v Rarity) predicate.Achievement {
 	return predicate.Achievement(sql.FieldNEQ(FieldRarity, v))
 }
 
 // RarityIn applies the In predicate on the "rarity" field.
-func RarityIn(vs ...string) predicate.Achievement {
+func RarityIn(vs ...Rarity) predicate.Achievement {
 	return predicate.Achievement(sql.FieldIn(FieldRarity, vs...))
 }
 
 // RarityNotIn applies the NotIn predicate on the "rarity" field.
-func RarityNotIn(vs ...string) predicate.Achievement {
+func RarityNotIn(vs ...Rarity) predicate.Achievement {
 	return predicate.Achievement(sql.FieldNotIn(FieldRarity, vs...))
-}
-
-// RarityGT applies the GT predicate on the "rarity" field.
-func RarityGT(v string) predicate.Achievement {
-	return predicate.Achievement(sql.FieldGT(FieldRarity, v))
-}
-
-// RarityGTE applies the GTE predicate on the "rarity" field.
-func RarityGTE(v string) predicate.Achievement {
-	return predicate.Achievement(sql.FieldGTE(FieldRarity, v))
-}
-
-// RarityLT applies the LT predicate on the "rarity" field.
-func RarityLT(v string) predicate.Achievement {
-	return predicate.Achievement(sql.FieldLT(FieldRarity, v))
-}
-
-// RarityLTE applies the LTE predicate on the "rarity" field.
-func RarityLTE(v string) predicate.Achievement {
-	return predicate.Achievement(sql.FieldLTE(FieldRarity, v))
-}
-
-// RarityContains applies the Contains predicate on the "rarity" field.
-func RarityContains(v string) predicate.Achievement {
-	return predicate.Achievement(sql.FieldContains(FieldRarity, v))
-}
-
-// RarityHasPrefix applies the HasPrefix predicate on the "rarity" field.
-func RarityHasPrefix(v string) predicate.Achievement {
-	return predicate.Achievement(sql.FieldHasPrefix(FieldRarity, v))
-}
-
-// RarityHasSuffix applies the HasSuffix predicate on the "rarity" field.
-func RarityHasSuffix(v string) predicate.Achievement {
-	return predicate.Achievement(sql.FieldHasSuffix(FieldRarity, v))
-}
-
-// RarityEqualFold applies the EqualFold predicate on the "rarity" field.
-func RarityEqualFold(v string) predicate.Achievement {
-	return predicate.Achievement(sql.FieldEqualFold(FieldRarity, v))
-}
-
-// RarityContainsFold applies the ContainsFold predicate on the "rarity" field.
-func RarityContainsFold(v string) predicate.Achievement {
-	return predicate.Achievement(sql.FieldContainsFold(FieldRarity, v))
 }
 
 // UnlockedAtEQ applies the EQ predicate on the "unlocked_at" field.

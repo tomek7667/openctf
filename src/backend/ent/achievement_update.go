@@ -58,13 +58,13 @@ func (_u *AchievementUpdate) SetNillableDescription(v *string) *AchievementUpdat
 }
 
 // SetRarity sets the "rarity" field.
-func (_u *AchievementUpdate) SetRarity(v string) *AchievementUpdate {
+func (_u *AchievementUpdate) SetRarity(v achievement.Rarity) *AchievementUpdate {
 	_u.mutation.SetRarity(v)
 	return _u
 }
 
 // SetNillableRarity sets the "rarity" field if the given value is not nil.
-func (_u *AchievementUpdate) SetNillableRarity(v *string) *AchievementUpdate {
+func (_u *AchievementUpdate) SetNillableRarity(v *achievement.Rarity) *AchievementUpdate {
 	if v != nil {
 		_u.SetRarity(*v)
 	}
@@ -136,6 +136,11 @@ func (_u *AchievementUpdate) ExecX(ctx context.Context) {
 
 // check runs all checks and user-defined validators on the builder.
 func (_u *AchievementUpdate) check() error {
+	if v, ok := _u.mutation.Rarity(); ok {
+		if err := achievement.RarityValidator(v); err != nil {
+			return &ValidationError{Name: "rarity", err: fmt.Errorf(`ent: validator failed for field "Achievement.rarity": %w`, err)}
+		}
+	}
 	if _u.mutation.UserCleared() && len(_u.mutation.UserIDs()) > 0 {
 		return errors.New(`ent: clearing a required unique edge "Achievement.user"`)
 	}
@@ -161,7 +166,7 @@ func (_u *AchievementUpdate) sqlSave(ctx context.Context) (_node int, err error)
 		_spec.SetField(achievement.FieldDescription, field.TypeString, value)
 	}
 	if value, ok := _u.mutation.Rarity(); ok {
-		_spec.SetField(achievement.FieldRarity, field.TypeString, value)
+		_spec.SetField(achievement.FieldRarity, field.TypeEnum, value)
 	}
 	if value, ok := _u.mutation.UnlockedAt(); ok {
 		_spec.SetField(achievement.FieldUnlockedAt, field.TypeTime, value)
@@ -244,13 +249,13 @@ func (_u *AchievementUpdateOne) SetNillableDescription(v *string) *AchievementUp
 }
 
 // SetRarity sets the "rarity" field.
-func (_u *AchievementUpdateOne) SetRarity(v string) *AchievementUpdateOne {
+func (_u *AchievementUpdateOne) SetRarity(v achievement.Rarity) *AchievementUpdateOne {
 	_u.mutation.SetRarity(v)
 	return _u
 }
 
 // SetNillableRarity sets the "rarity" field if the given value is not nil.
-func (_u *AchievementUpdateOne) SetNillableRarity(v *string) *AchievementUpdateOne {
+func (_u *AchievementUpdateOne) SetNillableRarity(v *achievement.Rarity) *AchievementUpdateOne {
 	if v != nil {
 		_u.SetRarity(*v)
 	}
@@ -335,6 +340,11 @@ func (_u *AchievementUpdateOne) ExecX(ctx context.Context) {
 
 // check runs all checks and user-defined validators on the builder.
 func (_u *AchievementUpdateOne) check() error {
+	if v, ok := _u.mutation.Rarity(); ok {
+		if err := achievement.RarityValidator(v); err != nil {
+			return &ValidationError{Name: "rarity", err: fmt.Errorf(`ent: validator failed for field "Achievement.rarity": %w`, err)}
+		}
+	}
 	if _u.mutation.UserCleared() && len(_u.mutation.UserIDs()) > 0 {
 		return errors.New(`ent: clearing a required unique edge "Achievement.user"`)
 	}
@@ -377,7 +387,7 @@ func (_u *AchievementUpdateOne) sqlSave(ctx context.Context) (_node *Achievement
 		_spec.SetField(achievement.FieldDescription, field.TypeString, value)
 	}
 	if value, ok := _u.mutation.Rarity(); ok {
-		_spec.SetField(achievement.FieldRarity, field.TypeString, value)
+		_spec.SetField(achievement.FieldRarity, field.TypeEnum, value)
 	}
 	if value, ok := _u.mutation.UnlockedAt(); ok {
 		_spec.SetField(achievement.FieldUnlockedAt, field.TypeTime, value)

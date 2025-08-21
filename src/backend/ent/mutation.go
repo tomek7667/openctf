@@ -59,7 +59,7 @@ type AchievementMutation struct {
 	id            *int
 	name          *string
 	description   *string
-	rarity        *string
+	rarity        *achievement.Rarity
 	unlocked_at   *time.Time
 	clearedFields map[string]struct{}
 	user          *int
@@ -240,12 +240,12 @@ func (m *AchievementMutation) ResetDescription() {
 }
 
 // SetRarity sets the "rarity" field.
-func (m *AchievementMutation) SetRarity(s string) {
-	m.rarity = &s
+func (m *AchievementMutation) SetRarity(a achievement.Rarity) {
+	m.rarity = &a
 }
 
 // Rarity returns the value of the "rarity" field in the mutation.
-func (m *AchievementMutation) Rarity() (r string, exists bool) {
+func (m *AchievementMutation) Rarity() (r achievement.Rarity, exists bool) {
 	v := m.rarity
 	if v == nil {
 		return
@@ -256,7 +256,7 @@ func (m *AchievementMutation) Rarity() (r string, exists bool) {
 // OldRarity returns the old "rarity" field's value of the Achievement entity.
 // If the Achievement object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *AchievementMutation) OldRarity(ctx context.Context) (v string, err error) {
+func (m *AchievementMutation) OldRarity(ctx context.Context) (v achievement.Rarity, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldRarity is only allowed on UpdateOne operations")
 	}
@@ -454,7 +454,7 @@ func (m *AchievementMutation) SetField(name string, value ent.Value) error {
 		m.SetDescription(v)
 		return nil
 	case achievement.FieldRarity:
-		v, ok := value.(string)
+		v, ok := value.(achievement.Rarity)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}

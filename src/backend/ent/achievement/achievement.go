@@ -3,6 +3,7 @@
 package achievement
 
 import (
+	"fmt"
 	"time"
 
 	"entgo.io/ent/dialect/sql"
@@ -69,6 +70,31 @@ var (
 	// DefaultUnlockedAt holds the default value on creation for the "unlocked_at" field.
 	DefaultUnlockedAt time.Time
 )
+
+// Rarity defines the type for the "rarity" enum field.
+type Rarity string
+
+// Rarity values.
+const (
+	RarityCommon    Rarity = "common"
+	RarityRare      Rarity = "rare"
+	RarityEpic      Rarity = "epic"
+	RarityLegendary Rarity = "legendary"
+)
+
+func (r Rarity) String() string {
+	return string(r)
+}
+
+// RarityValidator is a validator for the "rarity" field enum values. It is called by the builders before save.
+func RarityValidator(r Rarity) error {
+	switch r {
+	case RarityCommon, RarityRare, RarityEpic, RarityLegendary:
+		return nil
+	default:
+		return fmt.Errorf("achievement: invalid enum value for rarity field: %q", r)
+	}
+}
 
 // OrderOption defines the ordering options for the Achievement queries.
 type OrderOption func(*sql.Selector)

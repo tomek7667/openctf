@@ -7,6 +7,7 @@ import (
 
 	"openctfbackend/ent"
 	"openctfbackend/ent/team"
+	"openctfbackend/internal/achievements"
 )
 
 type CreateTeamDto struct {
@@ -73,6 +74,10 @@ func (c *Client) CreateTeam(ctx context.Context, captain *ent.User, dto *CreateT
 	_, err = c.AddActivity(ctx, tx, TeamActivityType, "Created a team", dto.Name, captain.ID)
 	if err != nil {
 		return nil, fmt.Errorf("failed to add activity for team creation: %w", err)
+	}
+	_, err = c.CheckAddAchievement(ctx, tx, achievements.CreatedTeamAchievement, captain)
+	if err != nil {
+		return nil, fmt.Errorf("failed to check and add achievement for team creation: %w", err)
 	}
 	if err := tx.Commit(); err != nil {
 		return nil, fmt.Errorf("committing transaction failed: %w", err)

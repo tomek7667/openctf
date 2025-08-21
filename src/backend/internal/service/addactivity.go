@@ -14,6 +14,7 @@ func (c *Client) AddActivity(
 	userId int,
 ) (*ent.Activity, error) {
 	var err error
+	shouldCommit := tx == nil
 	if tx == nil {
 		tx, err = c.C.BeginTx(ctx, nil)
 		if err != nil {
@@ -29,6 +30,11 @@ func (c *Client) AddActivity(
 		Save(ctx)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create activity '%s': %w", title, err)
+	}
+	if shouldCommit {
+		if err = tx.Commit(); err != nil {
+			return nil, fmt.Errorf("failed to commit add activity: %w", err)
+		}
 	}
 	return activity, nil
 }

@@ -36,7 +36,7 @@ func (_c *AchievementCreate) SetDescription(v string) *AchievementCreate {
 }
 
 // SetRarity sets the "rarity" field.
-func (_c *AchievementCreate) SetRarity(v string) *AchievementCreate {
+func (_c *AchievementCreate) SetRarity(v achievement.Rarity) *AchievementCreate {
 	_c.mutation.SetRarity(v)
 	return _c
 }
@@ -118,6 +118,11 @@ func (_c *AchievementCreate) check() error {
 	if _, ok := _c.mutation.Rarity(); !ok {
 		return &ValidationError{Name: "rarity", err: errors.New(`ent: missing required field "Achievement.rarity"`)}
 	}
+	if v, ok := _c.mutation.Rarity(); ok {
+		if err := achievement.RarityValidator(v); err != nil {
+			return &ValidationError{Name: "rarity", err: fmt.Errorf(`ent: validator failed for field "Achievement.rarity": %w`, err)}
+		}
+	}
 	if _, ok := _c.mutation.UnlockedAt(); !ok {
 		return &ValidationError{Name: "unlocked_at", err: errors.New(`ent: missing required field "Achievement.unlocked_at"`)}
 	}
@@ -160,7 +165,7 @@ func (_c *AchievementCreate) createSpec() (*Achievement, *sqlgraph.CreateSpec) {
 		_node.Description = value
 	}
 	if value, ok := _c.mutation.Rarity(); ok {
-		_spec.SetField(achievement.FieldRarity, field.TypeString, value)
+		_spec.SetField(achievement.FieldRarity, field.TypeEnum, value)
 		_node.Rarity = value
 	}
 	if value, ok := _c.mutation.UnlockedAt(); ok {
@@ -261,7 +266,7 @@ func (u *AchievementUpsert) UpdateDescription() *AchievementUpsert {
 }
 
 // SetRarity sets the "rarity" field.
-func (u *AchievementUpsert) SetRarity(v string) *AchievementUpsert {
+func (u *AchievementUpsert) SetRarity(v achievement.Rarity) *AchievementUpsert {
 	u.Set(achievement.FieldRarity, v)
 	return u
 }
@@ -353,7 +358,7 @@ func (u *AchievementUpsertOne) UpdateDescription() *AchievementUpsertOne {
 }
 
 // SetRarity sets the "rarity" field.
-func (u *AchievementUpsertOne) SetRarity(v string) *AchievementUpsertOne {
+func (u *AchievementUpsertOne) SetRarity(v achievement.Rarity) *AchievementUpsertOne {
 	return u.Update(func(s *AchievementUpsert) {
 		s.SetRarity(v)
 	})
@@ -613,7 +618,7 @@ func (u *AchievementUpsertBulk) UpdateDescription() *AchievementUpsertBulk {
 }
 
 // SetRarity sets the "rarity" field.
-func (u *AchievementUpsertBulk) SetRarity(v string) *AchievementUpsertBulk {
+func (u *AchievementUpsertBulk) SetRarity(v achievement.Rarity) *AchievementUpsertBulk {
 	return u.Update(func(s *AchievementUpsert) {
 		s.SetRarity(v)
 	})

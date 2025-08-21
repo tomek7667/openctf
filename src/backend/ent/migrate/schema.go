@@ -13,7 +13,7 @@ var (
 		{Name: "id", Type: field.TypeInt, Increment: true},
 		{Name: "name", Type: field.TypeString, Unique: true},
 		{Name: "description", Type: field.TypeString},
-		{Name: "rarity", Type: field.TypeString},
+		{Name: "rarity", Type: field.TypeEnum, Enums: []string{"common", "rare", "epic", "legendary"}},
 		{Name: "unlocked_at", Type: field.TypeTime},
 		{Name: "achievement_user", Type: field.TypeInt},
 	}
@@ -28,6 +28,13 @@ var (
 				Columns:    []*schema.Column{AchievementsColumns[5]},
 				RefColumns: []*schema.Column{UsersColumns[0]},
 				OnDelete:   schema.Cascade,
+			},
+		},
+		Indexes: []*schema.Index{
+			{
+				Name:    "achievement_name_achievement_user",
+				Unique:  true,
+				Columns: []*schema.Column{AchievementsColumns[1], AchievementsColumns[5]},
 			},
 		},
 	}

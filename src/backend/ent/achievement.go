@@ -23,7 +23,7 @@ type Achievement struct {
 	// Description holds the value of the "description" field.
 	Description string `json:"description"`
 	// Rarity holds the value of the "rarity" field.
-	Rarity string `json:"rarity"`
+	Rarity achievement.Rarity `json:"rarity"`
 	// UnlockedAt holds the value of the "unlocked_at" field.
 	UnlockedAt time.Time `json:"unlocked_at"`
 	// Edges holds the relations/edges for other nodes in the graph.
@@ -103,7 +103,7 @@ func (_m *Achievement) assignValues(columns []string, values []any) error {
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field rarity", values[i])
 			} else if value.Valid {
-				_m.Rarity = value.String
+				_m.Rarity = achievement.Rarity(value.String)
 			}
 		case achievement.FieldUnlockedAt:
 			if value, ok := values[i].(*sql.NullTime); !ok {
@@ -166,7 +166,7 @@ func (_m *Achievement) String() string {
 	builder.WriteString(_m.Description)
 	builder.WriteString(", ")
 	builder.WriteString("rarity=")
-	builder.WriteString(_m.Rarity)
+	builder.WriteString(fmt.Sprintf("%v", _m.Rarity))
 	builder.WriteString(", ")
 	builder.WriteString("unlocked_at=")
 	builder.WriteString(_m.UnlockedAt.Format(time.ANSIC))
