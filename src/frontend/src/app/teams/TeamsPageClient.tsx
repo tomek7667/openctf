@@ -37,7 +37,6 @@ interface PaginationState {
 interface TeamFiltersState {
 	search: string;
 	countries: string[];
-	privacy?: string;
 	minRating?: number;
 	recruiting?: boolean;
 }
@@ -293,7 +292,7 @@ export default function TeamsPageClient({
 }: {
 	teamsList: TeamLeaderboard[];
 }) {
-	const { user, isAuthenticated } = useAuthStore();
+	const { isAuthenticated } = useAuthStore();
 	const [teams, setTeams] = useState<TeamLeaderboard[]>(teamsList);
 	// const [userTeams, setUserTeams] = useState<Team[]>([]);
 	const [isLoading, setIsLoading] = useState(true);
@@ -435,7 +434,6 @@ export default function TeamsPageClient({
 	const hasActiveFilters =
 		filters.search ||
 		filters.countries.length > 0 ||
-		filters.privacy ||
 		filters.minRating ||
 		filters.recruiting !== undefined;
 
@@ -499,21 +497,6 @@ export default function TeamsPageClient({
 
 								{/* Quick Filters */}
 								<div className="flex flex-wrap gap-1">
-									<Badge
-										variant={
-											filters.privacy === "public" ? "default" : "outline"
-										}
-										className="cursor-pointer text-xs font-mono h-8 px-2"
-										onClick={() =>
-											updateFilter(
-												"privacy",
-												filters.privacy === "public" ? undefined : "public"
-											)
-										}
-									>
-										<Globe className="h-3 w-3 mr-1" />
-										Public
-									</Badge>
 									<Badge
 										variant={
 											filters.recruiting === true ? "default" : "outline"
