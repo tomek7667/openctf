@@ -99,22 +99,47 @@ FROM
 -- Create "aggregated_yearly_teams" view
 DROP VIEW IF EXISTS "aggregated_yearly_teams";
 CREATE OR REPLACE VIEW "aggregated_yearly_teams" AS
-SELECT
-	t.*,
-	EXTRACT(YEAR FROM c.end) AS "year",
-	SUM(p.assigned_weight_points) AS "team_points"
-FROM
-	teams t
-LEFT JOIN
-	places p ON
-	p.place_associated_team = t.id
-INNER JOIN
-	contests c ON
-	c.id = p.contest_places
-GROUP BY
-	t.id,
+WITH team_year AS (
+  SELECT
+    t.*,
+    EXTRACT(YEAR FROM c.end) AS "year",
+    SUM(p.assigned_weight_points) AS "team_points",
+	(
+		SELECT
+			COUNT(tm.user_id)
+		FROM
+			"team_members" tm
+		WHERE
+			t.id = tm.team_id
+	) AS "members",
+	AVG(p.place) AS "avg_place",
+	COUNT(p.id) AS "contests_count",
+	(
+		SELECT
+			COUNT(p2.id)
+		FROM
+			places p2
+		WHERE
+			p2.place_associated_team = t.id
+			AND p2.place = 1
+	) AS "contests_won"
+  FROM teams t
+  LEFT JOIN places p ON
+  	p.place_associated_team = t.id
+  INNER JOIN contests c ON
+  	c.id = p.contest_places
+  GROUP BY
+  	t.id,
 	t.name,
-	EXTRACT(YEAR FROM c.end);
+	EXTRACT(YEAR FROM c.end)
+)
+SELECT
+  ty.*,
+  ROW_NUMBER() OVER (
+    PARTITION BY ty."year"
+    ORDER BY ty.team_points DESC, ty.id ASC
+  ) AS "rank"
+FROM team_year ty;
 
 -- Create "aggregated_team_details" view
 DROP VIEW IF EXISTS "aggregated_team_details";

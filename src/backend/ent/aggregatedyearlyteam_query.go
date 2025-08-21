@@ -189,12 +189,12 @@ func (_q *AggregatedYearlyTeamQuery) Clone() *AggregatedYearlyTeamQuery {
 // Example:
 //
 //	var v []struct {
-//		Name string `json:"name"`
+//		ID int `json:"id"`
 //		Count int `json:"count,omitempty"`
 //	}
 //
 //	client.AggregatedYearlyTeam.Query().
-//		GroupBy(aggregatedyearlyteam.FieldName).
+//		GroupBy(aggregatedyearlyteam.FieldID).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
 func (_q *AggregatedYearlyTeamQuery) GroupBy(field string, fields ...string) *AggregatedYearlyTeamGroupBy {
@@ -212,11 +212,11 @@ func (_q *AggregatedYearlyTeamQuery) GroupBy(field string, fields ...string) *Ag
 // Example:
 //
 //	var v []struct {
-//		Name string `json:"name"`
+//		ID int `json:"id"`
 //	}
 //
 //	client.AggregatedYearlyTeam.Query().
-//		Select(aggregatedyearlyteam.FieldName).
+//		Select(aggregatedyearlyteam.FieldID).
 //		Scan(ctx, &v)
 func (_q *AggregatedYearlyTeamQuery) Select(fields ...string) *AggregatedYearlyTeamSelect {
 	_q.ctx.Fields = append(_q.ctx.Fields, fields...)

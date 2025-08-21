@@ -56,15 +56,15 @@ func init() {
 	aggregatedyearlyteamFields := schema.AggregatedYearlyTeam{}.Fields()
 	_ = aggregatedyearlyteamFields
 	// aggregatedyearlyteamDescCountryCode is the schema descriptor for country_code field.
-	aggregatedyearlyteamDescCountryCode := aggregatedyearlyteamFields[2].Descriptor()
+	aggregatedyearlyteamDescCountryCode := aggregatedyearlyteamFields[3].Descriptor()
 	// aggregatedyearlyteam.DefaultCountryCode holds the default value on creation for the country_code field.
 	aggregatedyearlyteam.DefaultCountryCode = aggregatedyearlyteamDescCountryCode.Default.(string)
 	// aggregatedyearlyteamDescRecruiting is the schema descriptor for recruiting field.
-	aggregatedyearlyteamDescRecruiting := aggregatedyearlyteamFields[8].Descriptor()
+	aggregatedyearlyteamDescRecruiting := aggregatedyearlyteamFields[9].Descriptor()
 	// aggregatedyearlyteam.DefaultRecruiting holds the default value on creation for the recruiting field.
 	aggregatedyearlyteam.DefaultRecruiting = aggregatedyearlyteamDescRecruiting.Default.(bool)
 	// aggregatedyearlyteamDescCreatedAt is the schema descriptor for created_at field.
-	aggregatedyearlyteamDescCreatedAt := aggregatedyearlyteamFields[11].Descriptor()
+	aggregatedyearlyteamDescCreatedAt := aggregatedyearlyteamFields[12].Descriptor()
 	// aggregatedyearlyteam.DefaultCreatedAt holds the default value on creation for the created_at field.
 	aggregatedyearlyteam.DefaultCreatedAt = aggregatedyearlyteamDescCreatedAt.Default.(time.Time)
 	contestFields := schema.Contest{}.Fields()

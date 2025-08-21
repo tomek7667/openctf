@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import TeamPageClient from "./TeamPageClient";
 import { getTeamDetails } from "@/ssr/api/teams";
-import { GoBack } from "./GoBack";
+import { GoBack } from "@/components/layout/GoBack";
 
 export default async function TeamPage({
 	params: { id },

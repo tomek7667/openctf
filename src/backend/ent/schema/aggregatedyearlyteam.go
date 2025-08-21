@@ -21,22 +21,47 @@ type AggregatedYearlyTeam struct {
 func (AggregatedYearlyTeam) Annotations() []schema.Annotation {
 	return []schema.Annotation{
 		entsql.View(`
-SELECT
-	t.*,
-	EXTRACT(YEAR FROM c.end) AS "year",
-	SUM(p.assigned_weight_points) AS "team_points"
-FROM
-	teams t
-LEFT JOIN
-	places p ON
-	p.place_associated_team = t.id
-INNER JOIN
-	contests c ON
-	c.id = p.contest_places
-GROUP BY
-	t.id,
+WITH team_year AS (
+  SELECT
+    t.*,
+    EXTRACT(YEAR FROM c.end) AS "year",
+    SUM(p.assigned_weight_points) AS "team_points",
+	(
+		SELECT
+			COUNT(tm.user_id)
+		FROM
+			"team_members" tm
+		WHERE
+			t.id = tm.team_id
+	) AS "members",
+	AVG(p.place) AS "avg_place",
+	COUNT(p.id) AS "contests_count",
+	(
+		SELECT
+			COUNT(p2.id)
+		FROM
+			places p2
+		WHERE
+			p2.place_associated_team = t.id
+			AND p2.place = 1
+	) AS "contests_won"
+  FROM teams t
+  LEFT JOIN places p ON
+  	p.place_associated_team = t.id
+  INNER JOIN contests c ON
+  	c.id = p.contest_places
+  GROUP BY
+  	t.id,
 	t.name,
-	EXTRACT(YEAR FROM c.end);
+	EXTRACT(YEAR FROM c.end)
+)
+SELECT
+  ty.*,
+  ROW_NUMBER() OVER (
+    PARTITION BY ty."year"
+    ORDER BY ty.team_points DESC, ty.id ASC
+  ) AS "rank"
+FROM team_year ty;
 `),
 	}
 }
@@ -44,6 +69,7 @@ GROUP BY
 func (AggregatedYearlyTeam) Fields() []ent.Field {
 	return TrimOmitEmptyTag([]ent.Field{
 		// basically copy+paste from teams
+		field.Int("id"),
 		field.String("name").Unique(),
 		field.String("description").Nillable().Optional(),
 		field.String("country_code").Default("global"),
@@ -62,6 +88,11 @@ func (AggregatedYearlyTeam) Fields() []ent.Field {
 
 		// aggregated fields
 		field.Int("year"),
+		field.Int("rank"),
 		field.Float("team_points").Nillable().Optional(),
+		field.Int("members").Nillable().Optional(),
+		field.Float("avg_place").Nillable().Optional(),
+		field.Int("contests_count"),
+		field.Int("contests_won"),
 	})
 }

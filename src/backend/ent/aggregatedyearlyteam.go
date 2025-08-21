@@ -16,6 +16,8 @@ import (
 // AggregatedYearlyTeam is the model entity for the AggregatedYearlyTeam schema.
 type AggregatedYearlyTeam struct {
 	config `json:"-"`
+	// ID holds the value of the "id" field.
+	ID int `json:"id"`
 	// Name holds the value of the "name" field.
 	Name string `json:"name"`
 	// Description holds the value of the "description" field.
@@ -48,8 +50,18 @@ type AggregatedYearlyTeam struct {
 	VerifiedAt *time.Time `json:"verified_at"`
 	// Year holds the value of the "year" field.
 	Year int `json:"year"`
+	// Rank holds the value of the "rank" field.
+	Rank int `json:"rank"`
 	// TeamPoints holds the value of the "team_points" field.
-	TeamPoints   *float64 `json:"team_points"`
+	TeamPoints *float64 `json:"team_points"`
+	// Members holds the value of the "members" field.
+	Members *int `json:"members"`
+	// AvgPlace holds the value of the "avg_place" field.
+	AvgPlace *float64 `json:"avg_place"`
+	// ContestsCount holds the value of the "contests_count" field.
+	ContestsCount *int `json:"contests_count"`
+	// ContestsWon holds the value of the "contests_won" field.
+	ContestsWon  int `json:"contests_won"`
 	selectValues sql.SelectValues
 }
 
@@ -62,9 +74,9 @@ func (*AggregatedYearlyTeam) scanValues(columns []string) ([]any, error) {
 			values[i] = new([]byte)
 		case aggregatedyearlyteam.FieldRecruiting:
 			values[i] = new(sql.NullBool)
-		case aggregatedyearlyteam.FieldTeamPoints:
+		case aggregatedyearlyteam.FieldTeamPoints, aggregatedyearlyteam.FieldAvgPlace:
 			values[i] = new(sql.NullFloat64)
-		case aggregatedyearlyteam.FieldCtftimeID, aggregatedyearlyteam.FieldYear:
+		case aggregatedyearlyteam.FieldID, aggregatedyearlyteam.FieldCtftimeID, aggregatedyearlyteam.FieldYear, aggregatedyearlyteam.FieldRank, aggregatedyearlyteam.FieldMembers, aggregatedyearlyteam.FieldContestsCount, aggregatedyearlyteam.FieldContestsWon:
 			values[i] = new(sql.NullInt64)
 		case aggregatedyearlyteam.FieldName, aggregatedyearlyteam.FieldDescription, aggregatedyearlyteam.FieldCountryCode, aggregatedyearlyteam.FieldTeamLogoURL, aggregatedyearlyteam.FieldBannerImageURL, aggregatedyearlyteam.FieldWebsiteURL, aggregatedyearlyteam.FieldDiscordURL, aggregatedyearlyteam.FieldGithubURL, aggregatedyearlyteam.FieldContactInfo:
 			values[i] = new(sql.NullString)
@@ -85,6 +97,12 @@ func (_m *AggregatedYearlyTeam) assignValues(columns []string, values []any) err
 	}
 	for i := range columns {
 		switch columns[i] {
+		case aggregatedyearlyteam.FieldID:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field id", values[i])
+			} else if value.Valid {
+				_m.ID = int(value.Int64)
+			}
 		case aggregatedyearlyteam.FieldName:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field name", values[i])
@@ -193,12 +211,45 @@ func (_m *AggregatedYearlyTeam) assignValues(columns []string, values []any) err
 			} else if value.Valid {
 				_m.Year = int(value.Int64)
 			}
+		case aggregatedyearlyteam.FieldRank:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field rank", values[i])
+			} else if value.Valid {
+				_m.Rank = int(value.Int64)
+			}
 		case aggregatedyearlyteam.FieldTeamPoints:
 			if value, ok := values[i].(*sql.NullFloat64); !ok {
 				return fmt.Errorf("unexpected type %T for field team_points", values[i])
 			} else if value.Valid {
 				_m.TeamPoints = new(float64)
 				*_m.TeamPoints = value.Float64
+			}
+		case aggregatedyearlyteam.FieldMembers:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field members", values[i])
+			} else if value.Valid {
+				_m.Members = new(int)
+				*_m.Members = int(value.Int64)
+			}
+		case aggregatedyearlyteam.FieldAvgPlace:
+			if value, ok := values[i].(*sql.NullFloat64); !ok {
+				return fmt.Errorf("unexpected type %T for field avg_place", values[i])
+			} else if value.Valid {
+				_m.AvgPlace = new(float64)
+				*_m.AvgPlace = value.Float64
+			}
+		case aggregatedyearlyteam.FieldContestsCount:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field contests_count", values[i])
+			} else if value.Valid {
+				_m.ContestsCount = new(int)
+				*_m.ContestsCount = int(value.Int64)
+			}
+		case aggregatedyearlyteam.FieldContestsWon:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field contests_won", values[i])
+			} else if value.Valid {
+				_m.ContestsWon = int(value.Int64)
 			}
 		default:
 			_m.selectValues.Set(columns[i], values[i])
@@ -228,6 +279,9 @@ func (_m *AggregatedYearlyTeam) Unwrap() *AggregatedYearlyTeam {
 func (_m *AggregatedYearlyTeam) String() string {
 	var builder strings.Builder
 	builder.WriteString("AggregatedYearlyTeam(")
+	builder.WriteString("id=")
+	builder.WriteString(fmt.Sprintf("%v", _m.ID))
+	builder.WriteString(", ")
 	builder.WriteString("name=")
 	builder.WriteString(_m.Name)
 	builder.WriteString(", ")
@@ -296,10 +350,31 @@ func (_m *AggregatedYearlyTeam) String() string {
 	builder.WriteString("year=")
 	builder.WriteString(fmt.Sprintf("%v", _m.Year))
 	builder.WriteString(", ")
+	builder.WriteString("rank=")
+	builder.WriteString(fmt.Sprintf("%v", _m.Rank))
+	builder.WriteString(", ")
 	if v := _m.TeamPoints; v != nil {
 		builder.WriteString("team_points=")
 		builder.WriteString(fmt.Sprintf("%v", *v))
 	}
+	builder.WriteString(", ")
+	if v := _m.Members; v != nil {
+		builder.WriteString("members=")
+		builder.WriteString(fmt.Sprintf("%v", *v))
+	}
+	builder.WriteString(", ")
+	if v := _m.AvgPlace; v != nil {
+		builder.WriteString("avg_place=")
+		builder.WriteString(fmt.Sprintf("%v", *v))
+	}
+	builder.WriteString(", ")
+	if v := _m.ContestsCount; v != nil {
+		builder.WriteString("contests_count=")
+		builder.WriteString(fmt.Sprintf("%v", *v))
+	}
+	builder.WriteString(", ")
+	builder.WriteString("contests_won=")
+	builder.WriteString(fmt.Sprintf("%v", _m.ContestsWon))
 	builder.WriteByte(')')
 	return builder.String()
 }

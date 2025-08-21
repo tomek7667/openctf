@@ -11,6 +11,8 @@ import (
 const (
 	// Label holds the string label denoting the aggregatedyearlyteam type in the database.
 	Label = "aggregated_yearly_team"
+	// FieldID holds the string denoting the id field in the database.
+	FieldID = "id"
 	// FieldName holds the string denoting the name field in the database.
 	FieldName = "name"
 	// FieldDescription holds the string denoting the description field in the database.
@@ -43,14 +45,25 @@ const (
 	FieldVerifiedAt = "verified_at"
 	// FieldYear holds the string denoting the year field in the database.
 	FieldYear = "year"
+	// FieldRank holds the string denoting the rank field in the database.
+	FieldRank = "rank"
 	// FieldTeamPoints holds the string denoting the team_points field in the database.
 	FieldTeamPoints = "team_points"
+	// FieldMembers holds the string denoting the members field in the database.
+	FieldMembers = "members"
+	// FieldAvgPlace holds the string denoting the avg_place field in the database.
+	FieldAvgPlace = "avg_place"
+	// FieldContestsCount holds the string denoting the contests_count field in the database.
+	FieldContestsCount = "contests_count"
+	// FieldContestsWon holds the string denoting the contests_won field in the database.
+	FieldContestsWon = "contests_won"
 	// Table holds the table name of the aggregatedyearlyteam in the database.
 	Table = "aggregated_yearly_teams"
 )
 
 // Columns holds all SQL columns for aggregatedyearlyteam fields.
 var Columns = []string{
+	FieldID,
 	FieldName,
 	FieldDescription,
 	FieldCountryCode,
@@ -67,7 +80,12 @@ var Columns = []string{
 	FieldCtftimeVerifiedAt,
 	FieldVerifiedAt,
 	FieldYear,
+	FieldRank,
 	FieldTeamPoints,
+	FieldMembers,
+	FieldAvgPlace,
+	FieldContestsCount,
+	FieldContestsWon,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -91,6 +109,11 @@ var (
 
 // OrderOption defines the ordering options for the AggregatedYearlyTeam queries.
 type OrderOption func(*sql.Selector)
+
+// ByID orders the results by the id field.
+func ByID(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldID, opts...).ToFunc()
+}
 
 // ByName orders the results by the name field.
 func ByName(opts ...sql.OrderTermOption) OrderOption {
@@ -167,7 +190,32 @@ func ByYear(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldYear, opts...).ToFunc()
 }
 
+// ByRank orders the results by the rank field.
+func ByRank(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldRank, opts...).ToFunc()
+}
+
 // ByTeamPoints orders the results by the team_points field.
 func ByTeamPoints(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldTeamPoints, opts...).ToFunc()
+}
+
+// ByMembers orders the results by the members field.
+func ByMembers(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldMembers, opts...).ToFunc()
+}
+
+// ByAvgPlace orders the results by the avg_place field.
+func ByAvgPlace(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldAvgPlace, opts...).ToFunc()
+}
+
+// ByContestsCount orders the results by the contests_count field.
+func ByContestsCount(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldContestsCount, opts...).ToFunc()
+}
+
+// ByContestsWon orders the results by the contests_won field.
+func ByContestsWon(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldContestsWon, opts...).ToFunc()
 }

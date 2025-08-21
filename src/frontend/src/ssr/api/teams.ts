@@ -1,4 +1,4 @@
-import { TeamDetails } from "@/api";
+import { TeamDetails, TeamLeaderboard } from "@/api";
 import { LOCAL_API_BASE_URL } from "./constant";
 
 export const getTeamDetails = async (teamId: number): Promise<TeamDetails> => {
@@ -10,4 +10,15 @@ export const getTeamDetails = async (teamId: number): Promise<TeamDetails> => {
 	}
 	const { team } = data as { team: TeamDetails };
 	return team;
+};
+
+export const getLeaderboardList = async () => {
+	const url = `${LOCAL_API_BASE_URL}/api/teams/leaderboard`;
+	const response = await fetch(url);
+	const { data, success, message } = await response.json();
+	if (!success) {
+		throw new Error(message ?? "unknown error occurred");
+	}
+	const { leaderboard } = data as { leaderboard: TeamLeaderboard[] };
+	return leaderboard;
 };

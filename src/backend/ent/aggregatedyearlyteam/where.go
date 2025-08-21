@@ -9,6 +9,11 @@ import (
 	"entgo.io/ent/dialect/sql"
 )
 
+// ID applies equality check predicate on the "id" field. It's identical to IDEQ.
+func ID(v int) predicate.AggregatedYearlyTeam {
+	return predicate.AggregatedYearlyTeam(sql.FieldEQ(FieldID, v))
+}
+
 // Name applies equality check predicate on the "name" field. It's identical to NameEQ.
 func Name(v string) predicate.AggregatedYearlyTeam {
 	return predicate.AggregatedYearlyTeam(sql.FieldEQ(FieldName, v))
@@ -84,9 +89,74 @@ func Year(v int) predicate.AggregatedYearlyTeam {
 	return predicate.AggregatedYearlyTeam(sql.FieldEQ(FieldYear, v))
 }
 
+// Rank applies equality check predicate on the "rank" field. It's identical to RankEQ.
+func Rank(v int) predicate.AggregatedYearlyTeam {
+	return predicate.AggregatedYearlyTeam(sql.FieldEQ(FieldRank, v))
+}
+
 // TeamPoints applies equality check predicate on the "team_points" field. It's identical to TeamPointsEQ.
 func TeamPoints(v float64) predicate.AggregatedYearlyTeam {
 	return predicate.AggregatedYearlyTeam(sql.FieldEQ(FieldTeamPoints, v))
+}
+
+// Members applies equality check predicate on the "members" field. It's identical to MembersEQ.
+func Members(v int) predicate.AggregatedYearlyTeam {
+	return predicate.AggregatedYearlyTeam(sql.FieldEQ(FieldMembers, v))
+}
+
+// AvgPlace applies equality check predicate on the "avg_place" field. It's identical to AvgPlaceEQ.
+func AvgPlace(v float64) predicate.AggregatedYearlyTeam {
+	return predicate.AggregatedYearlyTeam(sql.FieldEQ(FieldAvgPlace, v))
+}
+
+// ContestsCount applies equality check predicate on the "contests_count" field. It's identical to ContestsCountEQ.
+func ContestsCount(v int) predicate.AggregatedYearlyTeam {
+	return predicate.AggregatedYearlyTeam(sql.FieldEQ(FieldContestsCount, v))
+}
+
+// ContestsWon applies equality check predicate on the "contests_won" field. It's identical to ContestsWonEQ.
+func ContestsWon(v int) predicate.AggregatedYearlyTeam {
+	return predicate.AggregatedYearlyTeam(sql.FieldEQ(FieldContestsWon, v))
+}
+
+// IDEQ applies the EQ predicate on the "id" field.
+func IDEQ(v int) predicate.AggregatedYearlyTeam {
+	return predicate.AggregatedYearlyTeam(sql.FieldEQ(FieldID, v))
+}
+
+// IDNEQ applies the NEQ predicate on the "id" field.
+func IDNEQ(v int) predicate.AggregatedYearlyTeam {
+	return predicate.AggregatedYearlyTeam(sql.FieldNEQ(FieldID, v))
+}
+
+// IDIn applies the In predicate on the "id" field.
+func IDIn(vs ...int) predicate.AggregatedYearlyTeam {
+	return predicate.AggregatedYearlyTeam(sql.FieldIn(FieldID, vs...))
+}
+
+// IDNotIn applies the NotIn predicate on the "id" field.
+func IDNotIn(vs ...int) predicate.AggregatedYearlyTeam {
+	return predicate.AggregatedYearlyTeam(sql.FieldNotIn(FieldID, vs...))
+}
+
+// IDGT applies the GT predicate on the "id" field.
+func IDGT(v int) predicate.AggregatedYearlyTeam {
+	return predicate.AggregatedYearlyTeam(sql.FieldGT(FieldID, v))
+}
+
+// IDGTE applies the GTE predicate on the "id" field.
+func IDGTE(v int) predicate.AggregatedYearlyTeam {
+	return predicate.AggregatedYearlyTeam(sql.FieldGTE(FieldID, v))
+}
+
+// IDLT applies the LT predicate on the "id" field.
+func IDLT(v int) predicate.AggregatedYearlyTeam {
+	return predicate.AggregatedYearlyTeam(sql.FieldLT(FieldID, v))
+}
+
+// IDLTE applies the LTE predicate on the "id" field.
+func IDLTE(v int) predicate.AggregatedYearlyTeam {
+	return predicate.AggregatedYearlyTeam(sql.FieldLTE(FieldID, v))
 }
 
 // NameEQ applies the EQ predicate on the "name" field.
@@ -994,6 +1064,46 @@ func YearLTE(v int) predicate.AggregatedYearlyTeam {
 	return predicate.AggregatedYearlyTeam(sql.FieldLTE(FieldYear, v))
 }
 
+// RankEQ applies the EQ predicate on the "rank" field.
+func RankEQ(v int) predicate.AggregatedYearlyTeam {
+	return predicate.AggregatedYearlyTeam(sql.FieldEQ(FieldRank, v))
+}
+
+// RankNEQ applies the NEQ predicate on the "rank" field.
+func RankNEQ(v int) predicate.AggregatedYearlyTeam {
+	return predicate.AggregatedYearlyTeam(sql.FieldNEQ(FieldRank, v))
+}
+
+// RankIn applies the In predicate on the "rank" field.
+func RankIn(vs ...int) predicate.AggregatedYearlyTeam {
+	return predicate.AggregatedYearlyTeam(sql.FieldIn(FieldRank, vs...))
+}
+
+// RankNotIn applies the NotIn predicate on the "rank" field.
+func RankNotIn(vs ...int) predicate.AggregatedYearlyTeam {
+	return predicate.AggregatedYearlyTeam(sql.FieldNotIn(FieldRank, vs...))
+}
+
+// RankGT applies the GT predicate on the "rank" field.
+func RankGT(v int) predicate.AggregatedYearlyTeam {
+	return predicate.AggregatedYearlyTeam(sql.FieldGT(FieldRank, v))
+}
+
+// RankGTE applies the GTE predicate on the "rank" field.
+func RankGTE(v int) predicate.AggregatedYearlyTeam {
+	return predicate.AggregatedYearlyTeam(sql.FieldGTE(FieldRank, v))
+}
+
+// RankLT applies the LT predicate on the "rank" field.
+func RankLT(v int) predicate.AggregatedYearlyTeam {
+	return predicate.AggregatedYearlyTeam(sql.FieldLT(FieldRank, v))
+}
+
+// RankLTE applies the LTE predicate on the "rank" field.
+func RankLTE(v int) predicate.AggregatedYearlyTeam {
+	return predicate.AggregatedYearlyTeam(sql.FieldLTE(FieldRank, v))
+}
+
 // TeamPointsEQ applies the EQ predicate on the "team_points" field.
 func TeamPointsEQ(v float64) predicate.AggregatedYearlyTeam {
 	return predicate.AggregatedYearlyTeam(sql.FieldEQ(FieldTeamPoints, v))
@@ -1042,6 +1152,196 @@ func TeamPointsIsNil() predicate.AggregatedYearlyTeam {
 // TeamPointsNotNil applies the NotNil predicate on the "team_points" field.
 func TeamPointsNotNil() predicate.AggregatedYearlyTeam {
 	return predicate.AggregatedYearlyTeam(sql.FieldNotNull(FieldTeamPoints))
+}
+
+// MembersEQ applies the EQ predicate on the "members" field.
+func MembersEQ(v int) predicate.AggregatedYearlyTeam {
+	return predicate.AggregatedYearlyTeam(sql.FieldEQ(FieldMembers, v))
+}
+
+// MembersNEQ applies the NEQ predicate on the "members" field.
+func MembersNEQ(v int) predicate.AggregatedYearlyTeam {
+	return predicate.AggregatedYearlyTeam(sql.FieldNEQ(FieldMembers, v))
+}
+
+// MembersIn applies the In predicate on the "members" field.
+func MembersIn(vs ...int) predicate.AggregatedYearlyTeam {
+	return predicate.AggregatedYearlyTeam(sql.FieldIn(FieldMembers, vs...))
+}
+
+// MembersNotIn applies the NotIn predicate on the "members" field.
+func MembersNotIn(vs ...int) predicate.AggregatedYearlyTeam {
+	return predicate.AggregatedYearlyTeam(sql.FieldNotIn(FieldMembers, vs...))
+}
+
+// MembersGT applies the GT predicate on the "members" field.
+func MembersGT(v int) predicate.AggregatedYearlyTeam {
+	return predicate.AggregatedYearlyTeam(sql.FieldGT(FieldMembers, v))
+}
+
+// MembersGTE applies the GTE predicate on the "members" field.
+func MembersGTE(v int) predicate.AggregatedYearlyTeam {
+	return predicate.AggregatedYearlyTeam(sql.FieldGTE(FieldMembers, v))
+}
+
+// MembersLT applies the LT predicate on the "members" field.
+func MembersLT(v int) predicate.AggregatedYearlyTeam {
+	return predicate.AggregatedYearlyTeam(sql.FieldLT(FieldMembers, v))
+}
+
+// MembersLTE applies the LTE predicate on the "members" field.
+func MembersLTE(v int) predicate.AggregatedYearlyTeam {
+	return predicate.AggregatedYearlyTeam(sql.FieldLTE(FieldMembers, v))
+}
+
+// MembersIsNil applies the IsNil predicate on the "members" field.
+func MembersIsNil() predicate.AggregatedYearlyTeam {
+	return predicate.AggregatedYearlyTeam(sql.FieldIsNull(FieldMembers))
+}
+
+// MembersNotNil applies the NotNil predicate on the "members" field.
+func MembersNotNil() predicate.AggregatedYearlyTeam {
+	return predicate.AggregatedYearlyTeam(sql.FieldNotNull(FieldMembers))
+}
+
+// AvgPlaceEQ applies the EQ predicate on the "avg_place" field.
+func AvgPlaceEQ(v float64) predicate.AggregatedYearlyTeam {
+	return predicate.AggregatedYearlyTeam(sql.FieldEQ(FieldAvgPlace, v))
+}
+
+// AvgPlaceNEQ applies the NEQ predicate on the "avg_place" field.
+func AvgPlaceNEQ(v float64) predicate.AggregatedYearlyTeam {
+	return predicate.AggregatedYearlyTeam(sql.FieldNEQ(FieldAvgPlace, v))
+}
+
+// AvgPlaceIn applies the In predicate on the "avg_place" field.
+func AvgPlaceIn(vs ...float64) predicate.AggregatedYearlyTeam {
+	return predicate.AggregatedYearlyTeam(sql.FieldIn(FieldAvgPlace, vs...))
+}
+
+// AvgPlaceNotIn applies the NotIn predicate on the "avg_place" field.
+func AvgPlaceNotIn(vs ...float64) predicate.AggregatedYearlyTeam {
+	return predicate.AggregatedYearlyTeam(sql.FieldNotIn(FieldAvgPlace, vs...))
+}
+
+// AvgPlaceGT applies the GT predicate on the "avg_place" field.
+func AvgPlaceGT(v float64) predicate.AggregatedYearlyTeam {
+	return predicate.AggregatedYearlyTeam(sql.FieldGT(FieldAvgPlace, v))
+}
+
+// AvgPlaceGTE applies the GTE predicate on the "avg_place" field.
+func AvgPlaceGTE(v float64) predicate.AggregatedYearlyTeam {
+	return predicate.AggregatedYearlyTeam(sql.FieldGTE(FieldAvgPlace, v))
+}
+
+// AvgPlaceLT applies the LT predicate on the "avg_place" field.
+func AvgPlaceLT(v float64) predicate.AggregatedYearlyTeam {
+	return predicate.AggregatedYearlyTeam(sql.FieldLT(FieldAvgPlace, v))
+}
+
+// AvgPlaceLTE applies the LTE predicate on the "avg_place" field.
+func AvgPlaceLTE(v float64) predicate.AggregatedYearlyTeam {
+	return predicate.AggregatedYearlyTeam(sql.FieldLTE(FieldAvgPlace, v))
+}
+
+// AvgPlaceIsNil applies the IsNil predicate on the "avg_place" field.
+func AvgPlaceIsNil() predicate.AggregatedYearlyTeam {
+	return predicate.AggregatedYearlyTeam(sql.FieldIsNull(FieldAvgPlace))
+}
+
+// AvgPlaceNotNil applies the NotNil predicate on the "avg_place" field.
+func AvgPlaceNotNil() predicate.AggregatedYearlyTeam {
+	return predicate.AggregatedYearlyTeam(sql.FieldNotNull(FieldAvgPlace))
+}
+
+// ContestsCountEQ applies the EQ predicate on the "contests_count" field.
+func ContestsCountEQ(v int) predicate.AggregatedYearlyTeam {
+	return predicate.AggregatedYearlyTeam(sql.FieldEQ(FieldContestsCount, v))
+}
+
+// ContestsCountNEQ applies the NEQ predicate on the "contests_count" field.
+func ContestsCountNEQ(v int) predicate.AggregatedYearlyTeam {
+	return predicate.AggregatedYearlyTeam(sql.FieldNEQ(FieldContestsCount, v))
+}
+
+// ContestsCountIn applies the In predicate on the "contests_count" field.
+func ContestsCountIn(vs ...int) predicate.AggregatedYearlyTeam {
+	return predicate.AggregatedYearlyTeam(sql.FieldIn(FieldContestsCount, vs...))
+}
+
+// ContestsCountNotIn applies the NotIn predicate on the "contests_count" field.
+func ContestsCountNotIn(vs ...int) predicate.AggregatedYearlyTeam {
+	return predicate.AggregatedYearlyTeam(sql.FieldNotIn(FieldContestsCount, vs...))
+}
+
+// ContestsCountGT applies the GT predicate on the "contests_count" field.
+func ContestsCountGT(v int) predicate.AggregatedYearlyTeam {
+	return predicate.AggregatedYearlyTeam(sql.FieldGT(FieldContestsCount, v))
+}
+
+// ContestsCountGTE applies the GTE predicate on the "contests_count" field.
+func ContestsCountGTE(v int) predicate.AggregatedYearlyTeam {
+	return predicate.AggregatedYearlyTeam(sql.FieldGTE(FieldContestsCount, v))
+}
+
+// ContestsCountLT applies the LT predicate on the "contests_count" field.
+func ContestsCountLT(v int) predicate.AggregatedYearlyTeam {
+	return predicate.AggregatedYearlyTeam(sql.FieldLT(FieldContestsCount, v))
+}
+
+// ContestsCountLTE applies the LTE predicate on the "contests_count" field.
+func ContestsCountLTE(v int) predicate.AggregatedYearlyTeam {
+	return predicate.AggregatedYearlyTeam(sql.FieldLTE(FieldContestsCount, v))
+}
+
+// ContestsCountIsNil applies the IsNil predicate on the "contests_count" field.
+func ContestsCountIsNil() predicate.AggregatedYearlyTeam {
+	return predicate.AggregatedYearlyTeam(sql.FieldIsNull(FieldContestsCount))
+}
+
+// ContestsCountNotNil applies the NotNil predicate on the "contests_count" field.
+func ContestsCountNotNil() predicate.AggregatedYearlyTeam {
+	return predicate.AggregatedYearlyTeam(sql.FieldNotNull(FieldContestsCount))
+}
+
+// ContestsWonEQ applies the EQ predicate on the "contests_won" field.
+func ContestsWonEQ(v int) predicate.AggregatedYearlyTeam {
+	return predicate.AggregatedYearlyTeam(sql.FieldEQ(FieldContestsWon, v))
+}
+
+// ContestsWonNEQ applies the NEQ predicate on the "contests_won" field.
+func ContestsWonNEQ(v int) predicate.AggregatedYearlyTeam {
+	return predicate.AggregatedYearlyTeam(sql.FieldNEQ(FieldContestsWon, v))
+}
+
+// ContestsWonIn applies the In predicate on the "contests_won" field.
+func ContestsWonIn(vs ...int) predicate.AggregatedYearlyTeam {
+	return predicate.AggregatedYearlyTeam(sql.FieldIn(FieldContestsWon, vs...))
+}
+
+// ContestsWonNotIn applies the NotIn predicate on the "contests_won" field.
+func ContestsWonNotIn(vs ...int) predicate.AggregatedYearlyTeam {
+	return predicate.AggregatedYearlyTeam(sql.FieldNotIn(FieldContestsWon, vs...))
+}
+
+// ContestsWonGT applies the GT predicate on the "contests_won" field.
+func ContestsWonGT(v int) predicate.AggregatedYearlyTeam {
+	return predicate.AggregatedYearlyTeam(sql.FieldGT(FieldContestsWon, v))
+}
+
+// ContestsWonGTE applies the GTE predicate on the "contests_won" field.
+func ContestsWonGTE(v int) predicate.AggregatedYearlyTeam {
+	return predicate.AggregatedYearlyTeam(sql.FieldGTE(FieldContestsWon, v))
+}
+
+// ContestsWonLT applies the LT predicate on the "contests_won" field.
+func ContestsWonLT(v int) predicate.AggregatedYearlyTeam {
+	return predicate.AggregatedYearlyTeam(sql.FieldLT(FieldContestsWon, v))
+}
+
+// ContestsWonLTE applies the LTE predicate on the "contests_won" field.
+func ContestsWonLTE(v int) predicate.AggregatedYearlyTeam {
+	return predicate.AggregatedYearlyTeam(sql.FieldLTE(FieldContestsWon, v))
 }
 
 // And groups predicates with the AND operator between them.

@@ -1,5 +1,58 @@
 import { BASE_URL } from "./constant";
 
+export interface TeamLeaderboard {
+	id: number;
+	name: string;
+	description: string;
+	country_code: string;
+	team_logo_url: string | null;
+	banner_image_url: string | null;
+	website_url: string | null;
+	discord_url: string | null;
+	github_url: any;
+	recruiting: boolean;
+	contact_info: string | null;
+	looking_for: string[];
+	created_at: string;
+	ctftime_id: string | null;
+	ctftime_verified_at: string | null;
+	verified_at: string | null;
+	year: number;
+	team_points: number;
+	rank: number;
+	members: number | null;
+	avg_place: number | null;
+	contests_count: number;
+	contests_won: number;
+}
+
+export interface GetCurrentYearLeaderboardDto {
+	Offset?: number;
+	Limit?: number;
+	Year?: number;
+}
+
+export const getLeaderboardList = async (dto: GetCurrentYearLeaderboardDto) => {
+	const params = new URLSearchParams();
+	if (dto.Offset !== undefined) {
+		params.append("offset", dto.Offset.toString());
+	}
+	if (dto.Limit !== undefined) {
+		params.append("limit", dto.Limit.toString());
+	}
+	if (dto.Year !== undefined) {
+		params.append("year", dto.Year.toString());
+	}
+	const url = `${BASE_URL}/api/teams/leaderboard?${params.toString()}`;
+	const response = await fetch(url);
+	const { data, success, message } = await response.json();
+	if (!success) {
+		throw new Error(message ?? "unknown error occurred");
+	}
+	const { leaderboard } = data as { leaderboard: TeamLeaderboard[] };
+	return leaderboard;
+};
+
 export interface CreateTeamDto {
 	name: string;
 	description: string | null;
