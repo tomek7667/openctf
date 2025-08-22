@@ -158,15 +158,9 @@ SELECT
   ) AS "rank"
 FROM team_year ty;
 
--- Create "aggregated_team_details" view
+-- Create "aggregated_team_details" view - TODO: most probably to be optimized.
 DROP VIEW IF EXISTS "aggregated_team_details";
-CREATE OR REPLACE VIEW "aggregated_team_details" (
-	"id", "name", "description", "ctftime_id", "ctftime_verified_at",
-	"verified_at", "country_code", "team_logo_url", "banner_image_url",
-	"discord_url", "github_url", "recruiting", "contact_info", "looking_for",
-	"website_url", "avg_place", "years_active", "contest_history", "achievements",
-	"members", "captain", "verified_by"
-) AS
+CREATE OR REPLACE VIEW "aggregated_team_details" AS
 select
 	t.id as "id",
 	t.name as "name",
@@ -184,9 +178,25 @@ select
 	t.looking_for as "looking_for",
 	t.website_url as "website_url",
 	-- current place
-	-- -- TODO
+	(
+		select
+			ayt."rank"
+		from
+			"aggregated_yearly_teams" ayt
+		where
+			ayt.id = t.id and
+			extract(year from now()) = ayt.year
+	) as "current_place",
 	-- points
-	-- -- TODO
+	(
+		select
+			ayt."team_points"
+		from
+			"aggregated_yearly_teams" ayt
+		where
+			ayt.id = t.id and
+			extract(year from now()) = ayt.year
+	) as "points",
 	-- avg_place
 	(
 		select

@@ -465,17 +465,13 @@ export default function TeamPageClient({ team }: { team: TeamDetails }) {
 											<div className="flex items-center gap-2">
 												<Trophy className="h-5 w-5 text-yellow-400" />
 												<span className="text-xl font-mono font-bold text-yellow-400">
-													{/* #{team.} */}
-													{/* TODO: */}
-													#1
+													#{team.current_place}
 												</span>
 											</div>
 											<div className="flex items-center gap-2">
 												<Star className="h-5 w-5 text-primary" />
 												<span className="text-xl font-mono font-bold text-primary">
-													{/* {team.ratingPoints.toLocaleString()} */}
-													{/* TODO: */}
-													123
+													{team.points?.toLocaleString() ?? "--"}
 												</span>
 											</div>
 										</div>

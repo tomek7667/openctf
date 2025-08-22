@@ -150,6 +150,8 @@ export interface TeamDetails {
 	contact_info: string | null;
 	looking_for: string[];
 	website_url: string | null;
+	current_place: number;
+	points: number | null;
 	avg_place: number | null;
 	years_active: number;
 	contest_history: TeamsDetailsContest[];

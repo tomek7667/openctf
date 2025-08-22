@@ -47,6 +47,10 @@ type AggregatedTeamDetails struct {
 	LookingFor []string `json:"looking_for"`
 	// WebsiteURL holds the value of the "website_url" field.
 	WebsiteURL *string `json:"website_url"`
+	// CurrentPlace holds the value of the "current_place" field.
+	CurrentPlace int `json:"current_place"`
+	// Points holds the value of the "points" field.
+	Points *float64 `json:"points"`
 	// AvgPlace holds the value of the "avg_place" field.
 	AvgPlace *float64 `json:"avg_place"`
 	// YearsActive holds the value of the "years_active" field.
@@ -73,9 +77,9 @@ func (*AggregatedTeamDetails) scanValues(columns []string) ([]any, error) {
 			values[i] = new([]byte)
 		case aggregatedteamdetails.FieldRecruiting:
 			values[i] = new(sql.NullBool)
-		case aggregatedteamdetails.FieldAvgPlace:
+		case aggregatedteamdetails.FieldPoints, aggregatedteamdetails.FieldAvgPlace:
 			values[i] = new(sql.NullFloat64)
-		case aggregatedteamdetails.FieldID, aggregatedteamdetails.FieldCtftimeID, aggregatedteamdetails.FieldYearsActive:
+		case aggregatedteamdetails.FieldID, aggregatedteamdetails.FieldCtftimeID, aggregatedteamdetails.FieldCurrentPlace, aggregatedteamdetails.FieldYearsActive:
 			values[i] = new(sql.NullInt64)
 		case aggregatedteamdetails.FieldName, aggregatedteamdetails.FieldDescription, aggregatedteamdetails.FieldCountryCode, aggregatedteamdetails.FieldTeamLogoURL, aggregatedteamdetails.FieldBannerImageURL, aggregatedteamdetails.FieldDiscordURL, aggregatedteamdetails.FieldGithubURL, aggregatedteamdetails.FieldContactInfo, aggregatedteamdetails.FieldWebsiteURL:
 			values[i] = new(sql.NullString)
@@ -197,6 +201,19 @@ func (_m *AggregatedTeamDetails) assignValues(columns []string, values []any) er
 			} else if value.Valid {
 				_m.WebsiteURL = new(string)
 				*_m.WebsiteURL = value.String
+			}
+		case aggregatedteamdetails.FieldCurrentPlace:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field current_place", values[i])
+			} else if value.Valid {
+				_m.CurrentPlace = int(value.Int64)
+			}
+		case aggregatedteamdetails.FieldPoints:
+			if value, ok := values[i].(*sql.NullFloat64); !ok {
+				return fmt.Errorf("unexpected type %T for field points", values[i])
+			} else if value.Valid {
+				_m.Points = new(float64)
+				*_m.Points = value.Float64
 			}
 		case aggregatedteamdetails.FieldAvgPlace:
 			if value, ok := values[i].(*sql.NullFloat64); !ok {
@@ -342,6 +359,14 @@ func (_m *AggregatedTeamDetails) String() string {
 	if v := _m.WebsiteURL; v != nil {
 		builder.WriteString("website_url=")
 		builder.WriteString(*v)
+	}
+	builder.WriteString(", ")
+	builder.WriteString("current_place=")
+	builder.WriteString(fmt.Sprintf("%v", _m.CurrentPlace))
+	builder.WriteString(", ")
+	if v := _m.Points; v != nil {
+		builder.WriteString("points=")
+		builder.WriteString(fmt.Sprintf("%v", *v))
 	}
 	builder.WriteString(", ")
 	if v := _m.AvgPlace; v != nil {

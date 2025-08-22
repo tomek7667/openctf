@@ -38,9 +38,25 @@ select
 	t.looking_for as "looking_for",
 	t.website_url as "website_url",
 	-- current place
-	-- -- TODO
+	(
+		select
+			ayt."rank"
+		from
+			"aggregated_yearly_teams" ayt
+		where
+			ayt.id = t.id and
+			extract(year from now()) = ayt.year
+	) as "current_place",
 	-- points
-	-- -- TODO
+	(
+		select
+			ayt."team_points"
+		from
+			"aggregated_yearly_teams" ayt
+		where
+			ayt.id = t.id and
+			extract(year from now()) = ayt.year
+	) as "points",
 	-- avg_place
 	(
 		select
@@ -221,6 +237,8 @@ func (AggregatedTeamDetails) Fields() []ent.Field {
 		field.String("contact_info").Nillable().Optional(),
 		field.JSON("looking_for", []string{}).Optional(),
 		field.String("website_url").Nillable().Optional(),
+		field.Int("current_place"),
+		field.Float("points").Nillable().Optional(),
 		field.Float("avg_place").Nillable().Optional(),
 		field.Int("years_active"),
 		field.JSON("contest_history", []TeamsDetailsContest{}).Optional(),

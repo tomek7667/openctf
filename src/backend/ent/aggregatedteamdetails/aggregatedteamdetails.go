@@ -39,6 +39,10 @@ const (
 	FieldLookingFor = "looking_for"
 	// FieldWebsiteURL holds the string denoting the website_url field in the database.
 	FieldWebsiteURL = "website_url"
+	// FieldCurrentPlace holds the string denoting the current_place field in the database.
+	FieldCurrentPlace = "current_place"
+	// FieldPoints holds the string denoting the points field in the database.
+	FieldPoints = "points"
 	// FieldAvgPlace holds the string denoting the avg_place field in the database.
 	FieldAvgPlace = "avg_place"
 	// FieldYearsActive holds the string denoting the years_active field in the database.
@@ -74,6 +78,8 @@ var Columns = []string{
 	FieldContactInfo,
 	FieldLookingFor,
 	FieldWebsiteURL,
+	FieldCurrentPlace,
+	FieldPoints,
 	FieldAvgPlace,
 	FieldYearsActive,
 	FieldContestHistory,
@@ -164,6 +170,16 @@ func ByContactInfo(opts ...sql.OrderTermOption) OrderOption {
 // ByWebsiteURL orders the results by the website_url field.
 func ByWebsiteURL(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldWebsiteURL, opts...).ToFunc()
+}
+
+// ByCurrentPlace orders the results by the current_place field.
+func ByCurrentPlace(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldCurrentPlace, opts...).ToFunc()
+}
+
+// ByPoints orders the results by the points field.
+func ByPoints(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldPoints, opts...).ToFunc()
 }
 
 // ByAvgPlace orders the results by the avg_place field.

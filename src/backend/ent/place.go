@@ -4,10 +4,9 @@ package ent
 
 import (
 	"fmt"
-	"strings"
-
 	"openctfbackend/ent/place"
 	"openctfbackend/ent/team"
+	"strings"
 
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"

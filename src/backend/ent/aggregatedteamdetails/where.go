@@ -79,6 +79,16 @@ func WebsiteURL(v string) predicate.AggregatedTeamDetails {
 	return predicate.AggregatedTeamDetails(sql.FieldEQ(FieldWebsiteURL, v))
 }
 
+// CurrentPlace applies equality check predicate on the "current_place" field. It's identical to CurrentPlaceEQ.
+func CurrentPlace(v int) predicate.AggregatedTeamDetails {
+	return predicate.AggregatedTeamDetails(sql.FieldEQ(FieldCurrentPlace, v))
+}
+
+// Points applies equality check predicate on the "points" field. It's identical to PointsEQ.
+func Points(v float64) predicate.AggregatedTeamDetails {
+	return predicate.AggregatedTeamDetails(sql.FieldEQ(FieldPoints, v))
+}
+
 // AvgPlace applies equality check predicate on the "avg_place" field. It's identical to AvgPlaceEQ.
 func AvgPlace(v float64) predicate.AggregatedTeamDetails {
 	return predicate.AggregatedTeamDetails(sql.FieldEQ(FieldAvgPlace, v))
@@ -952,6 +962,96 @@ func WebsiteURLEqualFold(v string) predicate.AggregatedTeamDetails {
 // WebsiteURLContainsFold applies the ContainsFold predicate on the "website_url" field.
 func WebsiteURLContainsFold(v string) predicate.AggregatedTeamDetails {
 	return predicate.AggregatedTeamDetails(sql.FieldContainsFold(FieldWebsiteURL, v))
+}
+
+// CurrentPlaceEQ applies the EQ predicate on the "current_place" field.
+func CurrentPlaceEQ(v int) predicate.AggregatedTeamDetails {
+	return predicate.AggregatedTeamDetails(sql.FieldEQ(FieldCurrentPlace, v))
+}
+
+// CurrentPlaceNEQ applies the NEQ predicate on the "current_place" field.
+func CurrentPlaceNEQ(v int) predicate.AggregatedTeamDetails {
+	return predicate.AggregatedTeamDetails(sql.FieldNEQ(FieldCurrentPlace, v))
+}
+
+// CurrentPlaceIn applies the In predicate on the "current_place" field.
+func CurrentPlaceIn(vs ...int) predicate.AggregatedTeamDetails {
+	return predicate.AggregatedTeamDetails(sql.FieldIn(FieldCurrentPlace, vs...))
+}
+
+// CurrentPlaceNotIn applies the NotIn predicate on the "current_place" field.
+func CurrentPlaceNotIn(vs ...int) predicate.AggregatedTeamDetails {
+	return predicate.AggregatedTeamDetails(sql.FieldNotIn(FieldCurrentPlace, vs...))
+}
+
+// CurrentPlaceGT applies the GT predicate on the "current_place" field.
+func CurrentPlaceGT(v int) predicate.AggregatedTeamDetails {
+	return predicate.AggregatedTeamDetails(sql.FieldGT(FieldCurrentPlace, v))
+}
+
+// CurrentPlaceGTE applies the GTE predicate on the "current_place" field.
+func CurrentPlaceGTE(v int) predicate.AggregatedTeamDetails {
+	return predicate.AggregatedTeamDetails(sql.FieldGTE(FieldCurrentPlace, v))
+}
+
+// CurrentPlaceLT applies the LT predicate on the "current_place" field.
+func CurrentPlaceLT(v int) predicate.AggregatedTeamDetails {
+	return predicate.AggregatedTeamDetails(sql.FieldLT(FieldCurrentPlace, v))
+}
+
+// CurrentPlaceLTE applies the LTE predicate on the "current_place" field.
+func CurrentPlaceLTE(v int) predicate.AggregatedTeamDetails {
+	return predicate.AggregatedTeamDetails(sql.FieldLTE(FieldCurrentPlace, v))
+}
+
+// PointsEQ applies the EQ predicate on the "points" field.
+func PointsEQ(v float64) predicate.AggregatedTeamDetails {
+	return predicate.AggregatedTeamDetails(sql.FieldEQ(FieldPoints, v))
+}
+
+// PointsNEQ applies the NEQ predicate on the "points" field.
+func PointsNEQ(v float64) predicate.AggregatedTeamDetails {
+	return predicate.AggregatedTeamDetails(sql.FieldNEQ(FieldPoints, v))
+}
+
+// PointsIn applies the In predicate on the "points" field.
+func PointsIn(vs ...float64) predicate.AggregatedTeamDetails {
+	return predicate.AggregatedTeamDetails(sql.FieldIn(FieldPoints, vs...))
+}
+
+// PointsNotIn applies the NotIn predicate on the "points" field.
+func PointsNotIn(vs ...float64) predicate.AggregatedTeamDetails {
+	return predicate.AggregatedTeamDetails(sql.FieldNotIn(FieldPoints, vs...))
+}
+
+// PointsGT applies the GT predicate on the "points" field.
+func PointsGT(v float64) predicate.AggregatedTeamDetails {
+	return predicate.AggregatedTeamDetails(sql.FieldGT(FieldPoints, v))
+}
+
+// PointsGTE applies the GTE predicate on the "points" field.
+func PointsGTE(v float64) predicate.AggregatedTeamDetails {
+	return predicate.AggregatedTeamDetails(sql.FieldGTE(FieldPoints, v))
+}
+
+// PointsLT applies the LT predicate on the "points" field.
+func PointsLT(v float64) predicate.AggregatedTeamDetails {
+	return predicate.AggregatedTeamDetails(sql.FieldLT(FieldPoints, v))
+}
+
+// PointsLTE applies the LTE predicate on the "points" field.
+func PointsLTE(v float64) predicate.AggregatedTeamDetails {
+	return predicate.AggregatedTeamDetails(sql.FieldLTE(FieldPoints, v))
+}
+
+// PointsIsNil applies the IsNil predicate on the "points" field.
+func PointsIsNil() predicate.AggregatedTeamDetails {
+	return predicate.AggregatedTeamDetails(sql.FieldIsNull(FieldPoints))
+}
+
+// PointsNotNil applies the NotNil predicate on the "points" field.
+func PointsNotNil() predicate.AggregatedTeamDetails {
+	return predicate.AggregatedTeamDetails(sql.FieldNotNull(FieldPoints))
 }
 
 // AvgPlaceEQ applies the EQ predicate on the "avg_place" field.
