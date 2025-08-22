@@ -15,8 +15,8 @@ type CreateCtftimePlaceDto struct {
 	AssociatedTeamID *int    `json:"associated_team_id"`
 }
 
-func (c *Client) CreateCtftimePlace(ctx context.Context, dto *CreateCtftimePlaceDto) *ent.PlaceCreate {
-	placeCreate := c.C.Place.
+func (c *Client) CreateCtftimePlace(ctx context.Context, tx *ent.Tx, dto *CreateCtftimePlaceDto) *ent.PlaceCreate {
+	placeCreate := tx.Place.
 		Create().
 		SetTeamName(dto.TeamName).
 		SetPlace(dto.Place).

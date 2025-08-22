@@ -7,10 +7,10 @@ import (
 	"openctfbackend/ent/team"
 )
 
-func (c *Client) GetCtftimeTeam(ctx context.Context, teamId int) (*ent.Team, error) {
+func (c *Client) GetCtftimeTeam(ctx context.Context, ctftimeTeamId int) (*ent.Team, error) {
 	return c.C.Team.
 		Query().
-		Where(team.CtftimeID(teamId)).
+		Where(team.CtftimeID(ctftimeTeamId)).
 		WithCaptain().
 		WithMembers().
 		WithVerifiedBy().

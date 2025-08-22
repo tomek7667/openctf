@@ -37,22 +37,51 @@ func (h *Handler) CrawlPlaces() error {
 			continue
 		}
 		if len(scores) == 0 {
+			slog.Debug(
+				"the contest doesn't have the places in ctftime yet",
+				"contest name", c.Name,
+				"contest id", *c.CtftimeID,
+			)
 			continue
 		}
 
+		tx, err := h.ServiceClient.GetEnt().BeginTx(ctx, nil)
+
+		shouldAbort := false
 		var createQueries []*ent.PlaceCreate
 		for _, score := range scores {
 			var associatedDbTeamID *int
+			var dbTeam *ent.Team
 			// get db team for potential edge
-			dbTeam, err := h.ServiceClient.GetCtftimeTeam(
+			dbTeam, err = h.ServiceClient.GetCtftimeTeam(
 				ctx, score.CtftimeTeamID,
 			)
 			if err == nil && dbTeam.ID != 0 {
 				associatedDbTeamID = &dbTeam.ID
 			}
 
+			// make teams if they don't exist by name; assign ctftime id and add verified for the admin user being a creator.
+			if dbTeam == nil {
+				dbTeam, err = h.ServiceClient.CreateCrawlerTeam(ctx, tx, &service.CreateCrawlerTeamDto{
+					CtftimeTeamID:   score.CtftimeTeamID,
+					CtftimeTeamName: score.CtftimeTeamName,
+				})
+				if err != nil {
+					slog.Error(
+						"creating crawler team failed",
+						"contest", c.Name,
+						"ctftime team id", score.CtftimeTeamID,
+						"ctftime team name", score.CtftimeTeamName,
+						"err", err,
+					)
+					shouldAbort = true
+					break
+				}
+				associatedDbTeamID = &dbTeam.ID
+			}
+
 			// create place in the db
-			createdPlaceQuery := h.ServiceClient.CreateCtftimePlace(ctx, &service.CreateCtftimePlaceDto{
+			createdPlaceQuery := h.ServiceClient.CreateCtftimePlace(ctx, tx, &service.CreateCtftimePlaceDto{
 				ContestID:        c.ID,
 				TeamName:         score.CtftimeTeamName,
 				Place:            score.Place,
@@ -61,13 +90,36 @@ func (h *Handler) CrawlPlaces() error {
 			})
 			createQueries = append(createQueries, createdPlaceQuery)
 		}
+		if shouldAbort {
+			slog.Warn(
+				"the contest will be rolled back as an error appeared along the way",
+				"err", err,
+				"contest name", c.Name,
+			)
+			err = tx.Rollback()
+			if err != nil {
+				slog.Error(
+					"rolling back failed for crawled contest",
+					"contest name", c.Name,
+					"err", err,
+				)
+			}
+			continue
+		}
 
 		// actually creating the places in the places table
-		createdPlaces, err := h.ServiceClient.GetEnt().
-			Place.
+		createdPlaces, err := tx.Place.
 			CreateBulk(createQueries...).
 			Save(ctx)
 		if err != nil {
+			err = tx.Rollback()
+			if err != nil {
+				slog.Error(
+					"rolling back failed for crawled contest",
+					"contest name", c.Name,
+					"err", err,
+				)
+			}
 			slog.Error(
 				"saving ctftime places in the database failed",
 				"err", err,
@@ -79,14 +131,32 @@ func (h *Handler) CrawlPlaces() error {
 		}
 
 		// updating the contest places
-		_, err = h.ServiceClient.GetEnt().Contest.UpdateOne(c).AddPlaces(createdPlaces...).Save(ctx)
+		_, err = tx.Contest.UpdateOne(c).AddPlaces(createdPlaces...).Save(ctx)
 		if err != nil {
+			err = tx.Rollback()
+			if err != nil {
+				slog.Error(
+					"rolling back failed for crawled contest",
+					"contest name", c.Name,
+					"err", err,
+				)
+			}
 			slog.Error(
 				"failed updating the contest with new places",
 				"err", err,
 				"contest", c.Name,
 				"places amount to be saved", len(createdPlaces),
 				"last place example", createdPlaces[len(createdPlaces)-1],
+			)
+			continue
+		}
+
+		if err = tx.Commit(); err != nil {
+			slog.Error(
+				"committing the transaction failed",
+				"err", err,
+				"contest name", c.Name,
+				"places amount to be saved", len(createdPlaces),
 			)
 			continue
 		}

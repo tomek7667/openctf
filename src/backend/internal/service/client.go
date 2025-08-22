@@ -8,12 +8,14 @@ import (
 
 	"openctfbackend/ent"
 	"openctfbackend/ent/migrate"
+	"openctfbackend/ent/user"
 
 	_ "github.com/lib/pq"
 )
 
 type Client struct {
-	C *ent.Client
+	C         *ent.Client
+	AdminUser *ent.User
 }
 
 func New(credentials string) (*Client, error) {
@@ -29,10 +31,15 @@ func New(credentials string) (*Client, error) {
 		slog.Error("schema create failed", "err", err)
 		return nil, errors.Join(fmt.Errorf("failed creating schema resources"), err)
 	}
-
-	return &Client{
+	c := &Client{
 		C: client,
-	}, nil
+	}
+	admin, err := client.User.Query().Where(user.Username("admin")).First(context.Background())
+	if err != nil {
+		return nil, fmt.Errorf("failed to get admin user: %w", err)
+	}
+	c.AdminUser = admin
+	return c, nil
 }
 
 func (c *Client) GetEnt() *ent.Client {

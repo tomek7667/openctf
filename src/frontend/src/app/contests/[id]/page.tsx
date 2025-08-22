@@ -135,44 +135,29 @@ function PlaceRow({
 			transition={{ delay: index * 0.1 }}
 			className={`border-b transition-all duration-300 hover:bg-primary/5 ${getRowStyle(place.place)}`}
 		>
-			<td className="p-3 w-16">
-				{place.edges?.associated_team ? (
-					<Link
-						href={`/teams/${place.edges.associated_team.id}`}
-						className="flex items-center justify-center cursor-pointer"
-					>
-						{getRankDisplay(place.place)}
-					</Link>
-				) : (
-					<div className="flex items-center justify-center">
-						{getRankDisplay(place.place)}
-					</div>
-				)}
-			</td>
-			<td className="p-3">
-				{place.edges?.associated_team ? (
-					<Link
-						href={`/teams/${place.edges.associated_team.id}`}
-						className="block cursor-pointer"
-					>
+			{place.edges?.associated_team?.id !== undefined ? (
+				<Link
+					href={`/teams/${place.edges.associated_team.id}`}
+					className="contents text-inherit no-underline focus:outline-none"
+				>
+					<td className="p-3 w-16 align-middle">
+						<span className="flex items-center justify-center">
+							{getRankDisplay(place.place)}
+						</span>
+					</td>
+					<td className="p-3 align-middle">
 						<div>
 							<span
-								className={`font-mono font-bold text-sm text-lime-300 ${getTeamNameColor(place.place)} underline`}
+								className={`font-mono font-bold text-sm ${getTeamNameColor(place.place)}`}
 							>
-								{place.team_name != place.edges.associated_team.name ? (
-									<>{place.edges.associated_team.name}</>
-								) : (
-									<>
-										{place.team_name}
-										{getTitle(place.place) && (
-											<span className={`ml-2 ${getTitleColor(place.place)}`}>
-												{getTitle(place.place)}
-											</span>
-										)}
-									</>
+								{place.edges.associated_team.name}
+								{getTitle(place.place) && (
+									<span className={`ml-2 ${getTitleColor(place.place)}`}>
+										{getTitle(place.place)}
+									</span>
 								)}
 							</span>
-							{place.team_name != place.edges.associated_team.name && (
+							{place.team_name !== place.edges.associated_team.name && (
 								<>
 									<span className="text-gray-400 text-sm"> as </span>
 									<span className="text-gray-200 text-sm">
@@ -186,65 +171,74 @@ function PlaceRow({
 								</div>
 							)}
 						</div>
-					</Link>
-				) : (
-					<div className="block">
-						<div
-							className={`font-mono font-bold text-sm ${getTeamNameColor(place.place)}`}
-						>
-							{place.team_name}
-							{getTitle(place.place) && (
-								<span className={`ml-2 ${getTitleColor(place.place)}`}>
-									{getTitle(place.place)}
-								</span>
-							)}
-						</div>
-						{place.ctftime_team_id && (
-							<div className="text-xs text-muted-foreground font-mono">
-								CTFtime: {place.ctftime_team_id}
-							</div>
-						)}
-					</div>
-				)}
-			</td>
-			<td className="p-3 font-mono text-lg font-bold text-right">
-				{place.edges?.associated_team ? (
-					<Link
-						href={`/teams/${place.edges.associated_team.id}`}
-						className="block cursor-pointer"
-					>
-						{place.contest_points}
-					</Link>
-				) : (
-					<div className="block">{place.contest_points}</div>
-				)}
-			</td>
-			<td className="p-3 font-mono text-lg text-right">
-				<div className="flex items-center justify-end gap-2">
-					{place.edges?.associated_team ? (
-						<Link
-							href={`/teams/${place.edges.associated_team.id}`}
-							className="cursor-pointer"
-						>
+					</td>
+					<td className="p-3 font-mono text-lg font-bold text-right align-middle">
+						<div className="block">{place.contest_points}</div>
+					</td>
+					<td className="p-3 font-mono text-lg text-right align-middle">
+						<div className="flex items-center justify-end gap-2">
 							<span className={getWeightColor(place.assigned_weight_points)}>
 								{place.assigned_weight_points}
 							</span>
-						</Link>
-					) : (
-						<span className={getWeightColor(place.assigned_weight_points)}>
-							{place.assigned_weight_points}
+							{userTeam === place.team_name && (
+								<TwitterShareButton
+									contestName={contestName}
+									teamName={place.team_name}
+									place={place.place}
+									isCaptain={isCaptain || false}
+								/>
+							)}
+						</div>
+					</td>
+				</Link>
+			) : (
+				<>
+					<td className="p-3 w-16 align-middle">
+						<span className="flex items-center justify-center">
+							{getRankDisplay(place.place)}
 						</span>
-					)}
-					{userTeam === place.team_name && (
-						<TwitterShareButton
-							contestName={contestName}
-							teamName={place.team_name}
-							place={place.place}
-							isCaptain={isCaptain || false}
-						/>
-					)}
-				</div>
-			</td>
+					</td>
+					<td className="p-3 align-middle">
+						<div className="block">
+							<div>
+								<span
+									className={`font-mono font-bold text-sm ${getTeamNameColor(place.place)}`}
+								>
+									{place.team_name}
+									{getTitle(place.place) && (
+										<span className={`ml-2 ${getTitleColor(place.place)}`}>
+											{getTitle(place.place)}
+										</span>
+									)}
+								</span>
+								{place.ctftime_team_id && (
+									<div className="text-xs text-muted-foreground font-mono">
+										CTFtime: {place.ctftime_team_id}
+									</div>
+								)}
+							</div>
+						</div>
+					</td>
+					<td className="p-3 font-mono text-lg font-bold text-right align-middle">
+						<div className="block">{place.contest_points}</div>
+					</td>
+					<td className="p-3 font-mono text-lg text-right align-middle">
+						<div className="flex items-center justify-end gap-2">
+							<span className={getWeightColor(place.assigned_weight_points)}>
+								{place.assigned_weight_points}
+							</span>
+							{userTeam === place.team_name && (
+								<TwitterShareButton
+									contestName={contestName}
+									teamName={place.team_name}
+									place={place.place}
+									isCaptain={isCaptain || false}
+								/>
+							)}
+						</div>
+					</td>
+				</>
+			)}
 		</motion.tr>
 	);
 }

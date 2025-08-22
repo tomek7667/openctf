@@ -203,7 +203,7 @@ const Pagination = ({
 	const limit = pagination.Limit || DEFAULT_TEAMS_LIMIT;
 	const offset = pagination.Offset || 0;
 	const currentPage = Math.floor(offset / limit) + 1;
-	const hasNextPage = teamsCount === limit;
+	const hasNextPage = teamsCount >= limit;
 
 	return (
 		<div className="flex items-center justify-between py-4">

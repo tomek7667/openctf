@@ -146,7 +146,7 @@ const TeamRow = ({
 	team: TeamLeaderboardType;
 	index: number;
 }) => (
-	<Link href={`/teams/${team.name.toLowerCase().replace(/\s+/g, "-")}`}>
+	<Link href={`/teams/${team.id}`}>
 		<motion.div
 			initial={{ opacity: 0, x: -20 }}
 			animate={{ opacity: 1, x: 0 }}

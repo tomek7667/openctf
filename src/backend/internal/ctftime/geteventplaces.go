@@ -23,10 +23,47 @@ type Place struct {
 	CtfPoints       float64 `json:"ctfPoints"`
 }
 
+func decryptCFEmail(obfuscatedEmail string) string {
+	if len(obfuscatedEmail) < 2 {
+		return ""
+	}
+	xorKey, err := strconv.ParseInt(obfuscatedEmail[:2], 16, 64)
+	if err != nil {
+		return ""
+	}
+	var output strings.Builder
+	for i := 2; i < len(obfuscatedEmail); i += 2 {
+		if i+1 >= len(obfuscatedEmail) {
+			break
+		}
+		charCode, err := strconv.ParseInt(obfuscatedEmail[i:i+2], 16, 64)
+		if err != nil {
+			return ""
+		}
+		output.WriteByte(byte(charCode ^ xorKey))
+	}
+	return output.String()
+}
+
 func (cl *Client) GetEventPlaces(ID int) ([]*Place, error) {
 	var errs error
 	var places []*Place
 	c := colly.NewCollector()
+
+	c.OnHTML(".__cf_email__", func(e *colly.HTMLElement) {
+		// some team names are in form of e-mail and cloudflare is replacing them with `[email protected]` which is
+		// all cool, however it kind of kills the uniqueness of the names when 2 different email teams are found as
+		// the name is detected to be [email protected] for both of them unfortunately, so we need to bypass CF's protection.
+		if obfuscatedEmail := e.Attr("data-cfemail"); obfuscatedEmail != "" {
+			if decodedEmail := decryptCFEmail(obfuscatedEmail); decodedEmail != "" {
+				e.DOM.SetText(decodedEmail)
+				if href := e.Attr("href"); href != "" {
+					e.DOM.SetAttr("href", "mailto:"+decodedEmail)
+				}
+			}
+		}
+	})
+
 	c.OnHTML(".table-striped tbody tr", func(e *colly.HTMLElement) {
 		rp := &RawPlace{}
 		err := e.Unmarshal(rp)
