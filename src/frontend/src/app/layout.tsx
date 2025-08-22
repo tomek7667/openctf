@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import "./globals.css";
 import type { Metadata } from "next";
 import { JetBrains_Mono } from "next/font/google";
@@ -106,7 +108,10 @@ export default function RootLayout({
 					}}
 				/>
 			</head>
-			<body className="font-mono antialiased bg-background text-foreground" suppressHydrationWarning>
+			<body
+				className="font-mono antialiased bg-background text-foreground"
+				suppressHydrationWarning
+			>
 				<noscript>
 					<div className="min-h-screen flex items-center justify-center">
 						<div className="text-center">

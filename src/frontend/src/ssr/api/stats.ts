@@ -4,7 +4,11 @@ import { LOCAL_API_BASE_URL } from "./constant";
 export const getPlatformStats = async (): Promise<PlatformStats> => {
 	const url = `${LOCAL_API_BASE_URL}/api/statistics`;
 	// console.log(`-> ${url}`);
-	const response = await fetch(url);
+	const response = await fetch(url, {
+		next: {
+			revalidate: 300,
+		},
+	});
 	const { data, success, message } = await response.json();
 	if (!success) {
 		throw new Error(message ?? "unknown error occurred");

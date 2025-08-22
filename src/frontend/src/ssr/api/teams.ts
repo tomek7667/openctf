@@ -6,7 +6,11 @@ import {
 import { LOCAL_API_BASE_URL } from "./constant";
 
 export const getTeamDetails = async (teamId: number): Promise<TeamDetails> => {
-	const response = await fetch(`${LOCAL_API_BASE_URL}/api/teams/${teamId}`);
+	const response = await fetch(`${LOCAL_API_BASE_URL}/api/teams/${teamId}`, {
+		next: {
+			revalidate: 300,
+		},
+	});
 	const { data, success, message } = await response.json();
 	if (!success) {
 		console.log(message);
@@ -45,7 +49,11 @@ export const getLeaderboardList = async (
 		params.append("search", dto?.Search);
 	}
 	const url = `${LOCAL_API_BASE_URL}/api/teams/leaderboard?${params.toString()}`;
-	const response = await fetch(url);
+	const response = await fetch(url, {
+		next: {
+			revalidate: 300,
+		},
+	});
 	const { data, success, message } = await response.json();
 	if (!success) {
 		throw new Error(message ?? "unknown error occurred");
