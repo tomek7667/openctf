@@ -9,7 +9,7 @@ import {
 	Star,
 	TrendingUp,
 	Users,
-	BarChart3,
+	BarChart,
 	Target,
 	Award,
 	AlertCircle,
@@ -538,7 +538,7 @@ export default function ContestRatingPage() {
 					>
 						<Card className="p-6">
 							<div className="flex items-center gap-3 mb-4">
-								<BarChart3 className="h-6 w-6 text-blue-400" />
+								<BarChart className="h-6 w-6 text-blue-400" />
 								<h3 className="text-xl font-bold font-mono text-blue-400">
 									&gt; RATING_INFO
 								</h3>
