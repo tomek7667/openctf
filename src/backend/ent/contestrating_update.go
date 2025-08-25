@@ -64,6 +64,26 @@ func (_u *ContestRatingUpdate) SetNillableRelevant(v *bool) *ContestRatingUpdate
 	return _u
 }
 
+// SetComment sets the "comment" field.
+func (_u *ContestRatingUpdate) SetComment(v string) *ContestRatingUpdate {
+	_u.mutation.SetComment(v)
+	return _u
+}
+
+// SetNillableComment sets the "comment" field if the given value is not nil.
+func (_u *ContestRatingUpdate) SetNillableComment(v *string) *ContestRatingUpdate {
+	if v != nil {
+		_u.SetComment(*v)
+	}
+	return _u
+}
+
+// ClearComment clears the value of the "comment" field.
+func (_u *ContestRatingUpdate) ClearComment() *ContestRatingUpdate {
+	_u.mutation.ClearComment()
+	return _u
+}
+
 // SetUserID sets the "user" edge to the User entity by ID.
 func (_u *ContestRatingUpdate) SetUserID(id int) *ContestRatingUpdate {
 	_u.mutation.SetUserID(id)
@@ -166,6 +186,12 @@ func (_u *ContestRatingUpdate) sqlSave(ctx context.Context) (_node int, err erro
 	}
 	if value, ok := _u.mutation.Relevant(); ok {
 		_spec.SetField(contestrating.FieldRelevant, field.TypeBool, value)
+	}
+	if value, ok := _u.mutation.Comment(); ok {
+		_spec.SetField(contestrating.FieldComment, field.TypeString, value)
+	}
+	if _u.mutation.CommentCleared() {
+		_spec.ClearField(contestrating.FieldComment, field.TypeString)
 	}
 	if _u.mutation.UserCleared() {
 		edge := &sqlgraph.EdgeSpec{
@@ -277,6 +303,26 @@ func (_u *ContestRatingUpdateOne) SetNillableRelevant(v *bool) *ContestRatingUpd
 	if v != nil {
 		_u.SetRelevant(*v)
 	}
+	return _u
+}
+
+// SetComment sets the "comment" field.
+func (_u *ContestRatingUpdateOne) SetComment(v string) *ContestRatingUpdateOne {
+	_u.mutation.SetComment(v)
+	return _u
+}
+
+// SetNillableComment sets the "comment" field if the given value is not nil.
+func (_u *ContestRatingUpdateOne) SetNillableComment(v *string) *ContestRatingUpdateOne {
+	if v != nil {
+		_u.SetComment(*v)
+	}
+	return _u
+}
+
+// ClearComment clears the value of the "comment" field.
+func (_u *ContestRatingUpdateOne) ClearComment() *ContestRatingUpdateOne {
+	_u.mutation.ClearComment()
 	return _u
 }
 
@@ -412,6 +458,12 @@ func (_u *ContestRatingUpdateOne) sqlSave(ctx context.Context) (_node *ContestRa
 	}
 	if value, ok := _u.mutation.Relevant(); ok {
 		_spec.SetField(contestrating.FieldRelevant, field.TypeBool, value)
+	}
+	if value, ok := _u.mutation.Comment(); ok {
+		_spec.SetField(contestrating.FieldComment, field.TypeString, value)
+	}
+	if _u.mutation.CommentCleared() {
+		_spec.ClearField(contestrating.FieldComment, field.TypeString)
 	}
 	if _u.mutation.UserCleared() {
 		edge := &sqlgraph.EdgeSpec{

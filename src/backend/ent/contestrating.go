@@ -22,6 +22,8 @@ type ContestRating struct {
 	Rating int `json:"rating"`
 	// this will be true if the user is in a team that was participating in at least top 15%
 	Relevant bool `json:"relevant"`
+	// Comment holds the value of the "comment" field.
+	Comment *string `json:"comment"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the ContestRatingQuery when eager-loading is set.
 	Edges                  ContestRatingEdges `json:"edges"`
@@ -72,6 +74,8 @@ func (*ContestRating) scanValues(columns []string) ([]any, error) {
 			values[i] = new(sql.NullBool)
 		case contestrating.FieldID, contestrating.FieldRating:
 			values[i] = new(sql.NullInt64)
+		case contestrating.FieldComment:
+			values[i] = new(sql.NullString)
 		case contestrating.ForeignKeys[0]: // contest_rating_user
 			values[i] = new(sql.NullInt64)
 		case contestrating.ForeignKeys[1]: // contest_rating_contest
@@ -108,6 +112,13 @@ func (_m *ContestRating) assignValues(columns []string, values []any) error {
 				return fmt.Errorf("unexpected type %T for field relevant", values[i])
 			} else if value.Valid {
 				_m.Relevant = value.Bool
+			}
+		case contestrating.FieldComment:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field comment", values[i])
+			} else if value.Valid {
+				_m.Comment = new(string)
+				*_m.Comment = value.String
 			}
 		case contestrating.ForeignKeys[0]:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
@@ -174,6 +185,11 @@ func (_m *ContestRating) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("relevant=")
 	builder.WriteString(fmt.Sprintf("%v", _m.Relevant))
+	builder.WriteString(", ")
+	if v := _m.Comment; v != nil {
+		builder.WriteString("comment=")
+		builder.WriteString(*v)
+	}
 	builder.WriteByte(')')
 	return builder.String()
 }

@@ -96,6 +96,7 @@ var (
 		{Name: "id", Type: field.TypeInt, Increment: true},
 		{Name: "rating", Type: field.TypeInt},
 		{Name: "relevant", Type: field.TypeBool, Default: false},
+		{Name: "comment", Type: field.TypeString, Nullable: true, Size: 2147483647},
 		{Name: "contest_rating_user", Type: field.TypeInt},
 		{Name: "contest_rating_contest", Type: field.TypeInt},
 	}
@@ -107,13 +108,13 @@ var (
 		ForeignKeys: []*schema.ForeignKey{
 			{
 				Symbol:     "contest_ratings_users_user",
-				Columns:    []*schema.Column{ContestRatingsColumns[3]},
+				Columns:    []*schema.Column{ContestRatingsColumns[4]},
 				RefColumns: []*schema.Column{UsersColumns[0]},
 				OnDelete:   schema.NoAction,
 			},
 			{
 				Symbol:     "contest_ratings_contests_contest",
-				Columns:    []*schema.Column{ContestRatingsColumns[4]},
+				Columns:    []*schema.Column{ContestRatingsColumns[5]},
 				RefColumns: []*schema.Column{ContestsColumns[0]},
 				OnDelete:   schema.NoAction,
 			},
@@ -122,7 +123,7 @@ var (
 			{
 				Name:    "contestrating_contest_rating_user_contest_rating_contest",
 				Unique:  true,
-				Columns: []*schema.Column{ContestRatingsColumns[3], ContestRatingsColumns[4]},
+				Columns: []*schema.Column{ContestRatingsColumns[4], ContestRatingsColumns[5]},
 			},
 		},
 	}
@@ -287,6 +288,7 @@ var (
 	WeightRatingsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
 		{Name: "difficulty", Type: field.TypeInt},
+		{Name: "comment", Type: field.TypeString, Nullable: true, Size: 2147483647},
 		{Name: "weight_rating_captains_team", Type: field.TypeInt},
 		{Name: "weight_rating_contest", Type: field.TypeInt},
 	}
@@ -298,13 +300,13 @@ var (
 		ForeignKeys: []*schema.ForeignKey{
 			{
 				Symbol:     "weight_ratings_teams_captains_team",
-				Columns:    []*schema.Column{WeightRatingsColumns[2]},
+				Columns:    []*schema.Column{WeightRatingsColumns[3]},
 				RefColumns: []*schema.Column{TeamsColumns[0]},
 				OnDelete:   schema.NoAction,
 			},
 			{
 				Symbol:     "weight_ratings_contests_contest",
-				Columns:    []*schema.Column{WeightRatingsColumns[3]},
+				Columns:    []*schema.Column{WeightRatingsColumns[4]},
 				RefColumns: []*schema.Column{ContestsColumns[0]},
 				OnDelete:   schema.NoAction,
 			},
@@ -313,7 +315,7 @@ var (
 			{
 				Name:    "weightrating_weight_rating_captains_team_weight_rating_contest",
 				Unique:  true,
-				Columns: []*schema.Column{WeightRatingsColumns[2], WeightRatingsColumns[3]},
+				Columns: []*schema.Column{WeightRatingsColumns[3], WeightRatingsColumns[4]},
 			},
 		},
 	}

@@ -2,6 +2,11 @@
 CREATE SCHEMA IF NOT EXISTS openctf;
 SET search_path TO openctf;
 
+DROP VIEW IF EXISTS "aggregated_team_details";
+DROP VIEW IF EXISTS "aggregated_yearly_teams";
+DROP VIEW IF EXISTS "aggregated_contests";
+DROP VIEW IF EXISTS "aggregated_platform_statistics";
+
 -- Create "aggregated_contests_difficulties" view
 CREATE OR REPLACE VIEW "aggregated_contests_difficulties" ("contest_id", "contest_name", "end", "organizers_id", "avg_difficulty", "participants") AS
 SELECT
@@ -60,7 +65,6 @@ FROM
 	"users" u;
 
 -- Create "aggregated_platform_statistics" view
-DROP VIEW IF EXISTS "aggregated_platform_statistics";
 CREATE OR REPLACE VIEW "aggregated_platform_statistics" AS
 SELECT
 	(SELECT COUNT(id) FROM "users") AS "total_users",
@@ -86,7 +90,6 @@ SELECT
 	(SELECT COUNT(id) FROM "contests" WHERE NOW() > "start" AND NOW() < "end") AS "total_live_events";
 
 -- Create "aggregated_contests" view
-DROP VIEW IF EXISTS "aggregated_contests";
 CREATE OR REPLACE VIEW "aggregated_contests" (
 	"id", "name", "description", "rules", "prizes",
 	"start", "end", "url", "ctftime_id", "assigned_weight_points",
@@ -114,7 +117,6 @@ FROM
 	contests c;
 
 -- Create "aggregated_yearly_teams" view
-DROP VIEW IF EXISTS "aggregated_yearly_teams";
 CREATE OR REPLACE VIEW "aggregated_yearly_teams" AS
 WITH team_year AS (
   SELECT
@@ -159,7 +161,6 @@ SELECT
 FROM team_year ty;
 
 -- Create "aggregated_team_details" view - TODO: most probably to be optimized.
-DROP VIEW IF EXISTS "aggregated_team_details";
 CREATE OR REPLACE VIEW "aggregated_team_details" AS
 select
 	t.id as "id",

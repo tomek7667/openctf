@@ -2408,6 +2408,7 @@ type ContestRatingMutation struct {
 	rating         *int
 	addrating      *int
 	relevant       *bool
+	comment        *string
 	clearedFields  map[string]struct{}
 	user           *int
 	cleareduser    bool
@@ -2608,6 +2609,55 @@ func (m *ContestRatingMutation) ResetRelevant() {
 	m.relevant = nil
 }
 
+// SetComment sets the "comment" field.
+func (m *ContestRatingMutation) SetComment(s string) {
+	m.comment = &s
+}
+
+// Comment returns the value of the "comment" field in the mutation.
+func (m *ContestRatingMutation) Comment() (r string, exists bool) {
+	v := m.comment
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldComment returns the old "comment" field's value of the ContestRating entity.
+// If the ContestRating object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ContestRatingMutation) OldComment(ctx context.Context) (v *string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldComment is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldComment requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldComment: %w", err)
+	}
+	return oldValue.Comment, nil
+}
+
+// ClearComment clears the value of the "comment" field.
+func (m *ContestRatingMutation) ClearComment() {
+	m.comment = nil
+	m.clearedFields[contestrating.FieldComment] = struct{}{}
+}
+
+// CommentCleared returns if the "comment" field was cleared in this mutation.
+func (m *ContestRatingMutation) CommentCleared() bool {
+	_, ok := m.clearedFields[contestrating.FieldComment]
+	return ok
+}
+
+// ResetComment resets all changes to the "comment" field.
+func (m *ContestRatingMutation) ResetComment() {
+	m.comment = nil
+	delete(m.clearedFields, contestrating.FieldComment)
+}
+
 // SetUserID sets the "user" edge to the User entity by id.
 func (m *ContestRatingMutation) SetUserID(id int) {
 	m.user = &id
@@ -2720,12 +2770,15 @@ func (m *ContestRatingMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *ContestRatingMutation) Fields() []string {
-	fields := make([]string, 0, 2)
+	fields := make([]string, 0, 3)
 	if m.rating != nil {
 		fields = append(fields, contestrating.FieldRating)
 	}
 	if m.relevant != nil {
 		fields = append(fields, contestrating.FieldRelevant)
+	}
+	if m.comment != nil {
+		fields = append(fields, contestrating.FieldComment)
 	}
 	return fields
 }
@@ -2739,6 +2792,8 @@ func (m *ContestRatingMutation) Field(name string) (ent.Value, bool) {
 		return m.Rating()
 	case contestrating.FieldRelevant:
 		return m.Relevant()
+	case contestrating.FieldComment:
+		return m.Comment()
 	}
 	return nil, false
 }
@@ -2752,6 +2807,8 @@ func (m *ContestRatingMutation) OldField(ctx context.Context, name string) (ent.
 		return m.OldRating(ctx)
 	case contestrating.FieldRelevant:
 		return m.OldRelevant(ctx)
+	case contestrating.FieldComment:
+		return m.OldComment(ctx)
 	}
 	return nil, fmt.Errorf("unknown ContestRating field %s", name)
 }
@@ -2774,6 +2831,13 @@ func (m *ContestRatingMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetRelevant(v)
+		return nil
+	case contestrating.FieldComment:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetComment(v)
 		return nil
 	}
 	return fmt.Errorf("unknown ContestRating field %s", name)
@@ -2819,7 +2883,11 @@ func (m *ContestRatingMutation) AddField(name string, value ent.Value) error {
 // ClearedFields returns all nullable fields that were cleared during this
 // mutation.
 func (m *ContestRatingMutation) ClearedFields() []string {
-	return nil
+	var fields []string
+	if m.FieldCleared(contestrating.FieldComment) {
+		fields = append(fields, contestrating.FieldComment)
+	}
+	return fields
 }
 
 // FieldCleared returns a boolean indicating if a field with the given name was
@@ -2832,6 +2900,11 @@ func (m *ContestRatingMutation) FieldCleared(name string) bool {
 // ClearField clears the value of the field with the given name. It returns an
 // error if the field is not defined in the schema.
 func (m *ContestRatingMutation) ClearField(name string) error {
+	switch name {
+	case contestrating.FieldComment:
+		m.ClearComment()
+		return nil
+	}
 	return fmt.Errorf("unknown ContestRating nullable field %s", name)
 }
 
@@ -2844,6 +2917,9 @@ func (m *ContestRatingMutation) ResetField(name string) error {
 		return nil
 	case contestrating.FieldRelevant:
 		m.ResetRelevant()
+		return nil
+	case contestrating.FieldComment:
+		m.ResetComment()
 		return nil
 	}
 	return fmt.Errorf("unknown ContestRating field %s", name)
@@ -8521,6 +8597,7 @@ type WeightRatingMutation struct {
 	id                   *int
 	difficulty           *int
 	adddifficulty        *int
+	comment              *string
 	clearedFields        map[string]struct{}
 	captains_team        *int
 	clearedcaptains_team bool
@@ -8685,6 +8762,55 @@ func (m *WeightRatingMutation) ResetDifficulty() {
 	m.adddifficulty = nil
 }
 
+// SetComment sets the "comment" field.
+func (m *WeightRatingMutation) SetComment(s string) {
+	m.comment = &s
+}
+
+// Comment returns the value of the "comment" field in the mutation.
+func (m *WeightRatingMutation) Comment() (r string, exists bool) {
+	v := m.comment
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldComment returns the old "comment" field's value of the WeightRating entity.
+// If the WeightRating object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *WeightRatingMutation) OldComment(ctx context.Context) (v *string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldComment is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldComment requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldComment: %w", err)
+	}
+	return oldValue.Comment, nil
+}
+
+// ClearComment clears the value of the "comment" field.
+func (m *WeightRatingMutation) ClearComment() {
+	m.comment = nil
+	m.clearedFields[weightrating.FieldComment] = struct{}{}
+}
+
+// CommentCleared returns if the "comment" field was cleared in this mutation.
+func (m *WeightRatingMutation) CommentCleared() bool {
+	_, ok := m.clearedFields[weightrating.FieldComment]
+	return ok
+}
+
+// ResetComment resets all changes to the "comment" field.
+func (m *WeightRatingMutation) ResetComment() {
+	m.comment = nil
+	delete(m.clearedFields, weightrating.FieldComment)
+}
+
 // SetCaptainsTeamID sets the "captains_team" edge to the Team entity by id.
 func (m *WeightRatingMutation) SetCaptainsTeamID(id int) {
 	m.captains_team = &id
@@ -8797,9 +8923,12 @@ func (m *WeightRatingMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *WeightRatingMutation) Fields() []string {
-	fields := make([]string, 0, 1)
+	fields := make([]string, 0, 2)
 	if m.difficulty != nil {
 		fields = append(fields, weightrating.FieldDifficulty)
+	}
+	if m.comment != nil {
+		fields = append(fields, weightrating.FieldComment)
 	}
 	return fields
 }
@@ -8811,6 +8940,8 @@ func (m *WeightRatingMutation) Field(name string) (ent.Value, bool) {
 	switch name {
 	case weightrating.FieldDifficulty:
 		return m.Difficulty()
+	case weightrating.FieldComment:
+		return m.Comment()
 	}
 	return nil, false
 }
@@ -8822,6 +8953,8 @@ func (m *WeightRatingMutation) OldField(ctx context.Context, name string) (ent.V
 	switch name {
 	case weightrating.FieldDifficulty:
 		return m.OldDifficulty(ctx)
+	case weightrating.FieldComment:
+		return m.OldComment(ctx)
 	}
 	return nil, fmt.Errorf("unknown WeightRating field %s", name)
 }
@@ -8837,6 +8970,13 @@ func (m *WeightRatingMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetDifficulty(v)
+		return nil
+	case weightrating.FieldComment:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetComment(v)
 		return nil
 	}
 	return fmt.Errorf("unknown WeightRating field %s", name)
@@ -8882,7 +9022,11 @@ func (m *WeightRatingMutation) AddField(name string, value ent.Value) error {
 // ClearedFields returns all nullable fields that were cleared during this
 // mutation.
 func (m *WeightRatingMutation) ClearedFields() []string {
-	return nil
+	var fields []string
+	if m.FieldCleared(weightrating.FieldComment) {
+		fields = append(fields, weightrating.FieldComment)
+	}
+	return fields
 }
 
 // FieldCleared returns a boolean indicating if a field with the given name was
@@ -8895,6 +9039,11 @@ func (m *WeightRatingMutation) FieldCleared(name string) bool {
 // ClearField clears the value of the field with the given name. It returns an
 // error if the field is not defined in the schema.
 func (m *WeightRatingMutation) ClearField(name string) error {
+	switch name {
+	case weightrating.FieldComment:
+		m.ClearComment()
+		return nil
+	}
 	return fmt.Errorf("unknown WeightRating nullable field %s", name)
 }
 
@@ -8904,6 +9053,9 @@ func (m *WeightRatingMutation) ResetField(name string) error {
 	switch name {
 	case weightrating.FieldDifficulty:
 		m.ResetDifficulty()
+		return nil
+	case weightrating.FieldComment:
+		m.ResetComment()
 		return nil
 	}
 	return fmt.Errorf("unknown WeightRating field %s", name)

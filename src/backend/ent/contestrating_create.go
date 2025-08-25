@@ -43,6 +43,20 @@ func (_c *ContestRatingCreate) SetNillableRelevant(v *bool) *ContestRatingCreate
 	return _c
 }
 
+// SetComment sets the "comment" field.
+func (_c *ContestRatingCreate) SetComment(v string) *ContestRatingCreate {
+	_c.mutation.SetComment(v)
+	return _c
+}
+
+// SetNillableComment sets the "comment" field if the given value is not nil.
+func (_c *ContestRatingCreate) SetNillableComment(v *string) *ContestRatingCreate {
+	if v != nil {
+		_c.SetComment(*v)
+	}
+	return _c
+}
+
 // SetUserID sets the "user" edge to the User entity by ID.
 func (_c *ContestRatingCreate) SetUserID(id int) *ContestRatingCreate {
 	_c.mutation.SetUserID(id)
@@ -160,6 +174,10 @@ func (_c *ContestRatingCreate) createSpec() (*ContestRating, *sqlgraph.CreateSpe
 		_spec.SetField(contestrating.FieldRelevant, field.TypeBool, value)
 		_node.Relevant = value
 	}
+	if value, ok := _c.mutation.Comment(); ok {
+		_spec.SetField(contestrating.FieldComment, field.TypeString, value)
+		_node.Comment = &value
+	}
 	if nodes := _c.mutation.UserIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
@@ -276,6 +294,24 @@ func (u *ContestRatingUpsert) UpdateRelevant() *ContestRatingUpsert {
 	return u
 }
 
+// SetComment sets the "comment" field.
+func (u *ContestRatingUpsert) SetComment(v string) *ContestRatingUpsert {
+	u.Set(contestrating.FieldComment, v)
+	return u
+}
+
+// UpdateComment sets the "comment" field to the value that was provided on create.
+func (u *ContestRatingUpsert) UpdateComment() *ContestRatingUpsert {
+	u.SetExcluded(contestrating.FieldComment)
+	return u
+}
+
+// ClearComment clears the value of the "comment" field.
+func (u *ContestRatingUpsert) ClearComment() *ContestRatingUpsert {
+	u.SetNull(contestrating.FieldComment)
+	return u
+}
+
 // UpdateNewValues updates the mutable fields using the new values that were set on create.
 // Using this option is equivalent to using:
 //
@@ -348,6 +384,27 @@ func (u *ContestRatingUpsertOne) SetRelevant(v bool) *ContestRatingUpsertOne {
 func (u *ContestRatingUpsertOne) UpdateRelevant() *ContestRatingUpsertOne {
 	return u.Update(func(s *ContestRatingUpsert) {
 		s.UpdateRelevant()
+	})
+}
+
+// SetComment sets the "comment" field.
+func (u *ContestRatingUpsertOne) SetComment(v string) *ContestRatingUpsertOne {
+	return u.Update(func(s *ContestRatingUpsert) {
+		s.SetComment(v)
+	})
+}
+
+// UpdateComment sets the "comment" field to the value that was provided on create.
+func (u *ContestRatingUpsertOne) UpdateComment() *ContestRatingUpsertOne {
+	return u.Update(func(s *ContestRatingUpsert) {
+		s.UpdateComment()
+	})
+}
+
+// ClearComment clears the value of the "comment" field.
+func (u *ContestRatingUpsertOne) ClearComment() *ContestRatingUpsertOne {
+	return u.Update(func(s *ContestRatingUpsert) {
+		s.ClearComment()
 	})
 }
 
@@ -587,6 +644,27 @@ func (u *ContestRatingUpsertBulk) SetRelevant(v bool) *ContestRatingUpsertBulk {
 func (u *ContestRatingUpsertBulk) UpdateRelevant() *ContestRatingUpsertBulk {
 	return u.Update(func(s *ContestRatingUpsert) {
 		s.UpdateRelevant()
+	})
+}
+
+// SetComment sets the "comment" field.
+func (u *ContestRatingUpsertBulk) SetComment(v string) *ContestRatingUpsertBulk {
+	return u.Update(func(s *ContestRatingUpsert) {
+		s.SetComment(v)
+	})
+}
+
+// UpdateComment sets the "comment" field to the value that was provided on create.
+func (u *ContestRatingUpsertBulk) UpdateComment() *ContestRatingUpsertBulk {
+	return u.Update(func(s *ContestRatingUpsert) {
+		s.UpdateComment()
+	})
+}
+
+// ClearComment clears the value of the "comment" field.
+func (u *ContestRatingUpsertBulk) ClearComment() *ContestRatingUpsertBulk {
+	return u.Update(func(s *ContestRatingUpsert) {
+		s.ClearComment()
 	})
 }
 

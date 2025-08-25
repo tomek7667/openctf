@@ -14,6 +14,8 @@ const (
 	FieldID = "id"
 	// FieldDifficulty holds the string denoting the difficulty field in the database.
 	FieldDifficulty = "difficulty"
+	// FieldComment holds the string denoting the comment field in the database.
+	FieldComment = "comment"
 	// EdgeCaptainsTeam holds the string denoting the captains_team edge name in mutations.
 	EdgeCaptainsTeam = "captains_team"
 	// EdgeContest holds the string denoting the contest edge name in mutations.
@@ -40,6 +42,7 @@ const (
 var Columns = []string{
 	FieldID,
 	FieldDifficulty,
+	FieldComment,
 }
 
 // ForeignKeys holds the SQL foreign-keys that are owned by the "weight_ratings"
@@ -80,6 +83,11 @@ func ByID(opts ...sql.OrderTermOption) OrderOption {
 // ByDifficulty orders the results by the difficulty field.
 func ByDifficulty(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldDifficulty, opts...).ToFunc()
+}
+
+// ByComment orders the results by the comment field.
+func ByComment(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldComment, opts...).ToFunc()
 }
 
 // ByCaptainsTeamField orders the results by captains_team field.
