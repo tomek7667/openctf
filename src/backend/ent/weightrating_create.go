@@ -29,6 +29,20 @@ func (_c *WeightRatingCreate) SetDifficulty(v int) *WeightRatingCreate {
 	return _c
 }
 
+// SetComment sets the "comment" field.
+func (_c *WeightRatingCreate) SetComment(v string) *WeightRatingCreate {
+	_c.mutation.SetComment(v)
+	return _c
+}
+
+// SetNillableComment sets the "comment" field if the given value is not nil.
+func (_c *WeightRatingCreate) SetNillableComment(v *string) *WeightRatingCreate {
+	if v != nil {
+		_c.SetComment(*v)
+	}
+	return _c
+}
+
 // SetCaptainsTeamID sets the "captains_team" edge to the Team entity by ID.
 func (_c *WeightRatingCreate) SetCaptainsTeamID(id int) *WeightRatingCreate {
 	_c.mutation.SetCaptainsTeamID(id)
@@ -129,6 +143,10 @@ func (_c *WeightRatingCreate) createSpec() (*WeightRating, *sqlgraph.CreateSpec)
 	if value, ok := _c.mutation.Difficulty(); ok {
 		_spec.SetField(weightrating.FieldDifficulty, field.TypeInt, value)
 		_node.Difficulty = value
+	}
+	if value, ok := _c.mutation.Comment(); ok {
+		_spec.SetField(weightrating.FieldComment, field.TypeString, value)
+		_node.Comment = &value
 	}
 	if nodes := _c.mutation.CaptainsTeamIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
@@ -234,6 +252,24 @@ func (u *WeightRatingUpsert) AddDifficulty(v int) *WeightRatingUpsert {
 	return u
 }
 
+// SetComment sets the "comment" field.
+func (u *WeightRatingUpsert) SetComment(v string) *WeightRatingUpsert {
+	u.Set(weightrating.FieldComment, v)
+	return u
+}
+
+// UpdateComment sets the "comment" field to the value that was provided on create.
+func (u *WeightRatingUpsert) UpdateComment() *WeightRatingUpsert {
+	u.SetExcluded(weightrating.FieldComment)
+	return u
+}
+
+// ClearComment clears the value of the "comment" field.
+func (u *WeightRatingUpsert) ClearComment() *WeightRatingUpsert {
+	u.SetNull(weightrating.FieldComment)
+	return u
+}
+
 // UpdateNewValues updates the mutable fields using the new values that were set on create.
 // Using this option is equivalent to using:
 //
@@ -292,6 +328,27 @@ func (u *WeightRatingUpsertOne) AddDifficulty(v int) *WeightRatingUpsertOne {
 func (u *WeightRatingUpsertOne) UpdateDifficulty() *WeightRatingUpsertOne {
 	return u.Update(func(s *WeightRatingUpsert) {
 		s.UpdateDifficulty()
+	})
+}
+
+// SetComment sets the "comment" field.
+func (u *WeightRatingUpsertOne) SetComment(v string) *WeightRatingUpsertOne {
+	return u.Update(func(s *WeightRatingUpsert) {
+		s.SetComment(v)
+	})
+}
+
+// UpdateComment sets the "comment" field to the value that was provided on create.
+func (u *WeightRatingUpsertOne) UpdateComment() *WeightRatingUpsertOne {
+	return u.Update(func(s *WeightRatingUpsert) {
+		s.UpdateComment()
+	})
+}
+
+// ClearComment clears the value of the "comment" field.
+func (u *WeightRatingUpsertOne) ClearComment() *WeightRatingUpsertOne {
+	return u.Update(func(s *WeightRatingUpsert) {
+		s.ClearComment()
 	})
 }
 
@@ -516,6 +573,27 @@ func (u *WeightRatingUpsertBulk) AddDifficulty(v int) *WeightRatingUpsertBulk {
 func (u *WeightRatingUpsertBulk) UpdateDifficulty() *WeightRatingUpsertBulk {
 	return u.Update(func(s *WeightRatingUpsert) {
 		s.UpdateDifficulty()
+	})
+}
+
+// SetComment sets the "comment" field.
+func (u *WeightRatingUpsertBulk) SetComment(v string) *WeightRatingUpsertBulk {
+	return u.Update(func(s *WeightRatingUpsert) {
+		s.SetComment(v)
+	})
+}
+
+// UpdateComment sets the "comment" field to the value that was provided on create.
+func (u *WeightRatingUpsertBulk) UpdateComment() *WeightRatingUpsertBulk {
+	return u.Update(func(s *WeightRatingUpsert) {
+		s.UpdateComment()
+	})
+}
+
+// ClearComment clears the value of the "comment" field.
+func (u *WeightRatingUpsertBulk) ClearComment() *WeightRatingUpsertBulk {
+	return u.Update(func(s *WeightRatingUpsert) {
+		s.ClearComment()
 	})
 }
 

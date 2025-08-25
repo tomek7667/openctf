@@ -50,6 +50,26 @@ func (_u *WeightRatingUpdate) AddDifficulty(v int) *WeightRatingUpdate {
 	return _u
 }
 
+// SetComment sets the "comment" field.
+func (_u *WeightRatingUpdate) SetComment(v string) *WeightRatingUpdate {
+	_u.mutation.SetComment(v)
+	return _u
+}
+
+// SetNillableComment sets the "comment" field if the given value is not nil.
+func (_u *WeightRatingUpdate) SetNillableComment(v *string) *WeightRatingUpdate {
+	if v != nil {
+		_u.SetComment(*v)
+	}
+	return _u
+}
+
+// ClearComment clears the value of the "comment" field.
+func (_u *WeightRatingUpdate) ClearComment() *WeightRatingUpdate {
+	_u.mutation.ClearComment()
+	return _u
+}
+
 // SetCaptainsTeamID sets the "captains_team" edge to the Team entity by ID.
 func (_u *WeightRatingUpdate) SetCaptainsTeamID(id int) *WeightRatingUpdate {
 	_u.mutation.SetCaptainsTeamID(id)
@@ -150,6 +170,12 @@ func (_u *WeightRatingUpdate) sqlSave(ctx context.Context) (_node int, err error
 	if value, ok := _u.mutation.AddedDifficulty(); ok {
 		_spec.AddField(weightrating.FieldDifficulty, field.TypeInt, value)
 	}
+	if value, ok := _u.mutation.Comment(); ok {
+		_spec.SetField(weightrating.FieldComment, field.TypeString, value)
+	}
+	if _u.mutation.CommentCleared() {
+		_spec.ClearField(weightrating.FieldComment, field.TypeString)
+	}
 	if _u.mutation.CaptainsTeamCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
@@ -246,6 +272,26 @@ func (_u *WeightRatingUpdateOne) SetNillableDifficulty(v *int) *WeightRatingUpda
 // AddDifficulty adds value to the "difficulty" field.
 func (_u *WeightRatingUpdateOne) AddDifficulty(v int) *WeightRatingUpdateOne {
 	_u.mutation.AddDifficulty(v)
+	return _u
+}
+
+// SetComment sets the "comment" field.
+func (_u *WeightRatingUpdateOne) SetComment(v string) *WeightRatingUpdateOne {
+	_u.mutation.SetComment(v)
+	return _u
+}
+
+// SetNillableComment sets the "comment" field if the given value is not nil.
+func (_u *WeightRatingUpdateOne) SetNillableComment(v *string) *WeightRatingUpdateOne {
+	if v != nil {
+		_u.SetComment(*v)
+	}
+	return _u
+}
+
+// ClearComment clears the value of the "comment" field.
+func (_u *WeightRatingUpdateOne) ClearComment() *WeightRatingUpdateOne {
+	_u.mutation.ClearComment()
 	return _u
 }
 
@@ -378,6 +424,12 @@ func (_u *WeightRatingUpdateOne) sqlSave(ctx context.Context) (_node *WeightRati
 	}
 	if value, ok := _u.mutation.AddedDifficulty(); ok {
 		_spec.AddField(weightrating.FieldDifficulty, field.TypeInt, value)
+	}
+	if value, ok := _u.mutation.Comment(); ok {
+		_spec.SetField(weightrating.FieldComment, field.TypeString, value)
+	}
+	if _u.mutation.CommentCleared() {
+		_spec.ClearField(weightrating.FieldComment, field.TypeString)
 	}
 	if _u.mutation.CaptainsTeamCleared() {
 		edge := &sqlgraph.EdgeSpec{

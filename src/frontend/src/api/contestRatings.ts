@@ -1,4 +1,4 @@
-import { CreateContestRatingDto, CreateWeightRatingDto, ContestRating, WeightRating } from "@/lib/schema";
+import { ContestRating, WeightRating } from "@/lib/schema";
 
 export interface ApiResponse<T> {
 	success: boolean;
@@ -28,21 +28,72 @@ const initializeMockData = () => {
 				id: 1,
 				rating: 4,
 				relevant: true,
-				user: { id: 1, username: "alice_hacker", email: "alice@example.com" } as any,
+				user: {
+					id: 1,
+					username: "alice_hacker",
+					email: "alice@example.com",
+					teams: [{ id: 1, name: "Team Alpha" }],
+				} as any,
 				contest: { id: 1 } as any,
 			},
 			{
 				id: 2,
 				rating: 5,
 				relevant: true,
-				user: { id: 2, username: "bob_ctfer", email: "bob@example.com" } as any,
+				user: {
+					id: 2,
+					username: "bob_ctfer",
+					email: "bob@example.com",
+					teams: [{ id: 2, name: "Team Beta" }],
+				} as any,
 				contest: { id: 1 } as any,
 			},
 			{
 				id: 3,
 				rating: 3,
 				relevant: true,
-				user: { id: 3, username: "charlie_sec", email: "charlie@example.com" } as any,
+				user: {
+					id: 3,
+					username: "charlie_sec",
+					email: "charlie@example.com",
+					teams: [{ id: 3, name: "Team Gamma" }],
+				} as any,
+				contest: { id: 1 } as any,
+			},
+			{
+				id: 4,
+				rating: 2,
+				relevant: true,
+				user: {
+					id: 4,
+					username: "dave_pwn",
+					email: "dave@example.com",
+					teams: [{ id: 4, name: "Team Delta" }],
+				} as any,
+				contest: { id: 1 } as any,
+			},
+			{
+				id: 5,
+				rating: 4,
+				relevant: true,
+				user: {
+					id: 5,
+					username: "eve_exploit",
+					email: "eve@example.com",
+					teams: [{ id: 5, name: "Team Echo" }],
+				} as any,
+				contest: { id: 1 } as any,
+			},
+			{
+				id: 6,
+				rating: 5,
+				relevant: true,
+				user: {
+					id: 6,
+					username: "frank_forensics",
+					email: "frank@example.com",
+					teams: [{ id: 6, name: "Team Foxtrot" }],
+				} as any,
 				contest: { id: 1 } as any,
 			},
 		];
@@ -51,56 +102,120 @@ const initializeMockData = () => {
 			{
 				id: 1,
 				difficulty: 75,
-				captains_team: { id: 1, name: "Team Alpha" } as any,
+				captains_team: {
+					id: 1,
+					name: "Team Alpha",
+					captain: { id: 1, username: "alice_hacker" },
+				} as any,
 				contest: { id: 1 } as any,
 			},
 			{
 				id: 2,
 				difficulty: 82,
-				captains_team: { id: 2, name: "Team Beta" } as any,
+				captains_team: {
+					id: 2,
+					name: "Team Beta",
+					captain: { id: 2, username: "bob_ctfer" },
+				} as any,
 				contest: { id: 1 } as any,
 			},
 			{
 				id: 3,
 				difficulty: 68,
-				captains_team: { id: 3, name: "Team Gamma" } as any,
+				captains_team: {
+					id: 3,
+					name: "Team Gamma",
+					captain: { id: 3, username: "charlie_sec" },
+				} as any,
+				contest: { id: 1 } as any,
+			},
+			{
+				id: 4,
+				difficulty: 95,
+				captains_team: {
+					id: 4,
+					name: "Team Delta",
+					captain: { id: 4, username: "dave_pwn" },
+				} as any,
+				contest: { id: 1 } as any,
+			},
+			{
+				id: 5,
+				difficulty: 55,
+				captains_team: {
+					id: 5,
+					name: "Team Echo",
+					captain: { id: 5, username: "eve_exploit" },
+				} as any,
+				contest: { id: 1 } as any,
+			},
+			{
+				id: 6,
+				difficulty: 88,
+				captains_team: {
+					id: 6,
+					name: "Team Foxtrot",
+					captain: { id: 6, username: "frank_forensics" },
+				} as any,
 				contest: { id: 1 } as any,
 			},
 		];
 	}
 };
 
-export async function getContestRatings(contestId: number): Promise<ApiResponse<ContestRatingStats>> {
+export async function getContestRatings(
+	contestId: number
+): Promise<ApiResponse<ContestRatingStats>> {
 	await new Promise((resolve) => setTimeout(resolve, 300));
 	initializeMockData();
 
-	const contestQualityRatings = mockContestRatings.filter((r) => r.contest.id === contestId);
-	const contestDifficultyRatings = mockWeightRatings.filter((r) => r.contest.id === contestId);
+	const contestQualityRatings = mockContestRatings.filter(
+		(r) => r.contest.id === contestId
+	);
+	const contestDifficultyRatings = mockWeightRatings.filter(
+		(r) => r.contest.id === contestId
+	);
 
 	// Calculate quality rating stats
 	const totalQualityRatings = contestQualityRatings.length;
-	const averageQualityRating = totalQualityRatings > 0 
-		? contestQualityRatings.reduce((sum, r) => sum + r.rating, 0) / totalQualityRatings 
-		: 0;
+	const averageQualityRating =
+		totalQualityRatings > 0
+			? contestQualityRatings.reduce((sum, r) => sum + r.rating, 0) /
+				totalQualityRatings
+			: 0;
 
 	const qualityRatingDistribution: { [key: number]: number } = {};
 	for (let i = 1; i <= 5; i++) {
-		qualityRatingDistribution[i] = contestQualityRatings.filter(r => r.rating === i).length;
+		qualityRatingDistribution[i] = contestQualityRatings.filter(
+			(r) => r.rating === i
+		).length;
 	}
 
 	// Calculate difficulty rating stats
 	const totalDifficultyRatings = contestDifficultyRatings.length;
-	const averageDifficultyRating = totalDifficultyRatings > 0
-		? contestDifficultyRatings.reduce((sum, r) => sum + r.difficulty, 0) / totalDifficultyRatings
-		: 0;
+	const averageDifficultyRating =
+		totalDifficultyRatings > 0
+			? contestDifficultyRatings.reduce((sum, r) => sum + r.difficulty, 0) /
+				totalDifficultyRatings
+			: 0;
 
 	// Group difficulty ratings into ranges
 	const difficultyRatingDistribution: { [key: number]: number } = {
-		20: contestDifficultyRatings.filter(r => r.difficulty >= 0 && r.difficulty < 20).length,
-		40: contestDifficultyRatings.filter(r => r.difficulty >= 20 && r.difficulty < 40).length,
-		60: contestDifficultyRatings.filter(r => r.difficulty >= 40 && r.difficulty < 60).length,
-		80: contestDifficultyRatings.filter(r => r.difficulty >= 60 && r.difficulty < 80).length,
-		100: contestDifficultyRatings.filter(r => r.difficulty >= 80 && r.difficulty <= 100).length,
+		20: contestDifficultyRatings.filter(
+			(r) => r.difficulty >= 0 && r.difficulty < 20
+		).length,
+		40: contestDifficultyRatings.filter(
+			(r) => r.difficulty >= 20 && r.difficulty < 40
+		).length,
+		60: contestDifficultyRatings.filter(
+			(r) => r.difficulty >= 40 && r.difficulty < 60
+		).length,
+		80: contestDifficultyRatings.filter(
+			(r) => r.difficulty >= 60 && r.difficulty < 80
+		).length,
+		100: contestDifficultyRatings.filter(
+			(r) => r.difficulty >= 80 && r.difficulty <= 100
+		).length,
 	};
 
 	const stats: ContestRatingStats = {
@@ -150,7 +265,11 @@ export async function createContestRating(
 		id: Date.now(),
 		rating,
 		relevant: true,
-		user: { id: userId, username: `user_${userId}`, email: `user${userId}@example.com` } as any,
+		user: {
+			id: userId,
+			username: `user_${userId}`,
+			email: `user${userId}@example.com`,
+		} as any,
 		contest: { id: contestId } as any,
 	};
 
@@ -241,5 +360,37 @@ export async function getTeamWeightRating(
 	return {
 		success: true,
 		data: teamRating || null,
+	};
+}
+
+export async function getAllContestRatings(
+	contestId: number
+): Promise<ApiResponse<ContestRating[]>> {
+	await new Promise((resolve) => setTimeout(resolve, 200));
+	initializeMockData();
+
+	const contestRatings = mockContestRatings.filter(
+		(r) => r.contest.id === contestId
+	);
+
+	return {
+		success: true,
+		data: contestRatings,
+	};
+}
+
+export async function getAllWeightRatings(
+	contestId: number
+): Promise<ApiResponse<WeightRating[]>> {
+	await new Promise((resolve) => setTimeout(resolve, 200));
+	initializeMockData();
+
+	const weightRatings = mockWeightRatings.filter(
+		(r) => r.contest.id === contestId
+	);
+
+	return {
+		success: true,
+		data: weightRatings,
 	};
 }

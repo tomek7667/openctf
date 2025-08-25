@@ -16,6 +16,8 @@ const (
 	FieldRating = "rating"
 	// FieldRelevant holds the string denoting the relevant field in the database.
 	FieldRelevant = "relevant"
+	// FieldComment holds the string denoting the comment field in the database.
+	FieldComment = "comment"
 	// EdgeUser holds the string denoting the user edge name in mutations.
 	EdgeUser = "user"
 	// EdgeContest holds the string denoting the contest edge name in mutations.
@@ -43,6 +45,7 @@ var Columns = []string{
 	FieldID,
 	FieldRating,
 	FieldRelevant,
+	FieldComment,
 }
 
 // ForeignKeys holds the SQL foreign-keys that are owned by the "contest_ratings"
@@ -90,6 +93,11 @@ func ByRating(opts ...sql.OrderTermOption) OrderOption {
 // ByRelevant orders the results by the relevant field.
 func ByRelevant(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldRelevant, opts...).ToFunc()
+}
+
+// ByComment orders the results by the comment field.
+func ByComment(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldComment, opts...).ToFunc()
 }
 
 // ByUserField orders the results by user field.

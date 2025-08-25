@@ -14,6 +14,7 @@ type WeightRating struct {
 func (WeightRating) Fields() []ent.Field {
 	return TrimOmitEmptyTag([]ent.Field{
 		field.Int("difficulty").Min(0).Max(100),
+		field.Text("comment").Optional().Nillable(),
 	})
 }
 

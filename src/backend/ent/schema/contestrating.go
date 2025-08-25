@@ -18,6 +18,7 @@ func (ContestRating) Fields() []ent.Field {
 			Default(false).
 			StructTag(`json:"relevant"`).
 			Comment("this will be true if the user is in a team that was participating in at least top 15%"),
+		field.Text("comment").Optional().Nillable(),
 	})
 }
 

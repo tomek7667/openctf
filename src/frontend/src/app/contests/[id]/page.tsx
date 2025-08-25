@@ -602,12 +602,20 @@ export default function ContestDetailsPage() {
 										</div>
 
 										{contest.url && (
-											<div className="pt-4">
+											<div className="pt-4 flex gap-2">
+												<Link
+													href={`/contests/${contest.id}/rating`}
+													rel="noopener noreferrer"
+													className="w-full bg-primary hover:bg-primary/80 text-primary-foreground px-4 py-2 rounded font-mono font-bold text-sm transition-colors flex items-center justify-center gap-2"
+												>
+													<ExternalLink className="h-4 w-4" />
+													RATING
+												</Link>
 												<Link
 													href={contest.url}
 													target="_blank"
 													rel="noopener noreferrer"
-													className="w-full bg-primary hover:bg-primary/80 text-primary-foreground px-4 py-2 rounded font-mono font-bold text-sm transition-colors flex items-center justify-center gap-2"
+													className="w-full bg-secondary hover:bg-secondary/80 text-secondary-foreground px-4 py-2 rounded font-mono font-bold text-sm transition-colors flex items-center justify-center gap-2"
 												>
 													<ExternalLink className="h-4 w-4" />
 													VISIT CONTEST

@@ -20,6 +20,8 @@ type WeightRating struct {
 	ID int `json:"id,omitempty"`
 	// Difficulty holds the value of the "difficulty" field.
 	Difficulty int `json:"difficulty"`
+	// Comment holds the value of the "comment" field.
+	Comment *string `json:"comment"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the WeightRatingQuery when eager-loading is set.
 	Edges                       WeightRatingEdges `json:"edges"`
@@ -68,6 +70,8 @@ func (*WeightRating) scanValues(columns []string) ([]any, error) {
 		switch columns[i] {
 		case weightrating.FieldID, weightrating.FieldDifficulty:
 			values[i] = new(sql.NullInt64)
+		case weightrating.FieldComment:
+			values[i] = new(sql.NullString)
 		case weightrating.ForeignKeys[0]: // weight_rating_captains_team
 			values[i] = new(sql.NullInt64)
 		case weightrating.ForeignKeys[1]: // weight_rating_contest
@@ -98,6 +102,13 @@ func (_m *WeightRating) assignValues(columns []string, values []any) error {
 				return fmt.Errorf("unexpected type %T for field difficulty", values[i])
 			} else if value.Valid {
 				_m.Difficulty = int(value.Int64)
+			}
+		case weightrating.FieldComment:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field comment", values[i])
+			} else if value.Valid {
+				_m.Comment = new(string)
+				*_m.Comment = value.String
 			}
 		case weightrating.ForeignKeys[0]:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
@@ -161,6 +172,11 @@ func (_m *WeightRating) String() string {
 	builder.WriteString(fmt.Sprintf("id=%v, ", _m.ID))
 	builder.WriteString("difficulty=")
 	builder.WriteString(fmt.Sprintf("%v", _m.Difficulty))
+	builder.WriteString(", ")
+	if v := _m.Comment; v != nil {
+		builder.WriteString("comment=")
+		builder.WriteString(*v)
+	}
 	builder.WriteByte(')')
 	return builder.String()
 }

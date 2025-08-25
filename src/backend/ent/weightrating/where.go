@@ -59,6 +59,11 @@ func Difficulty(v int) predicate.WeightRating {
 	return predicate.WeightRating(sql.FieldEQ(FieldDifficulty, v))
 }
 
+// Comment applies equality check predicate on the "comment" field. It's identical to CommentEQ.
+func Comment(v string) predicate.WeightRating {
+	return predicate.WeightRating(sql.FieldEQ(FieldComment, v))
+}
+
 // DifficultyEQ applies the EQ predicate on the "difficulty" field.
 func DifficultyEQ(v int) predicate.WeightRating {
 	return predicate.WeightRating(sql.FieldEQ(FieldDifficulty, v))
@@ -97,6 +102,81 @@ func DifficultyLT(v int) predicate.WeightRating {
 // DifficultyLTE applies the LTE predicate on the "difficulty" field.
 func DifficultyLTE(v int) predicate.WeightRating {
 	return predicate.WeightRating(sql.FieldLTE(FieldDifficulty, v))
+}
+
+// CommentEQ applies the EQ predicate on the "comment" field.
+func CommentEQ(v string) predicate.WeightRating {
+	return predicate.WeightRating(sql.FieldEQ(FieldComment, v))
+}
+
+// CommentNEQ applies the NEQ predicate on the "comment" field.
+func CommentNEQ(v string) predicate.WeightRating {
+	return predicate.WeightRating(sql.FieldNEQ(FieldComment, v))
+}
+
+// CommentIn applies the In predicate on the "comment" field.
+func CommentIn(vs ...string) predicate.WeightRating {
+	return predicate.WeightRating(sql.FieldIn(FieldComment, vs...))
+}
+
+// CommentNotIn applies the NotIn predicate on the "comment" field.
+func CommentNotIn(vs ...string) predicate.WeightRating {
+	return predicate.WeightRating(sql.FieldNotIn(FieldComment, vs...))
+}
+
+// CommentGT applies the GT predicate on the "comment" field.
+func CommentGT(v string) predicate.WeightRating {
+	return predicate.WeightRating(sql.FieldGT(FieldComment, v))
+}
+
+// CommentGTE applies the GTE predicate on the "comment" field.
+func CommentGTE(v string) predicate.WeightRating {
+	return predicate.WeightRating(sql.FieldGTE(FieldComment, v))
+}
+
+// CommentLT applies the LT predicate on the "comment" field.
+func CommentLT(v string) predicate.WeightRating {
+	return predicate.WeightRating(sql.FieldLT(FieldComment, v))
+}
+
+// CommentLTE applies the LTE predicate on the "comment" field.
+func CommentLTE(v string) predicate.WeightRating {
+	return predicate.WeightRating(sql.FieldLTE(FieldComment, v))
+}
+
+// CommentContains applies the Contains predicate on the "comment" field.
+func CommentContains(v string) predicate.WeightRating {
+	return predicate.WeightRating(sql.FieldContains(FieldComment, v))
+}
+
+// CommentHasPrefix applies the HasPrefix predicate on the "comment" field.
+func CommentHasPrefix(v string) predicate.WeightRating {
+	return predicate.WeightRating(sql.FieldHasPrefix(FieldComment, v))
+}
+
+// CommentHasSuffix applies the HasSuffix predicate on the "comment" field.
+func CommentHasSuffix(v string) predicate.WeightRating {
+	return predicate.WeightRating(sql.FieldHasSuffix(FieldComment, v))
+}
+
+// CommentIsNil applies the IsNil predicate on the "comment" field.
+func CommentIsNil() predicate.WeightRating {
+	return predicate.WeightRating(sql.FieldIsNull(FieldComment))
+}
+
+// CommentNotNil applies the NotNil predicate on the "comment" field.
+func CommentNotNil() predicate.WeightRating {
+	return predicate.WeightRating(sql.FieldNotNull(FieldComment))
+}
+
+// CommentEqualFold applies the EqualFold predicate on the "comment" field.
+func CommentEqualFold(v string) predicate.WeightRating {
+	return predicate.WeightRating(sql.FieldEqualFold(FieldComment, v))
+}
+
+// CommentContainsFold applies the ContainsFold predicate on the "comment" field.
+func CommentContainsFold(v string) predicate.WeightRating {
+	return predicate.WeightRating(sql.FieldContainsFold(FieldComment, v))
 }
 
 // HasCaptainsTeam applies the HasEdge predicate on the "captains_team" edge.

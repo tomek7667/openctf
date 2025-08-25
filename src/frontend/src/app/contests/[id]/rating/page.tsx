@@ -7,11 +7,9 @@ import Link from "next/link";
 import {
 	ArrowLeft,
 	Star,
-	TrendingUp,
 	Users,
 	BarChart,
 	Target,
-	Award,
 	AlertCircle,
 } from "@/components/ui/icons";
 import { Button } from "@/components/ui/Button";
@@ -28,9 +26,29 @@ import {
 	createWeightRating,
 	getUserContestRating,
 	getTeamWeightRating,
+	getAllContestRatings,
+	getAllWeightRatings,
 	ContestRatingStats,
 } from "@/api/contestRatings";
 import { ContestRating, WeightRating } from "@/lib/schema";
+
+const getDifficultyColor = (diff: number) => {
+	if (diff === 100) return "text-purple-400";
+	if (diff >= 80) return "text-red-400";
+	if (diff >= 60) return "text-orange-400";
+	if (diff >= 40) return "text-yellow-400";
+	if (diff >= 20) return "text-blue-400";
+	return "text-green-400";
+};
+
+function getDifficultyLabel(diff: number) {
+	if (diff === 100) return "HARDEST";
+	if (diff >= 80) return "INSANE";
+	if (diff >= 60) return "HARD";
+	if (diff >= 40) return "MEDIUM";
+	if (diff >= 20) return "EASY";
+	return "TRIVIAL";
+}
 
 // Star Rating Component
 function StarRating({
@@ -80,33 +98,30 @@ function DifficultyRating({
 	onRate?: (difficulty: number) => void;
 	readonly?: boolean;
 }) {
-	const getDifficultyColor = (diff: number) => {
-		if (diff >= 80) return "text-red-400";
-		if (diff >= 60) return "text-orange-400";
-		if (diff >= 40) return "text-yellow-400";
-		if (diff >= 20) return "text-blue-400";
-		return "text-green-400";
-	};
+	const [localValue, setLocalValue] = useState(difficulty);
 
-	const getDifficultyLabel = (diff: number) => {
-		if (diff >= 80) return "INSANE";
-		if (diff >= 60) return "HARD";
-		if (diff >= 40) return "MEDIUM";
-		if (diff >= 20) return "EASY";
-		return "TRIVIAL";
+	useEffect(() => {
+		setLocalValue(difficulty);
+	}, [difficulty]);
+
+	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		if (readonly) return;
+		const newValue = parseInt(e.target.value);
+		setLocalValue(newValue);
+		onRate?.(newValue);
 	};
 
 	return (
 		<div className="space-y-3">
 			<div className="flex items-center justify-between">
 				<span className="font-mono text-sm text-muted-foreground">
-					Difficulty: {difficulty}/100
+					Difficulty: {localValue}/100
 				</span>
 				<Badge
 					variant="outline"
-					className={`font-mono ${getDifficultyColor(difficulty)}`}
+					className={`font-mono ${getDifficultyColor(localValue)}`}
 				>
-					{getDifficultyLabel(difficulty)}
+					{getDifficultyLabel(localValue)}
 				</Badge>
 			</div>
 			<div className="relative">
@@ -114,20 +129,14 @@ function DifficultyRating({
 					type="range"
 					min="0"
 					max="100"
-					value={difficulty}
-					onChange={(e) => !readonly && onRate?.(parseInt(e.target.value))}
+					value={localValue}
+					onChange={handleChange}
 					disabled={readonly}
-					className={`w-full h-2 bg-gray-700 rounded-lg appearance-none slider ${
+					className={`w-full h-2 rounded-lg appearance-none ${
 						readonly ? "cursor-default" : "cursor-pointer"
-					}`}
+					} [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-gray-300 [&::-webkit-slider-thumb]:cursor-pointer [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-white [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-gray-300 [&::-moz-range-thumb]:cursor-pointer [&::-moz-range-thumb]:border-none`}
 					style={{
 						background: `linear-gradient(to right, #22c55e 0%, #eab308 25%, #f97316 50%, #ef4444 75%, #dc2626 100%)`,
-					}}
-				/>
-				<div
-					className="absolute top-0 w-4 h-4 bg-white border-2 border-gray-300 rounded-full transform -translate-y-1"
-					style={{
-						left: `calc(${(difficulty / 100) * 100}% - 8px)`,
 					}}
 				/>
 			</div>
@@ -148,19 +157,39 @@ function RatingDistribution({
 	return (
 		<div className="space-y-3">
 			<h4 className="font-mono text-sm font-bold text-primary">
-				{type === "quality" ? "Quality Rating Distribution" : "Difficulty Rating Distribution"}
+				{type === "quality"
+					? "Quality Rating Distribution"
+					: "Difficulty Rating Distribution"}
 			</h4>
 			<div className="space-y-2">
 				{Object.entries(distribution).map(([key, count]) => {
 					const percentage = maxCount > 0 ? (count / maxCount) * 100 : 0;
-					const label = type === "quality" 
-						? `${key} star${key === "1" ? "" : "s"}` 
-						: `${key === "20" ? "0-19" : key === "40" ? "20-39" : key === "60" ? "40-59" : key === "80" ? "60-79" : "80-100"}`;
+					const label =
+						type === "quality"
+							? `${key} star${key === "1" ? "" : "s"}`
+							: `${key === "20" ? "0-19" : key === "40" ? "20-39" : key === "60" ? "40-59" : key === "80" ? "60-79" : "80-100"}`;
 
 					return (
 						<div key={key} className="flex items-center space-x-3">
-							<div className="w-16 text-xs font-mono text-muted-foreground">
-								{label}
+							<div className="w-16 flex items-center justify-center">
+								{type === "quality" ? (
+									<div className="flex space-x-0.5">
+										{[1, 2, 3, 4, 5].map((star) => (
+											<Star
+												key={star}
+												className={`h-3 w-3 ${
+													star <= parseInt(key)
+														? "text-yellow-400 fill-current"
+														: "text-gray-600"
+												}`}
+											/>
+										))}
+									</div>
+								) : (
+									<div className="text-xs font-mono text-muted-foreground">
+										{label}
+									</div>
+								)}
 							</div>
 							<div className="flex-1 bg-gray-700 rounded-full h-2">
 								<div
@@ -168,9 +197,7 @@ function RatingDistribution({
 									style={{ width: `${percentage}%` }}
 								/>
 							</div>
-							<div className="w-8 text-xs font-mono text-right">
-								{count}
-							</div>
+							<div className="w-8 text-xs font-mono text-right">{count}</div>
 						</div>
 					);
 				})}
@@ -187,14 +214,24 @@ export default function ContestRatingPage() {
 
 	// State management
 	const [contest, setContest] = useState<ParsedContest | null>(null);
-	const [ratingStats, setRatingStats] = useState<ContestRatingStats | null>(null);
+	const [ratingStats, setRatingStats] = useState<ContestRatingStats | null>(
+		null
+	);
 	const [userRating, setUserRating] = useState<ContestRating | null>(null);
 	const [teamRating, setTeamRating] = useState<WeightRating | null>(null);
+	const [allQualityRatings, setAllQualityRatings] = useState<ContestRating[]>(
+		[]
+	);
+	const [allDifficultyRatings, setAllDifficultyRatings] = useState<
+		WeightRating[]
+	>([]);
 	const [loading, setLoading] = useState(true);
-	
+
 	// Form state
 	const [newQualityRating, setNewQualityRating] = useState(0);
 	const [newDifficultyRating, setNewDifficultyRating] = useState(50);
+	const [qualityComment, setQualityComment] = useState("");
+	const [difficultyComment, setDifficultyComment] = useState("");
 	const [submittingQuality, setSubmittingQuality] = useState(false);
 	const [submittingDifficulty, setSubmittingDifficulty] = useState(false);
 
@@ -219,15 +256,32 @@ export default function ContestRatingPage() {
 					setRatingStats(statsResponse.data);
 				}
 
+				// Fetch all ratings for display
+				const allQualityResponse = await getAllContestRatings(contestId);
+				if (allQualityResponse.success && allQualityResponse.data) {
+					setAllQualityRatings(allQualityResponse.data);
+				}
+
+				const allDifficultyResponse = await getAllWeightRatings(contestId);
+				if (allDifficultyResponse.success && allDifficultyResponse.data) {
+					setAllDifficultyRatings(allDifficultyResponse.data);
+				}
+
 				// Fetch user's existing ratings if authenticated
 				if (isAuthenticated && user) {
-					const userRatingResponse = await getUserContestRating(contestId, user.id);
+					const userRatingResponse = await getUserContestRating(
+						contestId,
+						user.id
+					);
 					if (userRatingResponse.success && userRatingResponse.data) {
 						setUserRating(userRatingResponse.data);
 						setNewQualityRating(userRatingResponse.data.rating);
 					}
 
-					const teamRatingResponse = await getTeamWeightRating(contestId, userTeamId);
+					const teamRatingResponse = await getTeamWeightRating(
+						contestId,
+						userTeamId
+					);
 					if (teamRatingResponse.success && teamRatingResponse.data) {
 						setTeamRating(teamRatingResponse.data);
 						setNewDifficultyRating(teamRatingResponse.data.difficulty);
@@ -242,22 +296,35 @@ export default function ContestRatingPage() {
 		};
 
 		fetchData();
-	}, [contestId, isAuthenticated, user, toast]);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [contestId, isAuthenticated, user]);
 
-	const handleQualityRating = async (rating: number) => {
+	const handleQualityRatingChange = (rating: number) => {
+		setNewQualityRating(rating);
+	};
+
+	const handleQualitySubmit = async () => {
 		if (!isAuthenticated || !user) {
 			toast.error("Please log in to rate contests");
 			return;
 		}
 
+		if (newQualityRating === 0) {
+			toast.error("Please select a rating");
+			return;
+		}
+
 		try {
 			setSubmittingQuality(true);
-			setNewQualityRating(rating);
 
-			const response = await createContestRating(contestId, rating, user.id);
+			const response = await createContestRating(
+				contestId,
+				newQualityRating,
+				user.id
+			);
 			if (response.success) {
 				toast.success("Quality rating submitted successfully!");
-				
+
 				// Refresh data
 				const statsResponse = await getContestRatings(contestId);
 				if (statsResponse.success && statsResponse.data) {
@@ -283,10 +350,14 @@ export default function ContestRatingPage() {
 		try {
 			setSubmittingDifficulty(true);
 
-			const response = await createWeightRating(contestId, newDifficultyRating, userTeamId);
+			const response = await createWeightRating(
+				contestId,
+				newDifficultyRating,
+				userTeamId
+			);
 			if (response.success) {
 				toast.success("Difficulty rating submitted successfully!");
-				
+
 				// Refresh data
 				const statsResponse = await getContestRatings(contestId);
 				if (statsResponse.success && statsResponse.data) {
@@ -353,10 +424,12 @@ export default function ContestRatingPage() {
 						<div>
 							<h1 className="text-3xl md:text-4xl font-bold font-mono">
 								<span className="terminal-prompt">$ </span>
-								<span className="hacker-gradient-text">CONTEST_RATINGS</span>
+								<span className="hacker-gradient-text">
+									{contest.name} / RATINGS
+								</span>
 							</h1>
 							<p className="text-muted-foreground font-mono mt-2">
-								{contest.name}
+								Assigned weight points: {contest.assigned_weight_points}
 							</p>
 						</div>
 					</div>
@@ -368,7 +441,7 @@ export default function ContestRatingPage() {
 							animate={{ opacity: 1, y: 0 }}
 							transition={{ delay: 0.1 }}
 						>
-							<Card className="p-6 h-full">
+							<Card className="p-6 h-full flex flex-col">
 								<div className="flex items-center gap-3 mb-6">
 									<Star className="h-6 w-6 text-yellow-400" />
 									<h2 className="text-2xl font-bold font-mono text-yellow-400">
@@ -377,31 +450,38 @@ export default function ContestRatingPage() {
 								</div>
 
 								{ratingStats && (
-									<div className="space-y-6">
-										{/* Current Stats */}
-										<div className="text-center space-y-2">
-											<div className="text-4xl font-bold font-mono text-yellow-400">
-												{ratingStats.averageQualityRating.toFixed(1)}
+									<div className="flex flex-col flex-1">
+										<div className="space-y-6 flex-1">
+											{/* Current Stats */}
+											<div className="text-center space-y-2">
+												<div className="text-4xl font-bold font-mono text-yellow-400">
+													{ratingStats.averageQualityRating.toFixed(1)}
+												</div>
+												<div className="flex justify-center">
+													<StarRating
+														rating={ratingStats.averageQualityRating}
+														size="lg"
+														readonly
+													/>
+												</div>
+												<div className="text-sm text-muted-foreground font-mono">
+													({ratingStats.totalQualityRatings} ratings)
+												</div>
 											</div>
-											<StarRating 
-												rating={ratingStats.averageQualityRating} 
-												size="lg" 
-												readonly 
+
+											{/* Distribution */}
+											<RatingDistribution
+												distribution={ratingStats.qualityRatingDistribution}
+												type="quality"
 											/>
-											<div className="text-sm text-muted-foreground font-mono">
-												({ratingStats.totalQualityRatings} ratings)
-											</div>
 										</div>
 
-										{/* Distribution */}
-										<RatingDistribution
-											distribution={ratingStats.qualityRatingDistribution}
-											type="quality"
-										/>
-
-										{/* Rating Form */}
+										{/* Rating Form - Sticks to bottom */}
 										{showRatingForms && isAuthenticated && (
-											<div className="pt-6 border-t border-border/50">
+											<div
+												className="pt-6 border-t border-border/50 mt-auto"
+												style={{ marginTop: "20px" }}
+											>
 												<h4 className="font-mono text-sm font-bold text-primary mb-4">
 													Rate Contest Quality:
 												</h4>
@@ -409,20 +489,36 @@ export default function ContestRatingPage() {
 													<div className="flex items-center justify-center">
 														<StarRating
 															rating={newQualityRating}
-															onRate={handleQualityRating}
+															onRate={handleQualityRatingChange}
 															size="lg"
 														/>
 													</div>
-													{newQualityRating > 0 && (
-														<div className="text-center">
-															<div className="text-sm font-mono text-muted-foreground">
-																Your rating: {newQualityRating}/5 stars
-															</div>
-															{userRating && (
-																<div className="text-xs text-green-400 font-mono mt-1">
-																	✓ Updated
-																</div>
-															)}
+													<textarea
+														value={qualityComment}
+														onChange={(e) => setQualityComment(e.target.value)}
+														placeholder="Optional comment about contest quality..."
+														className="w-full p-3 bg-background border border-border rounded font-mono text-sm resize-none"
+														rows={5}
+														maxLength={500}
+													/>
+													<Button
+														onClick={handleQualitySubmit}
+														disabled={
+															submittingQuality || newQualityRating === 0
+														}
+														className="w-full font-mono"
+													>
+														{submittingQuality ? (
+															<LoadingSpinner size="sm" />
+														) : userRating ? (
+															"Update Quality Rating"
+														) : (
+															"Submit Quality Rating"
+														)}
+													</Button>
+													{userRating && (
+														<div className="text-xs text-green-400 font-mono text-center">
+															✓ Previously rated: {userRating.rating}/5 stars
 														</div>
 													)}
 												</div>
@@ -430,7 +526,7 @@ export default function ContestRatingPage() {
 										)}
 
 										{showRatingForms && !isAuthenticated && (
-											<div className="pt-6 border-t border-border/50">
+											<div className="pt-6 border-t border-border/50 mt-auto">
 												<div className="text-center text-muted-foreground font-mono">
 													<AlertCircle className="h-5 w-5 mx-auto mb-2" />
 													Log in to rate this contest
@@ -448,7 +544,7 @@ export default function ContestRatingPage() {
 							animate={{ opacity: 1, y: 0 }}
 							transition={{ delay: 0.2 }}
 						>
-							<Card className="p-6 h-full">
+							<Card className="p-6 h-full flex flex-col">
 								<div className="flex items-center gap-3 mb-6">
 									<Target className="h-6 w-6 text-red-400" />
 									<h2 className="text-2xl font-bold font-mono text-red-400">
@@ -457,34 +553,39 @@ export default function ContestRatingPage() {
 								</div>
 
 								{ratingStats && (
-									<div className="space-y-6">
-										{/* Current Stats */}
-										<div className="text-center space-y-2">
-											<div className="text-4xl font-bold font-mono text-red-400">
-												{ratingStats.averageDifficultyRating.toFixed(0)}
+									<div className="flex flex-col flex-1">
+										<div className="space-y-6 flex-1">
+											{/* Current Stats */}
+											<div className="text-center space-y-2">
+												<div className="text-4xl font-bold font-mono text-red-400">
+													{ratingStats.averageDifficultyRating.toFixed(0)}
+												</div>
+												<div className="text-sm text-muted-foreground font-mono">
+													out of 100 ({ratingStats.totalDifficultyRatings}{" "}
+													ratings)
+												</div>
+												<div className="flex justify-center">
+													<Badge variant="outline" className="font-mono">
+														{getDifficultyLabel(
+															ratingStats.averageDifficultyRating
+														)}
+													</Badge>
+												</div>
 											</div>
-											<div className="text-sm text-muted-foreground font-mono">
-												out of 100 ({ratingStats.totalDifficultyRatings} ratings)
-											</div>
-											<div className="flex justify-center">
-												<Badge variant="outline" className="font-mono">
-													{ratingStats.averageDifficultyRating >= 80 ? "INSANE" :
-													 ratingStats.averageDifficultyRating >= 60 ? "HARD" :
-													 ratingStats.averageDifficultyRating >= 40 ? "MEDIUM" :
-													 ratingStats.averageDifficultyRating >= 20 ? "EASY" : "TRIVIAL"}
-												</Badge>
-											</div>
+
+											{/* Distribution */}
+											<RatingDistribution
+												distribution={ratingStats.difficultyRatingDistribution}
+												type="difficulty"
+											/>
 										</div>
 
-										{/* Distribution */}
-										<RatingDistribution
-											distribution={ratingStats.difficultyRatingDistribution}
-											type="difficulty"
-										/>
-
-										{/* Rating Form */}
+										{/* Rating Form - Sticks to bottom */}
 										{showRatingForms && isAuthenticated && (
-											<div className="pt-6 border-t border-border/50">
+											<div
+												className="pt-6 border-t border-border/50 mt-auto"
+												style={{ marginTop: "20px" }}
+											>
 												<h4 className="font-mono text-sm font-bold text-primary mb-4">
 													Rate Contest Difficulty:
 												</h4>
@@ -492,6 +593,16 @@ export default function ContestRatingPage() {
 													<DifficultyRating
 														difficulty={newDifficultyRating}
 														onRate={setNewDifficultyRating}
+													/>
+													<textarea
+														value={difficultyComment}
+														onChange={(e) =>
+															setDifficultyComment(e.target.value)
+														}
+														placeholder="Optional comment about contest difficulty..."
+														className="w-full p-3 bg-background border border-border rounded font-mono text-sm resize-none"
+														rows={3}
+														maxLength={500}
 													/>
 													<Button
 														onClick={handleDifficultyRating}
@@ -516,7 +627,7 @@ export default function ContestRatingPage() {
 										)}
 
 										{showRatingForms && !isAuthenticated && (
-											<div className="pt-6 border-t border-border/50">
+											<div className="pt-6 border-t border-border/50 mt-auto">
 												<div className="text-center text-muted-foreground font-mono">
 													<AlertCircle className="h-5 w-5 mx-auto mb-2" />
 													Log in to rate contest difficulty
@@ -545,7 +656,9 @@ export default function ContestRatingPage() {
 							</div>
 							<div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm font-mono">
 								<div className="space-y-2">
-									<h4 className="text-primary font-bold">Quality Rating (0-5 stars):</h4>
+									<h4 className="text-primary font-bold">
+										Quality Rating (0-5 stars):
+									</h4>
 									<ul className="space-y-1 text-muted-foreground">
 										<li>• Overall contest experience</li>
 										<li>• Challenge quality and variety</li>
@@ -554,7 +667,9 @@ export default function ContestRatingPage() {
 									</ul>
 								</div>
 								<div className="space-y-2">
-									<h4 className="text-primary font-bold">Difficulty Rating (0-100):</h4>
+									<h4 className="text-primary font-bold">
+										Difficulty Rating (0-100):
+									</h4>
 									<ul className="space-y-1 text-muted-foreground">
 										<li>• Only team captains can rate</li>
 										<li>• Based on challenge complexity</li>
@@ -564,6 +679,128 @@ export default function ContestRatingPage() {
 								</div>
 							</div>
 						</Card>
+					</motion.div>
+
+					{/* User Ratings Lists */}
+					<motion.div
+						initial={{ opacity: 0, y: 20 }}
+						animate={{ opacity: 1, y: 0 }}
+						transition={{ delay: 0.4 }}
+						className="mt-8"
+					>
+						<div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+							{/* Quality Ratings List */}
+							<Card className="p-6">
+								<div className="flex items-center gap-3 mb-6">
+									<Users className="h-6 w-6 text-yellow-400" />
+									<h3 className="text-xl font-bold font-mono text-yellow-400">
+										&gt; QUALITY_OPINIONS
+									</h3>
+								</div>
+								<div className="space-y-4 max-h-96 overflow-y-auto">
+									{allQualityRatings.length > 0 ? (
+										allQualityRatings.map((rating) => {
+											const userTeam = rating.user.teams?.[0];
+											return (
+												<div
+													key={rating.id}
+													className="border-b border-border/30 pb-3"
+												>
+													<div className="flex items-center justify-between mb-2">
+														<div className="flex items-center gap-2">
+															<Link
+																href={`/users/${rating.user.id}`}
+																className="font-mono text-primary hover:text-primary/80 transition-colors"
+															>
+																{rating.user.username}
+															</Link>
+															{userTeam && (
+																<>
+																	<span className="text-muted-foreground">
+																		/
+																	</span>
+																	<Link
+																		href={`/teams/${userTeam.id}`}
+																		className="font-mono text-blue-400 hover:text-blue-300 transition-colors"
+																	>
+																		{userTeam.name}
+																	</Link>
+																</>
+															)}
+														</div>
+														<StarRating
+															rating={rating.rating}
+															readonly
+															size="sm"
+														/>
+													</div>
+												</div>
+											);
+										})
+									) : (
+										<div className="text-center text-muted-foreground font-mono py-8">
+											No quality ratings yet
+										</div>
+									)}
+								</div>
+							</Card>
+
+							{/* Difficulty Ratings List */}
+							<Card className="p-6">
+								<div className="flex items-center gap-3 mb-6">
+									<Target className="h-6 w-6 text-red-400" />
+									<h3 className="text-xl font-bold font-mono text-red-400">
+										&gt; DIFFICULTY_RATINGS
+									</h3>
+								</div>
+								<div className="space-y-4 max-h-96 overflow-y-auto">
+									{allDifficultyRatings.length > 0 ? (
+										allDifficultyRatings.map((rating) => {
+											const captain = rating.captains_team.captain;
+											return (
+												<div
+													key={rating.id}
+													className="border-b border-border/30 pb-3"
+												>
+													<div className="flex items-center justify-between mb-2">
+														<div className="flex items-center gap-2">
+															<Link
+																href={`/users/${captain?.id}`}
+																className="font-mono text-primary hover:text-primary/80 transition-colors"
+															>
+																{captain?.username || "Unknown"}
+															</Link>
+															<span className="text-muted-foreground">/</span>
+															<Link
+																href={`/teams/${rating.captains_team.id}`}
+																className="font-mono text-blue-400 hover:text-blue-300 transition-colors"
+															>
+																{rating.captains_team.name}
+															</Link>
+														</div>
+														<div className="flex items-center gap-2">
+															<span className="font-mono text-lg font-bold">
+																{rating.difficulty}
+															</span>
+															<Badge
+																variant="outline"
+																className="font-mono text-xs"
+															>
+																{getDifficultyLabel(rating.difficulty)}
+															</Badge>
+														</div>
+													</div>
+												</div>
+											);
+										})
+									) : (
+										<div className="text-center text-muted-foreground font-mono py-8">
+											No difficulty ratings yet
+										</div>
+									)}
+								</div>
+							</Card>
+						</div>
 					</motion.div>
 				</div>
 			</div>
