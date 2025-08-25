@@ -1,4 +1,3 @@
-import { BASE_URL } from "./constant";
 import { CreateContestRatingDto, CreateWeightRatingDto, ContestRating, WeightRating } from "@/lib/schema";
 
 export interface ApiResponse<T> {
