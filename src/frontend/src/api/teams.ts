@@ -26,7 +26,7 @@ export interface TeamLeaderboardType {
 	contests_won: number;
 }
 
-export const DEFAULT_TEAMS_LIMIT = 100;
+export const DEFAULT_TEAMS_LIMIT = 30;
 
 export interface GetCurrentYearLeaderboardDto {
 	Offset?: number;

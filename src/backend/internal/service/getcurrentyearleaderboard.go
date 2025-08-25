@@ -21,8 +21,8 @@ type GetCurrentYearLeaderboardDto struct {
 }
 
 func (c *Client) GetCurrentYearLeaderboard(ctx context.Context, dto *GetCurrentYearLeaderboardDto) ([]*ent.AggregatedYearlyTeam, error) {
-	if dto.Limit > 100 || dto.Limit <= 0 {
-		dto.Limit = 100
+	if dto.Limit > 30 || dto.Limit <= 0 {
+		dto.Limit = 30
 	}
 	if dto.Offset <= 0 {
 		dto.Offset = 0
@@ -68,8 +68,7 @@ func (c *Client) GetCurrentYearLeaderboard(ctx context.Context, dto *GetCurrentY
 		leaderboardQuery = leaderboardQuery.Order(ent.Desc(aggregatedyearlyteam.FieldTeamPoints))
 	}
 	if dto.Search != nil && *dto.Search != "" {
-		searchTerm := fmt.Sprintf("%%%s%%", *dto.Search)
-		leaderboardQuery = leaderboardQuery.Where(aggregatedyearlyteam.NameContainsFold(searchTerm))
+		leaderboardQuery = leaderboardQuery.Where(aggregatedyearlyteam.NameContains(*dto.Search))
 	}
 
 	leaderboard, err := leaderboardQuery.All(ctx)

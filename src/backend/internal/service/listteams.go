@@ -15,8 +15,8 @@ type ListTeamsDto struct {
 }
 
 func (c *Client) ListTeams(ctx context.Context, dto *ListTeamsDto) ([]*ent.Team, error) {
-	if dto.Limit > 100 {
-		dto.Limit = 100
+	if dto.Limit > 30 {
+		dto.Limit = 30
 	}
 	if dto.Limit <= 0 {
 		dto.Limit = 30
