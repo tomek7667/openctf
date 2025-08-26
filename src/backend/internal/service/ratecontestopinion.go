@@ -49,10 +49,7 @@ func (c *Client) RateContestOpinion(
 	// at least top 30%, then the rating "relevant" field should be set to false.
 	res, err := c.C.QueryContext(ctx, SqlUserTeamPlaceInContest, requester.ID, contestId)
 	if err != nil {
-		return nil, errors.Join(
-			fmt.Errorf("something went wrong while finding your place in the contest"),
-			err,
-		)
+		return nil, fmt.Errorf("something went wrong while finding your place in the contest: %w", err)
 	}
 	defer res.Close()
 	var place sql.NullInt64

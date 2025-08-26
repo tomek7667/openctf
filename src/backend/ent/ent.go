@@ -21,6 +21,7 @@ import (
 	"openctfbackend/ent/teamachievement"
 	"openctfbackend/ent/user"
 	"openctfbackend/ent/userprofile"
+	"openctfbackend/ent/vcontestparticipant"
 	"openctfbackend/ent/weightrating"
 	"reflect"
 	"sync"
@@ -103,6 +104,7 @@ func checkColumn(t, c string) error {
 			teamachievement.Table:                teamachievement.ValidColumn,
 			user.Table:                           user.ValidColumn,
 			userprofile.Table:                    userprofile.ValidColumn,
+			vcontestparticipant.Table:            vcontestparticipant.ValidColumn,
 			weightrating.Table:                   weightrating.ValidColumn,
 		})
 	})

@@ -48,6 +48,7 @@ const (
 	TypeTeamAchievement                = "TeamAchievement"
 	TypeUser                           = "User"
 	TypeUserProfile                    = "UserProfile"
+	TypeVContestParticipant            = "VContestParticipant"
 	TypeWeightRating                   = "WeightRating"
 )
 

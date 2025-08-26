@@ -56,12 +56,34 @@ func (h *Handler) ContestsRating(ctx *gin.Context) {
 		return
 	}
 
+	eligibleWeightVoters, err := h.ServiceClient.GetEligibleWeightVoters(ctx, contestId)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, map[string]any{
+			"success": false,
+			"message": err.Error(),
+			"data":    nil,
+		})
+		return
+	}
+
+	eligibleOpinionVoters, err := h.ServiceClient.GetEligibleOpinionVoters(ctx, contestId)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, map[string]any{
+			"success": false,
+			"message": err.Error(),
+			"data":    nil,
+		})
+		return
+	}
+
 	ctx.JSON(http.StatusOK, map[string]any{
 		"success": true,
 		"message": "ok",
 		"data": map[string]any{
-			"weight_ratings":  weightRatings,
-			"opinion_ratings": ratings,
+			"weight_ratings":          weightRatings,
+			"opinion_ratings":         ratings,
+			"eligible_weight_voters":  eligibleWeightVoters,
+			"eligible_opinion_voters": eligibleOpinionVoters,
 		},
 	})
 }

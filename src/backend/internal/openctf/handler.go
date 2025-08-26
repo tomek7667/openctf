@@ -77,6 +77,8 @@ type ServiceClient interface {
 	GetCurrentYearLeaderboard(ctx context.Context, dto *service.GetCurrentYearLeaderboardDto) ([]*ent.AggregatedYearlyTeam, error)
 	GetContestRatings(ctx context.Context, contestId int) ([]*ent.ContestRating, error)
 	GetContestWeightRatings(ctx context.Context, contestId int) ([]*ent.WeightRating, error)
+	GetEligibleWeightVoters(ctx context.Context, contestId int) ([]service.EligibleWeightVoter, error)
+	GetEligibleOpinionVoters(ctx context.Context, contestId int) ([]service.EligibleOpinionVoter, error)
 }
 
 type CtftimeClient interface {

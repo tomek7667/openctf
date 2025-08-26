@@ -44,6 +44,8 @@ type Tx struct {
 	User *UserClient
 	// UserProfile is the client for interacting with the UserProfile builders.
 	UserProfile *UserProfileClient
+	// VContestParticipant is the client for interacting with the VContestParticipant builders.
+	VContestParticipant *VContestParticipantClient
 	// WeightRating is the client for interacting with the WeightRating builders.
 	WeightRating *WeightRatingClient
 
@@ -192,6 +194,7 @@ func (tx *Tx) init() {
 	tx.TeamAchievement = NewTeamAchievementClient(tx.config)
 	tx.User = NewUserClient(tx.config)
 	tx.UserProfile = NewUserProfileClient(tx.config)
+	tx.VContestParticipant = NewVContestParticipantClient(tx.config)
 	tx.WeightRating = NewWeightRatingClient(tx.config)
 }
 

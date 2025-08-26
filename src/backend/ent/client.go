@@ -65,6 +65,8 @@ type Client struct {
 	User *UserClient
 	// UserProfile is the client for interacting with the UserProfile builders.
 	UserProfile *UserProfileClient
+	// VContestParticipant is the client for interacting with the VContestParticipant builders.
+	VContestParticipant *VContestParticipantClient
 	// WeightRating is the client for interacting with the WeightRating builders.
 	WeightRating *WeightRatingClient
 }
@@ -93,6 +95,7 @@ func (c *Client) init() {
 	c.TeamAchievement = NewTeamAchievementClient(c.config)
 	c.User = NewUserClient(c.config)
 	c.UserProfile = NewUserProfileClient(c.config)
+	c.VContestParticipant = NewVContestParticipantClient(c.config)
 	c.WeightRating = NewWeightRatingClient(c.config)
 }
 
@@ -201,6 +204,7 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 		TeamAchievement:                NewTeamAchievementClient(cfg),
 		User:                           NewUserClient(cfg),
 		UserProfile:                    NewUserProfileClient(cfg),
+		VContestParticipant:            NewVContestParticipantClient(cfg),
 		WeightRating:                   NewWeightRatingClient(cfg),
 	}, nil
 }
@@ -236,6 +240,7 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 		TeamAchievement:                NewTeamAchievementClient(cfg),
 		User:                           NewUserClient(cfg),
 		UserProfile:                    NewUserProfileClient(cfg),
+		VContestParticipant:            NewVContestParticipantClient(cfg),
 		WeightRating:                   NewWeightRatingClient(cfg),
 	}, nil
 }
@@ -281,7 +286,7 @@ func (c *Client) Intercept(interceptors ...Interceptor) {
 		c.AggregatedContestsDifficulties, c.AggregatedPlatformStatistics,
 		c.AggregatedTeamDetails, c.AggregatedUserStatistics, c.AggregatedYearlyTeam,
 		c.Contest, c.ContestRating, c.Place, c.Team, c.TeamAchievement, c.User,
-		c.UserProfile, c.WeightRating,
+		c.UserProfile, c.VContestParticipant, c.WeightRating,
 	} {
 		n.Intercept(interceptors...)
 	}
@@ -1900,6 +1905,36 @@ func (c *UserProfileClient) mutate(ctx context.Context, m *UserProfileMutation) 
 	}
 }
 
+// VContestParticipantClient is a client for the VContestParticipant schema.
+type VContestParticipantClient struct {
+	config
+}
+
+// NewVContestParticipantClient returns a client for the VContestParticipant from the given config.
+func NewVContestParticipantClient(c config) *VContestParticipantClient {
+	return &VContestParticipantClient{config: c}
+}
+
+// Intercept adds a list of query interceptors to the interceptors stack.
+// A call to `Intercept(f, g, h)` equals to `vcontestparticipant.Intercept(f(g(h())))`.
+func (c *VContestParticipantClient) Intercept(interceptors ...Interceptor) {
+	c.inters.VContestParticipant = append(c.inters.VContestParticipant, interceptors...)
+}
+
+// Query returns a query builder for VContestParticipant.
+func (c *VContestParticipantClient) Query() *VContestParticipantQuery {
+	return &VContestParticipantQuery{
+		config: c.config,
+		ctx:    &QueryContext{Type: TypeVContestParticipant},
+		inters: c.Interceptors(),
+	}
+}
+
+// Interceptors returns the client interceptors.
+func (c *VContestParticipantClient) Interceptors() []Interceptor {
+	return c.inters.VContestParticipant
+}
+
 // WeightRatingClient is a client for the WeightRating schema.
 type WeightRatingClient struct {
 	config
@@ -2075,7 +2110,7 @@ type (
 		Achievement, Activity, AggregatedContest, AggregatedContestsDifficulties,
 		AggregatedPlatformStatistics, AggregatedTeamDetails, AggregatedUserStatistics,
 		AggregatedYearlyTeam, Contest, ContestRating, Place, Team, TeamAchievement,
-		User, UserProfile, WeightRating []ent.Interceptor
+		User, UserProfile, VContestParticipant, WeightRating []ent.Interceptor
 	}
 )
 

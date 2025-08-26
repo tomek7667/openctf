@@ -2,6 +2,7 @@
 CREATE SCHEMA IF NOT EXISTS openctf;
 SET search_path TO openctf;
 
+DROP VIEW IF EXISTS "v_contest_participants";
 DROP VIEW IF EXISTS "aggregated_team_details";
 DROP VIEW IF EXISTS "aggregated_yearly_teams";
 DROP VIEW IF EXISTS "aggregated_contests";
@@ -328,3 +329,17 @@ select
 from
 	teams t
 group by t.id;
+
+-- Create "v_contest_participants" view
+CREATE OR REPLACE VIEW "v_contest_participants" AS
+SELECT
+	p.contest_places AS contest_id,
+	p.place_associated_team AS team_id,
+	MIN(p.place) AS best_place
+FROM
+	places p
+WHERE
+	p.place_associated_team IS NOT NULL
+GROUP BY
+	p.contest_places,
+	p.place_associated_team;

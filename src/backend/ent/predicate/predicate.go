@@ -51,5 +51,8 @@ type User func(*sql.Selector)
 // UserProfile is the predicate function for userprofile builders.
 type UserProfile func(*sql.Selector)
 
+// VContestParticipant is the predicate function for vcontestparticipant builders.
+type VContestParticipant func(*sql.Selector)
+
 // WeightRating is the predicate function for weightrating builders.
 type WeightRating func(*sql.Selector)

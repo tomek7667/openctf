@@ -9,13 +9,19 @@ export default async function ContestRatingPage({
 }) {
 	try {
 		const contestId = parseInt(id as string);
-		const { weight_ratings, opinion_ratings } =
-			await getContestRatings(contestId);
+		const {
+			weight_ratings,
+			opinion_ratings,
+			eligible_weight_voters,
+			eligible_opinion_voters,
+		} = await getContestRatings(contestId);
 		const contest = await getContest(contestId);
 		return (
 			<RatingPageClient
 				opinion_ratings={opinion_ratings}
 				weight_ratings={weight_ratings}
+				eligible_weight_voters={eligible_weight_voters}
+				eligible_opinion_voters={eligible_opinion_voters}
 				contest={contest}
 			/>
 		);

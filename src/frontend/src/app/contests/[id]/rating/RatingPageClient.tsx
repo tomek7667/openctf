@@ -10,7 +10,6 @@ import {
 	Users,
 	BarChart,
 	Target,
-	AlertCircle,
 } from "@/components/ui/icons";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
@@ -23,6 +22,8 @@ import {
 	rateContestOpinion,
 	OpinionRating as OpinionRating,
 	WeightRating,
+	EligibleWeightVoter,
+	EligibleOpinionVoter,
 } from "@/api/contests";
 
 const getDifficultyColor = (diff: number) => {
@@ -204,10 +205,14 @@ function RatingDistribution({
 export default function RatingPageClient({
 	opinion_ratings,
 	weight_ratings,
+	eligible_weight_voters,
+	eligible_opinion_voters,
 	contest,
 }: {
 	opinion_ratings: OpinionRating[];
 	weight_ratings: WeightRating[];
+	eligible_weight_voters: EligibleWeightVoter[];
+	eligible_opinion_voters: EligibleOpinionVoter[];
 	contest: ParsedContest;
 }) {
 	const params = useParams();
@@ -257,7 +262,17 @@ export default function RatingPageClient({
 	const [submittingOpinion, setSubmittingOpinion] = useState(false);
 	const [submittingWeight, setSubmittingWeight] = useState(false);
 
-	const showRatingForms = true; // todo: make only viable users see the forms
+	const showOpinionForms =
+		eligible_opinion_voters.findIndex((eov) => eov.user_id === user?.id) !== -1;
+	const hasOpinionVoted =
+		opinion_ratings.findIndex((or) => or.edges.user.id === user?.id) !== -1;
+
+	const showWeightForms =
+		eligible_weight_voters.findIndex((ewv) => ewv.user_id === user?.id) !== -1;
+	const hasWeightVoted =
+		weight_ratings.findIndex(
+			(wr) => wr.edges.captains_team.edges.captain.id === user?.id
+		) !== -1;
 
 	const handleOpinionRatingChange = (rating: number) => {
 		setNewOpinionRating(rating);
@@ -419,8 +434,8 @@ export default function RatingPageClient({
 										/>
 									</div>
 
-									{/* Rating Form - Sticks to bottom */}
-									{showRatingForms && isAuthenticated && (
+									{/* Rating Form - todo: check the eligible users to quality rate */}
+									{showOpinionForms && !hasOpinionVoted && isAuthenticated && (
 										<div
 											className="pt-6 border-t border-border/50 mt-auto"
 											style={{ marginTop: "20px" }}
@@ -508,7 +523,7 @@ export default function RatingPageClient({
 									</div>
 
 									{/* Rating Form - Sticks to bottom */}
-									{showRatingForms && isAuthenticated && (
+									{showWeightForms && isAuthenticated && !hasWeightVoted && (
 										<div
 											className="pt-6 border-t border-border/50 mt-auto"
 											style={{ marginTop: "20px" }}
@@ -548,15 +563,6 @@ export default function RatingPageClient({
 														✓ Previously rated: {teamRating.difficulty}/100
 													</div>
 												)} */}
-											</div>
-										</div>
-									)}
-
-									{showRatingForms && !isAuthenticated && (
-										<div className="pt-6 border-t border-border/50 mt-auto">
-											<div className="text-center text-muted-foreground font-mono">
-												<AlertCircle className="h-5 w-5 mx-auto mb-2" />
-												Log in to rate contest difficulty
 											</div>
 										</div>
 									)}

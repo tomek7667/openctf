@@ -93,6 +93,24 @@ export const getContest = async (contestId: number): Promise<ParsedContest> => {
 export interface ContestRatingsResponse {
 	opinion_ratings: OpinionRating[];
 	weight_ratings: WeightRating[];
+	eligible_weight_voters: EligibleWeightVoter[];
+	eligible_opinion_voters: EligibleOpinionVoter[];
+}
+
+export interface EligibleWeightVoter {
+	user_id: number;
+	username: string;
+	team_id: number;
+	team_name: string;
+	place: number;
+}
+
+export interface EligibleOpinionVoter {
+	user_id: number;
+	username: string;
+	team_id: number;
+	team_name: string;
+	place: number;
 }
 
 export interface OpinionRating {
