@@ -10,8 +10,9 @@ import (
 	"openctfbackend/ent/contestrating"
 )
 
-type RateContestDto struct {
-	Rating int `json:"rating"`
+type RateContestOpinionDto struct {
+	Rating  int     `json:"rating"`
+	Comment *string `json:"comment"`
 }
 
 const SqlUserTeamPlaceInContest = `
@@ -42,7 +43,7 @@ func (c *Client) RateContestOpinion(
 	ctx context.Context,
 	requester *ent.User,
 	contestId int,
-	dto *RateContestDto,
+	dto *RateContestOpinionDto,
 ) (*ent.ContestRating, error) {
 	// if the user is not a member of any team that took part in the contest and got
 	// at least top 30%, then the rating "relevant" field should be set to false.
@@ -77,6 +78,9 @@ func (c *Client) RateContestOpinion(
 		SetRelevant(relevant).
 		SetUserID(requester.ID).
 		SetContestID(contestId)
+	if dto.Comment != nil && *dto.Comment != "" {
+		createContestOpinonQ.SetComment(*dto.Comment)
+	}
 
 	_opinion, err := createContestOpinonQ.Save(ctx)
 	if err != nil {

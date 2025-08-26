@@ -1,0 +1,7 @@
+todo:
+users
+users/[id]
+weight_pool
+writeups
+teams/[id]/manage
+create_contest

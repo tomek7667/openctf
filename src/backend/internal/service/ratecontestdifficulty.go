@@ -8,7 +8,8 @@ import (
 )
 
 type RateContestDifficultyDto struct {
-	Difficulty int `json:"difficulty"`
+	Difficulty int     `json:"difficulty"`
+	Comment    *string `json:"comment"`
 }
 
 const SqlCaptainPlaceInContest = `

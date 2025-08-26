@@ -13,7 +13,6 @@ export const getTeamDetails = async (teamId: number): Promise<TeamDetails> => {
 	});
 	const { data, success, message } = await response.json();
 	if (!success) {
-		console.log(message);
 		throw new Error(message ?? "unknown error occurred");
 	}
 	const { team } = data as { team: TeamDetails };

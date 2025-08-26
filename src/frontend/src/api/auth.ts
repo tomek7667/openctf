@@ -142,7 +142,6 @@ export const disconnectGithub = async (
 			message ?? "Disconnecting with github failed. Please try again later."
 		);
 	}
-	console.log(data);
 	return data;
 };
 

@@ -44,7 +44,7 @@ type ServiceClient interface {
 		ctx context.Context,
 		requester *ent.User,
 		contestId int,
-		dto *service.RateContestDto,
+		dto *service.RateContestOpinionDto,
 	) (*ent.ContestRating, error)
 	GetProfile(ctx context.Context, userId int) (*service.Profile, error)
 	UpdateProfile(
@@ -75,6 +75,8 @@ type ServiceClient interface {
 	ChangePassword(ctx context.Context, _user *ent.User, dto *service.ChangePasswordDto) (*ent.User, *string, error)
 	GetPlatformStatistics(ctx context.Context) (*ent.AggregatedPlatformStatistics, error)
 	GetCurrentYearLeaderboard(ctx context.Context, dto *service.GetCurrentYearLeaderboardDto) ([]*ent.AggregatedYearlyTeam, error)
+	GetContestRatings(ctx context.Context, contestId int) ([]*ent.ContestRating, error)
+	GetContestWeightRatings(ctx context.Context, contestId int) ([]*ent.WeightRating, error)
 }
 
 type CtftimeClient interface {

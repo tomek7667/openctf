@@ -65,23 +65,6 @@ export interface Place {
 	associated_team?: Team;
 }
 
-export interface ContestRating {
-	id: number;
-	rating: number; // 0-5
-	relevant: boolean;
-	// Relations
-	user: User;
-	contest: Contest;
-}
-
-export interface WeightRating {
-	id: number;
-	difficulty: number; // 0-100
-	// Relations
-	captains_team: Team;
-	contest: Contest;
-}
-
 export interface AggregatedContestsDifficulties {
 	contest_id: number;
 	contest_name: string;

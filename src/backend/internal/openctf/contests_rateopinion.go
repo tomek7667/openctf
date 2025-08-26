@@ -11,7 +11,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// ContestsRate handles rating a contest by a user.
+// ContestsRateOpinion handles rating a contest by a user.
 //
 //	@Summary		Rate a contest
 //	@Description	Allows a user to rate a contest and returns the updated rating.
@@ -25,7 +25,7 @@ import (
 //	@Failure		400			{object}	map[string]any			"Bad request error"
 //	@Failure		500			{object}	map[string]any			"Internal server error"
 //	@Router			/contests/{contestId}/rate [post]
-func (h *Handler) ContestsRate(ctx *gin.Context, user *ent.User) {
+func (h *Handler) ContestsRateOpinion(ctx *gin.Context, user *ent.User) {
 	teamIdStr := ctx.Param("contestId")
 	contestId, err := strconv.Atoi(teamIdStr)
 	if err != nil {
@@ -36,7 +36,7 @@ func (h *Handler) ContestsRate(ctx *gin.Context, user *ent.User) {
 		})
 		return
 	}
-	dto := service.RateContestDto{}
+	dto := service.RateContestOpinionDto{}
 	err = ctx.ShouldBind(&dto)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, map[string]any{

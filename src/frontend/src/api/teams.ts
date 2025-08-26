@@ -117,6 +117,7 @@ export interface Team {
 
 export interface TeamEdges {
 	members: Member[];
+	captain: Member;
 }
 
 export interface Member {
