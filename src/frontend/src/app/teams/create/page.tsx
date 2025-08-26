@@ -445,6 +445,34 @@ export default function CreateTeamPage() {
 													className="font-mono bg-gray-800/50 border-green-500/30 text-white placeholder-gray-400"
 												/>
 											</div>
+
+											<div>
+												<label className="block text-sm font-mono text-green-400 mb-2">
+													CTFTIME
+												</label>
+												<Input
+													value={teamData.discord_url ?? ""}
+													onChange={(e) =>
+														setTeamData((prev) => ({
+															...prev,
+															ctftime_id: e.target.value.includes(
+																"https://ctftime.org/team/"
+															)
+																? Number(
+																		(e.target.value as string)
+																			.split("https://ctftime.org/team/")[1]
+																			?.replaceAll("/", "")
+																	)
+																: null,
+														}))
+													}
+													placeholder="https://ctftime.org/team/<id>"
+													className="font-mono bg-gray-800/50 border-green-500/30 text-white placeholder-gray-400"
+												/>
+												<span className="block text-xs font-mono text-gray-400 mt-2">
+													this will need additional verification from the staff
+												</span>
+											</div>
 										</div>
 									</div>
 								</div>

@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { User, LogOut, Shield, ChevronDown } from "@/components/ui/icons";
 import { useAuthStore } from "@/store/authStore";
 import { logout } from "@/api/auth";
+import Link from "next/link";
 
 export function UserMenu() {
 	const [isOpen, setIsOpen] = useState(false);
@@ -82,14 +83,16 @@ export function UserMenu() {
 								</div>
 
 								<div className="border-t border-border/50 pt-3 space-y-1">
-									<a
+									<Link
 										href="/profile"
 										className="w-full flex items-center gap-3 p-2 rounded transition-colors hover:bg-primary/10 text-left font-mono text-sm"
 										onClick={() => setIsOpen(false)}
 									>
 										<User className="h-4 w-4 text-muted-foreground" />
 										<span className="text-muted-foreground">&gt; Profile</span>
-									</a>
+									</Link>
+
+									{/* TODO: add My teams page */}
 
 									<button
 										onClick={handleLogout}
