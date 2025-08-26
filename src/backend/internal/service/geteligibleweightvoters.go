@@ -60,7 +60,7 @@ func (c *Client) GetEligibleWeightVoters(ctx context.Context, contestId int) ([]
 	if err := rows.Err(); err != nil {
 		return nil, fmt.Errorf("iterate eligible weight voters: %w", err)
 	}
-	var uniqueVoters []EligibleWeightVoter
+	uniqueVoters := []EligibleWeightVoter{}
 	seen := make(map[int]bool)
 	for _, v := range voters {
 		if !seen[v.UserID] {
