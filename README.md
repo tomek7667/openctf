@@ -19,3 +19,11 @@ Open-source alternative for [ctftime.org](https://ctftime.org)
   - notification based contact with administrators of the platform -- a good form with topic, message and attachments
 - [ ] mobile app in future
 - [ ] bigger presence on social media from openctf; like autoamted posts about incoming (only verified!) events etc. some profiles on X, instagram;
+
+## Known bugs / needed refactor
+
+- [ ] many places except the frontend, display difficulty metric named "weight" where in reality:
+  - **weight**: assigned points from the weight pool, based on the difficulty and quality metrics
+  - **difficulty**: top 15 teams choices how hard the CTF really was
+  - **quality**: top 50 teams choices what was the overall quality of communications, infra etc.
+- [ ] many places in the code the "ratingOpinion" is used as a name for ratingQuality. It should be rating quality as that's the metrics name, not opinion.

@@ -62,7 +62,7 @@ const TopThreePodium = ({ teams }: { teams: TeamLeaderboardType[] }) => {
 				initial={{ opacity: 0, y: 50 }}
 				animate={{ opacity: 1, y: 0 }}
 				transition={{ delay: 0.2 }}
-				className="text-center"
+				className="text-center w-24"
 			>
 				<div
 					className={`${getPodiumHeight(2)} w-24 bg-gradient-to-t from-primary/20 to-primary/10 border-t-4 border-primary rounded-t-lg relative terminal mb-2`}
@@ -89,7 +89,7 @@ const TopThreePodium = ({ teams }: { teams: TeamLeaderboardType[] }) => {
 				initial={{ opacity: 0, y: 50 }}
 				animate={{ opacity: 1, y: 0 }}
 				transition={{ delay: 0.1 }}
-				className="text-center"
+				className="text-center w-32"
 			>
 				<div
 					className={`${getPodiumHeight(1)} w-32 bg-gradient-to-t from-yellow-600/30 to-yellow-400/20 border-t-4 border-yellow-400 rounded-t-lg relative terminal mb-2`}
@@ -114,7 +114,7 @@ const TopThreePodium = ({ teams }: { teams: TeamLeaderboardType[] }) => {
 				initial={{ opacity: 0, y: 50 }}
 				animate={{ opacity: 1, y: 0 }}
 				transition={{ delay: 0.3 }}
-				className="text-center"
+				className="text-center w-20"
 			>
 				<div
 					className={`${getPodiumHeight(3)} w-20 bg-gradient-to-t from-green-400/20 to-green-400/10 border-t-4 border-green-400 rounded-t-lg relative terminal mb-2`}
@@ -128,7 +128,7 @@ const TopThreePodium = ({ teams }: { teams: TeamLeaderboardType[] }) => {
 						3
 					</div>
 				</div>
-				<div className="font-mono text-sm text-green-400 font-bold">
+				<div className="font-mono text-sm text-green-400 font-bold truncate">
 					{topThree[2]?.name}
 				</div>
 				<div className="text-xs text-primary">
@@ -209,7 +209,7 @@ export function TeamLeaderboard({ teams }: { teams: TeamLeaderboardType[] }) {
 					initial={{ opacity: 0, y: 20 }}
 					whileInView={{ opacity: 1, y: 0 }}
 					viewport={{ once: true }}
-					className="text-center mb-12"
+					className="text-center mb-24"
 				>
 					<h2 className="text-4xl md:text-5xl font-bold mb-4 font-mono">
 						<span className="terminal-prompt">$ </span>

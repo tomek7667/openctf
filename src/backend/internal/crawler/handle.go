@@ -19,11 +19,11 @@ func (h *Handler) Handle() {
 	if err != nil {
 		panic(err)
 	}
-	tickerDuration := time.Duration(interval) * time.Second
-	ticker := time.NewTicker(tickerDuration)
+	timespan := time.Duration(interval) * time.Second
+	ticker := time.NewTicker(timespan)
 	defer ticker.Stop()
 
-	initialErr := h.CrawlContests(tickerDuration)
+	initialErr := h.CrawlContests(timespan)
 	if initialErr != nil {
 		slog.Error(
 			"the initial contests crawler run errored",
@@ -42,7 +42,7 @@ func (h *Handler) Handle() {
 
 	for range ticker.C {
 		slog.Info("crawler: ticker ticked, performing periodic task")
-		err = h.CrawlContests(tickerDuration)
+		err = h.CrawlContests(timespan)
 		if err != nil {
 			slog.Error(
 				"crawler contest crawl failed",

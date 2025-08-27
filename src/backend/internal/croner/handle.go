@@ -13,7 +13,7 @@ func (h *Handler) Handle() {
 	}()
 	// run it every 24 hours to check if if new pool should be created
 	ticker := time.NewTicker(time.Hour * 24)
-	err := h.IntervalFunc()
+	err := h.AssignWeight()
 	if err != nil {
 		slog.Error(
 			"the initial croner action errored",
@@ -24,7 +24,7 @@ func (h *Handler) Handle() {
 
 	for range ticker.C {
 		slog.Info("croner: ticker ticked, performing periodic task")
-		err = h.IntervalFunc()
+		err = h.AssignWeight()
 		if err != nil {
 			slog.Error(
 				"croner interval func failed",

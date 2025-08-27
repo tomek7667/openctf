@@ -11,12 +11,12 @@ import (
 	"openctfbackend/internal/service"
 )
 
-func (h *Handler) CrawlContests(interval time.Duration) error {
+func (h *Handler) CrawlContests(timespan time.Duration) error {
 	ctx := context.Background()
 	slog.Info("running the contests crawler")
 
-	start := time.Now().Add(-interval)
-	finish := start.Add(interval)
+	start := time.Now().Add(-timespan)
+	finish := start.Add(timespan)
 	ctftimeEvents, err := h.CtftimeClient.GetEventsBetween(ctx, start, finish)
 	if err != nil {
 		return errors.Join(fmt.Errorf("getting ctf teams failed"), err)

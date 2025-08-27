@@ -12,10 +12,11 @@ func getMonthBeforeTimestamp(current time.Time) time.Time {
 	return current.AddDate(0, -1, 0)
 }
 
-func (h *Handler) IntervalFunc() error {
+func (h *Handler) AssignWeight() error {
+	time.Sleep(time.Second * 3)
 	ctx := context.Background()
 	ec := h.ServiceClient.GetEnt()
-	now := time.Now().AddDate(0, 0, 10)
+	now := time.Now().AddDate(0, 0, 5)
 	before := getMonthBeforeTimestamp(now)
 
 	// 1. if today is 1st, check if any of the ctfs that ended in currentmonth1st+lastmonth-lastmonth1st have assigned weight points;
@@ -24,6 +25,8 @@ func (h *Handler) IntervalFunc() error {
 		slog.Debug("points assignment skipped as today is not the day", "the day", now.Day(), "should be", 1)
 		return nil
 	}
+	// this is querying contests where organiers' have organized a ctf previously in time
+	// of at least 6 months before and with at least 50 teams taking part in.
 	aggCount := ec.AggregatedContestsDifficulties.Query().Where(
 		aggregatedcontestsdifficulties.And(
 			aggregatedcontestsdifficulties.EndGTE(before),
