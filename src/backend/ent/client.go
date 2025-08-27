@@ -41,8 +41,8 @@ type Client struct {
 	Activity *ActivityClient
 	// AggregatedContest is the client for interacting with the AggregatedContest builders.
 	AggregatedContest *AggregatedContestClient
-	// AggregatedContestsDifficulties is the client for interacting with the AggregatedContestsDifficulties builders.
-	AggregatedContestsDifficulties *AggregatedContestsDifficultiesClient
+	// AggregatedContestsDifficulty is the client for interacting with the AggregatedContestsDifficulty builders.
+	AggregatedContestsDifficulty *AggregatedContestsDifficultyClient
 	// AggregatedPlatformStatistics is the client for interacting with the AggregatedPlatformStatistics builders.
 	AggregatedPlatformStatistics *AggregatedPlatformStatisticsClient
 	// AggregatedTeamDetails is the client for interacting with the AggregatedTeamDetails builders.
@@ -83,7 +83,7 @@ func (c *Client) init() {
 	c.Achievement = NewAchievementClient(c.config)
 	c.Activity = NewActivityClient(c.config)
 	c.AggregatedContest = NewAggregatedContestClient(c.config)
-	c.AggregatedContestsDifficulties = NewAggregatedContestsDifficultiesClient(c.config)
+	c.AggregatedContestsDifficulty = NewAggregatedContestsDifficultyClient(c.config)
 	c.AggregatedPlatformStatistics = NewAggregatedPlatformStatisticsClient(c.config)
 	c.AggregatedTeamDetails = NewAggregatedTeamDetailsClient(c.config)
 	c.AggregatedUserStatistics = NewAggregatedUserStatisticsClient(c.config)
@@ -187,25 +187,25 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 	cfg := c.config
 	cfg.driver = tx
 	return &Tx{
-		ctx:                            ctx,
-		config:                         cfg,
-		Achievement:                    NewAchievementClient(cfg),
-		Activity:                       NewActivityClient(cfg),
-		AggregatedContest:              NewAggregatedContestClient(cfg),
-		AggregatedContestsDifficulties: NewAggregatedContestsDifficultiesClient(cfg),
-		AggregatedPlatformStatistics:   NewAggregatedPlatformStatisticsClient(cfg),
-		AggregatedTeamDetails:          NewAggregatedTeamDetailsClient(cfg),
-		AggregatedUserStatistics:       NewAggregatedUserStatisticsClient(cfg),
-		AggregatedYearlyTeam:           NewAggregatedYearlyTeamClient(cfg),
-		Contest:                        NewContestClient(cfg),
-		ContestRating:                  NewContestRatingClient(cfg),
-		Place:                          NewPlaceClient(cfg),
-		Team:                           NewTeamClient(cfg),
-		TeamAchievement:                NewTeamAchievementClient(cfg),
-		User:                           NewUserClient(cfg),
-		UserProfile:                    NewUserProfileClient(cfg),
-		VContestParticipant:            NewVContestParticipantClient(cfg),
-		WeightRating:                   NewWeightRatingClient(cfg),
+		ctx:                          ctx,
+		config:                       cfg,
+		Achievement:                  NewAchievementClient(cfg),
+		Activity:                     NewActivityClient(cfg),
+		AggregatedContest:            NewAggregatedContestClient(cfg),
+		AggregatedContestsDifficulty: NewAggregatedContestsDifficultyClient(cfg),
+		AggregatedPlatformStatistics: NewAggregatedPlatformStatisticsClient(cfg),
+		AggregatedTeamDetails:        NewAggregatedTeamDetailsClient(cfg),
+		AggregatedUserStatistics:     NewAggregatedUserStatisticsClient(cfg),
+		AggregatedYearlyTeam:         NewAggregatedYearlyTeamClient(cfg),
+		Contest:                      NewContestClient(cfg),
+		ContestRating:                NewContestRatingClient(cfg),
+		Place:                        NewPlaceClient(cfg),
+		Team:                         NewTeamClient(cfg),
+		TeamAchievement:              NewTeamAchievementClient(cfg),
+		User:                         NewUserClient(cfg),
+		UserProfile:                  NewUserProfileClient(cfg),
+		VContestParticipant:          NewVContestParticipantClient(cfg),
+		WeightRating:                 NewWeightRatingClient(cfg),
 	}, nil
 }
 
@@ -223,25 +223,25 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 	cfg := c.config
 	cfg.driver = &txDriver{tx: tx, drv: c.driver}
 	return &Tx{
-		ctx:                            ctx,
-		config:                         cfg,
-		Achievement:                    NewAchievementClient(cfg),
-		Activity:                       NewActivityClient(cfg),
-		AggregatedContest:              NewAggregatedContestClient(cfg),
-		AggregatedContestsDifficulties: NewAggregatedContestsDifficultiesClient(cfg),
-		AggregatedPlatformStatistics:   NewAggregatedPlatformStatisticsClient(cfg),
-		AggregatedTeamDetails:          NewAggregatedTeamDetailsClient(cfg),
-		AggregatedUserStatistics:       NewAggregatedUserStatisticsClient(cfg),
-		AggregatedYearlyTeam:           NewAggregatedYearlyTeamClient(cfg),
-		Contest:                        NewContestClient(cfg),
-		ContestRating:                  NewContestRatingClient(cfg),
-		Place:                          NewPlaceClient(cfg),
-		Team:                           NewTeamClient(cfg),
-		TeamAchievement:                NewTeamAchievementClient(cfg),
-		User:                           NewUserClient(cfg),
-		UserProfile:                    NewUserProfileClient(cfg),
-		VContestParticipant:            NewVContestParticipantClient(cfg),
-		WeightRating:                   NewWeightRatingClient(cfg),
+		ctx:                          ctx,
+		config:                       cfg,
+		Achievement:                  NewAchievementClient(cfg),
+		Activity:                     NewActivityClient(cfg),
+		AggregatedContest:            NewAggregatedContestClient(cfg),
+		AggregatedContestsDifficulty: NewAggregatedContestsDifficultyClient(cfg),
+		AggregatedPlatformStatistics: NewAggregatedPlatformStatisticsClient(cfg),
+		AggregatedTeamDetails:        NewAggregatedTeamDetailsClient(cfg),
+		AggregatedUserStatistics:     NewAggregatedUserStatisticsClient(cfg),
+		AggregatedYearlyTeam:         NewAggregatedYearlyTeamClient(cfg),
+		Contest:                      NewContestClient(cfg),
+		ContestRating:                NewContestRatingClient(cfg),
+		Place:                        NewPlaceClient(cfg),
+		Team:                         NewTeamClient(cfg),
+		TeamAchievement:              NewTeamAchievementClient(cfg),
+		User:                         NewUserClient(cfg),
+		UserProfile:                  NewUserProfileClient(cfg),
+		VContestParticipant:          NewVContestParticipantClient(cfg),
+		WeightRating:                 NewWeightRatingClient(cfg),
 	}, nil
 }
 
@@ -282,11 +282,11 @@ func (c *Client) Use(hooks ...Hook) {
 // In order to add interceptors to a specific client, call: `client.Node.Intercept(...)`.
 func (c *Client) Intercept(interceptors ...Interceptor) {
 	for _, n := range []interface{ Intercept(...Interceptor) }{
-		c.Achievement, c.Activity, c.AggregatedContest,
-		c.AggregatedContestsDifficulties, c.AggregatedPlatformStatistics,
-		c.AggregatedTeamDetails, c.AggregatedUserStatistics, c.AggregatedYearlyTeam,
-		c.Contest, c.ContestRating, c.Place, c.Team, c.TeamAchievement, c.User,
-		c.UserProfile, c.VContestParticipant, c.WeightRating,
+		c.Achievement, c.Activity, c.AggregatedContest, c.AggregatedContestsDifficulty,
+		c.AggregatedPlatformStatistics, c.AggregatedTeamDetails,
+		c.AggregatedUserStatistics, c.AggregatedYearlyTeam, c.Contest, c.ContestRating,
+		c.Place, c.Team, c.TeamAchievement, c.User, c.UserProfile,
+		c.VContestParticipant, c.WeightRating,
 	} {
 		n.Intercept(interceptors...)
 	}
@@ -648,34 +648,34 @@ func (c *AggregatedContestClient) Interceptors() []Interceptor {
 	return c.inters.AggregatedContest
 }
 
-// AggregatedContestsDifficultiesClient is a client for the AggregatedContestsDifficulties schema.
-type AggregatedContestsDifficultiesClient struct {
+// AggregatedContestsDifficultyClient is a client for the AggregatedContestsDifficulty schema.
+type AggregatedContestsDifficultyClient struct {
 	config
 }
 
-// NewAggregatedContestsDifficultiesClient returns a client for the AggregatedContestsDifficulties from the given config.
-func NewAggregatedContestsDifficultiesClient(c config) *AggregatedContestsDifficultiesClient {
-	return &AggregatedContestsDifficultiesClient{config: c}
+// NewAggregatedContestsDifficultyClient returns a client for the AggregatedContestsDifficulty from the given config.
+func NewAggregatedContestsDifficultyClient(c config) *AggregatedContestsDifficultyClient {
+	return &AggregatedContestsDifficultyClient{config: c}
 }
 
 // Intercept adds a list of query interceptors to the interceptors stack.
-// A call to `Intercept(f, g, h)` equals to `aggregatedcontestsdifficulties.Intercept(f(g(h())))`.
-func (c *AggregatedContestsDifficultiesClient) Intercept(interceptors ...Interceptor) {
-	c.inters.AggregatedContestsDifficulties = append(c.inters.AggregatedContestsDifficulties, interceptors...)
+// A call to `Intercept(f, g, h)` equals to `aggregatedcontestsdifficulty.Intercept(f(g(h())))`.
+func (c *AggregatedContestsDifficultyClient) Intercept(interceptors ...Interceptor) {
+	c.inters.AggregatedContestsDifficulty = append(c.inters.AggregatedContestsDifficulty, interceptors...)
 }
 
-// Query returns a query builder for AggregatedContestsDifficulties.
-func (c *AggregatedContestsDifficultiesClient) Query() *AggregatedContestsDifficultiesQuery {
-	return &AggregatedContestsDifficultiesQuery{
+// Query returns a query builder for AggregatedContestsDifficulty.
+func (c *AggregatedContestsDifficultyClient) Query() *AggregatedContestsDifficultyQuery {
+	return &AggregatedContestsDifficultyQuery{
 		config: c.config,
-		ctx:    &QueryContext{Type: TypeAggregatedContestsDifficulties},
+		ctx:    &QueryContext{Type: TypeAggregatedContestsDifficulty},
 		inters: c.Interceptors(),
 	}
 }
 
 // Interceptors returns the client interceptors.
-func (c *AggregatedContestsDifficultiesClient) Interceptors() []Interceptor {
-	return c.inters.AggregatedContestsDifficulties
+func (c *AggregatedContestsDifficultyClient) Interceptors() []Interceptor {
+	return c.inters.AggregatedContestsDifficulty
 }
 
 // AggregatedPlatformStatisticsClient is a client for the AggregatedPlatformStatistics schema.
@@ -2107,7 +2107,7 @@ type (
 		User, UserProfile, WeightRating []ent.Hook
 	}
 	inters struct {
-		Achievement, Activity, AggregatedContest, AggregatedContestsDifficulties,
+		Achievement, Activity, AggregatedContest, AggregatedContestsDifficulty,
 		AggregatedPlatformStatistics, AggregatedTeamDetails, AggregatedUserStatistics,
 		AggregatedYearlyTeam, Contest, ContestRating, Place, Team, TeamAchievement,
 		User, UserProfile, VContestParticipant, WeightRating []ent.Interceptor

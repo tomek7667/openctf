@@ -1,5 +1,5 @@
 import { sleep } from "@/lib/utils";
-import type { RawContest, AggregatedContestsDifficulties } from "@/types/api";
+import type { RawContest, AggregatedContestsDifficulty } from "@/types/api";
 
 export interface MonthlyDistribution {
 	month: string;
@@ -121,7 +121,7 @@ export const getContestsByMonth = async (
 };
 
 export const getAggregatedContestsDifficulties = async (): Promise<
-	AggregatedContestsDifficulties[]
+	AggregatedContestsDifficulty[]
 > => {
 	await sleep(1000);
 	// TODO: implement getAggregatedContestsDifficulties

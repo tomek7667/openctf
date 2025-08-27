@@ -62,20 +62,6 @@ func (_c *PlaceCreate) SetNillableContestPoints(v *float64) *PlaceCreate {
 	return _c
 }
 
-// SetOpenctfPoints sets the "openctf_points" field.
-func (_c *PlaceCreate) SetOpenctfPoints(v float64) *PlaceCreate {
-	_c.mutation.SetOpenctfPoints(v)
-	return _c
-}
-
-// SetNillableOpenctfPoints sets the "openctf_points" field if the given value is not nil.
-func (_c *PlaceCreate) SetNillableOpenctfPoints(v *float64) *PlaceCreate {
-	if v != nil {
-		_c.SetOpenctfPoints(*v)
-	}
-	return _c
-}
-
 // SetAssociatedContestID sets the "associated_contest_id" field.
 func (_c *PlaceCreate) SetAssociatedContestID(v int) *PlaceCreate {
 	_c.mutation.SetAssociatedContestID(v)
@@ -83,13 +69,13 @@ func (_c *PlaceCreate) SetAssociatedContestID(v int) *PlaceCreate {
 }
 
 // SetAssignedWeightPoints sets the "assigned_weight_points" field.
-func (_c *PlaceCreate) SetAssignedWeightPoints(v int) *PlaceCreate {
+func (_c *PlaceCreate) SetAssignedWeightPoints(v float64) *PlaceCreate {
 	_c.mutation.SetAssignedWeightPoints(v)
 	return _c
 }
 
 // SetNillableAssignedWeightPoints sets the "assigned_weight_points" field if the given value is not nil.
-func (_c *PlaceCreate) SetNillableAssignedWeightPoints(v *int) *PlaceCreate {
+func (_c *PlaceCreate) SetNillableAssignedWeightPoints(v *float64) *PlaceCreate {
 	if v != nil {
 		_c.SetAssignedWeightPoints(*v)
 	}
@@ -179,11 +165,6 @@ func (_c *PlaceCreate) check() error {
 			return &ValidationError{Name: "contest_points", err: fmt.Errorf(`ent: validator failed for field "Place.contest_points": %w`, err)}
 		}
 	}
-	if v, ok := _c.mutation.OpenctfPoints(); ok {
-		if err := place.OpenctfPointsValidator(v); err != nil {
-			return &ValidationError{Name: "openctf_points", err: fmt.Errorf(`ent: validator failed for field "Place.openctf_points": %w`, err)}
-		}
-	}
 	if _, ok := _c.mutation.AssociatedContestID(); !ok {
 		return &ValidationError{Name: "associated_contest_id", err: errors.New(`ent: missing required field "Place.associated_contest_id"`)}
 	}
@@ -233,16 +214,12 @@ func (_c *PlaceCreate) createSpec() (*Place, *sqlgraph.CreateSpec) {
 		_spec.SetField(place.FieldContestPoints, field.TypeFloat64, value)
 		_node.ContestPoints = &value
 	}
-	if value, ok := _c.mutation.OpenctfPoints(); ok {
-		_spec.SetField(place.FieldOpenctfPoints, field.TypeFloat64, value)
-		_node.OpenctfPoints = &value
-	}
 	if value, ok := _c.mutation.AssociatedContestID(); ok {
 		_spec.SetField(place.FieldAssociatedContestID, field.TypeInt, value)
 		_node.AssociatedContestID = value
 	}
 	if value, ok := _c.mutation.AssignedWeightPoints(); ok {
-		_spec.SetField(place.FieldAssignedWeightPoints, field.TypeInt, value)
+		_spec.SetField(place.FieldAssignedWeightPoints, field.TypeFloat64, value)
 		_node.AssignedWeightPoints = value
 	}
 	if nodes := _c.mutation.AssociatedTeamIDs(); len(nodes) > 0 {
@@ -392,30 +369,6 @@ func (u *PlaceUpsert) ClearContestPoints() *PlaceUpsert {
 	return u
 }
 
-// SetOpenctfPoints sets the "openctf_points" field.
-func (u *PlaceUpsert) SetOpenctfPoints(v float64) *PlaceUpsert {
-	u.Set(place.FieldOpenctfPoints, v)
-	return u
-}
-
-// UpdateOpenctfPoints sets the "openctf_points" field to the value that was provided on create.
-func (u *PlaceUpsert) UpdateOpenctfPoints() *PlaceUpsert {
-	u.SetExcluded(place.FieldOpenctfPoints)
-	return u
-}
-
-// AddOpenctfPoints adds v to the "openctf_points" field.
-func (u *PlaceUpsert) AddOpenctfPoints(v float64) *PlaceUpsert {
-	u.Add(place.FieldOpenctfPoints, v)
-	return u
-}
-
-// ClearOpenctfPoints clears the value of the "openctf_points" field.
-func (u *PlaceUpsert) ClearOpenctfPoints() *PlaceUpsert {
-	u.SetNull(place.FieldOpenctfPoints)
-	return u
-}
-
 // SetAssociatedContestID sets the "associated_contest_id" field.
 func (u *PlaceUpsert) SetAssociatedContestID(v int) *PlaceUpsert {
 	u.Set(place.FieldAssociatedContestID, v)
@@ -435,7 +388,7 @@ func (u *PlaceUpsert) AddAssociatedContestID(v int) *PlaceUpsert {
 }
 
 // SetAssignedWeightPoints sets the "assigned_weight_points" field.
-func (u *PlaceUpsert) SetAssignedWeightPoints(v int) *PlaceUpsert {
+func (u *PlaceUpsert) SetAssignedWeightPoints(v float64) *PlaceUpsert {
 	u.Set(place.FieldAssignedWeightPoints, v)
 	return u
 }
@@ -447,7 +400,7 @@ func (u *PlaceUpsert) UpdateAssignedWeightPoints() *PlaceUpsert {
 }
 
 // AddAssignedWeightPoints adds v to the "assigned_weight_points" field.
-func (u *PlaceUpsert) AddAssignedWeightPoints(v int) *PlaceUpsert {
+func (u *PlaceUpsert) AddAssignedWeightPoints(v float64) *PlaceUpsert {
 	u.Add(place.FieldAssignedWeightPoints, v)
 	return u
 }
@@ -583,34 +536,6 @@ func (u *PlaceUpsertOne) ClearContestPoints() *PlaceUpsertOne {
 	})
 }
 
-// SetOpenctfPoints sets the "openctf_points" field.
-func (u *PlaceUpsertOne) SetOpenctfPoints(v float64) *PlaceUpsertOne {
-	return u.Update(func(s *PlaceUpsert) {
-		s.SetOpenctfPoints(v)
-	})
-}
-
-// AddOpenctfPoints adds v to the "openctf_points" field.
-func (u *PlaceUpsertOne) AddOpenctfPoints(v float64) *PlaceUpsertOne {
-	return u.Update(func(s *PlaceUpsert) {
-		s.AddOpenctfPoints(v)
-	})
-}
-
-// UpdateOpenctfPoints sets the "openctf_points" field to the value that was provided on create.
-func (u *PlaceUpsertOne) UpdateOpenctfPoints() *PlaceUpsertOne {
-	return u.Update(func(s *PlaceUpsert) {
-		s.UpdateOpenctfPoints()
-	})
-}
-
-// ClearOpenctfPoints clears the value of the "openctf_points" field.
-func (u *PlaceUpsertOne) ClearOpenctfPoints() *PlaceUpsertOne {
-	return u.Update(func(s *PlaceUpsert) {
-		s.ClearOpenctfPoints()
-	})
-}
-
 // SetAssociatedContestID sets the "associated_contest_id" field.
 func (u *PlaceUpsertOne) SetAssociatedContestID(v int) *PlaceUpsertOne {
 	return u.Update(func(s *PlaceUpsert) {
@@ -633,14 +558,14 @@ func (u *PlaceUpsertOne) UpdateAssociatedContestID() *PlaceUpsertOne {
 }
 
 // SetAssignedWeightPoints sets the "assigned_weight_points" field.
-func (u *PlaceUpsertOne) SetAssignedWeightPoints(v int) *PlaceUpsertOne {
+func (u *PlaceUpsertOne) SetAssignedWeightPoints(v float64) *PlaceUpsertOne {
 	return u.Update(func(s *PlaceUpsert) {
 		s.SetAssignedWeightPoints(v)
 	})
 }
 
 // AddAssignedWeightPoints adds v to the "assigned_weight_points" field.
-func (u *PlaceUpsertOne) AddAssignedWeightPoints(v int) *PlaceUpsertOne {
+func (u *PlaceUpsertOne) AddAssignedWeightPoints(v float64) *PlaceUpsertOne {
 	return u.Update(func(s *PlaceUpsert) {
 		s.AddAssignedWeightPoints(v)
 	})
@@ -948,34 +873,6 @@ func (u *PlaceUpsertBulk) ClearContestPoints() *PlaceUpsertBulk {
 	})
 }
 
-// SetOpenctfPoints sets the "openctf_points" field.
-func (u *PlaceUpsertBulk) SetOpenctfPoints(v float64) *PlaceUpsertBulk {
-	return u.Update(func(s *PlaceUpsert) {
-		s.SetOpenctfPoints(v)
-	})
-}
-
-// AddOpenctfPoints adds v to the "openctf_points" field.
-func (u *PlaceUpsertBulk) AddOpenctfPoints(v float64) *PlaceUpsertBulk {
-	return u.Update(func(s *PlaceUpsert) {
-		s.AddOpenctfPoints(v)
-	})
-}
-
-// UpdateOpenctfPoints sets the "openctf_points" field to the value that was provided on create.
-func (u *PlaceUpsertBulk) UpdateOpenctfPoints() *PlaceUpsertBulk {
-	return u.Update(func(s *PlaceUpsert) {
-		s.UpdateOpenctfPoints()
-	})
-}
-
-// ClearOpenctfPoints clears the value of the "openctf_points" field.
-func (u *PlaceUpsertBulk) ClearOpenctfPoints() *PlaceUpsertBulk {
-	return u.Update(func(s *PlaceUpsert) {
-		s.ClearOpenctfPoints()
-	})
-}
-
 // SetAssociatedContestID sets the "associated_contest_id" field.
 func (u *PlaceUpsertBulk) SetAssociatedContestID(v int) *PlaceUpsertBulk {
 	return u.Update(func(s *PlaceUpsert) {
@@ -998,14 +895,14 @@ func (u *PlaceUpsertBulk) UpdateAssociatedContestID() *PlaceUpsertBulk {
 }
 
 // SetAssignedWeightPoints sets the "assigned_weight_points" field.
-func (u *PlaceUpsertBulk) SetAssignedWeightPoints(v int) *PlaceUpsertBulk {
+func (u *PlaceUpsertBulk) SetAssignedWeightPoints(v float64) *PlaceUpsertBulk {
 	return u.Update(func(s *PlaceUpsert) {
 		s.SetAssignedWeightPoints(v)
 	})
 }
 
 // AddAssignedWeightPoints adds v to the "assigned_weight_points" field.
-func (u *PlaceUpsertBulk) AddAssignedWeightPoints(v int) *PlaceUpsertBulk {
+func (u *PlaceUpsertBulk) AddAssignedWeightPoints(v float64) *PlaceUpsertBulk {
 	return u.Update(func(s *PlaceUpsert) {
 		s.AddAssignedWeightPoints(v)
 	})

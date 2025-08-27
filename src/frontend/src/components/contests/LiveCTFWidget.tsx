@@ -4,8 +4,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import { Target, Clock } from "@/components/ui/icons";
 import Link from "next/link";
-import { ParsedAggregatedContest } from "@/api";
-import { ContestStatus } from "@/types/api";
+import { ContestStatus, ParsedAggregatedContest } from "@/api";
 
 interface LiveCTFWidgetProps {
 	contests: ParsedAggregatedContest[];

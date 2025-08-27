@@ -117,33 +117,6 @@ func (_u *PlaceUpdate) ClearContestPoints() *PlaceUpdate {
 	return _u
 }
 
-// SetOpenctfPoints sets the "openctf_points" field.
-func (_u *PlaceUpdate) SetOpenctfPoints(v float64) *PlaceUpdate {
-	_u.mutation.ResetOpenctfPoints()
-	_u.mutation.SetOpenctfPoints(v)
-	return _u
-}
-
-// SetNillableOpenctfPoints sets the "openctf_points" field if the given value is not nil.
-func (_u *PlaceUpdate) SetNillableOpenctfPoints(v *float64) *PlaceUpdate {
-	if v != nil {
-		_u.SetOpenctfPoints(*v)
-	}
-	return _u
-}
-
-// AddOpenctfPoints adds value to the "openctf_points" field.
-func (_u *PlaceUpdate) AddOpenctfPoints(v float64) *PlaceUpdate {
-	_u.mutation.AddOpenctfPoints(v)
-	return _u
-}
-
-// ClearOpenctfPoints clears the value of the "openctf_points" field.
-func (_u *PlaceUpdate) ClearOpenctfPoints() *PlaceUpdate {
-	_u.mutation.ClearOpenctfPoints()
-	return _u
-}
-
 // SetAssociatedContestID sets the "associated_contest_id" field.
 func (_u *PlaceUpdate) SetAssociatedContestID(v int) *PlaceUpdate {
 	_u.mutation.ResetAssociatedContestID()
@@ -166,14 +139,14 @@ func (_u *PlaceUpdate) AddAssociatedContestID(v int) *PlaceUpdate {
 }
 
 // SetAssignedWeightPoints sets the "assigned_weight_points" field.
-func (_u *PlaceUpdate) SetAssignedWeightPoints(v int) *PlaceUpdate {
+func (_u *PlaceUpdate) SetAssignedWeightPoints(v float64) *PlaceUpdate {
 	_u.mutation.ResetAssignedWeightPoints()
 	_u.mutation.SetAssignedWeightPoints(v)
 	return _u
 }
 
 // SetNillableAssignedWeightPoints sets the "assigned_weight_points" field if the given value is not nil.
-func (_u *PlaceUpdate) SetNillableAssignedWeightPoints(v *int) *PlaceUpdate {
+func (_u *PlaceUpdate) SetNillableAssignedWeightPoints(v *float64) *PlaceUpdate {
 	if v != nil {
 		_u.SetAssignedWeightPoints(*v)
 	}
@@ -181,7 +154,7 @@ func (_u *PlaceUpdate) SetNillableAssignedWeightPoints(v *int) *PlaceUpdate {
 }
 
 // AddAssignedWeightPoints adds value to the "assigned_weight_points" field.
-func (_u *PlaceUpdate) AddAssignedWeightPoints(v int) *PlaceUpdate {
+func (_u *PlaceUpdate) AddAssignedWeightPoints(v float64) *PlaceUpdate {
 	_u.mutation.AddAssignedWeightPoints(v)
 	return _u
 }
@@ -260,11 +233,6 @@ func (_u *PlaceUpdate) check() error {
 			return &ValidationError{Name: "contest_points", err: fmt.Errorf(`ent: validator failed for field "Place.contest_points": %w`, err)}
 		}
 	}
-	if v, ok := _u.mutation.OpenctfPoints(); ok {
-		if err := place.OpenctfPointsValidator(v); err != nil {
-			return &ValidationError{Name: "openctf_points", err: fmt.Errorf(`ent: validator failed for field "Place.openctf_points": %w`, err)}
-		}
-	}
 	return nil
 }
 
@@ -307,15 +275,6 @@ func (_u *PlaceUpdate) sqlSave(ctx context.Context) (_node int, err error) {
 	if _u.mutation.ContestPointsCleared() {
 		_spec.ClearField(place.FieldContestPoints, field.TypeFloat64)
 	}
-	if value, ok := _u.mutation.OpenctfPoints(); ok {
-		_spec.SetField(place.FieldOpenctfPoints, field.TypeFloat64, value)
-	}
-	if value, ok := _u.mutation.AddedOpenctfPoints(); ok {
-		_spec.AddField(place.FieldOpenctfPoints, field.TypeFloat64, value)
-	}
-	if _u.mutation.OpenctfPointsCleared() {
-		_spec.ClearField(place.FieldOpenctfPoints, field.TypeFloat64)
-	}
 	if value, ok := _u.mutation.AssociatedContestID(); ok {
 		_spec.SetField(place.FieldAssociatedContestID, field.TypeInt, value)
 	}
@@ -323,10 +282,10 @@ func (_u *PlaceUpdate) sqlSave(ctx context.Context) (_node int, err error) {
 		_spec.AddField(place.FieldAssociatedContestID, field.TypeInt, value)
 	}
 	if value, ok := _u.mutation.AssignedWeightPoints(); ok {
-		_spec.SetField(place.FieldAssignedWeightPoints, field.TypeInt, value)
+		_spec.SetField(place.FieldAssignedWeightPoints, field.TypeFloat64, value)
 	}
 	if value, ok := _u.mutation.AddedAssignedWeightPoints(); ok {
-		_spec.AddField(place.FieldAssignedWeightPoints, field.TypeInt, value)
+		_spec.AddField(place.FieldAssignedWeightPoints, field.TypeFloat64, value)
 	}
 	if _u.mutation.AssociatedTeamCleared() {
 		edge := &sqlgraph.EdgeSpec{
@@ -466,33 +425,6 @@ func (_u *PlaceUpdateOne) ClearContestPoints() *PlaceUpdateOne {
 	return _u
 }
 
-// SetOpenctfPoints sets the "openctf_points" field.
-func (_u *PlaceUpdateOne) SetOpenctfPoints(v float64) *PlaceUpdateOne {
-	_u.mutation.ResetOpenctfPoints()
-	_u.mutation.SetOpenctfPoints(v)
-	return _u
-}
-
-// SetNillableOpenctfPoints sets the "openctf_points" field if the given value is not nil.
-func (_u *PlaceUpdateOne) SetNillableOpenctfPoints(v *float64) *PlaceUpdateOne {
-	if v != nil {
-		_u.SetOpenctfPoints(*v)
-	}
-	return _u
-}
-
-// AddOpenctfPoints adds value to the "openctf_points" field.
-func (_u *PlaceUpdateOne) AddOpenctfPoints(v float64) *PlaceUpdateOne {
-	_u.mutation.AddOpenctfPoints(v)
-	return _u
-}
-
-// ClearOpenctfPoints clears the value of the "openctf_points" field.
-func (_u *PlaceUpdateOne) ClearOpenctfPoints() *PlaceUpdateOne {
-	_u.mutation.ClearOpenctfPoints()
-	return _u
-}
-
 // SetAssociatedContestID sets the "associated_contest_id" field.
 func (_u *PlaceUpdateOne) SetAssociatedContestID(v int) *PlaceUpdateOne {
 	_u.mutation.ResetAssociatedContestID()
@@ -515,14 +447,14 @@ func (_u *PlaceUpdateOne) AddAssociatedContestID(v int) *PlaceUpdateOne {
 }
 
 // SetAssignedWeightPoints sets the "assigned_weight_points" field.
-func (_u *PlaceUpdateOne) SetAssignedWeightPoints(v int) *PlaceUpdateOne {
+func (_u *PlaceUpdateOne) SetAssignedWeightPoints(v float64) *PlaceUpdateOne {
 	_u.mutation.ResetAssignedWeightPoints()
 	_u.mutation.SetAssignedWeightPoints(v)
 	return _u
 }
 
 // SetNillableAssignedWeightPoints sets the "assigned_weight_points" field if the given value is not nil.
-func (_u *PlaceUpdateOne) SetNillableAssignedWeightPoints(v *int) *PlaceUpdateOne {
+func (_u *PlaceUpdateOne) SetNillableAssignedWeightPoints(v *float64) *PlaceUpdateOne {
 	if v != nil {
 		_u.SetAssignedWeightPoints(*v)
 	}
@@ -530,7 +462,7 @@ func (_u *PlaceUpdateOne) SetNillableAssignedWeightPoints(v *int) *PlaceUpdateOn
 }
 
 // AddAssignedWeightPoints adds value to the "assigned_weight_points" field.
-func (_u *PlaceUpdateOne) AddAssignedWeightPoints(v int) *PlaceUpdateOne {
+func (_u *PlaceUpdateOne) AddAssignedWeightPoints(v float64) *PlaceUpdateOne {
 	_u.mutation.AddAssignedWeightPoints(v)
 	return _u
 }
@@ -622,11 +554,6 @@ func (_u *PlaceUpdateOne) check() error {
 			return &ValidationError{Name: "contest_points", err: fmt.Errorf(`ent: validator failed for field "Place.contest_points": %w`, err)}
 		}
 	}
-	if v, ok := _u.mutation.OpenctfPoints(); ok {
-		if err := place.OpenctfPointsValidator(v); err != nil {
-			return &ValidationError{Name: "openctf_points", err: fmt.Errorf(`ent: validator failed for field "Place.openctf_points": %w`, err)}
-		}
-	}
 	return nil
 }
 
@@ -686,15 +613,6 @@ func (_u *PlaceUpdateOne) sqlSave(ctx context.Context) (_node *Place, err error)
 	if _u.mutation.ContestPointsCleared() {
 		_spec.ClearField(place.FieldContestPoints, field.TypeFloat64)
 	}
-	if value, ok := _u.mutation.OpenctfPoints(); ok {
-		_spec.SetField(place.FieldOpenctfPoints, field.TypeFloat64, value)
-	}
-	if value, ok := _u.mutation.AddedOpenctfPoints(); ok {
-		_spec.AddField(place.FieldOpenctfPoints, field.TypeFloat64, value)
-	}
-	if _u.mutation.OpenctfPointsCleared() {
-		_spec.ClearField(place.FieldOpenctfPoints, field.TypeFloat64)
-	}
 	if value, ok := _u.mutation.AssociatedContestID(); ok {
 		_spec.SetField(place.FieldAssociatedContestID, field.TypeInt, value)
 	}
@@ -702,10 +620,10 @@ func (_u *PlaceUpdateOne) sqlSave(ctx context.Context) (_node *Place, err error)
 		_spec.AddField(place.FieldAssociatedContestID, field.TypeInt, value)
 	}
 	if value, ok := _u.mutation.AssignedWeightPoints(); ok {
-		_spec.SetField(place.FieldAssignedWeightPoints, field.TypeInt, value)
+		_spec.SetField(place.FieldAssignedWeightPoints, field.TypeFloat64, value)
 	}
 	if value, ok := _u.mutation.AddedAssignedWeightPoints(); ok {
-		_spec.AddField(place.FieldAssignedWeightPoints, field.TypeInt, value)
+		_spec.AddField(place.FieldAssignedWeightPoints, field.TypeFloat64, value)
 	}
 	if _u.mutation.AssociatedTeamCleared() {
 		edge := &sqlgraph.EdgeSpec{

@@ -7,15 +7,18 @@ DROP VIEW IF EXISTS "aggregated_team_details";
 DROP VIEW IF EXISTS "aggregated_yearly_teams";
 DROP VIEW IF EXISTS "aggregated_contests";
 DROP VIEW IF EXISTS "aggregated_platform_statistics";
+DROP VIEW IF EXISTS "aggregated_contests_difficulties";
 
 -- Create "aggregated_contests_difficulties" view
-CREATE OR REPLACE VIEW "aggregated_contests_difficulties" ("contest_id", "contest_name", "end", "organizers_id", "avg_difficulty", "participants") AS
+CREATE OR REPLACE VIEW "aggregated_contests_difficulties" AS
 SELECT
 	c.id AS "contest_id",
 	c.name AS "contest_name",
 	c."end" AS "end",
+	c."assigned_weight_points" AS "assigned_weight_points",
 	c.contest_organizers as "organizers_id",
-	AVG(wr.difficulty) AS "avg_difficulty",
+	COALESCE(AVG(wr.difficulty), 0) AS "avg_difficulty",
+	COALESCE(AVG(cr.rating), 3) AS "avg_quality",
 	(
 		SELECT
 			COUNT(p.id)
@@ -30,9 +33,14 @@ RIGHT JOIN
 	weight_ratings wr
 ON
 	c.id = wr.weight_rating_contest
+RIGHT JOIN
+	contest_ratings cr
+ON
+	c.id = cr.contest_rating_contest
 WHERE
 	NOW() > c."end" AND
 	c.contest_organizers IS NOT NULL AND
+	cr.relevant = TRUE AND
 	(
 		SELECT
 			COUNT(p.id)
@@ -229,7 +237,6 @@ select
 						cr.relevant is true and
 						cr.contest_rating_contest = c.id
 				),
-				'openctf_points', p.openctf_points,
 				'assigned_weight_points', p.assigned_weight_points,
 				'participants', (
 					select

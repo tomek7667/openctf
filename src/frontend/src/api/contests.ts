@@ -1,15 +1,30 @@
-import {
-	ContestStatus,
-	ContestStatusType,
-	RawContest,
-	User,
-} from "@/types/api";
+import { RawContest, User } from "@/types/api";
 import { BASE_URL } from "./constant";
 import { Team } from "./teams";
+
+export enum ContestStatus {
+	Upcoming = "upcoming",
+	Ongoing = "ongoing",
+	Finished = "finished",
+	Cancelled = "cancelled",
+}
+
+export type ContestStatusType =
+	| ContestStatus.Upcoming
+	| ContestStatus.Ongoing
+	| ContestStatus.Finished
+	| ContestStatus.Cancelled;
 
 export interface ListContestsDto {
 	Offset?: number;
 	Limit?: number;
+	Search: string;
+	Status: ContestStatus | "all";
+	MinRating?: undefined | number;
+	MaxRating?: undefined | number;
+	MinWeight?: undefined | number;
+	MaxWeight?: undefined | number;
+	Year?: undefined | number;
 }
 
 export interface ParsedContest extends RawContest {
@@ -18,7 +33,7 @@ export interface ParsedContest extends RawContest {
 
 export const getStatus = (start: Date, end: Date): ContestStatusType => {
 	const now = new Date();
-	if (end < now) {
+	if (now > end) {
 		return ContestStatus.Finished;
 	} else if (now > start) {
 		return ContestStatus.Upcoming;
@@ -58,6 +73,27 @@ export const getContests = async (
 	}
 	if (dto.Limit !== undefined) {
 		params.append("limit", dto.Limit.toString());
+	}
+	if (dto.Search) {
+		params.append("search", dto.Search.toString());
+	}
+	if (dto.Status) {
+		params.append("status", dto.Status.toString());
+	}
+	if (dto.MinRating) {
+		params.append("minRating", dto.MinRating.toString());
+	}
+	if (dto.MaxRating) {
+		params.append("maxRating", dto.MaxRating.toString());
+	}
+	if (dto.MinWeight) {
+		params.append("minWeight", dto.MinWeight.toString());
+	}
+	if (dto.MaxWeight) {
+		params.append("maxWeight", dto.MaxWeight.toString());
+	}
+	if (dto.Year) {
+		params.append("year", dto.Year.toString());
 	}
 	const url = `${BASE_URL}/api/contests?${params.toString()}`;
 	console.log(`GET -> ${url}`);

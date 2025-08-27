@@ -390,7 +390,7 @@ const ContestTimeline = ({ contests }: { contests: TeamsDetailsContest[] }) => {
 															Points:
 														</span>
 														<div className="font-mono font-bold text-primary">
-															{contest.openctf_points.toLocaleString()}
+															{contest.assigned_weight_points.toLocaleString()}
 														</div>
 													</div>
 													<div>

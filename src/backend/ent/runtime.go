@@ -119,14 +119,10 @@ func init() {
 	placeDescContestPoints := placeFields[3].Descriptor()
 	// place.ContestPointsValidator is a validator for the "contest_points" field. It is called by the builders before save.
 	place.ContestPointsValidator = placeDescContestPoints.Validators[0].(func(float64) error)
-	// placeDescOpenctfPoints is the schema descriptor for openctf_points field.
-	placeDescOpenctfPoints := placeFields[4].Descriptor()
-	// place.OpenctfPointsValidator is a validator for the "openctf_points" field. It is called by the builders before save.
-	place.OpenctfPointsValidator = placeDescOpenctfPoints.Validators[0].(func(float64) error)
 	// placeDescAssignedWeightPoints is the schema descriptor for assigned_weight_points field.
-	placeDescAssignedWeightPoints := placeFields[6].Descriptor()
+	placeDescAssignedWeightPoints := placeFields[5].Descriptor()
 	// place.DefaultAssignedWeightPoints holds the default value on creation for the assigned_weight_points field.
-	place.DefaultAssignedWeightPoints = placeDescAssignedWeightPoints.Default.(int)
+	place.DefaultAssignedWeightPoints = placeDescAssignedWeightPoints.Default.(float64)
 	teamFields := schema.Team{}.Fields()
 	_ = teamFields
 	// teamDescCountryCode is the schema descriptor for country_code field.

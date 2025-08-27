@@ -58,7 +58,6 @@ export interface Place {
 	place: number;
 	ctftime_team_id?: number | null;
 	contest_points?: number | null;
-	openctf_points?: number | null;
 	associated_contest_id: number;
 	assigned_weight_points: number;
 	// Relations

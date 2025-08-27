@@ -42,6 +42,9 @@ func (c *Client) RateContestDifficulty(
 	contestId int,
 	dto *RateContestDifficultyDto,
 ) (*ent.ContestRating, error) {
+	if dto.Difficulty < 0 || dto.Difficulty > 100 {
+		return nil, fmt.Errorf("rated difficulty should be between 0 and 100")
+	}
 	// TODO: team captain id extract based on team id;
 	return nil, fmt.Errorf("not implemented yet")
 	// res, err := c.C.QueryContext(ctx, SqlCaptainPlaceInContest, requester.ID, contestId)

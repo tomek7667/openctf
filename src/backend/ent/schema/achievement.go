@@ -18,7 +18,7 @@ type Achievement struct {
 // Fields of the Achievement.
 func (Achievement) Fields() []ent.Field {
 	return TrimOmitEmptyTag([]ent.Field{
-		field.String("name").Unique(),
+		field.String("name"),
 		field.String("description"),
 		field.Enum("rarity").Values("common", "rare", "epic", "legendary"),
 		field.Time("unlocked_at").Default(time.Now()),

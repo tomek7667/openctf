@@ -14,9 +14,8 @@ import {
 	Shield,
 } from "@/components/ui/icons";
 import { Card, CardContent, CardHeader } from "@/components/ui/Card";
-import { ContestStatus } from "@/types/api";
 import { clsx } from "clsx";
-import { ParsedAggregatedContest } from "@/api";
+import { ContestStatus, ParsedAggregatedContest } from "@/api";
 
 interface ContestCardProps {
 	contest: ParsedAggregatedContest;

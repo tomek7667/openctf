@@ -17,9 +17,8 @@ func (Place) Fields() []ent.Field {
 		field.Int("place").Min(1),
 		field.Int("ctftime_team_id").Nillable().Optional(),
 		field.Float("contest_points").Min(0).Nillable().Optional().Comment("the actual amount of points obtained by the place holder in the ctf"),
-		field.Float("openctf_points").Min(0).Nillable().Optional().Comment("these points are normalized based on contest_points being max multiplied by the ctf weight"),
 		field.Int("associated_contest_id"),
-		field.Int("assigned_weight_points").Default(0),
+		field.Float("assigned_weight_points").Default(0),
 	})
 }
 

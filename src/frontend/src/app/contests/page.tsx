@@ -20,9 +20,15 @@ import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 import { MainLayout } from "@/components/layout/MainLayout";
 import { ContestCard } from "@/components/contests/ContestCard";
 import { LiveCTFWidget } from "@/components/contests/LiveCTFWidget";
-import { getContests, ParsedAggregatedContest } from "@/api/contests";
-import { ContestStatus, ContestStatusType } from "@/types/api";
+import {
+	ContestStatus,
+	ContestStatusType,
+	getContests,
+	ListContestsDto,
+	ParsedAggregatedContest,
+} from "@/api/contests";
 import { clsx } from "clsx";
+import useToast from "@/hooks/useToast";
 
 const contestStatuses: {
 	status: ContestStatusType | "all";
@@ -54,16 +60,6 @@ const getYearOptions = () => {
 	const currentYear = getCurrentYear();
 	return Array.from({ length: 5 }, (_, i) => currentYear - i);
 };
-
-interface ContestFilters {
-	search: string;
-	status: ContestStatus | "all";
-	minRating?: undefined | number;
-	maxRating?: undefined | number;
-	minWeight?: undefined | number;
-	maxWeight?: undefined | number;
-	year?: undefined | number;
-}
 
 const ContestTableRow = ({ contest }: { contest: ParsedAggregatedContest }) => (
 	<tr
@@ -142,109 +138,58 @@ const ContestTableRow = ({ contest }: { contest: ParsedAggregatedContest }) => (
 
 export default function ContestsPage() {
 	const [contests, setContests] = useState<ParsedAggregatedContest[]>([]);
-	const [filteredContests, setFilteredContests] = useState<
-		ParsedAggregatedContest[]
-	>([]);
 	const [isLoading, setIsLoading] = useState(true);
-	const [filters, setFilters] = useState<ContestFilters>({
-		search: "",
-		status: "all",
+	const [dto, setDto] = useState<ListContestsDto>({
+		Search: "",
+		Status: "all",
 	});
+	const { toast } = useToast();
 
 	// Fetch contests on mount
 	useEffect(() => {
 		const fetchContests = async () => {
 			try {
 				setIsLoading(true);
-				const contests = await getContests({
-					Offset: 0,
-					Limit: 50,
-				});
+				const contests = await getContests(dto);
 				setContests(contests || []);
-				setFilteredContests(contests || []);
-			} catch (error) {
+			} catch (error: any) {
 				console.error("Error fetching contests:", error);
+				toast.error(
+					"failed to get contests",
+					error?.message ??
+						"an unknown error occurred, if it persist please contact the administrator"
+				);
 			} finally {
 				setIsLoading(false);
 			}
 		};
 
 		fetchContests();
-	}, []);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [dto]);
 
-	// Apply filters whenever filters or contests change
-	useEffect(() => {
-		let filtered = [...contests];
-
-		// Search filter
-		if (filters.search) {
-			const searchLower = filters.search.toLowerCase();
-			filtered = filtered.filter(
-				(contest) =>
-					contest.name.toLowerCase().includes(searchLower) ||
-					contest.description?.toLowerCase().includes(searchLower)
-			);
-		}
-
-		// Status filter
-		if (filters.status !== "all") {
-			filtered = filtered.filter(
-				(contest) => contest.status === filters.status
-			);
-		}
-
-		// Rating filter
-		if (filters.minRating !== undefined) {
-			filtered = filtered.filter(
-				(contest) => (contest.rating ?? 0) >= (filters.minRating ?? 0)
-			);
-		}
-		if (filters.maxRating !== undefined) {
-			filtered = filtered.filter(
-				(contest) => (contest.rating ?? 0) <= (filters.maxRating ?? 0)
-			);
-		}
-
-		// Weight filter
-		if (filters.minWeight !== undefined && filters.maxWeight !== undefined) {
-			filtered = filtered.filter((contest) => {
-				const weight = contest.assigned_weight_points || 0;
-				return weight >= filters.minWeight! && weight <= filters.maxWeight!;
-			});
-		}
-
-		// Year filter
-		if (filters.year) {
-			filtered = filtered.filter(
-				(contest) => new Date(contest.start).getFullYear() === filters.year
-			);
-		}
-
-		setFilteredContests(filtered);
-	}, [contests, filters]);
-
-	const updateFilter = (key: keyof ContestFilters, value: any) => {
-		setFilters((prev) => ({ ...prev, [key]: value }));
+	const updateFilter = (key: keyof ListContestsDto, value: any) => {
+		setDto((prev) => ({ ...prev, [key]: value }));
 	};
 
 	const setRatingFilter = (
 		min?: undefined | number,
 		max?: undefined | number
 	) => {
-		setFilters((prev) => ({ ...prev, minRating: min, maxRating: max }));
+		setDto((prev) => ({ ...prev, MinRating: min, MaxRating: max }));
 	};
 
 	const setWeightFilter = (
 		min?: undefined | number,
 		max?: undefined | number
 	) => {
-		setFilters((prev) => ({ ...prev, minWeight: min, maxWeight: max }));
+		setDto((prev) => ({ ...prev, MinWeight: min, MaxWeight: max }));
 	};
 
 	const clearFilters = () => {
-		setFilters({
-			search: "",
-			status: "all",
+		setDto({
+			Search: "",
+			Status: "all",
 		});
 	};
 
@@ -562,13 +507,13 @@ export default function ContestsPage() {
 	};
 
 	// Group contests by status
-	const ongoingContests = filteredContests.filter(
+	const ongoingContests = contests.filter(
 		(c) => c.status === ContestStatus.Ongoing // Contest interface uses 'live' not 'ongoing'
 	);
-	const upcomingContests = filteredContests.filter(
+	const upcomingContests = contests.filter(
 		(c) => c.status === ContestStatus.Upcoming
 	);
-	const finishedContests = filteredContests.filter(
+	const finishedContests = contests.filter(
 		(c) => c.status === ContestStatus.Finished
 	);
 
@@ -613,7 +558,7 @@ export default function ContestsPage() {
 									}
 									<br />
 									<span className="text-yellow-400">
-										{"// Live tracking and real-time updates | Total: " +
+										{"// Live tracking and real-time updates | Total contests: " +
 											stats.total}
 									</span>
 								</p>
@@ -639,8 +584,8 @@ export default function ContestsPage() {
 									<Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
 									<Input
 										placeholder="Search contests..."
-										value={filters.search}
-										onChange={(e) => updateFilter("search", e.target.value)}
+										value={dto.Search}
+										onChange={(e) => updateFilter("Search", e.target.value)}
 										className="pl-10 font-mono"
 									/>
 								</div>
@@ -649,11 +594,9 @@ export default function ContestsPage() {
 									{contestStatuses.map(({ status, label, icon: Icon }) => (
 										<Button
 											key={status}
-											variant={
-												filters.status === status ? "primary" : "outline"
-											}
+											variant={dto.Status === status ? "primary" : "outline"}
 											size="sm"
-											onClick={() => updateFilter("status", status)}
+											onClick={() => updateFilter("Status", status)}
 											className="font-mono"
 										>
 											<Icon className="h-4 w-4 mr-1" />
@@ -683,9 +626,7 @@ export default function ContestsPage() {
 												<Badge
 													key={`${option.min}-${option.max}`}
 													variant={
-														filters.minRating === option.min
-															? "default"
-															: "outline"
+														dto.MinRating === option.min ? "default" : "outline"
 													}
 													className="cursor-pointer transition-colors font-mono"
 													onClick={() =>
@@ -708,9 +649,7 @@ export default function ContestsPage() {
 												<Badge
 													key={`${option.min}-${option.max}`}
 													variant={
-														filters.minWeight === option.min
-															? "default"
-															: "outline"
+														dto.MinWeight === option.min ? "default" : "outline"
 													}
 													className="cursor-pointer transition-colors font-mono"
 													onClick={() =>
@@ -732,11 +671,9 @@ export default function ContestsPage() {
 											{getYearOptions().map((year) => (
 												<Badge
 													key={year}
-													variant={
-														filters.year === year ? "default" : "outline"
-													}
+													variant={dto.Year === year ? "default" : "outline"}
 													className="cursor-pointer transition-colors font-mono"
-													onClick={() => updateFilter("year", year)}
+													onClick={() => updateFilter("Year", year)}
 												>
 													{year}
 												</Badge>
@@ -750,8 +687,7 @@ export default function ContestsPage() {
 
 							<div className="flex justify-between items-center">
 								<span className="text-sm text-muted-foreground font-mono">
-									Showing {filteredContests.length} of {contests.length}{" "}
-									contests
+									Showing {contests.length} of {contests.length} contests
 								</span>
 								<Button
 									variant="outline"
@@ -776,26 +712,26 @@ export default function ContestsPage() {
 						) : (
 							<>
 								{/* Ongoing Contests */}
-								{(filters.status === "all" ||
-									filters.status === ContestStatus.Ongoing) &&
+								{(dto.Status === "all" ||
+									dto.Status === ContestStatus.Ongoing) &&
 									ongoingContests.length > 0 && (
 										<OngoingContestsSection contests={ongoingContests} />
 									)}
 
 								{/* Upcoming Contests */}
-								{(filters.status === "all" || filters.status === "upcoming") &&
+								{(dto.Status === "all" || dto.Status === "upcoming") &&
 									upcomingContests.length > 0 && (
 										<UpcomingContestsSection contests={upcomingContests} />
 									)}
 
 								{/* Finished Contests - Table View */}
-								{(filters.status === "all" || filters.status === "finished") &&
+								{(dto.Status === "all" || dto.Status === "finished") &&
 									finishedContests.length > 0 && (
 										<FinishedContestsSection contests={finishedContests} />
 									)}
 
 								{/* No Results */}
-								{filteredContests.length === 0 && !isLoading && (
+								{contests.length === 0 && !isLoading && (
 									<motion.div
 										initial={{ opacity: 0, y: 20 }}
 										animate={{ opacity: 1, y: 0 }}

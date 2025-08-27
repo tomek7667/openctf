@@ -65,6 +65,9 @@ func (c *Client) RateContestOpinion(
 	if !place.Valid {
 		return nil, fmt.Errorf("place was not found")
 	}
+	if dto.Rating < 1 || dto.Rating > 5 {
+		return nil, fmt.Errorf("the rating should be between 1 and 5")
+	}
 	relevant := false
 	if float64(place.Int64) <= float64(totalPlaces)*0.30 {
 		relevant = true

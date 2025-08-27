@@ -33,23 +33,23 @@ const (
 	OpUpdateOne = ent.OpUpdateOne
 
 	// Node types.
-	TypeAchievement                    = "Achievement"
-	TypeActivity                       = "Activity"
-	TypeAggregatedContest              = "AggregatedContest"
-	TypeAggregatedContestsDifficulties = "AggregatedContestsDifficulties"
-	TypeAggregatedPlatformStatistics   = "AggregatedPlatformStatistics"
-	TypeAggregatedTeamDetails          = "AggregatedTeamDetails"
-	TypeAggregatedUserStatistics       = "AggregatedUserStatistics"
-	TypeAggregatedYearlyTeam           = "AggregatedYearlyTeam"
-	TypeContest                        = "Contest"
-	TypeContestRating                  = "ContestRating"
-	TypePlace                          = "Place"
-	TypeTeam                           = "Team"
-	TypeTeamAchievement                = "TeamAchievement"
-	TypeUser                           = "User"
-	TypeUserProfile                    = "UserProfile"
-	TypeVContestParticipant            = "VContestParticipant"
-	TypeWeightRating                   = "WeightRating"
+	TypeAchievement                  = "Achievement"
+	TypeActivity                     = "Activity"
+	TypeAggregatedContest            = "AggregatedContest"
+	TypeAggregatedContestsDifficulty = "AggregatedContestsDifficulty"
+	TypeAggregatedPlatformStatistics = "AggregatedPlatformStatistics"
+	TypeAggregatedTeamDetails        = "AggregatedTeamDetails"
+	TypeAggregatedUserStatistics     = "AggregatedUserStatistics"
+	TypeAggregatedYearlyTeam         = "AggregatedYearlyTeam"
+	TypeContest                      = "Contest"
+	TypeContestRating                = "ContestRating"
+	TypePlace                        = "Place"
+	TypeTeam                         = "Team"
+	TypeTeamAchievement              = "TeamAchievement"
+	TypeUser                         = "User"
+	TypeUserProfile                  = "UserProfile"
+	TypeVContestParticipant          = "VContestParticipant"
+	TypeWeightRating                 = "WeightRating"
 )
 
 // AchievementMutation represents an operation that mutates the Achievement nodes in the graph.
@@ -3031,12 +3031,10 @@ type PlaceMutation struct {
 	addctftime_team_id        *int
 	contest_points            *float64
 	addcontest_points         *float64
-	openctf_points            *float64
-	addopenctf_points         *float64
 	associated_contest_id     *int
 	addassociated_contest_id  *int
-	assigned_weight_points    *int
-	addassigned_weight_points *int
+	assigned_weight_points    *float64
+	addassigned_weight_points *float64
 	clearedFields             map[string]struct{}
 	associated_team           *int
 	clearedassociated_team    bool
@@ -3375,76 +3373,6 @@ func (m *PlaceMutation) ResetContestPoints() {
 	delete(m.clearedFields, place.FieldContestPoints)
 }
 
-// SetOpenctfPoints sets the "openctf_points" field.
-func (m *PlaceMutation) SetOpenctfPoints(f float64) {
-	m.openctf_points = &f
-	m.addopenctf_points = nil
-}
-
-// OpenctfPoints returns the value of the "openctf_points" field in the mutation.
-func (m *PlaceMutation) OpenctfPoints() (r float64, exists bool) {
-	v := m.openctf_points
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldOpenctfPoints returns the old "openctf_points" field's value of the Place entity.
-// If the Place object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *PlaceMutation) OldOpenctfPoints(ctx context.Context) (v *float64, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldOpenctfPoints is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldOpenctfPoints requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldOpenctfPoints: %w", err)
-	}
-	return oldValue.OpenctfPoints, nil
-}
-
-// AddOpenctfPoints adds f to the "openctf_points" field.
-func (m *PlaceMutation) AddOpenctfPoints(f float64) {
-	if m.addopenctf_points != nil {
-		*m.addopenctf_points += f
-	} else {
-		m.addopenctf_points = &f
-	}
-}
-
-// AddedOpenctfPoints returns the value that was added to the "openctf_points" field in this mutation.
-func (m *PlaceMutation) AddedOpenctfPoints() (r float64, exists bool) {
-	v := m.addopenctf_points
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// ClearOpenctfPoints clears the value of the "openctf_points" field.
-func (m *PlaceMutation) ClearOpenctfPoints() {
-	m.openctf_points = nil
-	m.addopenctf_points = nil
-	m.clearedFields[place.FieldOpenctfPoints] = struct{}{}
-}
-
-// OpenctfPointsCleared returns if the "openctf_points" field was cleared in this mutation.
-func (m *PlaceMutation) OpenctfPointsCleared() bool {
-	_, ok := m.clearedFields[place.FieldOpenctfPoints]
-	return ok
-}
-
-// ResetOpenctfPoints resets all changes to the "openctf_points" field.
-func (m *PlaceMutation) ResetOpenctfPoints() {
-	m.openctf_points = nil
-	m.addopenctf_points = nil
-	delete(m.clearedFields, place.FieldOpenctfPoints)
-}
-
 // SetAssociatedContestID sets the "associated_contest_id" field.
 func (m *PlaceMutation) SetAssociatedContestID(i int) {
 	m.associated_contest_id = &i
@@ -3502,13 +3430,13 @@ func (m *PlaceMutation) ResetAssociatedContestID() {
 }
 
 // SetAssignedWeightPoints sets the "assigned_weight_points" field.
-func (m *PlaceMutation) SetAssignedWeightPoints(i int) {
-	m.assigned_weight_points = &i
+func (m *PlaceMutation) SetAssignedWeightPoints(f float64) {
+	m.assigned_weight_points = &f
 	m.addassigned_weight_points = nil
 }
 
 // AssignedWeightPoints returns the value of the "assigned_weight_points" field in the mutation.
-func (m *PlaceMutation) AssignedWeightPoints() (r int, exists bool) {
+func (m *PlaceMutation) AssignedWeightPoints() (r float64, exists bool) {
 	v := m.assigned_weight_points
 	if v == nil {
 		return
@@ -3519,7 +3447,7 @@ func (m *PlaceMutation) AssignedWeightPoints() (r int, exists bool) {
 // OldAssignedWeightPoints returns the old "assigned_weight_points" field's value of the Place entity.
 // If the Place object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *PlaceMutation) OldAssignedWeightPoints(ctx context.Context) (v int, err error) {
+func (m *PlaceMutation) OldAssignedWeightPoints(ctx context.Context) (v float64, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldAssignedWeightPoints is only allowed on UpdateOne operations")
 	}
@@ -3533,17 +3461,17 @@ func (m *PlaceMutation) OldAssignedWeightPoints(ctx context.Context) (v int, err
 	return oldValue.AssignedWeightPoints, nil
 }
 
-// AddAssignedWeightPoints adds i to the "assigned_weight_points" field.
-func (m *PlaceMutation) AddAssignedWeightPoints(i int) {
+// AddAssignedWeightPoints adds f to the "assigned_weight_points" field.
+func (m *PlaceMutation) AddAssignedWeightPoints(f float64) {
 	if m.addassigned_weight_points != nil {
-		*m.addassigned_weight_points += i
+		*m.addassigned_weight_points += f
 	} else {
-		m.addassigned_weight_points = &i
+		m.addassigned_weight_points = &f
 	}
 }
 
 // AddedAssignedWeightPoints returns the value that was added to the "assigned_weight_points" field in this mutation.
-func (m *PlaceMutation) AddedAssignedWeightPoints() (r int, exists bool) {
+func (m *PlaceMutation) AddedAssignedWeightPoints() (r float64, exists bool) {
 	v := m.addassigned_weight_points
 	if v == nil {
 		return
@@ -3630,7 +3558,7 @@ func (m *PlaceMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *PlaceMutation) Fields() []string {
-	fields := make([]string, 0, 7)
+	fields := make([]string, 0, 6)
 	if m.team_name != nil {
 		fields = append(fields, place.FieldTeamName)
 	}
@@ -3642,9 +3570,6 @@ func (m *PlaceMutation) Fields() []string {
 	}
 	if m.contest_points != nil {
 		fields = append(fields, place.FieldContestPoints)
-	}
-	if m.openctf_points != nil {
-		fields = append(fields, place.FieldOpenctfPoints)
 	}
 	if m.associated_contest_id != nil {
 		fields = append(fields, place.FieldAssociatedContestID)
@@ -3668,8 +3593,6 @@ func (m *PlaceMutation) Field(name string) (ent.Value, bool) {
 		return m.CtftimeTeamID()
 	case place.FieldContestPoints:
 		return m.ContestPoints()
-	case place.FieldOpenctfPoints:
-		return m.OpenctfPoints()
 	case place.FieldAssociatedContestID:
 		return m.AssociatedContestID()
 	case place.FieldAssignedWeightPoints:
@@ -3691,8 +3614,6 @@ func (m *PlaceMutation) OldField(ctx context.Context, name string) (ent.Value, e
 		return m.OldCtftimeTeamID(ctx)
 	case place.FieldContestPoints:
 		return m.OldContestPoints(ctx)
-	case place.FieldOpenctfPoints:
-		return m.OldOpenctfPoints(ctx)
 	case place.FieldAssociatedContestID:
 		return m.OldAssociatedContestID(ctx)
 	case place.FieldAssignedWeightPoints:
@@ -3734,13 +3655,6 @@ func (m *PlaceMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetContestPoints(v)
 		return nil
-	case place.FieldOpenctfPoints:
-		v, ok := value.(float64)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetOpenctfPoints(v)
-		return nil
 	case place.FieldAssociatedContestID:
 		v, ok := value.(int)
 		if !ok {
@@ -3749,7 +3663,7 @@ func (m *PlaceMutation) SetField(name string, value ent.Value) error {
 		m.SetAssociatedContestID(v)
 		return nil
 	case place.FieldAssignedWeightPoints:
-		v, ok := value.(int)
+		v, ok := value.(float64)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
@@ -3772,9 +3686,6 @@ func (m *PlaceMutation) AddedFields() []string {
 	if m.addcontest_points != nil {
 		fields = append(fields, place.FieldContestPoints)
 	}
-	if m.addopenctf_points != nil {
-		fields = append(fields, place.FieldOpenctfPoints)
-	}
 	if m.addassociated_contest_id != nil {
 		fields = append(fields, place.FieldAssociatedContestID)
 	}
@@ -3795,8 +3706,6 @@ func (m *PlaceMutation) AddedField(name string) (ent.Value, bool) {
 		return m.AddedCtftimeTeamID()
 	case place.FieldContestPoints:
 		return m.AddedContestPoints()
-	case place.FieldOpenctfPoints:
-		return m.AddedOpenctfPoints()
 	case place.FieldAssociatedContestID:
 		return m.AddedAssociatedContestID()
 	case place.FieldAssignedWeightPoints:
@@ -3831,13 +3740,6 @@ func (m *PlaceMutation) AddField(name string, value ent.Value) error {
 		}
 		m.AddContestPoints(v)
 		return nil
-	case place.FieldOpenctfPoints:
-		v, ok := value.(float64)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.AddOpenctfPoints(v)
-		return nil
 	case place.FieldAssociatedContestID:
 		v, ok := value.(int)
 		if !ok {
@@ -3846,7 +3748,7 @@ func (m *PlaceMutation) AddField(name string, value ent.Value) error {
 		m.AddAssociatedContestID(v)
 		return nil
 	case place.FieldAssignedWeightPoints:
-		v, ok := value.(int)
+		v, ok := value.(float64)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
@@ -3865,9 +3767,6 @@ func (m *PlaceMutation) ClearedFields() []string {
 	}
 	if m.FieldCleared(place.FieldContestPoints) {
 		fields = append(fields, place.FieldContestPoints)
-	}
-	if m.FieldCleared(place.FieldOpenctfPoints) {
-		fields = append(fields, place.FieldOpenctfPoints)
 	}
 	return fields
 }
@@ -3889,9 +3788,6 @@ func (m *PlaceMutation) ClearField(name string) error {
 	case place.FieldContestPoints:
 		m.ClearContestPoints()
 		return nil
-	case place.FieldOpenctfPoints:
-		m.ClearOpenctfPoints()
-		return nil
 	}
 	return fmt.Errorf("unknown Place nullable field %s", name)
 }
@@ -3911,9 +3807,6 @@ func (m *PlaceMutation) ResetField(name string) error {
 		return nil
 	case place.FieldContestPoints:
 		m.ResetContestPoints()
-		return nil
-	case place.FieldOpenctfPoints:
-		m.ResetOpenctfPoints()
 		return nil
 	case place.FieldAssociatedContestID:
 		m.ResetAssociatedContestID()

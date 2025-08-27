@@ -11,7 +11,7 @@ var (
 	// AchievementsColumns holds the columns for the "achievements" table.
 	AchievementsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
-		{Name: "name", Type: field.TypeString, Unique: true},
+		{Name: "name", Type: field.TypeString},
 		{Name: "description", Type: field.TypeString},
 		{Name: "rarity", Type: field.TypeEnum, Enums: []string{"common", "rare", "epic", "legendary"}},
 		{Name: "unlocked_at", Type: field.TypeTime},
@@ -134,9 +134,8 @@ var (
 		{Name: "place", Type: field.TypeInt},
 		{Name: "ctftime_team_id", Type: field.TypeInt, Nullable: true},
 		{Name: "contest_points", Type: field.TypeFloat64, Nullable: true},
-		{Name: "openctf_points", Type: field.TypeFloat64, Nullable: true},
 		{Name: "associated_contest_id", Type: field.TypeInt},
-		{Name: "assigned_weight_points", Type: field.TypeInt, Default: 0},
+		{Name: "assigned_weight_points", Type: field.TypeFloat64, Default: 0},
 		{Name: "contest_places", Type: field.TypeInt, Nullable: true},
 		{Name: "place_associated_team", Type: field.TypeInt, Nullable: true},
 	}
@@ -148,13 +147,13 @@ var (
 		ForeignKeys: []*schema.ForeignKey{
 			{
 				Symbol:     "places_contests_places",
-				Columns:    []*schema.Column{PlacesColumns[8]},
+				Columns:    []*schema.Column{PlacesColumns[7]},
 				RefColumns: []*schema.Column{ContestsColumns[0]},
 				OnDelete:   schema.Cascade,
 			},
 			{
 				Symbol:     "places_teams_associated_team",
-				Columns:    []*schema.Column{PlacesColumns[9]},
+				Columns:    []*schema.Column{PlacesColumns[8]},
 				RefColumns: []*schema.Column{TeamsColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
@@ -163,7 +162,7 @@ var (
 			{
 				Name:    "place_team_name_ctftime_team_id_associated_contest_id",
 				Unique:  true,
-				Columns: []*schema.Column{PlacesColumns[1], PlacesColumns[3], PlacesColumns[6]},
+				Columns: []*schema.Column{PlacesColumns[1], PlacesColumns[3], PlacesColumns[5]},
 			},
 		},
 	}

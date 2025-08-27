@@ -44,7 +44,6 @@ export interface Place {
 	place: number;
 	ctftime_team_id: number | null;
 	contest_points: number;
-	openctf_points: number | null;
 	associated_contest_id: number;
 	assigned_weight_points: number;
 	edges?: {
@@ -86,7 +85,7 @@ export interface WeightRating {
 	contest: RawContest;
 }
 
-export interface AggregatedContestsDifficulties {
+export interface AggregatedContestsDifficulty {
 	contest_id: number;
 	contest_name: string;
 	end: string;
@@ -94,19 +93,6 @@ export interface AggregatedContestsDifficulties {
 	avg_difficulty: number;
 	participants: number;
 }
-
-export enum ContestStatus {
-	Upcoming = "upcoming",
-	Ongoing = "ongoing",
-	Finished = "finished",
-	Cancelled = "cancelled",
-}
-
-export type ContestStatusType =
-	| ContestStatus.Upcoming
-	| ContestStatus.Ongoing
-	| ContestStatus.Finished
-	| ContestStatus.Cancelled;
 
 export interface ApiResponse<T = unknown> {
 	success: boolean;

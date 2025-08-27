@@ -9,7 +9,7 @@ import (
 	"openctfbackend/ent/achievement"
 	"openctfbackend/ent/activity"
 	"openctfbackend/ent/aggregatedcontest"
-	"openctfbackend/ent/aggregatedcontestsdifficulties"
+	"openctfbackend/ent/aggregatedcontestsdifficulty"
 	"openctfbackend/ent/aggregatedplatformstatistics"
 	"openctfbackend/ent/aggregatedteamdetails"
 	"openctfbackend/ent/aggregateduserstatistics"
@@ -89,23 +89,23 @@ var (
 func checkColumn(t, c string) error {
 	initCheck.Do(func() {
 		columnCheck = sql.NewColumnCheck(map[string]func(string) bool{
-			achievement.Table:                    achievement.ValidColumn,
-			activity.Table:                       activity.ValidColumn,
-			aggregatedcontest.Table:              aggregatedcontest.ValidColumn,
-			aggregatedcontestsdifficulties.Table: aggregatedcontestsdifficulties.ValidColumn,
-			aggregatedplatformstatistics.Table:   aggregatedplatformstatistics.ValidColumn,
-			aggregatedteamdetails.Table:          aggregatedteamdetails.ValidColumn,
-			aggregateduserstatistics.Table:       aggregateduserstatistics.ValidColumn,
-			aggregatedyearlyteam.Table:           aggregatedyearlyteam.ValidColumn,
-			contest.Table:                        contest.ValidColumn,
-			contestrating.Table:                  contestrating.ValidColumn,
-			place.Table:                          place.ValidColumn,
-			team.Table:                           team.ValidColumn,
-			teamachievement.Table:                teamachievement.ValidColumn,
-			user.Table:                           user.ValidColumn,
-			userprofile.Table:                    userprofile.ValidColumn,
-			vcontestparticipant.Table:            vcontestparticipant.ValidColumn,
-			weightrating.Table:                   weightrating.ValidColumn,
+			achievement.Table:                  achievement.ValidColumn,
+			activity.Table:                     activity.ValidColumn,
+			aggregatedcontest.Table:            aggregatedcontest.ValidColumn,
+			aggregatedcontestsdifficulty.Table: aggregatedcontestsdifficulty.ValidColumn,
+			aggregatedplatformstatistics.Table: aggregatedplatformstatistics.ValidColumn,
+			aggregatedteamdetails.Table:        aggregatedteamdetails.ValidColumn,
+			aggregateduserstatistics.Table:     aggregateduserstatistics.ValidColumn,
+			aggregatedyearlyteam.Table:         aggregatedyearlyteam.ValidColumn,
+			contest.Table:                      contest.ValidColumn,
+			contestrating.Table:                contestrating.ValidColumn,
+			place.Table:                        place.ValidColumn,
+			team.Table:                         team.ValidColumn,
+			teamachievement.Table:              teamachievement.ValidColumn,
+			user.Table:                         user.ValidColumn,
+			userprofile.Table:                  userprofile.ValidColumn,
+			vcontestparticipant.Table:          vcontestparticipant.ValidColumn,
+			weightrating.Table:                 weightrating.ValidColumn,
 		})
 	})
 	return columnCheck(t, c)

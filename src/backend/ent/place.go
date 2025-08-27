@@ -25,12 +25,10 @@ type Place struct {
 	CtftimeTeamID *int `json:"ctftime_team_id"`
 	// the actual amount of points obtained by the place holder in the ctf
 	ContestPoints *float64 `json:"contest_points"`
-	// these points are normalized based on contest_points being max multiplied by the ctf weight
-	OpenctfPoints *float64 `json:"openctf_points"`
 	// AssociatedContestID holds the value of the "associated_contest_id" field.
 	AssociatedContestID int `json:"associated_contest_id"`
 	// AssignedWeightPoints holds the value of the "assigned_weight_points" field.
-	AssignedWeightPoints int `json:"assigned_weight_points"`
+	AssignedWeightPoints float64 `json:"assigned_weight_points"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the PlaceQuery when eager-loading is set.
 	Edges                 PlaceEdges `json:"edges"`
@@ -64,9 +62,9 @@ func (*Place) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case place.FieldContestPoints, place.FieldOpenctfPoints:
+		case place.FieldContestPoints, place.FieldAssignedWeightPoints:
 			values[i] = new(sql.NullFloat64)
-		case place.FieldID, place.FieldPlace, place.FieldCtftimeTeamID, place.FieldAssociatedContestID, place.FieldAssignedWeightPoints:
+		case place.FieldID, place.FieldPlace, place.FieldCtftimeTeamID, place.FieldAssociatedContestID:
 			values[i] = new(sql.NullInt64)
 		case place.FieldTeamName:
 			values[i] = new(sql.NullString)
@@ -121,13 +119,6 @@ func (_m *Place) assignValues(columns []string, values []any) error {
 				_m.ContestPoints = new(float64)
 				*_m.ContestPoints = value.Float64
 			}
-		case place.FieldOpenctfPoints:
-			if value, ok := values[i].(*sql.NullFloat64); !ok {
-				return fmt.Errorf("unexpected type %T for field openctf_points", values[i])
-			} else if value.Valid {
-				_m.OpenctfPoints = new(float64)
-				*_m.OpenctfPoints = value.Float64
-			}
 		case place.FieldAssociatedContestID:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field associated_contest_id", values[i])
@@ -135,10 +126,10 @@ func (_m *Place) assignValues(columns []string, values []any) error {
 				_m.AssociatedContestID = int(value.Int64)
 			}
 		case place.FieldAssignedWeightPoints:
-			if value, ok := values[i].(*sql.NullInt64); !ok {
+			if value, ok := values[i].(*sql.NullFloat64); !ok {
 				return fmt.Errorf("unexpected type %T for field assigned_weight_points", values[i])
 			} else if value.Valid {
-				_m.AssignedWeightPoints = int(value.Int64)
+				_m.AssignedWeightPoints = value.Float64
 			}
 		case place.ForeignKeys[0]:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
@@ -208,11 +199,6 @@ func (_m *Place) String() string {
 	builder.WriteString(", ")
 	if v := _m.ContestPoints; v != nil {
 		builder.WriteString("contest_points=")
-		builder.WriteString(fmt.Sprintf("%v", *v))
-	}
-	builder.WriteString(", ")
-	if v := _m.OpenctfPoints; v != nil {
-		builder.WriteString("openctf_points=")
 		builder.WriteString(fmt.Sprintf("%v", *v))
 	}
 	builder.WriteString(", ")

@@ -8,8 +8,7 @@ import (
 func (h *Handler) Handle() {
 	slog.Info("starting croner handler")
 	defer func() {
-		slog.Warn("croner.Handle is closing the database")
-		h.ServiceClient.GetEnt().Close()
+		slog.Error("croner.Handle closed for some reason, this should not have happened")
 	}()
 	// run it every 24 hours to check if if new pool should be created
 	ticker := time.NewTicker(time.Hour * 24)

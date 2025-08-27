@@ -74,18 +74,13 @@ func ContestPoints(v float64) predicate.Place {
 	return predicate.Place(sql.FieldEQ(FieldContestPoints, v))
 }
 
-// OpenctfPoints applies equality check predicate on the "openctf_points" field. It's identical to OpenctfPointsEQ.
-func OpenctfPoints(v float64) predicate.Place {
-	return predicate.Place(sql.FieldEQ(FieldOpenctfPoints, v))
-}
-
 // AssociatedContestID applies equality check predicate on the "associated_contest_id" field. It's identical to AssociatedContestIDEQ.
 func AssociatedContestID(v int) predicate.Place {
 	return predicate.Place(sql.FieldEQ(FieldAssociatedContestID, v))
 }
 
 // AssignedWeightPoints applies equality check predicate on the "assigned_weight_points" field. It's identical to AssignedWeightPointsEQ.
-func AssignedWeightPoints(v int) predicate.Place {
+func AssignedWeightPoints(v float64) predicate.Place {
 	return predicate.Place(sql.FieldEQ(FieldAssignedWeightPoints, v))
 }
 
@@ -294,56 +289,6 @@ func ContestPointsNotNil() predicate.Place {
 	return predicate.Place(sql.FieldNotNull(FieldContestPoints))
 }
 
-// OpenctfPointsEQ applies the EQ predicate on the "openctf_points" field.
-func OpenctfPointsEQ(v float64) predicate.Place {
-	return predicate.Place(sql.FieldEQ(FieldOpenctfPoints, v))
-}
-
-// OpenctfPointsNEQ applies the NEQ predicate on the "openctf_points" field.
-func OpenctfPointsNEQ(v float64) predicate.Place {
-	return predicate.Place(sql.FieldNEQ(FieldOpenctfPoints, v))
-}
-
-// OpenctfPointsIn applies the In predicate on the "openctf_points" field.
-func OpenctfPointsIn(vs ...float64) predicate.Place {
-	return predicate.Place(sql.FieldIn(FieldOpenctfPoints, vs...))
-}
-
-// OpenctfPointsNotIn applies the NotIn predicate on the "openctf_points" field.
-func OpenctfPointsNotIn(vs ...float64) predicate.Place {
-	return predicate.Place(sql.FieldNotIn(FieldOpenctfPoints, vs...))
-}
-
-// OpenctfPointsGT applies the GT predicate on the "openctf_points" field.
-func OpenctfPointsGT(v float64) predicate.Place {
-	return predicate.Place(sql.FieldGT(FieldOpenctfPoints, v))
-}
-
-// OpenctfPointsGTE applies the GTE predicate on the "openctf_points" field.
-func OpenctfPointsGTE(v float64) predicate.Place {
-	return predicate.Place(sql.FieldGTE(FieldOpenctfPoints, v))
-}
-
-// OpenctfPointsLT applies the LT predicate on the "openctf_points" field.
-func OpenctfPointsLT(v float64) predicate.Place {
-	return predicate.Place(sql.FieldLT(FieldOpenctfPoints, v))
-}
-
-// OpenctfPointsLTE applies the LTE predicate on the "openctf_points" field.
-func OpenctfPointsLTE(v float64) predicate.Place {
-	return predicate.Place(sql.FieldLTE(FieldOpenctfPoints, v))
-}
-
-// OpenctfPointsIsNil applies the IsNil predicate on the "openctf_points" field.
-func OpenctfPointsIsNil() predicate.Place {
-	return predicate.Place(sql.FieldIsNull(FieldOpenctfPoints))
-}
-
-// OpenctfPointsNotNil applies the NotNil predicate on the "openctf_points" field.
-func OpenctfPointsNotNil() predicate.Place {
-	return predicate.Place(sql.FieldNotNull(FieldOpenctfPoints))
-}
-
 // AssociatedContestIDEQ applies the EQ predicate on the "associated_contest_id" field.
 func AssociatedContestIDEQ(v int) predicate.Place {
 	return predicate.Place(sql.FieldEQ(FieldAssociatedContestID, v))
@@ -385,42 +330,42 @@ func AssociatedContestIDLTE(v int) predicate.Place {
 }
 
 // AssignedWeightPointsEQ applies the EQ predicate on the "assigned_weight_points" field.
-func AssignedWeightPointsEQ(v int) predicate.Place {
+func AssignedWeightPointsEQ(v float64) predicate.Place {
 	return predicate.Place(sql.FieldEQ(FieldAssignedWeightPoints, v))
 }
 
 // AssignedWeightPointsNEQ applies the NEQ predicate on the "assigned_weight_points" field.
-func AssignedWeightPointsNEQ(v int) predicate.Place {
+func AssignedWeightPointsNEQ(v float64) predicate.Place {
 	return predicate.Place(sql.FieldNEQ(FieldAssignedWeightPoints, v))
 }
 
 // AssignedWeightPointsIn applies the In predicate on the "assigned_weight_points" field.
-func AssignedWeightPointsIn(vs ...int) predicate.Place {
+func AssignedWeightPointsIn(vs ...float64) predicate.Place {
 	return predicate.Place(sql.FieldIn(FieldAssignedWeightPoints, vs...))
 }
 
 // AssignedWeightPointsNotIn applies the NotIn predicate on the "assigned_weight_points" field.
-func AssignedWeightPointsNotIn(vs ...int) predicate.Place {
+func AssignedWeightPointsNotIn(vs ...float64) predicate.Place {
 	return predicate.Place(sql.FieldNotIn(FieldAssignedWeightPoints, vs...))
 }
 
 // AssignedWeightPointsGT applies the GT predicate on the "assigned_weight_points" field.
-func AssignedWeightPointsGT(v int) predicate.Place {
+func AssignedWeightPointsGT(v float64) predicate.Place {
 	return predicate.Place(sql.FieldGT(FieldAssignedWeightPoints, v))
 }
 
 // AssignedWeightPointsGTE applies the GTE predicate on the "assigned_weight_points" field.
-func AssignedWeightPointsGTE(v int) predicate.Place {
+func AssignedWeightPointsGTE(v float64) predicate.Place {
 	return predicate.Place(sql.FieldGTE(FieldAssignedWeightPoints, v))
 }
 
 // AssignedWeightPointsLT applies the LT predicate on the "assigned_weight_points" field.
-func AssignedWeightPointsLT(v int) predicate.Place {
+func AssignedWeightPointsLT(v float64) predicate.Place {
 	return predicate.Place(sql.FieldLT(FieldAssignedWeightPoints, v))
 }
 
 // AssignedWeightPointsLTE applies the LTE predicate on the "assigned_weight_points" field.
-func AssignedWeightPointsLTE(v int) predicate.Place {
+func AssignedWeightPointsLTE(v float64) predicate.Place {
 	return predicate.Place(sql.FieldLTE(FieldAssignedWeightPoints, v))
 }
 

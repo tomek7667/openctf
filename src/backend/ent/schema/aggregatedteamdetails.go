@@ -87,7 +87,6 @@ select
 						cr.relevant is true and
 						cr.contest_rating_contest = c.id
 				),
-				'openctf_points', p.openctf_points,
 				'assigned_weight_points', p.assigned_weight_points,
 				'participants', (
 					select
@@ -199,8 +198,7 @@ type TeamsDetailsContest struct {
 	End                  time.Time `json:"end"`
 	Place                int       `json:"place"`
 	Rating               *float64  `json:"rating"`
-	OpenctfPoints        int       `json:"openctf_points"`
-	AssignedWeightPoints int       `json:"assigned_weight_points"`
+	AssignedWeightPoints float64   `json:"assigned_weight_points"`
 	Participants         int       `json:"participants"`
 }
 

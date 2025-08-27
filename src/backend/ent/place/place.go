@@ -20,8 +20,6 @@ const (
 	FieldCtftimeTeamID = "ctftime_team_id"
 	// FieldContestPoints holds the string denoting the contest_points field in the database.
 	FieldContestPoints = "contest_points"
-	// FieldOpenctfPoints holds the string denoting the openctf_points field in the database.
-	FieldOpenctfPoints = "openctf_points"
 	// FieldAssociatedContestID holds the string denoting the associated_contest_id field in the database.
 	FieldAssociatedContestID = "associated_contest_id"
 	// FieldAssignedWeightPoints holds the string denoting the assigned_weight_points field in the database.
@@ -46,7 +44,6 @@ var Columns = []string{
 	FieldPlace,
 	FieldCtftimeTeamID,
 	FieldContestPoints,
-	FieldOpenctfPoints,
 	FieldAssociatedContestID,
 	FieldAssignedWeightPoints,
 }
@@ -80,10 +77,8 @@ var (
 	PlaceValidator func(int) error
 	// ContestPointsValidator is a validator for the "contest_points" field. It is called by the builders before save.
 	ContestPointsValidator func(float64) error
-	// OpenctfPointsValidator is a validator for the "openctf_points" field. It is called by the builders before save.
-	OpenctfPointsValidator func(float64) error
 	// DefaultAssignedWeightPoints holds the default value on creation for the "assigned_weight_points" field.
-	DefaultAssignedWeightPoints int
+	DefaultAssignedWeightPoints float64
 )
 
 // OrderOption defines the ordering options for the Place queries.
@@ -112,11 +107,6 @@ func ByCtftimeTeamID(opts ...sql.OrderTermOption) OrderOption {
 // ByContestPoints orders the results by the contest_points field.
 func ByContestPoints(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldContestPoints, opts...).ToFunc()
-}
-
-// ByOpenctfPoints orders the results by the openctf_points field.
-func ByOpenctfPoints(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldOpenctfPoints, opts...).ToFunc()
 }
 
 // ByAssociatedContestID orders the results by the associated_contest_id field.

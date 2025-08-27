@@ -170,7 +170,6 @@ export interface TeamsDetailsContest {
 	end: string;
 	place: number;
 	rating: number | null;
-	openctf_points: number;
 	assigned_weight_points: number;
 	participants: number;
 }
