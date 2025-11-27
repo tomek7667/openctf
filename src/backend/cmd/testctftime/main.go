@@ -4,8 +4,9 @@ import (
 	"log/slog"
 
 	"openctfbackend/internal/ctftime"
-	"openctfbackend/internal/logger"
 	"openctfbackend/internal/utils"
+
+	"github.com/tomek7667/go-multi-logger-slog/logger"
 )
 
 func init() {

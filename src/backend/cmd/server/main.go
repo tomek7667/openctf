@@ -10,11 +10,12 @@ import (
 	"openctfbackend/internal/croner"
 	"openctfbackend/internal/ctftime"
 	"openctfbackend/internal/github"
-	"openctfbackend/internal/logger"
 	"openctfbackend/internal/openctf"
 	"openctfbackend/internal/rest"
 	"openctfbackend/internal/service"
 	"openctfbackend/internal/utils"
+
+	"github.com/tomek7667/go-multi-logger-slog/logger"
 
 	"github.com/joho/godotenv"
 	"github.com/tomek7667/goimail/icloud"

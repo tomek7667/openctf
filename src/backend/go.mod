@@ -1,8 +1,6 @@
 module openctfbackend
 
-go 1.24.5
-
-toolchain go1.24.6
+go 1.25.4
 
 require (
 	entgo.io/ent v0.14.5
@@ -13,10 +11,10 @@ require (
 	github.com/golang-jwt/jwt v3.2.2+incompatible
 	github.com/joho/godotenv v1.5.1
 	github.com/lib/pq v1.10.9
-	github.com/lmittmann/tint v1.1.2
 	github.com/swaggo/files v1.0.1
 	github.com/swaggo/gin-swagger v1.6.0
 	github.com/swaggo/swag v1.16.6
+	github.com/tomek7667/go-multi-logger-slog v0.0.3
 	github.com/tomek7667/goimail v1.0.0
 	golang.org/x/crypto v0.41.0
 )
@@ -59,6 +57,7 @@ require (
 	github.com/kennygrant/sanitize v1.2.4 // indirect
 	github.com/klauspost/cpuid/v2 v2.3.0 // indirect
 	github.com/leodido/go-urn v1.4.0 // indirect
+	github.com/lmittmann/tint v1.1.2 // indirect
 	github.com/mailru/easyjson v0.9.0 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/mattn/go-sqlite3 v1.14.31 // indirect

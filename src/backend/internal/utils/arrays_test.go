@@ -5,8 +5,9 @@ import (
 	"os"
 	"testing"
 
-	"openctfbackend/internal/logger"
 	"openctfbackend/internal/utils"
+
+	"github.com/tomek7667/go-multi-logger-slog/logger"
 )
 
 func TestMain(m *testing.M) {

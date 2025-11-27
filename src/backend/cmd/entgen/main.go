@@ -6,9 +6,11 @@ import (
 	"context"
 	"fmt"
 	"log/slog"
-	"openctfbackend/internal/logger"
+
 	"openctfbackend/internal/service"
 	"openctfbackend/internal/utils"
+
+	"github.com/tomek7667/go-multi-logger-slog/logger"
 
 	"entgo.io/ent/entc"
 	"entgo.io/ent/entc/gen"
